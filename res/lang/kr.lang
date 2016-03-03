@@ -1,0 +1,73 @@
+﻿firststart: "\n
+&3============================== RPGInventory ================================\n
+&cBefore using &eRPGInventory&c, add changed textures to your server resource-pack\n
+and configure items that can be put in the inventory slots. After that,\n
+set value in the config &eenabled: true\n
+&3============================================================================"
+
+title: "RPG Inventory"
+
+locked.name: "&c&l잠긴 슬릇"
+locked.lore: "&6&o이 슬릇부터 해제해야 합니다"
+
+buyable.name: "&a&l사용 가능한 슬릇"
+buyable.lore: "&6&o슬릇을 구입할려면 다음의 조건:"
+buyable.money: "&6&o• %s 만큼의 화폐가 필요하다"
+buyable.level: "&6&o• %d 만큼의 레벨이 필요하다"
+
+error.money: "&6&l%s 만큼의 돈이 더 필요합니다"
+error.level: "&6&l%d 만큼의 레벨이 더 필요합니다"
+error.buyable: "&6&l당신이 이 슬릇을 구입할려면 %d 만큼의 골드가 필요합니다. 구입 확인을 위해 10 초 이내로 다시 클릭해주시길 바랍니다."
+error.previous: "&6&l이전 슬릇의 잠금을 해제해야 합니다"
+error.rp.denied: "&c리소스 팩의 다운로드 권한이 필요합니다!"
+error.rp.force: "&c리소스 팩이 비활성화 되었습니다."
+error.rp.disabled: "&c리소스 팩을 사용할 수 없습니다."
+error.rp.already: "&7리소스 팩이 이미 존재합니다 %s."
+error.item.level: "&6그것은 &c%s &6레벨이 필요합니다"
+error.item.class: "&6그것은 클래스가 필요합니다 &c%s"
+error.mount.owner: "&6주인에게 귀속되어 있습니다 %s"
+
+message.buyed: "&a&l성공적으로 슬릇을 구입했습니다"
+
+rp.enabled: "활성화"
+rp.disabled: "비활성화"
+
+chest.cap.name: "&7&l사용할 수 없는 슬릇"
+chest.cap.lore: "&8&o상자 종료"
+chest.occupied: "&6&l다른 플레이어에 의해 잠겨진 상자"
+
+container.chest: "상자"
+container.chestDouble: "큰 상자"
+container.enderchest: "엔더 상자"
+
+pet.name: "%s &f[%s]"
+pet.health: "&c체력: %d"
+pet.damage: "&c데미지: %d"
+pet.speed: "&c스피드: %d"
+pet.revival.yes: "&b쿨타임: %ds"
+pet.revival.no: "&b부활하지 않습니다"
+pet.cooldown: " &a&l&o(%ds)"
+pet.food.value: "&a회복: %d HP"
+pet.role.companion: "도우미"
+pet.role.mount: "탑승"
+
+item.level: "&f%d 만큼의 레벨이 필요합니다"
+item.class: "&f그것은 &b%s 클래스만 사용이 가능합니다"
+item.nodrop: "&7죽을 때 떨어트리지 않습니다"
+item.left-click: "&a왼 클릭 - %s"
+item.right-click: "&a우 클릭 - %s"
+item.hide: "&7&oItem stats are hidden"
+item.unbreakable: "&7Unbreakable item"
+
+stat.damage: "&c데미지: &7%s"
+stat.bow_damage: "&c데미지 (활): &7%s"
+stat.hand_damage: "&c데미지 (손): &7%s"
+stat.health: "&2체력: &7%s"
+stat.armor: "&3피해 감소: &7%s"
+stat.crit_chance: "&6크리티컬 확률: &7%s"
+stat.crit_damage: "&6크리티컬 데미지: &7%s"
+stat.speed: "&9스피드: &7%s"
+stat.jump: "&9도약: &7%s"
+
+backpack.desc: "&8&o추가 슬릇을 사용할려면 클릭하세요 &f우클릭"
+backpack.size: "&a크기: &7%d"

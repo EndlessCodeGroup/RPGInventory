@@ -1,0 +1,136 @@
+slots:
+  helmet:
+    type: ARMOR
+    slot: 4
+    holder:
+      item: STAINED_GLASS_PANE:8
+      name: "&a&lHelmet slot"
+      lore: "&6&oHere possible to put only helmet"
+    items:
+    - LEATHER_HELMET
+    - CHAINMAIL_HELMET
+    - IRON_HELMET
+    - GOLD_HELMET
+    - DIAMOND_HELMET
+  chestplate:
+    type: ARMOR
+    slot: 13
+    holder:
+      item: STAINED_GLASS_PANE:8
+      name: "&a&lChestplate slot"
+      lore: "&6&oHere possible to put only chestplate"
+    items:
+    - LEATHER_CHESTPLATE
+    - CHAINMAIL_CHESTPLATE
+    - IRON_CHESTPLATE
+    - GOLD_CHESTPLATE
+    - DIAMOND_CHESTPLATE
+  leggings:
+    type: ARMOR
+    slot: 22
+    holder:
+      item: STAINED_GLASS_PANE:8
+      name: "&a&lLeggings slot"
+      lore: "&6&oHere possible to put only leggings"
+    items:
+    - LEATHER_LEGGINGS
+    - CHAINMAIL_LEGGINGS
+    - IRON_LEGGINGS
+    - GOLD_LEGGINGS
+    - DIAMOND_LEGGINGS
+  boots:
+    type: ARMOR
+    slot: 31
+    holder:
+      item: STAINED_GLASS_PANE:8
+      name: "&a&lBoots slot"
+      lore: "&6&oHere possible to put only boots"
+    items:
+    - LEATHER_BOOTS
+    - CHAINMAIL_BOOTS
+    - IRON_BOOTS
+    - GOLD_BOOTS
+    - DIAMOND_BOOTS
+  weapon:
+    type: ACTIVE
+    slot: 12
+    quickbar: 0
+    holder:
+      item: STAINED_GLASS_PANE:8
+      name: "&a&lWeapon slot"
+      lore: "&6&oHere possible to put only weapon"
+    items:
+    - WOOD_SWORD
+    - STONE_SWORD
+    - IRON_SWORD
+    - GOLD_SWORD
+    - DIAMOND_SWORD
+    - WOOD_AXE
+    - STONE_AXE
+    - IRON_AXE
+    - GOLD_AXE
+    - DIAMOND_AXE
+    - BOW
+  gloves:
+    type: PASSIVE
+    slot: 14
+    holder:
+      item: STAINED_GLASS_PANE:8
+      name: "&a&lGloves slot"
+      lore: "&6&oHere possible to put only gloves"
+    items:
+    - INK_SACK:13
+  rings:
+    type: PASSIVE
+    slot: [10, 28]
+    holder:
+      item: STAINED_GLASS_PANE:8
+      name: "&a&lRing slot"
+      lore: "&6&oHere possible to put only ring"
+    items:
+    - INK_SACK:10
+  amulet:
+    type: PASSIVE
+    slot: 19
+    cost:
+      required-level: 4
+      money: 1000
+    holder:
+      item: STAINED_GLASS_PANE:8
+      name: "&a&lAmulet slot"
+      lore: "&6&oHere possible to put only amulet"
+    items:
+    - INK_SACK:12
+  artifacts:
+    type: PASSIVE
+    slot: [47, 48, 49, 50, 51]
+    holder:
+      item: STAINED_GLASS_PANE:8
+      name: "&a&lArtifact slot"
+      lore: "&6&oHere possible to put only artifacts"
+    items:
+    - INK_SACK:14
+  pet:
+    type: PET
+    slot: 33
+    holder:
+      item: STAINED_GLASS_PANE:8
+      name: "&a&lPet slot"
+      lore: "&6&oHere possible to put only pet"
+  backpack:
+    type: BACKPACK
+    slot: 34
+    drop: false
+    holder:
+      item: STAINED_GLASS_PANE:8
+      name: "&a&lBackpack slot"
+      lore: "&6&oHere possible to put only backpack"
+  craft:
+    type: ACTION
+    slot: 16
+    gui: true
+    holder:
+      item: STAINED_GLASS_PANE:8
+      name: "&a&lWorkbench"
+      lore: "&6&oClick to open workbench"
+    action: WORKBENCH

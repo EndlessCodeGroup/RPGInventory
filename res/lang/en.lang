@@ -1,0 +1,73 @@
+firststart: "\n
+&3============================== RPGInventory ================================\n
+&cBefore using &eRPGInventory&c, add changed textures to your server resource-pack\n
+and configure items that can be put in the inventory slots. After that,\n
+set value in the config &eenabled: true\n
+&3============================================================================"
+
+title: "RPG Inventory"
+
+locked.name: "&c&lLocked slot"
+locked.lore: "&6&oFirst unlock the previous slots"
+
+buyable.name: "&a&lAvaliable slot"
+buyable.lore: "&6&oTo purchase a slot, you must:"
+buyable.money: "&6&o• Have %s gold"
+buyable.level: "&6&o• Be %d lvl"
+
+error.money: "&6&lTo purchase slots still need %s gold"
+error.level: "&6&lTo purchase slots need %d lvl"
+error.buyable: "&6&lTo purchase this slots you need %d gold. Click on it again for 10 seconds to confirm purchase."
+error.previous: "&6&lFirst unlock the previous slots"
+error.rp.denied: "&cYou must allow downloading resource-pack!"
+error.rp.force: "&cDisabling of resource-pack not allowed."
+error.rp.disabled: "&cEnabling of resource-pack not allowed."
+error.rp.already: "&7Resource-pack is already %s."
+error.item.level: "&6Required &c%s &6level"
+error.item.class: "&6Required class &c%s"
+error.mount.owner: "&6Mount belongs to %s"
+
+message.buyed: "&a&lYou have successfully purchased the slot"
+
+rp.enabled: "enabled"
+rp.disabled: "disabled"
+
+chest.cap.name: "&7&lSlot not available"
+chest.cap.lore: "&8&oChest ended"
+chest.occupied: "&6&lChest occupied by another player"
+
+container.chest: "Chest"
+container.chestDouble: "Large Chest"
+container.enderchest: "Ender Chest"
+
+pet.name: "%s &f[%s]"
+pet.health: "&cHealth: %d"
+pet.damage: "&cDamage: %d"
+pet.speed: "&cSpeed: %d"
+pet.revival.yes: "&bCooldown: %ds"
+pet.revival.no: "&bDon't revives"
+pet.cooldown: " &a&l&o(%ds)"
+pet.food.value: "&aRestores: %d HP"
+pet.role.companion: "Companion"
+pet.role.mount: "Mount"
+
+item.level: "&fRequires %d level"
+item.class: "&fOnly for &b%s"
+item.nodrop: "&7Not drops when dead"
+item.left-click: "&aLMB - %s"
+item.right-click: "&aRMB - %s"
+item.hide: "&7&oItem stats are hidden"
+item.unbreakable: "&7Unbreakable item"
+
+stat.damage: "&cDamage: &7%s"
+stat.bow_damage: "&cDamage (shoot): &7%s"
+stat.hand_damage: "&cDamage (hand): &7%s"
+stat.health: "&2Health: &7%s"
+stat.armor: "&3Armor: &7%s"
+stat.crit_chance: "&6Crit Chance: &7%s"
+stat.crit_damage: "&6Crit Damage: &7%s"
+stat.speed: "&9Speed: &7%s"
+stat.jump: "&9Jump: &7%s"
+
+backpack.desc: "&8&oPut it in specified slot, and click &fRMB"
+backpack.size: "&aSize: &7%d"

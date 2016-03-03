@@ -1,0 +1,73 @@
+﻿firststart: "\n
+&3============================== RPGInventory ================================\n
+&cBefore using &eRPGInventory&c, add changed textures to your server resource-pack\n
+and configure items that can be put in the inventory slots. After that,\n
+set value in the config &eenabled: true\n
+&3============================================================================"
+
+title: "RPG Inventory"
+
+locked.name: "&c&lロックされたのスペース"
+locked.lore: "&6&o以前のロックから解除する必要があります"
+
+buyable.name: "&a&l使用可能なスペース"
+buyable.lore: "&6&oのスペースを購入するには、次の条件:"
+buyable.money: "&6&o• %s ほどの貨幣が必要である"
+buyable.level: "&6&o• %d ほどのレベルが必要である"
+
+error.money: "&6&l%sほどのお金が必要になります"
+error.level: "&6&l%dほどのレベルが必要です"
+error.buyable: "&6&lこのスペースを購入するには,%dだけのゴールドが必要になります。購入を確認するため、10秒以内に再度クリックして下さい"
+error.previous: "&6&l以前スペースのロックを解除する必要があります"
+error.rp.denied: "&cリソースパックをダウンロードする権限が必要です!"
+error.rp.force: "&cリソースパックが無効になっています。"
+error.rp.disabled: "&cリソースパックを使用することができません"
+error.rp.already: "&7リソースパックが既に存在します %s."
+error.item.level: "&6それは&c%s&6レベルが必要になります"
+error.item.class: "&6それはクラスが必要になります &c%s"
+error.mount.owner: "&6主人に帰属しています %s"
+
+message.buyed: "&a&l正常にスペースを購入しました"
+
+rp.enabled: "有効"
+rp.disabled: "無効"
+
+chest.cap.name: "&7&l使用できないスペース"
+chest.cap.lore: "&8&oチェスト 終了"
+chest.occupied: "&6&l他のプレイヤーによってロックされてチェスト"
+
+container.chest: "チェスト"
+container.chestDouble: "大きなチェスト"
+container.enderchest: "エンダーチェスト"
+
+pet.name: "%s &f[%s]"
+pet.health: "&c健康: %d"
+pet.damage: "&c被害: %d"
+pet.speed: "&c速度: %d"
+pet.revival.yes: "&bクールタイム: %ds"
+pet.revival.no: "&b復活なし"
+pet.cooldown: " &a&l&o(%ds)"
+pet.food.value: "&a回復: %d HP"
+pet.role.companion: "ヘルパー"
+pet.role.mount: "搭乗"
+
+item.level: "&f%dほどのレベルが必要になります"
+item.class: "&fそれは&bクラス%sのみ使用可能です"
+item.nodrop: "&7死んだの後で落とさない"
+item.left-click: "&a左クリック - %s"
+item.right-click: "&a右クリック - %s"
+item.hide: "&7&oItem stats are hidden"
+item.unbreakable: "&7Unbreakable item"
+
+stat.damage: "&c被害: &7%s"
+stat.bow_damage: "&c被害 (弓): &7%s"
+stat.hand_damage: "&c被害 (手): &7%s"
+stat.health: "&2健康: &7%s"
+stat.armor: "&3被害減少: &7%s"
+stat.crit_chance: "&6クリティカル確率: &7%s"
+stat.crit_damage: "&6クリティカル被害: &7%s"
+stat.speed: "&9速度: &7%s"
+stat.jump: "&9ジャンプ: &7%s"
+
+backpack.desc: "&8&o追加のスペースを使用するには、クリックしてください&f右クリック"
+backpack.size: "&aサイズ: &7%d"

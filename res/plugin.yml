@@ -1,0 +1,49 @@
+name: RPGInventory
+version: 1.2.7
+description: Change inventory how you need
+author: OsipXD
+
+main: ru.endlesscode.rpginventory.RPGInventory
+depend: [ProtocolLib, Vault, LibsDisguises]
+loadbefore: [SkillAPI]
+
+commands:
+  rpginventory:
+    description: RPGInventory command.
+    aliases: rpginv
+    usage: /<command>
+
+permissions:
+  rpginventory.admin:
+    description: Gives access to all RPGInventory commands
+    default: op
+    children:
+      rpginventory.container: true
+      rpginventory.user: true
+      rpginventory.textures.others: true
+      rpginventory.open.others: true
+  rpginventory.user:
+    description: Gives access to all user commands
+    default: true
+    children:
+      rpginventory.textures: true
+      rpginventory.open: true
+  rpginventory.container:
+    description: Allows you to open containers
+    default: op
+  rpginventory.open:
+    description: Allows you to open inventory by command
+    default: true
+  rpginventory.open.others:
+    description: Allows you to open your or other player's inventory by command
+    default: op
+    children:
+      rpginventory.open: true
+  rpginventory.textures:
+    description: Allows you to enable/disable textures
+    default: true
+  rpginventory.textures.others:
+    description: Allows you to enable/disable textures for you or other players
+    default: op
+    children:
+      rpginventory.textures: true

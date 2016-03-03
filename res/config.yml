@@ -1,0 +1,182 @@
+# RPG Inventory
+# by OsipXD
+
+###############################
+#           General           #
+###############################
+
+# Plugin enabling
+enabled: false
+
+# Language (must be same as the file name in the folder /lang)
+language: en
+
+# Auto-update system
+auto-update: true
+
+# This plugin uses MCStats to generate and publish anonymous aggregate usage statistics
+# If you find this is not critical, please leave it enabled
+metrics: true
+
+# Worlds settings
+worlds:
+  # Mode of list. Can be either BLACKLIST or WHITELIST
+  mode: BLACKLIST
+
+  # List of blocked or allowed worlds
+  list:
+    - blocked_world
+
+# What system used for level
+# Can be: EXP (exp bar from Minecraft), SKILLAPI, BATTLELEVELS, SKILLS, HEROES, RAC
+level-system: EXP
+
+# What system used for class
+# Can be: PERMISSIONS (like a rpginventory.class.{class_name}), SKILLAPI, HEROES, RAC
+class-system: PERMISSIONS
+
+
+###############################
+#           Items             #
+###############################
+
+items:
+  # Pattern of item lore
+  lore-pattern:
+  - _UNBREAKABLE_
+  - _DROP_
+  - _LEVEL_
+  - _CLASS_
+  - _SEPARATOR_
+  - _LORE_
+  - _SEPARATOR_
+  - _SKILLS_
+  - _SEPARATOR_
+  - _STATS_
+
+  # What is used as a _SEPARATOR_
+  separator: ""
+
+
+###############################
+#         Containers          #
+###############################
+
+backpacks:
+  # Backpack will be deleted if it is not opened within that period (in days)
+  # Comment it out or set 0 for infinity backpacks (NOT RECOMMENDED)
+  expiration-time: 30
+
+containers:
+  # Disallow to open containers
+  block: true
+
+  # List of disallowed containers
+  list:
+  - DISPENSER
+  - DROPPER
+
+
+###############################
+#             GUI             #
+###############################
+
+# Resource-pack options
+resource-pack:
+  # Mode of resource pack. It can be:
+  # DISABLED - not load RP, and not touch chest GUI, always use alternate view
+  # AUTO - if player denies RP downloading, he use alternate view otherwise, normal view
+  # FORCE - always use normal view (if player denies RP, he will be kicked from server)
+  mode: AUTO
+
+  # URL of your RP
+  # Example: https://dl.dropboxusercontent.com/u/105899524/RPGInventory/ResourcePack_en.zip
+  url: PUT_YOUR_URL_HERE
+
+  # Hash (works as identifier of RP)
+  hash: PUT_YOUR_HASH_HERE
+
+# Alternate view - works when RP not loaded
+alternate-view:
+  # Enabling of item for inventory opening
+  use-item: true
+
+  # Enabling of craft grid in player inventory
+  # false - when player click on result slot, will be opened RPGInventory (like in the normal mode)
+  enable-craft: true
+
+  # Texture of inventory item
+  item: ENCHANTED_BOOK
+
+  # Slot of inventory item (0 - 8)
+  slot: 8
+
+  # Options of item
+  name: "&6Equipment"
+  lore: "&7&o(Right click to open equipment)"
+
+  # Texture to fill unavailable slots
+  fill: STAINED_GLASS_PANE:0
+
+
+###############################
+#        Battle system        #
+###############################
+
+attack:
+  # Damage is applied only if a player has in his hands a weapon (from weapon slot)
+  require-weapon: true
+
+  # When you deal damage, your hand automatically switches to weapon slot
+  force-weapon: true
+
+  # When you picked up a weapon, your hand automatically switches to it
+  auto-held: true
+
+  # Allow to damage own pet
+  own-pet: false
+
+
+###############################
+#            Slots            #
+###############################
+
+slots:
+  # Slot buying
+  enabled: true
+
+  # Texture of locked slot
+  locked: STAINED_GLASS_PANE:14
+
+  # Texture of buyable slot
+  buyable: STAINED_GLASS_PANE:1
+
+  # Default available (free) slots
+  free: 2
+
+  money:
+    # Whether to take the money for the purchase of slots
+    enabled: true
+
+    cost:
+      # Price for 1st line of inventory
+      line1: 1000
+      # Price for 2nd line of inventory
+      line2: 2000
+      # Price for 3rd line of inventory
+      line3: 3000
+
+  level:
+    # Whether to take the lvl for the purchase of slots
+    enabled: true
+
+    # Spend levels for the purchase of slots or not
+    spend: false
+
+    required:
+      # Price for 1st line of inventory
+      line1: 20
+      # Price for 2nd line of inventory
+      line2: 30
+      # Price for 3rd line of inventory
+      line3: 40
