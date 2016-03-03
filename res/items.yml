@@ -1,0 +1,34 @@
+items:
+  all-stats:
+    texture: INK_SACK:10
+    name: "Ring with all stats"
+    lore: "&e&oThis is ring of my grandfather...\n&e&oIt has something unusual"
+    rarity: UNCOMMON
+    level: 4
+    drop: false
+    unbreakable: true
+    hide-stats: false
+    classes:
+    - Mage
+    - Cleric
+    abilities:
+      permissions:
+      - essentials.gamemode
+      right-click:
+        op: true
+        command: "time set day %WORLD%"
+        lore: "Set day"
+      left-click:
+        op: true
+        command: "weather %WORLD% sun"
+        lore: "Clear weather"
+    stats:
+    - DAMAGE +5-10
+    - BOW_DAMAGE +2
+    - HAND_DAMAGE +3
+    - CRIT_CHANCE +2%
+    - CRIT_DAMAGE +30-40%
+    - HEALTH +5
+    - ARMOR +50%
+    - SPEED +30%
+    - JUMP +4

@@ -1,0 +1,73 @@
+firststart: "\n
+&3============================== RPGInventory ================================\n
+&cBefore using &eRPGInventory&c, add changed textures to your server resource-pack\n
+and configure items that can be put in the inventory slots. After that,\n
+set value in the config &eenabled: true\n
+&3============================================================================"
+
+title: "RPG Inventory"
+
+locked.name: "&c&lЗаблокированный слот"
+locked.lore: "&6&oСначала разблокируйте предыдущие слоты"
+
+buyable.name: "&a&lДоступный слот"
+buyable.lore: "&6&oЧтобы приобрести слот, нужно:"
+buyable.money: "&6&o• Иметь %s золота"
+buyable.level: "&6&o• Быть %d уровня"
+
+error.money: "&6&lДля покупки слота не хватает %s золота"
+error.level: "&6&lДля покупки слота нужен %d уровень"
+error.buyable: "&6&lЭтот слот стоит %d золота, чтобы подтвердить его покупку, нажмите на него еще раз в течение 10 секунд"
+error.previous: "&6&lСначала разблокируйте предыдущие слоты"
+error.resource-pack: "&cДля игры на сервере нужно ыогласиться на загрузку текстур!"
+error.rp.force: "&cВыключать ресурс-пак не разрешено."
+error.rp.disabled: "&cВыключать ресурс-пак не разрешено."
+error.rp.already: "&7Ресурс-пак уже %s."
+error.item.level: "&6Требуется &c%s &6уровень"
+error.item.class: "&6Требуется класс &c%s"
+error.mount.owner: "&6Скакун принадлежит %s"
+
+message.buyed: "&a&lВы успешно приобрели слот"
+
+rp.enabled: "включен"
+rp.disabled: "выключен"
+
+chest.cap.name: "&7&lНедоступный слот"
+chest.cap.lore: "&8&oСундук закончился"
+chest.occupied: "&6&lСундук занят другим игроком"
+
+container.chest: "Сундук"
+container.chestDouble: "Большой сундук"
+container.enderchest: "Сундук Эндера"
+
+pet.name: "%s &f[%s]"
+pet.health: "&cЗдоровье: %d"
+pet.damage: "&cУрон: %d"
+pet.speed: "&cСкорость: %d"
+pet.revival.yes: "&bВремя возрождения: %dс"
+pet.revival.no: "&bНе возрождается"
+pet.cooldown: " &a&l&o(%dс)"
+pet.food.value: "&aВосстанавливает: %d HP"
+pet.role.companion: "Компаньон"
+pet.role.mount: "Ездовое животное"
+
+item.level: "&fТребуется %d уровень"
+item.class: "&fТолько для &b%s"
+item.nodrop: "&7Не выпадает при смерти"
+item.left-click: "&aЛКМ - %s"
+item.right-click: "&aПКМ - %s"
+item.hide: "&7&oСвойства скрыты"
+item.unbreakable: "&7Не ломается"
+
+stat.damage: "&cУрон: &7%s"
+stat.bow_damage: "&cУрон (выстрел): &7%s"
+stat.hand_damage: "&cУрон (рука): &7%s"
+stat.health: "&2Здоровье: &7%s"
+stat.armor: "&3Броня: &7%s"
+stat.crit_chance: "&6Шанс крит.: &7%s"
+stat.crit_damage: "&6Крит. урон: &7%s"
+stat.speed: "&9Скорость: &7%s"
+stat.jump: "&9Прыжок: &7%s"
+
+backpack.desc: "&8&oПоместите в слот рюкзака и нажмите &fПКМ"
+backpack.size: "&aРазмер: &7%d"

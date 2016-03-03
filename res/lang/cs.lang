@@ -1,0 +1,73 @@
+firststart: "\n
+&3============================== RPGInventory ================================\n
+&cBefore using &eRPGInventory&c, add changed textures to your server resource-pack\n
+and configure items that can be put in the inventory slots. After that,\n
+set value in the config &eenabled: true\n
+&3============================================================================"
+
+title: "RPG Inventar"
+
+locked.name: "&c&lZamceny slot"
+locked.lore: "&6&oNejdrive musis odemknout predchozi slot"
+
+buyable.name: "&a&lDostupny slot"
+buyable.lore: "&6&oAby si odemkl slot musis:"
+buyable.money: "&6&o• mit %s goldu"
+buyable.level: "&6&o• byt %d lvl"
+
+error.money: "&6&lAby si mohl odemknout slot jeste potrebujes %s gold"
+error.level: "&6&lAby si mohl odemknout slot potrebujes %d lvlu"
+error.buyable: "&6&lOdemknuti tohoto slotu te bude stat %d gold. Klikni na to znova do 10 vterin aby si potvrdil odemceni."
+error.previous: "&6&lNejdrive odemkni predchozi sloty"
+error.rp.denied: "&cMusis povolit stazeni resource-packu!"
+error.rp.force: "&cVypnuti resource-packu neni povoleno!"
+error.rp.disabled: "&cZapnuti resource-packu neni povoleno!"
+error.rp.already: "&7Resource-pack is already %s."
+error.item.level: "&6Vyzaduje &c%s &6level"
+error.item.class: "&6Vyzaduje tridu &c%s"
+error.mount.owner: "&6Zvire patri %"
+
+message.buyed: "&a&lUspesne jsi zakoupil slot"
+
+rp.enabled: "povolen"
+rp.disabled: "zakázan"
+
+chest.cap.name: "&7&lSlot neni k dispozici"
+chest.cap.lore: "&8&oTruhla skoncila"
+chest.occupied: "&6&lTruhlu ma otevrenou jiny hrac"
+
+container.chest: "Truhla"
+container.chestDouble: "Velka truhla"
+container.enderchest: "Ender truhla"
+
+pet.name: "%s &f[%s]"
+pet.health: "&cZivoty: %d"
+pet.damage: "&cUtok: %d"
+pet.speed: "&cRychlost: %d"
+pet.revival.yes: "&bOzivovaci doba: %ds"
+pet.revival.no: "&bNeozivuje se"
+pet.cooldown: " &a&l&o(%ds)"
+pet.food.value: "&aObnovi: %d Zivota"
+pet.role.companion: "Spolecnik"
+pet.role.mount: "Jezdec"
+
+item.level: "&fVyzaduje %d level"
+item.class: "&fJen pro &b%s"
+item.nodrop: "&7Nevypadne pri smrti"
+item.left-click: "&aLMB - %s"
+item.right-click: "&aRMB - %s"
+item.hide: "&7&oItem stats are hidden"
+item.unbreakable: "&7Unbreakable item"
+
+stat.damage: "&cUtok: &7%s"
+stat.bow_damage: "&cUtok (na dalku): &7%s"
+stat.hand_damage: "&cUtok (na blizko): &7%s"
+stat.health: "&2Zivoty: &7%s"
+stat.armor: "&3Brneni: &7%s"
+stat.crit_chance: "&6Sance na kriticky utok: &7%s"
+stat.crit_damage: "&6Poskozeni kritickym utokem: &7%s"
+stat.speed: "&9Rychlost: &7%s"
+stat.jump: "&9Skoky: &7%s"
+
+backpack.desc: "&8&oPrendej ho do spravneho slotu v RPG inventari"
+backpack.size: "&aKapacita: &7%d"
