@@ -29,11 +29,18 @@ class StatsUpdater extends BukkitRunnable {
         Modifier healthModifier = ItemManager.getModifier(this.player, ItemStat.StatType.HEALTH, false);
         double oldHealth = this.player.getMaxHealth();
         double newHealth = (inventoryWrapper.getBaseHealth() + healthModifier.getBonus()) * healthModifier.getMultiplier();
+        double currentHealth = this.player.getHealth();
         this.player.setMaxHealth(newHealth);
 
         if (newHealth > oldHealth) {
-            this.player.setHealth(this.player.getHealth() + newHealth - oldHealth);
+            currentHealth = currentHealth + newHealth - oldHealth;
+        } else if (newHealth < oldHealth) {
+            currentHealth = currentHealth - oldHealth + newHealth;
+            if (currentHealth < 1) {
+                currentHealth = 1;
+            }
         }
+        this.player.setHealth(currentHealth);
 
         // Update speed
         this.player.setWalkSpeed(inventoryWrapper.getBaseSpeed() * ItemManager.getModifier(this.player, ItemStat.StatType.SPEED, false).getMultiplier());
