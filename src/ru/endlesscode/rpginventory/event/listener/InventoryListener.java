@@ -136,18 +136,23 @@ public class InventoryListener implements Listener {
     }
 
     private void onItemDisappeared(PlayerEvent event) {
-        Player player = event.getPlayer();
-        PlayerInventory inventory = player.getInventory();
+        final Player player = event.getPlayer();
+        final PlayerInventory inventory = player.getInventory();
 
         if (!InventoryManager.playerIsLoaded(player)) {
             return;
         }
 
-        int slotId = inventory.getHeldItemSlot();
-        Slot slot = InventoryManager.getQuickSlot(slotId);
+        final int slotId = inventory.getHeldItemSlot();
+        final Slot slot = InventoryManager.getQuickSlot(slotId);
         if (slot != null) {
-            InventoryUtils.heldFreeSlot(player, slotId, InventoryUtils.SearchType.NEXT);
-            inventory.setItem(slotId, slot.getCup());
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    InventoryUtils.heldFreeSlot(player, slotId, InventoryUtils.SearchType.NEXT);
+                    inventory.setItem(slotId, slot.getCup());
+                }
+            }.runTaskLater(RPGInventory.getInstance(), 1);
         }
     }
 
@@ -234,18 +239,19 @@ public class InventoryListener implements Listener {
 
         // Crafting area
         if (inventory.getType() == InventoryType.CRAFTING) {
-            if (InventoryManager.get(player).isOpened()
-                    || (Config.getConfig().getBoolean("alternate-view.enable-craft") && !ResourcePackManager.isLoadedResourcePack(player))) {
+            if (InventoryManager.get(player).isOpened()) {
                 return;
             }
 
-            switch (event.getSlotType()) {
-                case RESULT:
-                    InventoryManager.get(player).openInventory(true);
-                case ARMOR:
-                case CRAFTING:
-                    event.setCancelled(true);
-                    return;
+            if (!Config.getConfig().getBoolean("alternate-view.enable-craft") || ResourcePackManager.isLoadedResourcePack(player)) {
+                switch (event.getSlotType()) {
+                    case RESULT:
+                        InventoryManager.get(player).openInventory(true);
+                    case ARMOR:
+                    case CRAFTING:
+                        event.setCancelled(true);
+                        return;
+                }
             }
         }
 
