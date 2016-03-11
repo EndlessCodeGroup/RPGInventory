@@ -8,8 +8,6 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import ru.endlesscode.rpginventory.RPGInventory;
 import ru.endlesscode.rpginventory.api.InventoryAPI;
-import ru.endlesscode.rpginventory.inventory.InventoryManager;
-import ru.endlesscode.rpginventory.inventory.InventoryWrapper;
 import ru.endlesscode.rpginventory.misc.Config;
 import ru.endlesscode.rpginventory.misc.FileLanguage;
 import ru.endlesscode.rpginventory.utils.ItemUtils;
@@ -118,20 +116,7 @@ public class ItemManager {
         return false;
     }
 
-    public static void updateStats(@NotNull Player player) {
-        InventoryWrapper inventoryWrapper = InventoryManager.get(player);
-
-        inventoryWrapper.clearPermissions();
-        List<ItemStack> items = new ArrayList<>(inventoryWrapper.getInventory().getContents().length + 1);
-        Collections.addAll(items, inventoryWrapper.getInventory().getContents());
-        items.add(player.getItemInHand());
-        for (ItemStack item : items) {
-            if (CustomItem.isCustomItem(item)) {
-                CustomItem customItem = ItemManager.getCustomItem(item);
-                customItem.onEquip(player);
-            }
-        }
-
+    public static void updateStats(@NotNull final Player player) {
         new StatsUpdater(player).runTaskLater(RPGInventory.getInstance(), 1);
     }
 
