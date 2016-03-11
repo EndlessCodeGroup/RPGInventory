@@ -340,7 +340,10 @@ public class ItemListener implements Listener {
             return;
         }
 
-        ItemManager.updateStats(player);
+        ItemStack item = event.getItem().getItemStack();
+        if (CustomItem.isCustomItem(item)) {
+            ItemManager.updateStats(player);
+        }
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
