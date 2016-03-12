@@ -148,10 +148,11 @@ class CommandExecutor {
         }
     }
 
-    public static void reloadPlugin() {
+    public static void reloadPlugin(CommandSender sender) {
         PluginManager pm = RPGInventory.getInstance().getServer().getPluginManager();
         pm.disablePlugin(RPGInventory.getInstance());
         pm.enablePlugin(RPGInventory.getInstance());
+        sender.sendMessage(StringUtils.coloredLine("&e[RPGInventory] Plugin successfully reloaded!"));
     }
 
     public static void openInventory(CommandSender sender) {

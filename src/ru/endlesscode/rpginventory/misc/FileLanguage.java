@@ -7,7 +7,10 @@ import org.jetbrains.annotations.NotNull;
 import ru.endlesscode.rpginventory.RPGInventory;
 import ru.endlesscode.rpginventory.utils.StringUtils;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.net.URL;
 import java.security.CodeSource;
 import java.util.ArrayList;
@@ -83,12 +86,11 @@ public class FileLanguage {
 
         this.lang = YamlConfiguration.loadConfiguration(this.langFile);
 
-        try {
-            Reader defaultLangStream = new InputStreamReader(
-                    this.plugin.getResource("lang/" + (this.getSupportedLocales().contains(locale) ? locale : "en") + ".lang"), "UTF8");
+        try (Reader defaultLangStream = new InputStreamReader(
+                this.plugin.getResource("lang/" + (this.getSupportedLocales().contains(locale) ? locale : "en") + ".lang"), "UTF8")) {
             YamlConfiguration defaultLang = YamlConfiguration.loadConfiguration(defaultLangStream);
             this.lang.setDefaults(defaultLang);
-        } catch (UnsupportedEncodingException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }

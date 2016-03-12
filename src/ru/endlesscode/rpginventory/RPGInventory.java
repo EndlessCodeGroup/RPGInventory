@@ -21,6 +21,7 @@ import ru.endlesscode.rpginventory.inventory.InventoryManager;
 import ru.endlesscode.rpginventory.inventory.ResourcePackManager;
 import ru.endlesscode.rpginventory.inventory.backpack.BackpackManager;
 import ru.endlesscode.rpginventory.inventory.chest.ChestManager;
+import ru.endlesscode.rpginventory.inventory.slot.SlotManager;
 import ru.endlesscode.rpginventory.item.ItemManager;
 import ru.endlesscode.rpginventory.misc.Config;
 import ru.endlesscode.rpginventory.misc.FileLanguage;
@@ -134,6 +135,7 @@ public class RPGInventory extends JavaPlugin {
         BackpackManager.init();
         ChestManager.init();
         ItemManager.init();
+        SlotManager.init();
 
         // Enabling pets
         if (PetManager.isEnabled()) {
@@ -255,7 +257,7 @@ public class RPGInventory extends JavaPlugin {
                         CommandExecutor.printList(sender, args[1]);
                         return true;
                     } else if (args[0].equals("reload")) {
-                        CommandExecutor.reloadPlugin();
+                        CommandExecutor.reloadPlugin(sender);
                         return true;
                     } else if (args[0].equals("update")) {
                         this.updatePlugin(sender);

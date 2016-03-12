@@ -227,6 +227,10 @@ public class PetManager {
 
     @Nullable
     public static PetType getPetFromEntity(@NotNull Tameable entity) {
+        if (!entity.isTamed() || entity.getOwner() == null) {
+            return null;
+        }
+
         OfflinePlayer player = (OfflinePlayer) entity.getOwner();
         InventoryWrapper inventoryWrapper = InventoryManager.get(player);
 

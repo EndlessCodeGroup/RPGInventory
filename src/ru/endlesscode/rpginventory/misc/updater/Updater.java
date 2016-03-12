@@ -1,15 +1,18 @@
 package ru.endlesscode.rpginventory.misc.updater;
 
+import org.apache.commons.codec.binary.Base64;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.jetbrains.annotations.Nullable;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
-import sun.misc.BASE64Decoder;
+import ru.endlesscode.rpginventory.RPGInventory;
 
 import javax.crypto.Cipher;
+import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.*;
 import java.math.BigInteger;
@@ -17,7 +20,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.security.DigestOutputStream;
-import java.security.GeneralSecurityException;
 import java.security.MessageDigest;
 import java.util.Enumeration;
 import java.util.logging.Level;
@@ -61,7 +63,7 @@ public class Updater {
     // Remote description
     private static final String DESCRIPTION_VALUE = "description";
     // Path to GET
-    private static final String QUERY = "/files/update.php";
+    private static final String QUERY = "/updates/update.php";
     // Slugs will be appended to this to get to the project's RSS feed
     private static final String HOST = "http://rpginventory.endlesscode.ru";
     // User-agent when querying Curse
@@ -96,7 +98,7 @@ public class Updater {
     // The provided callback (if any)
     private final UpdateCallback callback;
     // Secret key
-    private final byte[] secretKey = {52, 68, 49, 68, 65, 51, 49, 51, 54, 54, 66, 65, 67, 66, 51, 69};
+    private final String secretKey = "BA8F94F2D6TF3ETR";
 
     /* Collected from Curse API */
 
@@ -270,6 +272,31 @@ public class Updater {
             } catch (final InterruptedException e) {
                 this.plugin.getLogger().log(Level.SEVERE, null, e);
             }
+        }
+    }
+
+    /**
+     * Save an update from dev.bukkit.org into the server's update folder.
+     *
+     * @param file the name of the file to save it as.
+     */
+    private void saveFile(String file) {
+        final File folder = this.updateFolder;
+
+        deleteOldFiles();
+        if (!folder.exists()) {
+            this.fileIOOrError(folder, folder.mkdir(), true);
+        }
+        downloadFile();
+
+        // Check to see if it's a zip file, if it is, unzip it.
+        final File dFile = new File(folder.getAbsolutePath(), file);
+        if (dFile.getName().endsWith(".zip")) {
+            // Unzip
+            this.unzip(dFile.getAbsolutePath());
+        }
+        if (this.announce) {
+            this.plugin.getLogger().info("Finished updating.");
         }
     }
 
@@ -566,25 +593,19 @@ public class Updater {
             conn.addRequestProperty("User-Agent", Updater.USER_AGENT);
             conn.setDoOutput(true);
 
-            final BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-            final String rawResponse = reader.readLine();
-            final String response;
+            BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            String rawResponse = reader.readLine();
 
             // Decrypt
-            try {
-                SecretKeySpec keySpec = new SecretKeySpec(this.secretKey, "AES");
+            String key = "FD257C442CB15548";
+            String iv = "C2C19FA1B3123A9B";
+            String response = decrypt(rawResponse, key, iv);
 
-                Cipher cipher = Cipher.getInstance("AES");
-                cipher.init(Cipher.DECRYPT_MODE, keySpec);
-                response = new String(cipher.doFinal(new BASE64Decoder().decodeBuffer(rawResponse)));
-            } catch (GeneralSecurityException e) {
-                this.result = UpdateResult.FAIL_DBO;
-                this.plugin.getLogger().log(Level.SEVERE, "Error while decryption:", e);
-                return false;
+            if (response == null) {
+                RPGInventory.getPluginLogger().warning("Cannot take data from update server!");
             }
 
-            final JSONArray array = (JSONArray) JSONValue.parse(response);
-
+            JSONArray array = (JSONArray) JSONValue.parse(response);
             JSONObject latestUpdate = null;
             for (int i = array.size() - 1; i >= 0; i--) {
                 JSONObject update = (JSONObject) array.get(i);
@@ -764,5 +785,21 @@ public class Updater {
         public void run() {
             runUpdater();
         }
+    }
+
+    @Nullable
+    public static String decrypt(String strToEncrypt, String key, String iv) {
+        try {
+            Cipher cipher = Cipher.getInstance("AES/CBC/NoPadding");
+            SecretKeySpec keySpec = new SecretKeySpec(key.getBytes(), "AES");
+            IvParameterSpec ivSpec = new IvParameterSpec(iv.getBytes());
+            cipher.init(Cipher.DECRYPT_MODE, keySpec, ivSpec);
+            byte[] outText = cipher.doFinal(Base64.decodeBase64(strToEncrypt));
+            return new String(outText).trim();
+        } catch (Exception e) {
+            System.out.println("Error while decrypting: " + e.toString());
+        }
+
+        return null;
     }
 }
