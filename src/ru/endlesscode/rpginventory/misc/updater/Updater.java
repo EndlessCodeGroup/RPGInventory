@@ -1,6 +1,5 @@
 package ru.endlesscode.rpginventory.misc.updater;
 
-import org.apache.commons.codec.binary.Base64;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
@@ -10,6 +9,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 import ru.endlesscode.rpginventory.RPGInventory;
+import sun.misc.BASE64Decoder;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
@@ -203,6 +203,22 @@ public class Updater {
         }
     }
 
+    @Nullable
+    public static String decrypt(String strToEncrypt, String key, String iv) {
+        try {
+            Cipher cipher = Cipher.getInstance("AES/CBC/NoPadding");
+            SecretKeySpec keySpec = new SecretKeySpec(key.getBytes(), "AES");
+            IvParameterSpec ivSpec = new IvParameterSpec(iv.getBytes());
+            cipher.init(Cipher.DECRYPT_MODE, keySpec, ivSpec);
+            byte[] outText = cipher.doFinal(new BASE64Decoder().decodeBuffer(strToEncrypt));
+            return new String(outText).trim();
+        } catch (Exception e) {
+            System.out.println("Error while decrypting: " + e.toString());
+        }
+
+        return null;
+    }
+
     /**
      * Get the result of the update process.
      *
@@ -272,31 +288,6 @@ public class Updater {
             } catch (final InterruptedException e) {
                 this.plugin.getLogger().log(Level.SEVERE, null, e);
             }
-        }
-    }
-
-    /**
-     * Save an update from dev.bukkit.org into the server's update folder.
-     *
-     * @param file the name of the file to save it as.
-     */
-    private void saveFile(String file) {
-        final File folder = this.updateFolder;
-
-        deleteOldFiles();
-        if (!folder.exists()) {
-            this.fileIOOrError(folder, folder.mkdir(), true);
-        }
-        downloadFile();
-
-        // Check to see if it's a zip file, if it is, unzip it.
-        final File dFile = new File(folder.getAbsolutePath(), file);
-        if (dFile.getName().endsWith(".zip")) {
-            // Unzip
-            this.unzip(dFile.getAbsolutePath());
-        }
-        if (this.announce) {
-            this.plugin.getLogger().info("Finished updating.");
         }
     }
 
@@ -785,21 +776,5 @@ public class Updater {
         public void run() {
             runUpdater();
         }
-    }
-
-    @Nullable
-    public static String decrypt(String strToEncrypt, String key, String iv) {
-        try {
-            Cipher cipher = Cipher.getInstance("AES/CBC/NoPadding");
-            SecretKeySpec keySpec = new SecretKeySpec(key.getBytes(), "AES");
-            IvParameterSpec ivSpec = new IvParameterSpec(iv.getBytes());
-            cipher.init(Cipher.DECRYPT_MODE, keySpec, ivSpec);
-            byte[] outText = cipher.doFinal(Base64.decodeBase64(strToEncrypt));
-            return new String(outText).trim();
-        } catch (Exception e) {
-            System.out.println("Error while decrypting: " + e.toString());
-        }
-
-        return null;
     }
 }
