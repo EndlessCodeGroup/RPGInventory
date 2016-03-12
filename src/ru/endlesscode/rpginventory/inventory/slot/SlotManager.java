@@ -56,6 +56,10 @@ public class SlotManager {
         }
     }
 
+    public static void init() {
+        slotManager = new SlotManager();
+    }
+
     public static SlotManager getSlotManager() {
         if (slotManager == null) {
             slotManager = new SlotManager();

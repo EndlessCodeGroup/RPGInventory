@@ -1,11 +1,11 @@
 name: RPGInventory
-version: 1.2.7
+version: 1.2.8
 description: Change inventory how you need
 author: OsipXD
 
 main: ru.endlesscode.rpginventory.RPGInventory
 depend: [ProtocolLib, Vault, LibsDisguises]
-softdepend: [BattleLevels, SkillAPI, Skills, Heroes, RacesAndClasses]
+softdepend: [BattleLevels, Skills, Heroes, RacesAndClasses]
 loadbefore: [SkillAPI]
 
 commands:
