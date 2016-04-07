@@ -20,7 +20,7 @@ import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
 class InventorySerializer {
-    public static void savePlayer(@NotNull Player player, @NotNull InventoryWrapper inventoryWrapper, @NotNull File file) throws IOException {
+    static void savePlayer(@NotNull Player player, @NotNull InventoryWrapper inventoryWrapper, @NotNull File file) throws IOException {
         List<NbtCompound> nbtList = new ArrayList<>();
 
         try (DataOutputStream dataOutput = new DataOutputStream(new GZIPOutputStream(new FileOutputStream(file)))) {
@@ -60,7 +60,7 @@ class InventorySerializer {
         }
     }
 
-    public static InventoryWrapper loadPlayer(@NotNull Player player, @NotNull File file) throws IOException {
+    static InventoryWrapper loadPlayer(@NotNull Player player, @NotNull File file) throws IOException {
         InventoryWrapper inventoryWrapper = new InventoryWrapper(player);
         Inventory inventory = inventoryWrapper.getInventory();
 

@@ -47,7 +47,7 @@ public class Config {
         try {
             config.save(configFile);
         } catch (IOException e) {
-            RPGInventory.getInstance().getLogger().warning(e.getMessage());
+            RPGInventory.getPluginLogger().warning(e.getMessage());
         }
     }
 }

@@ -44,9 +44,8 @@ import java.util.*;
  */
 @SuppressWarnings("ResultOfMethodCallIgnored")
 public class InventoryManager {
-    public static final String TITLE = RPGInventory.getLanguage().getCaption("title");
     public static final int OPEN_ITEM_SLOT = Config.getConfig().getInt("alternate-view.slot") % 9;
-
+    static final String TITLE = RPGInventory.getLanguage().getCaption("title");
     private static final Map<UUID, InventoryWrapper> INVENTORIES = new HashMap<>();
 
     private static ItemStack fillSlot = null;
@@ -111,7 +110,42 @@ public class InventoryManager {
         return !(actionType == InventoryUtils.ActionType.SET || action == InventoryAction.UNKNOWN) || slot.isValidItem(cursor);
     }
 
-    public static void updateQuickSlot(@NotNull Player player, @NotNull Inventory inventory, @NotNull Slot slot, int slotId, InventoryType.SlotType slotType, InventoryAction action, ItemStack currentItem, ItemStack cursor) {
+    public static void updateShieldSlot(@NotNull Player player, @NotNull Inventory inventory, @NotNull Slot slot, int slotId,
+                                        InventoryType.SlotType slotType, InventoryAction action,
+                                        ItemStack currentItem, ItemStack cursor) {
+        InventoryUtils.ActionType actionType = InventoryUtils.getTypeOfAction(action);
+        if (actionType == InventoryUtils.ActionType.GET) {
+            if (slot.isCup(currentItem)) {
+                return;
+            }
+
+            if (slotType == InventoryType.SlotType.QUICKBAR && InventoryAPI.isRPGInventory(inventory)) {
+                inventory.setItem(slot.getSlotId(), slot.getCup());
+            } else {
+                player.getEquipment().setItemInOffHand(new ItemStack(Material.AIR));
+            }
+
+//            action = InventoryAction.SWAP_WITH_CURSOR;
+//            cursor = slot.getCup();
+        } else if (actionType == InventoryUtils.ActionType.SET) {
+            if (slot.isCup(currentItem)) {
+                currentItem = null;
+                action = InventoryAction.PLACE_ALL;
+            }
+
+            if (slotType == InventoryType.SlotType.QUICKBAR && InventoryAPI.isRPGInventory(inventory)) {
+                inventory.setItem(slot.getSlotId(), cursor);
+            } else {
+                player.getEquipment().setItemInOffHand(cursor);
+            }
+        }
+
+        InventoryManager.updateInventory(player, inventory, slotId, slotType, action, currentItem, cursor);
+    }
+
+    public static void updateQuickSlot(@NotNull Player player, @NotNull Inventory inventory, @NotNull Slot slot, int slotId,
+                                       InventoryType.SlotType slotType, InventoryAction action,
+                                       ItemStack currentItem, ItemStack cursor) {
         InventoryUtils.ActionType actionType = InventoryUtils.getTypeOfAction(action);
         if (actionType == InventoryUtils.ActionType.GET) {
             if (slot.isCup(currentItem)) {
@@ -222,6 +256,20 @@ public class InventoryManager {
         }
     }
 
+    public static void syncShieldSlot(@NotNull HumanEntity player, @NotNull Inventory inventory) {
+        Slot slot = SlotManager.getSlotManager().getShieldSlot();
+        if (slot == null) {
+            return;
+        }
+
+        ItemStack itemInHand = player.getEquipment().getItemInOffHand();
+        if (itemInHand.getType() == Material.AIR) {
+            inventory.setItem(slot.getSlotId(), slot.getCup());
+        } else {
+            inventory.setItem(slot.getSlotId(), itemInHand);
+        }
+    }
+
     private static void updateInventory(@NotNull Player player, @NotNull Inventory inventory, int slot, InventoryAction action, ItemStack currentItem, @NotNull ItemStack cursor) {
         InventoryManager.updateInventory(player, inventory, slot, InventoryType.SlotType.CONTAINER, action, currentItem, cursor);
     }
@@ -277,7 +325,9 @@ public class InventoryManager {
         }
 
         if (slotType == InventoryType.SlotType.QUICKBAR) {
-            player.getInventory().setItem(slot, currentItem);
+            if (slot < 9) { // Exclude shield
+                player.getInventory().setItem(slot, currentItem);
+            }
         } else {
             inventory.setItem(slot, currentItem);
         }
@@ -286,9 +336,19 @@ public class InventoryManager {
         player.updateInventory();
     }
 
-    public static void lockEmptySlots(@NotNull Player player) {
+    static void lockEmptySlots(@NotNull Player player) {
         lockEmptySlots(player, INVENTORIES.get(player.getUniqueId()).getInventory());
     }
+
+//    static void lockShieldSlot(@NotNull Player player) {
+//        Slot shieldSlot = SlotManager.getSlotManager().getShieldSlot();
+//        if (shieldSlot == null) {
+//            return;
+//        }
+//
+//        int shieldSlotId = shieldSlot.getSlotId();
+//        if (player.getInventory())
+//    }
 
     @SuppressWarnings("WeakerAccess")
     public static void lockEmptySlots(@NotNull Player player, @NotNull Inventory inventory) {
@@ -304,7 +364,7 @@ public class InventoryManager {
         }
     }
 
-    public static void unlockEmptySlots(@NotNull Player player) {
+    static void unlockEmptySlots(@NotNull Player player) {
         Inventory inventory = INVENTORIES.get(player.getUniqueId()).getInventory();
 
         for (int i = 0; i < inventory.getSize(); i++) {
@@ -330,9 +390,10 @@ public class InventoryManager {
         return null;
     }
 
-    public static void lockQuickSlots(@NotNull Player player) {
+    static void lockQuickSlots(@NotNull Player player) {
         for (Slot quickSlot : SlotManager.getSlotManager().getQuickSlots()) {
             int slotId = quickSlot.getQuickSlot();
+
             if (player.getInventory().getItem(slotId) == null || player.getInventory().getItem(slotId).getType() == Material.AIR) {
                 player.getInventory().setItem(slotId, quickSlot.getCup());
             }
@@ -345,7 +406,7 @@ public class InventoryManager {
         }
     }
 
-    public static void unlockQuickSlots(@NotNull Player player) {
+    static void unlockQuickSlots(@NotNull Player player) {
         for (Slot quickSlot : SlotManager.getSlotManager().getQuickSlots()) {
             int slotId = quickSlot.getQuickSlot();
             if (quickSlot.isCup(player.getInventory().getItem(slotId))) {

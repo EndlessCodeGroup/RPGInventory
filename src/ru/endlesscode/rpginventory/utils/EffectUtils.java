@@ -70,14 +70,18 @@ public class EffectUtils {
     public static void playSpawnEffect(@NotNull Entity entity) {
         Location loc = entity.getLocation();
 
-        entity.getWorld().playSound(loc, Sound.ENDERMAN_TELEPORT, 1, (float) (1.2 + Math.random() * 0.4));
+        entity.getWorld().playSound(loc,
+                VersionHandler.is1_9() ? Sound.ENTITY_ENDERMEN_TELEPORT : Sound.valueOf("ENDERMAN_TELEPORT"),
+                1, (float) (1.2 + Math.random() * 0.4));
         playParticlesToAll(EnumWrappers.Particle.EXPLOSION_LARGE, 3, loc);
     }
 
     public static void playDespawnEffect(@NotNull Entity entity) {
         Location loc = entity.getLocation();
 
-        entity.getWorld().playSound(loc, Sound.ENDERMAN_TELEPORT, 1, (float) (0.6 + Math.random() * 0.4));
+        entity.getWorld().playSound(loc,
+                VersionHandler.is1_9() ? Sound.ENTITY_ENDERMEN_TELEPORT : Sound.valueOf("ENDERMAN_TELEPORT"),
+                1, (float) (0.6 + Math.random() * 0.4));
         playParticlesToAll(EnumWrappers.Particle.SMOKE_NORMAL, 3, loc);
     }
 }

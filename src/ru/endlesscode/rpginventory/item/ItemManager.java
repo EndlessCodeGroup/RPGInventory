@@ -10,6 +10,7 @@ import ru.endlesscode.rpginventory.RPGInventory;
 import ru.endlesscode.rpginventory.api.InventoryAPI;
 import ru.endlesscode.rpginventory.misc.Config;
 import ru.endlesscode.rpginventory.misc.FileLanguage;
+import ru.endlesscode.rpginventory.nms.VersionHandler;
 import ru.endlesscode.rpginventory.utils.ItemUtils;
 import ru.endlesscode.rpginventory.utils.PlayerUtils;
 import ru.endlesscode.rpginventory.utils.StringUtils;
@@ -43,7 +44,7 @@ public class ItemManager {
             CustomItem customItem = new CustomItem(key, itemsConfig.getConfigurationSection("items." + key));
             CUSTOM_ITEMS.put(key, customItem);
         }
-        RPGInventory.getInstance().getLogger().info(CUSTOM_ITEMS.size() + " item(s) has been loaded");
+        RPGInventory.getPluginLogger().info(CUSTOM_ITEMS.size() + " item(s) has been loaded");
     }
 
     public static Modifier getModifier(@NotNull Player player, ItemStat.StatType statType, boolean notifyPlayer) {
@@ -53,9 +54,17 @@ public class ItemManager {
         List<ItemStack> items = new ArrayList<>(InventoryAPI.getPassiveItems(player));
         Collections.addAll(items, player.getInventory().getArmorContents());
 
-        ItemStack itemInHand = player.getItemInHand();
+        //noinspection deprecation
+        ItemStack itemInHand = (VersionHandler.is1_9()) ? player.getEquipment().getItemInMainHand() : player.getItemInHand();
         if (CustomItem.isCustomItem(itemInHand) && ItemManager.allowedForPlayer(player, itemInHand, notifyPlayer)) {
             items.add(itemInHand);
+        }
+
+        if (VersionHandler.is1_9()) {
+            itemInHand = player.getEquipment().getItemInOffHand();
+            if (CustomItem.isCustomItem(itemInHand) && ItemManager.allowedForPlayer(player, itemInHand, notifyPlayer)) {
+                items.add(itemInHand);
+            }
         }
 
         for (ItemStack item : items) {

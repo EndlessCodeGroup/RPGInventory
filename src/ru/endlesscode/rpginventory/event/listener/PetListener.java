@@ -27,6 +27,7 @@ import ru.endlesscode.rpginventory.inventory.InventoryWrapper;
 import ru.endlesscode.rpginventory.inventory.slot.Slot;
 import ru.endlesscode.rpginventory.inventory.slot.SlotManager;
 import ru.endlesscode.rpginventory.misc.Config;
+import ru.endlesscode.rpginventory.nms.VersionHandler;
 import ru.endlesscode.rpginventory.pet.PetFood;
 import ru.endlesscode.rpginventory.pet.PetManager;
 import ru.endlesscode.rpginventory.pet.PetType;
@@ -55,7 +56,12 @@ public class PetListener implements Listener {
 
             if (player.getGameMode() == GameMode.CREATIVE && PetManager.isPetItem(petItem)) {
                 petItem = PetManager.toPetItem(petItem);
-                player.setItemInHand(petItem);
+                if (VersionHandler.is1_9()) {
+                    player.getEquipment().setItemInMainHand(petItem);
+                } else {
+                    //noinspection deprecation
+                    player.setItemInHand(petItem);
+                }
             }
 
             if (PetType.isPetItem(petItem) && (event.getAction() == Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.RIGHT_CLICK_AIR)) {
@@ -63,7 +69,12 @@ public class PetListener implements Listener {
                 if (petSlot != null && petSlot.isCup(inventory.getItem(PetManager.getPetSlotId()))) {
                     inventory.setItem(PetManager.getPetSlotId(), event.getItem());
                     PetManager.spawnPet(player, petItem);
-                    player.getInventory().setItemInHand(null);
+                    if (VersionHandler.is1_9()) {
+                        player.getEquipment().setItemInMainHand(null);
+                    } else {
+                        //noinspection deprecation
+                        player.setItemInHand(null);
+                    }
                 }
 
                 event.setCancelled(true);
@@ -88,7 +99,7 @@ public class PetListener implements Listener {
     @EventHandler
     public void onPetFeed(PlayerInteractEntityEvent event) {
         Player player = event.getPlayer();
-        ItemStack itemInHand = player.getItemInHand();
+        @SuppressWarnings("deprecation") ItemStack itemInHand = (VersionHandler.is1_9()) ? player.getEquipment().getItemInMainHand() : player.getItemInHand();
 
         if (!InventoryManager.playerIsLoaded(player)) {
             return;
@@ -108,8 +119,16 @@ public class PetListener implements Listener {
             double health = pet.getHealth() + petFood.getValue();
             pet.setHealth(health < pet.getMaxHealth() ? health : pet.getMaxHealth());
             itemInHand.setAmount(itemInHand.getAmount() - 1);
-            player.setItemInHand(itemInHand);
-            pet.getWorld().playSound(pet.getLocation(), Sound.EAT, 1.0f, (float) (1.0 + Math.random() * 0.4));
+            if (VersionHandler.is1_9()) {
+                player.getEquipment().setItemInMainHand(itemInHand);
+            } else {
+                //noinspection deprecation
+                player.setItemInHand(itemInHand);
+            }
+
+            pet.getWorld().playSound(pet.getLocation(),
+                    VersionHandler.is1_9() ? Sound.ENTITY_GENERIC_EAT : Sound.valueOf("EAT"),
+                    1.0f, (float) (1.0 + Math.random() * 0.4));
         }
     }
 
@@ -196,7 +215,7 @@ public class PetListener implements Listener {
                 && !Config.getConfig().getBoolean("attack.own-pet")) {
             Tameable ownedEntity = (Tameable) petEntity;
             if (event.getDamager().getType() == EntityType.PLAYER && ownedEntity.isTamed()
-                    && ownedEntity.getOwner().getName().equals(((Player) event.getDamager()).getName())) {
+                    && ownedEntity.getOwner().getName().equals(event.getDamager().getName())) {
                 event.setCancelled(true);
             } else if (event.getDamager().getType() == EntityType.ARROW) {
                 Arrow arrow = (Arrow) event.getDamager();

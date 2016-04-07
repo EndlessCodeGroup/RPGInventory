@@ -12,6 +12,7 @@ import ru.endlesscode.rpginventory.RPGInventory;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
 import ru.endlesscode.rpginventory.inventory.ResourcePackManager;
 import ru.endlesscode.rpginventory.misc.Config;
+import ru.endlesscode.rpginventory.utils.InventoryUtils;
 import ru.endlesscode.rpginventory.utils.ItemUtils;
 import ru.endlesscode.rpginventory.utils.StringUtils;
 
@@ -41,25 +42,29 @@ public class Slot {
     public Slot(String name, @NotNull ConfigurationSection config) {
         this.name = name;
         this.slotType = SlotType.valueOf(config.getString("type"));
-        this.slotIds = config.getIntegerList("slot").size() == 0 ? Collections.singletonList(config.getInt("slot")) : config.getIntegerList("slot");
+        this.slotIds = config.getIntegerList("slot").size() == 0 ? Collections.singletonList(config.getInt("slot"))
+                : config.getIntegerList("slot");
         this.requiredLevel = config.getInt("cost.required-level", 0);
         this.cost = config.getInt("cost.money", 0);
         this.drop = config.getBoolean("drop", true);
 
-        if (slotType != SlotType.ACTIVE && !config.contains("quickbar") || slotType == SlotType.ACTION
-                || slotType == SlotType.PET || slotIds.size() > 1) {
+        int quickSlot = config.contains("quickbar") ? InventoryUtils.getQuickSlot(config.getInt("quickbar")) : -1;
+        if (slotType == SlotType.SHIELD) {
+            this.quickSlot = 9; // Shield slot ID
+        } else if (slotType != SlotType.ACTIVE && quickSlot == -1 || slotType == SlotType.ACTION || slotType == SlotType.PET
+                || slotIds.size() > 1) {
             if (config.contains("quickbar")) {
                 RPGInventory.getPluginLogger().warning("Option \"quickbar\" is ignored for slot \"" + name + "\"!");
             }
             this.quickSlot = -1;
         } else if (Config.getConfig().getBoolean("alternate-view.use-item")
                 && ResourcePackManager.getMode() != ResourcePackManager.Mode.FORCE
-                && config.getInt("quickbar") % 9 == InventoryManager.OPEN_ITEM_SLOT) {
+                && quickSlot == InventoryManager.OPEN_ITEM_SLOT) {
             RPGInventory.getPluginLogger().warning("Option \"quickbar\" is ignored for slot \"" + name + "\"!");
-            RPGInventory.getPluginLogger().warning("Slot " + config.getInt("quickbar") % 9 + " already reserved for inventory open item.");
+            RPGInventory.getPluginLogger().warning("Slot " + quickSlot + " already reserved for inventory open item.");
             this.quickSlot = -1;
         } else {
-            this.quickSlot = config.getInt("quickbar") % 9;
+            this.quickSlot = quickSlot;
         }
 
         for (String item : config.getStringList("items")) {
@@ -124,7 +129,7 @@ public class Slot {
         return this.cup.equals(itemStack);
     }
 
-    public boolean containsSlot(int slot) {
+    boolean containsSlot(int slot) {
         return this.slotIds.contains(slot);
     }
 
@@ -165,7 +170,7 @@ public class Slot {
     }
 
     public boolean isQuick() {
-        return this.quickSlot != -1;
+        return this.quickSlot != -1 && this.slotType != SlotType.SHIELD;
     }
 
     @NotNull
@@ -189,6 +194,7 @@ public class Slot {
         ARMOR,
         ACTIVE,
         BACKPACK,
-        PASSIVE
+        PASSIVE,
+        SHIELD
     }
 }

@@ -10,6 +10,7 @@ import ru.endlesscode.rpginventory.RPGInventory;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
 import ru.endlesscode.rpginventory.inventory.ResourcePackManager;
 import ru.endlesscode.rpginventory.misc.Config;
+import ru.endlesscode.rpginventory.nms.VersionHandler;
 
 import java.io.File;
 import java.io.IOException;
@@ -51,7 +52,7 @@ public class SlotManager {
             if (this.validateSlot(slot)) {
                 this.slots.add(slot);
             } else {
-                RPGInventory.getInstance().getLogger().warning("Slot " + slot.getName() + " not been added.");
+                RPGInventory.getPluginLogger().warning("Slot " + slot.getName() + " not been added.");
             }
         }
     }
@@ -69,24 +70,32 @@ public class SlotManager {
     }
 
     private boolean validateSlot(@NotNull Slot slot) {
-        if ((slot.getSlotType() == Slot.SlotType.ACTIVE || slot.getSlotType() == Slot.SlotType.PET
+        if (slot.getSlotType() == Slot.SlotType.SHIELD && !VersionHandler.is1_9()) {
+            RPGInventory.getPluginLogger().warning("Slot type SHIELD available only since Minecraft 1.9");
+            return false;
+        }
+
+        if ((slot.getSlotType() == Slot.SlotType.ACTIVE || slot.getSlotType() == Slot.SlotType.PET || slot.getSlotType() == Slot.SlotType.SHIELD
                 || slot.getSlotType() == Slot.SlotType.BACKPACK || slot.getSlotType() == Slot.SlotType.ARMOR)
                 && slot.getSlotIds().size() > 1) {
-            RPGInventory.getInstance().getLogger().warning("Slot with type " + slot.getSlotType() + " can not contain more than one slotId");
+            RPGInventory.getPluginLogger().warning("Slot with type " + slot.getSlotType()
+                    + " can not contain more than one slotId");
             return false;
         }
 
         if (slot.isQuick() && ResourcePackManager.getMode() != ResourcePackManager.Mode.FORCE
                 && Config.getConfig().getBoolean("alternate-view.use-item")
                 && slot.getQuickSlot() == InventoryManager.OPEN_ITEM_SLOT) {
-            RPGInventory.getInstance().getLogger().warning("Quickbar slot " + slot.getQuickSlot() + " is reserved for inventory item");
+            RPGInventory.getPluginLogger().warning("Quickbar slot " + slot.getQuickSlot()
+                    + " is reserved for inventory item");
             return false;
         }
 
         for (Slot existingSlot : this.slots) {
             for (int slotId : slot.getSlotIds()) {
                 if (existingSlot.getSlotIds().contains(slotId)) {
-                    RPGInventory.getInstance().getLogger().warning("Slot " + slotId + " is occupied by " + existingSlot.getName());
+                    RPGInventory.getPluginLogger().warning("Slot " + slotId + " is occupied by "
+                            + existingSlot.getName());
                     return false;
                 }
             }
@@ -95,13 +104,15 @@ public class SlotManager {
                 int slotId = slot.getQuickSlot();
                 int existingSlotId = existingSlot.getQuickSlot();
                 if (slotId == existingSlotId) {
-                    RPGInventory.getInstance().getLogger().warning("Quickbar slot " + slotId + " is occupied by " + existingSlot.getName());
+                    RPGInventory.getPluginLogger().warning("Quickbar slot " + slotId + " is occupied by " + existingSlot.getName());
                     return false;
                 }
             }
 
-            if (slot.getSlotType() == Slot.SlotType.PET && existingSlot.getSlotType() == Slot.SlotType.PET) {
-                RPGInventory.getInstance().getLogger().warning("You can not create more then one pet!");
+            if ((slot.getSlotType() == Slot.SlotType.PET || slot.getSlotType() == Slot.SlotType.SHIELD)
+                    && slot.getSlotType() == existingSlot.getSlotType()) {
+                RPGInventory.getPluginLogger().warning("You can not create more then one slot with type " +
+                        slot.getSlotType() + "!");
                 return false;
             }
         }
@@ -124,7 +135,7 @@ public class SlotManager {
     public Slot getSlot(int slotId, InventoryType.SlotType slotType) {
         for (Slot slot : this.slots) {
             if (slotType == InventoryType.SlotType.QUICKBAR) {
-                if (slot.isQuick() && slot.getQuickSlot() == slotId) {
+                if ((slot.isQuick() || slot.getSlotType() == Slot.SlotType.SHIELD) && slot.getQuickSlot() == slotId) {
                     return slot;
                 }
             } else if (slot.containsSlot(slotId)) {
@@ -136,14 +147,14 @@ public class SlotManager {
     }
 
     public List<Slot> getQuickSlots() {
-        List<Slot> activeSlots = new ArrayList<>();
+        List<Slot> quickSlots = new ArrayList<>();
         for (Slot slot : this.slots) {
             if (slot.isQuick()) {
-                activeSlots.add(slot);
+                quickSlots.add(slot);
             }
         }
 
-        return activeSlots;
+        return quickSlots;
     }
 
     public List<Slot> getPassiveSlots() {
@@ -194,6 +205,17 @@ public class SlotManager {
         return null;
     }
 
+    @Nullable
+    public Slot getShieldSlot() {
+        for (Slot slot : this.slots) {
+            if (slot.getSlotType() == Slot.SlotType.SHIELD) {
+                return slot;
+            }
+        }
+
+        return null;
+    }
+
     public int getHelmetSlotId() {
         return this.getArmorId(ArmorType.HELMET);
     }
@@ -223,7 +245,7 @@ public class SlotManager {
         }
     }
 
-    enum ArmorType {
+    private enum ArmorType {
         HELMET,
         CHESTPLATE,
         LEGGINGS,

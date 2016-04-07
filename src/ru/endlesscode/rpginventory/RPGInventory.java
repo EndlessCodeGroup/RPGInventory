@@ -86,6 +86,10 @@ public class RPGInventory extends JavaPlugin {
         return instance.getServer().getPluginManager().isPluginEnabled("SkillAPI");
     }
 
+    public static boolean isMythicMobsEnabled() {
+        return instance.getServer().getPluginManager().isPluginEnabled("MythicMobs");
+    }
+
     public static PlayerUtils.LevelSystem getLevelSystem() {
         return levelSystem;
     }
@@ -123,6 +127,10 @@ public class RPGInventory extends JavaPlugin {
         pm.registerEvents(new ChestListener(), this);
         pm.registerEvents(new WorldListener(), this);
         pm.registerEvents(new ItemListener(), this);
+
+        if (VersionHandler.is1_9()) {
+            pm.registerEvents(new HandSwitchListener(), this);
+        }
 
         if (!VersionHandler.is1_7_10()) {
             ProtocolLibrary.getProtocolManager().addPacketListener(new ResourcePackListener(this));

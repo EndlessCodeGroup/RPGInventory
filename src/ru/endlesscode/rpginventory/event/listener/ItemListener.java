@@ -30,6 +30,7 @@ import ru.endlesscode.rpginventory.item.CustomItem;
 import ru.endlesscode.rpginventory.item.ItemManager;
 import ru.endlesscode.rpginventory.item.ItemStat;
 import ru.endlesscode.rpginventory.item.Modifier;
+import ru.endlesscode.rpginventory.nms.VersionHandler;
 import ru.endlesscode.rpginventory.utils.EffectUtils;
 import ru.endlesscode.rpginventory.utils.ItemUtils;
 
@@ -80,13 +81,17 @@ public class ItemListener implements Listener {
 
         // Attack stats
         Modifier damageModifier;
+        ItemStack itemInHand;
         if (event.getDamager().getType() == EntityType.PLAYER) {
             damager = (Player) event.getDamager();
-            ItemStack itemInHand = damager.getItemInHand();
+            //noinspection deprecation
+            itemInHand = (VersionHandler.is1_9()) ? damager.getEquipment().getItemInMainHand() : damager.getItemInHand();
             damageModifier = ItemManager.getModifier(damager,
                     (itemInHand == null || itemInHand.getType() == Material.AIR) ? ItemStat.StatType.HAND_DAMAGE : ItemStat.StatType.DAMAGE, false);
         } else if (event.getDamager().getType() == EntityType.ARROW && ((Arrow) event.getDamager()).getShooter() instanceof Player) {
             damager = (Player) ((Arrow) event.getDamager()).getShooter();
+            //noinspection deprecation
+            itemInHand = (VersionHandler.is1_9()) ? damager.getEquipment().getItemInMainHand() : damager.getItemInHand();
             damageModifier = ItemManager.getModifier(damager, ItemStat.StatType.BOW_DAMAGE, false);
         } else {
             return;
@@ -96,18 +101,19 @@ public class ItemListener implements Listener {
             return;
         }
 
-        if (!ItemManager.allowedForPlayer(damager, damager.getItemInHand(), true)) {
+        if (!ItemManager.allowedForPlayer(damager, itemInHand, true)) {
             event.setCancelled(true);
             return;
         }
 
-        ItemStack itemInHand = damager.getItemInHand();
         double damage = (CustomItem.isCustomItem(itemInHand) ? 1 : event.getDamage(EntityDamageEvent.DamageModifier.BASE))
                 + damageModifier.getBonus() * damageModifier.getMultiplier();
         float critChance = ItemManager.getModifier(damager, ItemStat.StatType.CRIT_CHANCE, false).getMultiplier() - 1.0f;
         if (Math.random() <= critChance) {
             damage *= ItemManager.getModifier(damager, ItemStat.StatType.CRIT_DAMAGE, false).getMultiplier();
-            damager.getWorld().playSound(event.getEntity().getLocation(), Sound.SUCCESSFUL_HIT, 1, (float) (0.5 + Math.random() * 0.4));
+            damager.getWorld().playSound(event.getEntity().getLocation(),
+                    VersionHandler.is1_9() ? Sound.ENTITY_PLAYER_ATTACK_CRIT : Sound.valueOf("SUCCESSFUL_HIT"),
+                    1, (float) (0.5 + Math.random() * 0.4));
             EffectUtils.playParticlesToAll(EnumWrappers.Particle.CRIT, 10, event.getEntity().getLocation());
         }
 
@@ -196,52 +202,66 @@ public class ItemListener implements Listener {
             return;
         }
 
-        // Saving armor
-        List<ItemStack> armorList = new ArrayList<>();
-        Inventory inventory = InventoryManager.get(player).getInventory();
-        List<Slot> armorSlots = SlotManager.getSlotManager().getArmorSlots();
-        InventoryManager.syncArmor(player, inventory);
-        for (ItemStack armor : player.getInventory().getArmorContents()) {
-            if (!CustomItem.isCustomItem(armor) || ItemManager.getCustomItem(armor).isDrop()) {
-                boolean drop = true;
-                for (Slot slot : armorSlots) {
-                    if (!slot.isDrop() && armor.getType() == (inventory.getItem(slot.getSlotId())).getType()) {
-                        drop = false;
-                        break;
-                    }
-                }
+        List<ItemStack> contents = new ArrayList<>();
+        if (!event.getKeepInventory()) {
+            boolean dropForPlayer = !RPGInventory.getPermissions().has(player, "rpginventory.keep.items");
+            boolean dropArmorForPlayer = !RPGInventory.getPermissions().has(player, "rpginventory.keep.armor");
 
-                if (drop) {
-                    armorList.add(new ItemStack(Material.AIR, 0));
+            // Saving armor
+            List<ItemStack> armorList = new ArrayList<>();
+            Inventory inventory = InventoryManager.get(player).getInventory();
+            List<Slot> armorSlots = SlotManager.getSlotManager().getArmorSlots();
+            InventoryManager.syncArmor(player, inventory);
+            for (ItemStack armor : player.getInventory().getArmorContents()) {
+                if (dropArmorForPlayer && (!CustomItem.isCustomItem(armor) || ItemManager.getCustomItem(armor).isDrop())) {
+                    boolean drop = true;
+                    for (Slot slot : armorSlots) {
+                        if (!slot.isDrop() && armor.getType() == (inventory.getItem(slot.getSlotId())).getType()) {
+                            drop = false;
+                            break;
+                        }
+                    }
+
+                    if (drop) {
+                        armorList.add(new ItemStack(Material.AIR, 0));
+                    } else {
+                        armorList.add(armor);
+                        event.getDrops().remove(armor);
+                    }
                 } else {
                     armorList.add(armor);
                     event.getDrops().remove(armor);
                 }
-            } else {
-                armorList.add(armor);
-                event.getDrops().remove(armor);
             }
-        }
-        ARMORS.put(player.getUniqueId(), armorList.toArray(new ItemStack[armorList.size()]));
+            ARMORS.put(player.getUniqueId(), armorList.toArray(new ItemStack[armorList.size()]));
 
-        // Saving inventory
-        List<ItemStack> contents = new ArrayList<>();
-        for (ItemStack drop : new ArrayList<>(event.getDrops())) {
-            if (CustomItem.isCustomItem(drop) && !ItemManager.getCustomItem(drop).isDrop()) {
-                contents.add(drop);
-                event.getDrops().remove(drop);
+            // Saving quick slots
+            for (Slot slot : SlotManager.getSlotManager().getQuickSlots()) {
+                ItemStack quickItem = player.getInventory().getItem(slot.getQuickSlot());
+                if ((!dropForPlayer || !slot.isDrop()) && !slot.isCup(quickItem)) {
+                    contents.add(quickItem);
+                    event.getDrops().remove(quickItem);
+                }
             }
-        }
+            // Saving shield
+            Slot shieldSlot = SlotManager.getSlotManager().getShieldSlot();
+            if (shieldSlot != null && (!dropForPlayer || !shieldSlot.isDrop())) {
+                ItemStack itemInOffHand = player.getEquipment().getItemInOffHand();
+                if (itemInOffHand.getType() != Material.AIR) {
+                    contents.add(itemInOffHand);
+                    event.getDrops().remove(itemInOffHand);
+                }
+            }
 
-        // Saving quick slots
-        for (Slot slot : SlotManager.getSlotManager().getQuickSlots()) {
-            ItemStack quickItem = player.getInventory().getItem(slot.getQuickSlot());
-            if (!slot.isDrop() && !slot.isCup(quickItem)) {
-                contents.add(quickItem);
-                event.getDrops().remove(quickItem);
+            // Saving inventory
+            for (ItemStack drop : new ArrayList<>(event.getDrops())) {
+                if (CustomItem.isCustomItem(drop) && !ItemManager.getCustomItem(drop).isDrop()) {
+                    contents.add(drop);
+                    event.getDrops().remove(drop);
+                }
             }
+            INVENTORIES.put(player.getUniqueId(), contents.toArray(new ItemStack[contents.size()]));
         }
-        INVENTORIES.put(player.getUniqueId(), contents.toArray(new ItemStack[contents.size()]));
     }
 
     @EventHandler(priority = EventPriority.LOW)

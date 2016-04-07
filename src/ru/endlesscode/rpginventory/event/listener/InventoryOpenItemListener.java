@@ -19,6 +19,7 @@ import ru.endlesscode.rpginventory.event.PlayerInventoryLoadEvent;
 import ru.endlesscode.rpginventory.event.PlayerInventoryUnloadEvent;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
 import ru.endlesscode.rpginventory.inventory.ResourcePackManager;
+import ru.endlesscode.rpginventory.nms.VersionHandler;
 
 import java.util.ArrayList;
 
@@ -33,7 +34,12 @@ public class InventoryOpenItemListener implements Listener {
         Player player = event.getPlayer();
         if (!InventoryManager.playerIsLoaded(player) || ResourcePackManager.isLoadedResourcePack(player)) {
             if (InventoryManager.isInventoryOpenItem(event.getItem())) {
-                player.getInventory().setItemInHand(new ItemStack(Material.AIR));
+                if (VersionHandler.is1_9()) {
+                    player.getEquipment().setItemInMainHand(new ItemStack(Material.AIR));
+                } else {
+                    //noinspection deprecation
+                    player.setItemInHand(new ItemStack(Material.AIR));
+                }
                 event.setCancelled(true);
             }
 

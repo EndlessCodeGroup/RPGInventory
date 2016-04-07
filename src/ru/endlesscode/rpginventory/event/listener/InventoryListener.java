@@ -44,7 +44,6 @@ import ru.endlesscode.rpginventory.utils.PlayerUtils;
  * All rights reserved 2014 - 2015 © «EndlessCode Group»
  */
 public class InventoryListener implements Listener {
-
     @EventHandler(priority = EventPriority.LOW)
     public void onPlayerJoin(final PlayerJoinEvent event) {
         final Player player = event.getPlayer();
@@ -71,12 +70,13 @@ public class InventoryListener implements Listener {
 
         if (!event.getKeepInventory()) {
             Inventory inventory = InventoryManager.get(player).getInventory();
+            boolean dropForPlayer = !RPGInventory.getPermissions().has(player, "rpginventory.keep.all");
 
             int petSlotId = PetManager.getPetSlotId();
             if (PetManager.isEnabled() && inventory.getItem(petSlotId) != null) {
                 Slot petSlot = SlotManager.getSlotManager().getPetSlot();
                 ItemStack petItem = inventory.getItem(petSlotId);
-                if (petSlot != null && petSlot.isDrop() && !petSlot.isCup(petItem)) {
+                if (petSlot != null && petSlot.isDrop() && dropForPlayer && !petSlot.isCup(petItem)) {
                     event.getDrops().add(PetType.clone(petItem));
                     RPGInventory.getInstance().getServer().getPluginManager().callEvent(new PetUnequipEvent(player));
                     inventory.setItem(petSlotId, petSlot.getCup());
@@ -86,7 +86,8 @@ public class InventoryListener implements Listener {
             for (Slot slot : SlotManager.getSlotManager().getPassiveSlots()) {
                 for (int slotId : slot.getSlotIds()) {
                     ItemStack item = inventory.getItem(slotId);
-                    if (!slot.isQuick() && !slot.isCup(item) && slot.isDrop() && (!CustomItem.isCustomItem(item) || ItemManager.getCustomItem(item).isDrop())) {
+                    if (dropForPlayer && !slot.isQuick() && !slot.isCup(item) && slot.isDrop()
+                            && (!CustomItem.isCustomItem(item) || ItemManager.getCustomItem(item).isDrop())) {
                         event.getDrops().add(inventory.getItem(slotId));
                         inventory.setItem(slotId, slot.getCup());
                     }
@@ -169,7 +170,10 @@ public class InventoryListener implements Listener {
             if (quickSlot.isCup(player.getInventory().getItem(slotId)) && quickSlot.isValidItem(event.getItem().getItemStack())) {
                 player.getInventory().setItem(slotId, event.getItem().getItemStack());
                 event.getItem().remove();
-                player.playSound(player.getLocation(), Sound.ITEM_PICKUP, .3f, 1.7f);
+
+                player.playSound(player.getLocation(),
+                        VersionHandler.is1_9() ? Sound.ENTITY_ITEM_PICKUP : Sound.valueOf("ITEM_PICKUP"),
+                        .3f, 1.7f);
                 if (Config.getConfig().getBoolean("attack.auto-held")) {
                     player.getInventory().setHeldItemSlot(quickSlot.getQuickSlot());
                 }
@@ -225,7 +229,7 @@ public class InventoryListener implements Listener {
         }
 
         final int rawSlot = event.getRawSlot();
-        final Slot slot = SlotManager.getSlotManager().getSlot(event.getView().convertSlot(rawSlot), event.getSlotType());
+        final Slot slot = SlotManager.getSlotManager().getSlot(event.getSlot(), event.getSlotType());
         final Inventory inventory = event.getInventory();
         InventoryAction action = event.getAction();
         InventoryUtils.ActionType actionType = InventoryUtils.getTypeOfAction(action);
@@ -257,7 +261,8 @@ public class InventoryListener implements Listener {
 
         // In RPG Inventory or quick slot
         if (InventoryAPI.isRPGInventory(inventory) ||
-                event.getSlotType() == InventoryType.SlotType.QUICKBAR && slot != null && slot.isQuick() && player.getGameMode() != GameMode.CREATIVE) {
+                event.getSlotType() == InventoryType.SlotType.QUICKBAR && slot != null
+                        && (slot.isQuick() || slot.getSlotType() == Slot.SlotType.SHIELD) && player.getGameMode() != GameMode.CREATIVE) {
             if (rawSlot < 54 && slot == null || action == InventoryAction.MOVE_TO_OTHER_INVENTORY) {
                 event.setCancelled(true);
                 return;
@@ -272,26 +277,7 @@ public class InventoryListener implements Listener {
                 inventoryWrapper = (InventoryWrapper) inventory.getHolder();
             }
 
-            if (inventoryWrapper != null) {
-                if (player != inventoryWrapper.getPlayer()) {
-                    event.setCancelled(true);
-                    return;
-                }
-
-                if (!PlayerUtils.checkLevel(player, slot.getRequiredLevel())) {
-                    player.sendMessage(String.format(RPGInventory.getLanguage().getCaption("error.level"), slot.getRequiredLevel()));
-                    event.setCancelled(true);
-                    return;
-                }
-
-                if (!slot.isFree() && !inventoryWrapper.isBuyedSlot(slot.getName()) && !InventoryManager.buySlot(player, inventoryWrapper, slot)) {
-                    event.setCancelled(true);
-                    return;
-                }
-            }
-
-            if ((actionType == InventoryUtils.ActionType.GET && slot.getSlotType() != Slot.SlotType.ACTION
-                    || actionType == InventoryUtils.ActionType.DROP) && slot.isCup(currentItem) && event.getSlotType() != InventoryType.SlotType.QUICKBAR) {
+            if (!validateClick(player, inventoryWrapper, slot, actionType, currentItem, event.getSlotType())) {
                 event.setCancelled(true);
                 return;
             }
@@ -304,44 +290,12 @@ public class InventoryListener implements Listener {
             }
 
             if (inventoryWrapper != null && slot.getSlotType() == Slot.SlotType.ARMOR) {
-                if (InventoryManager.validateArmor(action, slot, cursor)) {
-                    // Event of equip armor
-                    InventoryClickEvent fakeEvent = new InventoryClickEvent((inventoryWrapper.getInventoryView()),
-                            InventoryType.SlotType.ARMOR, InventoryUtils.getArmorSlot(slot), event.getClick(), action);
-                    Bukkit.getPluginManager().callEvent(fakeEvent);
-
-                    if (fakeEvent.isCancelled()) {
-                        event.setCancelled(true);
-                        return;
-                    }
-
-                    InventoryManager.updateArmor(player, inventory, slot, rawSlot, action, currentItem, cursor);
-
-                    if (actionType == InventoryUtils.ActionType.GET) {
-                        inventory.setItem(rawSlot, slot.getCup());
-                    } else if (slot.isCup(currentItem)) {
-                        player.setItemOnCursor(new ItemStack(Material.AIR));
-                    }
-
-                    player.updateInventory();
-                }
-
-                if (actionType == InventoryUtils.ActionType.DROP) {
-                    new BukkitRunnable() {
-                        @Override
-                        public void run() {
-                            inventory.setItem(rawSlot, slot.getCup());
-                            player.updateInventory();
-                        }
-                    }.runTaskLater(RPGInventory.getInstance(), 1);
-                } else {
-                    event.setCancelled(true);
-                }
-
+                onArmorSlotClick(event, inventoryWrapper, slot, cursor, currentItem);
                 return;
             }
 
-            if (slot.getSlotType() == Slot.SlotType.ACTIVE || slot.getSlotType() == Slot.SlotType.PASSIVE) {
+            if (slot.getSlotType() == Slot.SlotType.ACTIVE || slot.getSlotType() == Slot.SlotType.PASSIVE ||
+                    slot.getSlotType() == Slot.SlotType.SHIELD) {
                 event.setCancelled(!InventoryManager.validateUpdate(player, actionType, slot, cursor));
             } else if (slot.getSlotType() == Slot.SlotType.PET) {
                 event.setCancelled(!InventoryManager.validatePet(player, action, currentItem, cursor));
@@ -355,7 +309,12 @@ public class InventoryListener implements Listener {
 
             if (!event.isCancelled()) {
                 if (slot.isQuick()) {
-                    InventoryManager.updateQuickSlot(player, inventory, slot, event.getSlot(), event.getSlotType(), action, currentItem, cursor);
+                    InventoryManager.updateQuickSlot(player, inventory, slot, event.getSlot(), event.getSlotType(),
+                            action, currentItem, cursor);
+                    event.setCancelled(true);
+                } else if (slot.getSlotType() == Slot.SlotType.SHIELD) {
+                    InventoryManager.updateShieldSlot(player, inventory, slot, event.getSlot(), event.getSlotType(),
+                            action, currentItem, cursor);
                     event.setCancelled(true);
                 } else if (actionType == InventoryUtils.ActionType.GET || actionType == InventoryUtils.ActionType.DROP) {
                     new BukkitRunnable() {
@@ -370,6 +329,80 @@ public class InventoryListener implements Listener {
                     event.setCurrentItem(null);
                 }
             }
+        }
+    }
+
+    /**
+     * Check
+     *
+     * @return Click is valid
+     */
+    private boolean validateClick(Player player, InventoryWrapper inventoryWrapper, Slot slot,
+                                  InventoryUtils.ActionType actionType, ItemStack currentItem, InventoryType.SlotType slotType) {
+        if (inventoryWrapper != null) {
+            if (player != inventoryWrapper.getPlayer()) {
+                return false;
+            }
+
+            if (!PlayerUtils.checkLevel(player, slot.getRequiredLevel())) {
+                player.sendMessage(String.format(RPGInventory.getLanguage().getCaption("error.level"), slot.getRequiredLevel()));
+                return false;
+            }
+
+            if (!slot.isFree() && !inventoryWrapper.isBuyedSlot(slot.getName()) && !InventoryManager.buySlot(player, inventoryWrapper, slot)) {
+                return false;
+            }
+        }
+
+        return !((actionType == InventoryUtils.ActionType.GET && slot.getSlotType() != Slot.SlotType.ACTION
+                || actionType == InventoryUtils.ActionType.DROP) && slot.isCup(currentItem) && slotType != InventoryType.SlotType.QUICKBAR);
+    }
+
+    /**
+     * It happens when player click on armor slot
+     */
+    private void onArmorSlotClick(InventoryClickEvent event, InventoryWrapper inventoryWrapper, final Slot slot,
+                                  ItemStack cursor, ItemStack currentItem) {
+        final Player player = inventoryWrapper.getPlayer().getPlayer();
+        final Inventory inventory = event.getInventory();
+        final int rawSlot = event.getRawSlot();
+        InventoryAction action = event.getAction();
+        InventoryUtils.ActionType actionType = InventoryUtils.getTypeOfAction(action);
+
+        if (InventoryManager.validateArmor(action, slot, cursor)) {
+            // Event of equip armor
+            InventoryClickEvent fakeEvent = new InventoryClickEvent((inventoryWrapper.getInventoryView()),
+                    InventoryType.SlotType.ARMOR, InventoryUtils.getArmorSlot(slot), event.getClick(), action);
+            Bukkit.getPluginManager().callEvent(fakeEvent);
+
+            if (fakeEvent.isCancelled()) {
+                event.setCancelled(true);
+                return;
+            }
+
+            InventoryManager.updateArmor(player, inventory, slot, rawSlot, action, currentItem, cursor);
+
+            if (actionType == InventoryUtils.ActionType.GET) {
+                inventory.setItem(rawSlot, slot.getCup());
+            } else if (slot.isCup(currentItem)) {
+                player.setItemOnCursor(new ItemStack(Material.AIR));
+            }
+
+            //noinspection deprecation
+            player.updateInventory();
+        }
+
+        if (actionType == InventoryUtils.ActionType.DROP) {
+            new BukkitRunnable() {
+                @SuppressWarnings("deprecation")
+                @Override
+                public void run() {
+                    inventory.setItem(rawSlot, slot.getCup());
+                    player.updateInventory();
+                }
+            }.runTaskLater(RPGInventory.getInstance(), 1);
+        } else {
+            event.setCancelled(true);
         }
     }
 
@@ -389,6 +422,7 @@ public class InventoryListener implements Listener {
             }
 
             InventoryManager.syncQuickSlots(player, inventory);
+            InventoryManager.syncShieldSlot(player, inventory);
             InventoryManager.syncArmor(player, inventory);
         }
     }
