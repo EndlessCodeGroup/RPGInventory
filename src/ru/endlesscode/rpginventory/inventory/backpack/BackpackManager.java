@@ -39,8 +39,8 @@ public class BackpackManager {
         }
 
         BackpackManager.loadBackpacks();
-        RPGInventory.getInstance().getLogger().info(BACKPACK_TYPES.size() + " backpack type(s) has been loaded");
-        RPGInventory.getInstance().getLogger().info(BACKPACKS.size() + " backpack(s) has been loaded");
+        RPGInventory.getPluginLogger().info(BACKPACK_TYPES.size() + " backpack type(s) has been loaded");
+        RPGInventory.getPluginLogger().info(BACKPACKS.size() + " backpack(s) has been loaded");
     }
 
     public static List<String> getBackpackList() {

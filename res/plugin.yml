@@ -1,5 +1,5 @@
 name: RPGInventory
-version: 1.2.8
+version: 1.2.9
 description: Change inventory how you need
 author: OsipXD
 
@@ -48,3 +48,9 @@ permissions:
     default: op
     children:
       rpginventory.textures: true
+  rpginventory.keep.items:
+    description: Player with this permission will not lose items on dead
+    default: op
+  rpginventory.keep.armor:
+    description: Player with this permission will not lose armor on dead
+    default: op

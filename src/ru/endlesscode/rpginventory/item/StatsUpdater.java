@@ -5,6 +5,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
 import ru.endlesscode.rpginventory.inventory.InventoryWrapper;
+import ru.endlesscode.rpginventory.nms.VersionHandler;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -18,7 +19,7 @@ import java.util.List;
 class StatsUpdater extends BukkitRunnable {
     private final Player player;
 
-    public StatsUpdater(Player player) {
+    StatsUpdater(Player player) {
         this.player = player;
     }
 
@@ -34,7 +35,13 @@ class StatsUpdater extends BukkitRunnable {
         inventoryWrapper.clearPermissions();
         List<ItemStack> items = new ArrayList<>(inventoryWrapper.getInventory().getContents().length + 1);
         Collections.addAll(items, inventoryWrapper.getInventory().getContents());
-        items.add(this.player.getItemInHand());
+        if (VersionHandler.is1_9()) {
+            items.add(this.player.getEquipment().getItemInOffHand());
+            items.add(this.player.getEquipment().getItemInMainHand());
+        } else {
+            //noinspection deprecation
+            items.add(this.player.getItemInHand());
+        }
         for (ItemStack item : items) {
             if (CustomItem.isCustomItem(item)) {
                 CustomItem customItem = ItemManager.getCustomItem(item);
@@ -42,22 +49,7 @@ class StatsUpdater extends BukkitRunnable {
             }
         }
 
-        // Update health
-        Modifier healthModifier = ItemManager.getModifier(this.player, ItemStat.StatType.HEALTH, false);
-        double oldHealth = this.player.getMaxHealth();
-        double newHealth = (inventoryWrapper.getBaseHealth() + healthModifier.getBonus()) * healthModifier.getMultiplier();
-        double currentHealth = this.player.getHealth();
-        this.player.setMaxHealth(newHealth);
-
-        if (newHealth > oldHealth) {
-            currentHealth = currentHealth + newHealth - oldHealth;
-        } else if (newHealth < oldHealth) {
-            currentHealth = currentHealth - oldHealth + newHealth;
-            if (currentHealth < 1) {
-                currentHealth = 1;
-            }
-        }
-        this.player.setHealth(currentHealth);
+        inventoryWrapper.updateHealth();
 
         // Update speed
         this.player.setWalkSpeed(inventoryWrapper.getBaseSpeed() * ItemManager.getModifier(this.player, ItemStat.StatType.SPEED, false).getMultiplier());

@@ -7,8 +7,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.InventoryView;
+import org.bukkit.scheduler.BukkitRunnable;
 import ru.endlesscode.rpginventory.RPGInventory;
 import ru.endlesscode.rpginventory.inventory.backpack.Backpack;
+import ru.endlesscode.rpginventory.item.ItemManager;
+import ru.endlesscode.rpginventory.item.ItemStat;
+import ru.endlesscode.rpginventory.item.Modifier;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,6 +37,7 @@ public class InventoryWrapper implements InventoryHolder {
     private Backpack backpack;
 
     private LivingEntity pet;
+    private Modifier currentHealthModifier = new Modifier(0, 1);
 
     public InventoryWrapper(OfflinePlayer player) {
         this.player = player;
@@ -66,7 +71,7 @@ public class InventoryWrapper implements InventoryHolder {
         player.openInventory(this.inventory);
     }
 
-    public void prepareToBuy() {
+    void prepareToBuy() {
         this.timeWhenPreparedToBuy = System.currentTimeMillis();
     }
 
@@ -86,7 +91,7 @@ public class InventoryWrapper implements InventoryHolder {
         this.setBuyedSlots("{generic}", buyedSlots);
     }
 
-    public void setBuyedSlots(String slotType) {
+    void setBuyedSlots(String slotType) {
         this.setBuyedSlots(slotType, 1);
     }
 
@@ -98,7 +103,7 @@ public class InventoryWrapper implements InventoryHolder {
         return this.buyedSlots.containsKey(slotType);
     }
 
-    public boolean isPreparedToBuy() {
+    boolean isPreparedToBuy() {
         if (this.timeWhenPreparedToBuy == 0 || System.currentTimeMillis() - this.timeWhenPreparedToBuy > 10 * 1000) {
             return false;
         } else {
@@ -127,13 +132,15 @@ public class InventoryWrapper implements InventoryHolder {
         return baseSpeed;
     }
 
-    public double getBaseHealth() {
-        return baseHealth;
-    }
+    void clearStats() {
+        Player player = this.player.getPlayer();
+        player.setWalkSpeed(this.baseSpeed);
 
-    public void clearStats() {
-        this.player.getPlayer().setWalkSpeed(this.baseSpeed);
-        this.player.getPlayer().setMaxHealth(this.baseHealth);
+        if (RPGInventory.isMythicMobsEnabled()) {
+            this.player.getPlayer().setMaxHealth(this.baseHealth);
+        } else {
+            player.setMaxHealth(player.getMaxHealth() / this.currentHealthModifier.getMultiplier() - this.currentHealthModifier.getBonus());
+        }
     }
 
     public Backpack getBackpack() {
@@ -158,5 +165,59 @@ public class InventoryWrapper implements InventoryHolder {
 
     public OfflinePlayer getPlayer() {
         return player;
+    }
+
+    public void updateHealth() {
+        final Player player = this.player.getPlayer();
+        Modifier healthModifier = ItemManager.getModifier(player, ItemStat.StatType.HEALTH, false);
+        final double oldMaxHealth = player.getMaxHealth();
+
+        // TODO: Добавить нормальную интеграцию c MythicMobs
+        final double mythicMobsBonus;
+        if (RPGInventory.isMythicMobsEnabled()) {
+            mythicMobsBonus = oldMaxHealth - (this.baseHealth + this.currentHealthModifier.getBonus())
+                    * this.currentHealthModifier.getMultiplier();
+        } else {
+            mythicMobsBonus = 0;
+        }
+
+        double newMaxHealth;
+        if (RPGInventory.isMythicMobsEnabled()) {
+            newMaxHealth = (this.baseHealth + healthModifier.getBonus()) * healthModifier.getMultiplier();
+        } else {
+            newMaxHealth =
+                    (oldMaxHealth / this.currentHealthModifier.getMultiplier() - this.currentHealthModifier.getBonus()
+                            + healthModifier.getBonus()) * healthModifier.getMultiplier();
+        }
+
+        if (oldMaxHealth == newMaxHealth) {
+            return;
+        }
+
+        this.currentHealthModifier = healthModifier;
+
+        final double oldHealth = player.getHealth();
+        player.setMaxHealth(newMaxHealth);
+
+        double currentHealth;
+        if (newMaxHealth > oldMaxHealth) {
+            currentHealth = oldHealth + newMaxHealth - oldMaxHealth;
+        } else if (newMaxHealth < oldMaxHealth) {
+            currentHealth = oldHealth - oldMaxHealth + newMaxHealth;
+            if (currentHealth < 1) {
+                currentHealth = 1;
+            }
+        } else {
+            currentHealth = oldHealth;
+        }
+
+        final double finalCurrentHealth = currentHealth;
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                double health = finalCurrentHealth + mythicMobsBonus;
+                player.setHealth(health > player.getMaxHealth() ? player.getMaxHealth() : health);
+            }
+        }.runTaskLater(RPGInventory.getInstance(), 1);
     }
 }

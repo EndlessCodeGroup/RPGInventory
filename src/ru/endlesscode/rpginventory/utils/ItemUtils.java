@@ -88,7 +88,7 @@ public class ItemUtils {
         String[] textures = texture.split(":");
 
         if (Material.getMaterial(textures[0]) == null) {
-            RPGInventory.getInstance().getLogger().warning("Material " + textures[0] + " not found");
+            RPGInventory.getPluginLogger().warning("Material " + textures[0] + " not found");
             return new ItemStack(Material.AIR);
         }
 

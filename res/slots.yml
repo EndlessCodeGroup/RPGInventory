@@ -110,6 +110,15 @@ slots:
       lore: "&6&oHere possible to put only artifacts"
     items:
     - INK_SACK:14
+  shield:
+    type: SHIELD
+    slot: 21
+    holder:
+      item: STAINED_GLASS_PANE:8
+      name: "&a&lShield slot"
+      lore: "&6&oHere possible to put only shield"
+    items:
+    - SHIELD
   pet:
     type: PET
     slot: 33

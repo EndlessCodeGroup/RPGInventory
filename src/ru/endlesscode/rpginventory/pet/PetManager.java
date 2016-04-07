@@ -79,14 +79,14 @@ public class PetManager {
             PetType petType = new PetType(petsConfig.getConfigurationSection("pets." + key));
             PetManager.PETS.put(key, petType);
         }
-        RPGInventory.getInstance().getLogger().info(PetManager.PETS.size() + " pet(s) has been loaded");
+        RPGInventory.getPluginLogger().info(PetManager.PETS.size() + " pet(s) has been loaded");
 
         PetManager.PET_FOOD.clear();
         for (String key : petsConfig.getConfigurationSection("food").getKeys(false)) {
             PetFood pet = new PetFood(petsConfig.getConfigurationSection("food." + key));
             PetManager.PET_FOOD.put(key, pet);
         }
-        RPGInventory.getInstance().getLogger().info(PetManager.PET_FOOD.size() + " food(s) has been loaded");
+        RPGInventory.getPluginLogger().info(PetManager.PET_FOOD.size() + " food(s) has been loaded");
     }
 
     @NotNull

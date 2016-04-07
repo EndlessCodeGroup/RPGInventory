@@ -20,4 +20,8 @@ public class VersionHandler {
     public static boolean is1_7_10() {
         return Bukkit.getVersion().contains("1.7") && MinecraftReflection.getMinecraftPackage().contains("R4");
     }
+
+    public static boolean is1_9() {
+        return Bukkit.getVersion().contains("1.9");
+    }
 }

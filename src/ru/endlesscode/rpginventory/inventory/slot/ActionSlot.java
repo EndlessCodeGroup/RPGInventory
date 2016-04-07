@@ -14,7 +14,7 @@ public class ActionSlot extends Slot {
     private final String command;
     private final boolean isGui;
 
-    public ActionSlot(String name, @NotNull ConfigurationSection config) {
+    ActionSlot(String name, @NotNull ConfigurationSection config) {
         super(name, config);
         this.actionType = ActionType.valueOf(config.getString("action"));
         this.command = config.getString("command");
@@ -35,7 +35,7 @@ public class ActionSlot extends Slot {
         }
     }
 
-    enum ActionType {
+    private enum ActionType {
         WORKBENCH,
         ENDERCHEST,
         COMMAND

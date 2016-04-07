@@ -69,6 +69,10 @@ public class InventoryUtils {
         }
     }
 
+    public static int getQuickSlot(int slotId) {
+        return slotId % 9;
+    }
+
     public static int getArmorSlot(Slot slot) {
         switch (slot.getName()) {
             case "helmet":
