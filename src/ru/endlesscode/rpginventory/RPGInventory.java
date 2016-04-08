@@ -6,8 +6,6 @@ import net.milkbowl.vault.permission.Permission;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.InvalidDescriptionException;
-import org.bukkit.plugin.InvalidPluginException;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -33,12 +31,7 @@ import ru.endlesscode.rpginventory.pet.PetManager;
 import ru.endlesscode.rpginventory.utils.PlayerUtils;
 import ru.endlesscode.rpginventory.utils.StringUtils;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.URL;
-import java.nio.channels.Channels;
-import java.nio.channels.ReadableByteChannel;
 import java.util.logging.Logger;
 
 /**
@@ -184,13 +177,6 @@ public class RPGInventory extends JavaPlugin {
             this.getLogger().warning("Economy not found!");
         }
 
-        if (this.hookPacketWrapper()) {
-            this.getLogger().info("PacketWrapper hooked.");
-        } else {
-            this.getLogger().warning("PacketWrapper install failed!");
-            return false;
-        }
-
         levelSystem = PlayerUtils.LevelSystem.valueOf(Config.getConfig().getString("level-system"));
         classSystem = PlayerUtils.ClassSystem.valueOf(Config.getConfig().getString("class-system"));
 
@@ -328,29 +314,6 @@ public class RPGInventory extends JavaPlugin {
 
         economy = rsp.getProvider();
         return economy != null;
-    }
-
-    private boolean hookPacketWrapper() {
-        PluginManager pm = this.getServer().getPluginManager();
-        if (pm.getPlugin("PacketWrapper") != null) {
-            return true;
-        }
-
-        try {
-            this.getLogger().info("Installing PacketWrapper...");
-            File file = new File("plugins", "PacketWrapper.jar");
-            URL website = new URL("http://ci.shadowvolt.com/job/PacketWrapper/lastStableBuild/artifact/PacketWrapper/target/PacketWrapper.jar");
-            ReadableByteChannel rbc = Channels.newChannel(website.openStream());
-            FileOutputStream fos = new FileOutputStream(file);
-            fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
-            pm.loadPlugin(file);
-            this.getLogger().info("PacketWrapper installed!");
-            return true;
-        } catch (IOException | InvalidPluginException | InvalidDescriptionException e) {
-            e.printStackTrace();
-        }
-
-        return false;
     }
 
     public void checkUpdates(@Nullable final Player player) {
