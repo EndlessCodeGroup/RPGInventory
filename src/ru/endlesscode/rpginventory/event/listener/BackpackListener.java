@@ -10,7 +10,7 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
-import ru.endlesscode.rpginventory.inventory.InventoryWrapper;
+import ru.endlesscode.rpginventory.inventory.PlayerWrapper;
 import ru.endlesscode.rpginventory.inventory.backpack.Backpack;
 import ru.endlesscode.rpginventory.inventory.backpack.BackpackHolder;
 import ru.endlesscode.rpginventory.inventory.backpack.BackpackManager;
@@ -64,8 +64,8 @@ public class BackpackListener implements Listener {
             return;
         }
 
-        InventoryWrapper inventoryWrapper = InventoryManager.get(player);
-        Backpack backpack = inventoryWrapper.getBackpack();
+        PlayerWrapper playerWrapper = InventoryManager.get(player);
+        Backpack backpack = playerWrapper.getBackpack();
 
         if (backpack == null) {
             return;
@@ -73,6 +73,6 @@ public class BackpackListener implements Listener {
 
         backpack.setContents(Arrays.copyOfRange(inventory.getContents(), 0, backpack.getType().getSize()));
         backpack.onClose();
-        inventoryWrapper.setBackpack(null);
+        playerWrapper.setBackpack(null);
     }
 }

@@ -23,7 +23,7 @@ import ru.endlesscode.rpginventory.event.PlayerInventoryLoadEvent;
 import ru.endlesscode.rpginventory.event.PlayerInventoryUnloadEvent;
 import ru.endlesscode.rpginventory.inventory.InventoryLocker;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
-import ru.endlesscode.rpginventory.inventory.InventoryWrapper;
+import ru.endlesscode.rpginventory.inventory.PlayerWrapper;
 import ru.endlesscode.rpginventory.inventory.ResourcePackManager;
 import ru.endlesscode.rpginventory.inventory.backpack.BackpackManager;
 import ru.endlesscode.rpginventory.inventory.slot.ActionSlot;
@@ -272,12 +272,12 @@ public class InventoryListener implements Listener {
                 return;
             }
 
-            InventoryWrapper inventoryWrapper = null;
+            PlayerWrapper playerWrapper = null;
             if (InventoryAPI.isRPGInventory(inventory)) {
-                inventoryWrapper = (InventoryWrapper) inventory.getHolder();
+                playerWrapper = (PlayerWrapper) inventory.getHolder();
             }
 
-            if (!validateClick(player, inventoryWrapper, slot, actionType, currentItem, event.getSlotType())) {
+            if (!validateClick(player, playerWrapper, slot, actionType, currentItem, event.getSlotType())) {
                 event.setCancelled(true);
                 return;
             }
@@ -289,13 +289,13 @@ public class InventoryListener implements Listener {
                 return;
             }
 
-            if (inventoryWrapper != null && slot.getSlotType() == Slot.SlotType.ARMOR) {
-                onArmorSlotClick(event, inventoryWrapper, slot, cursor, currentItem);
+            if (playerWrapper != null && slot.getSlotType() == Slot.SlotType.ARMOR) {
+                onArmorSlotClick(event, playerWrapper, slot, cursor, currentItem);
                 return;
             }
 
-            if (slot.getSlotType() == Slot.SlotType.ACTIVE || slot.getSlotType() == Slot.SlotType.PASSIVE ||
-                    slot.getSlotType() == Slot.SlotType.SHIELD) {
+            if (slot.getSlotType() == Slot.SlotType.ACTIVE || slot.getSlotType() == Slot.SlotType.PASSIVE
+                    || slot.getSlotType() == Slot.SlotType.SHIELD || slot.getSlotType() == Slot.SlotType.ELYTRA) {
                 event.setCancelled(!InventoryManager.validateUpdate(player, actionType, slot, cursor));
             } else if (slot.getSlotType() == Slot.SlotType.PET) {
                 event.setCancelled(!InventoryManager.validatePet(player, action, currentItem, cursor));
@@ -337,10 +337,10 @@ public class InventoryListener implements Listener {
      *
      * @return Click is valid
      */
-    private boolean validateClick(Player player, InventoryWrapper inventoryWrapper, Slot slot,
+    private boolean validateClick(Player player, PlayerWrapper playerWrapper, Slot slot,
                                   InventoryUtils.ActionType actionType, ItemStack currentItem, InventoryType.SlotType slotType) {
-        if (inventoryWrapper != null) {
-            if (player != inventoryWrapper.getPlayer()) {
+        if (playerWrapper != null) {
+            if (player != playerWrapper.getPlayer()) {
                 return false;
             }
 
@@ -349,7 +349,7 @@ public class InventoryListener implements Listener {
                 return false;
             }
 
-            if (!slot.isFree() && !inventoryWrapper.isBuyedSlot(slot.getName()) && !InventoryManager.buySlot(player, inventoryWrapper, slot)) {
+            if (!slot.isFree() && !playerWrapper.isBuyedSlot(slot.getName()) && !InventoryManager.buySlot(player, playerWrapper, slot)) {
                 return false;
             }
         }
@@ -361,9 +361,9 @@ public class InventoryListener implements Listener {
     /**
      * It happens when player click on armor slot
      */
-    private void onArmorSlotClick(InventoryClickEvent event, InventoryWrapper inventoryWrapper, final Slot slot,
+    private void onArmorSlotClick(InventoryClickEvent event, PlayerWrapper playerWrapper, final Slot slot,
                                   ItemStack cursor, ItemStack currentItem) {
-        final Player player = inventoryWrapper.getPlayer().getPlayer();
+        final Player player = playerWrapper.getPlayer().getPlayer();
         final Inventory inventory = event.getInventory();
         final int rawSlot = event.getRawSlot();
         InventoryAction action = event.getAction();
@@ -371,8 +371,8 @@ public class InventoryListener implements Listener {
 
         if (InventoryManager.validateArmor(action, slot, cursor)) {
             // Event of equip armor
-            InventoryClickEvent fakeEvent = new InventoryClickEvent((inventoryWrapper.getInventoryView()),
-                    InventoryType.SlotType.ARMOR, InventoryUtils.getArmorSlot(slot), event.getClick(), action);
+            InventoryClickEvent fakeEvent = new InventoryClickEvent((playerWrapper.getInventoryView()),
+                    InventoryType.SlotType.ARMOR, InventoryUtils.getArmorSlotId(slot), event.getClick(), action);
             Bukkit.getPluginManager().callEvent(fakeEvent);
 
             if (fakeEvent.isCancelled()) {
@@ -416,9 +416,9 @@ public class InventoryListener implements Listener {
         }
 
         if (InventoryAPI.isRPGInventory(inventory)) {
-            InventoryWrapper inventoryWrapper = (InventoryWrapper) inventory.getHolder();
-            if (player != inventoryWrapper.getPlayer()) {
-                player = (HumanEntity) inventoryWrapper.getPlayer();
+            PlayerWrapper playerWrapper = (PlayerWrapper) inventory.getHolder();
+            if (player != playerWrapper.getPlayer()) {
+                player = (HumanEntity) playerWrapper.getPlayer();
             }
 
             InventoryManager.syncQuickSlots(player, inventory);
@@ -430,12 +430,12 @@ public class InventoryListener implements Listener {
     @EventHandler
     public void onInventoryClose(InventoryCloseEvent event) {
         if (InventoryAPI.isRPGInventory(event.getInventory())) {
-            InventoryWrapper inventoryWrapper = (InventoryWrapper) event.getInventory().getHolder();
-            if (event.getPlayer() != inventoryWrapper.getPlayer()) {
+            PlayerWrapper playerWrapper = (PlayerWrapper) event.getInventory().getHolder();
+            if (event.getPlayer() != playerWrapper.getPlayer()) {
                 return;
             }
 
-            inventoryWrapper.onClose();
+            playerWrapper.onClose();
         }
     }
 

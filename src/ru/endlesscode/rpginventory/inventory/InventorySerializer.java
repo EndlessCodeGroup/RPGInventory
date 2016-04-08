@@ -20,7 +20,7 @@ import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
 class InventorySerializer {
-    static void savePlayer(@NotNull Player player, @NotNull InventoryWrapper inventoryWrapper, @NotNull File file) throws IOException {
+    static void savePlayer(@NotNull Player player, @NotNull PlayerWrapper playerWrapper, @NotNull File file) throws IOException {
         List<NbtCompound> nbtList = new ArrayList<>();
 
         try (DataOutputStream dataOutput = new DataOutputStream(new GZIPOutputStream(new FileOutputStream(file)))) {
@@ -31,7 +31,7 @@ class InventorySerializer {
 
                 List<NbtCompound> itemList = new ArrayList<>();
                 List<Integer> slotIds = slot.getSlotIds();
-                Inventory inventory = inventoryWrapper.getInventory();
+                Inventory inventory = playerWrapper.getInventory();
                 for (int i = 0; i < slotIds.size(); i++) {
                     int slotId = slotIds.get(i);
                     ItemStack itemStack = inventory.getItem(slotId);
@@ -40,10 +40,10 @@ class InventorySerializer {
                     }
                 }
 
-                if (itemList.size() > 0 || inventoryWrapper.isBuyedSlot(slot.getName())) {
+                if (itemList.size() > 0 || playerWrapper.isBuyedSlot(slot.getName())) {
                     NbtCompound slotNbt = NbtFactory.ofCompound(slot.getName());
                     slotNbt.put("type", slot.getSlotType().name());
-                    if (inventoryWrapper.isBuyedSlot(slot.getName())) {
+                    if (playerWrapper.isBuyedSlot(slot.getName())) {
                         slotNbt.put("buyed", "true");
                     }
                     slotNbt.put(NbtFactory.ofCompound("items", itemList));
@@ -53,26 +53,26 @@ class InventorySerializer {
 
             NbtCompound itemList = NbtFactory.ofCompound("Inventory");
             itemList.put(NbtFactory.ofCompound("slots", nbtList));
-            itemList.put("buyed-slots", inventoryWrapper.getBuyedGenericSlots());
+            itemList.put("buyed-slots", playerWrapper.getBuyedGenericSlots());
             itemList.put("resource-pack", Boolean.toString(ResourcePackManager.isWontResourcePack(player)));
 
             NbtBinarySerializer.DEFAULT.serialize(itemList, dataOutput);
         }
     }
 
-    static InventoryWrapper loadPlayer(@NotNull Player player, @NotNull File file) throws IOException {
-        InventoryWrapper inventoryWrapper = new InventoryWrapper(player);
-        Inventory inventory = inventoryWrapper.getInventory();
+    static PlayerWrapper loadPlayer(@NotNull Player player, @NotNull File file) throws IOException {
+        PlayerWrapper playerWrapper = new PlayerWrapper(player);
+        Inventory inventory = playerWrapper.getInventory();
 
         try (DataInputStream dataInput = new DataInputStream(new GZIPInputStream(new FileInputStream(file)))) {
             NbtCompound inventoryNbt = NbtBinarySerializer.DEFAULT.deserializeCompound(dataInput);
 
             // =========== Added in v1.1.8 ============
             if (inventoryNbt.containsKey("free-slots")) {
-                inventoryWrapper.setBuyedSlots(inventoryNbt.getInteger("free-slots") - Config.getConfig().getInt("slots.free"));
+                playerWrapper.setBuyedSlots(inventoryNbt.getInteger("free-slots") - Config.getConfig().getInt("slots.free"));
                 inventoryNbt.remove("free-slots");
             } else {
-                inventoryWrapper.setBuyedSlots(inventoryNbt.getInteger("buyed-slots"));
+                playerWrapper.setBuyedSlots(inventoryNbt.getInteger("buyed-slots"));
                 inventoryNbt.remove("buyed-slots");
             }
             // ========================================
@@ -98,7 +98,7 @@ class InventorySerializer {
                     }
 
                     if (slotNbt.containsKey("buyed")) {
-                        inventoryWrapper.setBuyedSlots(slot.getName());
+                        playerWrapper.setBuyedSlots(slot.getName());
                     }
 
                     NbtCompound itemListNbt = slotNbt.getCompound("items");
@@ -117,6 +117,6 @@ class InventorySerializer {
             }
         }
 
-        return inventoryWrapper;
+        return playerWrapper;
     }
 }

@@ -3,7 +3,8 @@ package ru.endlesscode.rpginventory.utils;
 import com.herocraftonline.heroes.Heroes;
 import com.sucy.skill.SkillAPI;
 import com.sucy.skill.api.player.PlayerData;
-import de.tobiyas.racesandclasses.datacontainer.player.RaCPlayerManager;
+import de.tobiyas.racesandclasses.APIs.ClassAPI;
+import de.tobiyas.racesandclasses.APIs.LevelAPI;
 import de.tobiyas.racesandclasses.datacontainer.traitholdercontainer.classes.ClassContainer;
 import me.leothepro555.skills.Skills;
 import me.robin.battlelevels.api.BattleLevelsAPI;
@@ -38,7 +39,7 @@ public class PlayerUtils {
                 level = Heroes.getInstance().getCharacterManager().getHero(player).getLevel();
                 break;
             case RAC:
-                level = RaCPlayerManager.get().getPlayer(player).getLevel();
+                level = LevelAPI.getCurrentLevel(player);
                 break;
         }
 
@@ -66,7 +67,7 @@ public class PlayerUtils {
                 playerClass = Heroes.getInstance().getCharacterManager().getHero(player).getHeroClass().getName();
                 break;
             case RAC:
-                ClassContainer classContainer = RaCPlayerManager.get().getPlayer(player).getclass();
+                ClassContainer classContainer = ClassAPI.getClassOfPlayer(player);
                 playerClass = classContainer == null ? null : classContainer.getDisplayName();
         }
 

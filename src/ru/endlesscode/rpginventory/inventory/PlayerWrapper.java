@@ -7,9 +7,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.InventoryView;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import ru.endlesscode.rpginventory.RPGInventory;
 import ru.endlesscode.rpginventory.inventory.backpack.Backpack;
+import ru.endlesscode.rpginventory.inventory.slot.Slot;
+import ru.endlesscode.rpginventory.inventory.slot.SlotManager;
 import ru.endlesscode.rpginventory.item.ItemManager;
 import ru.endlesscode.rpginventory.item.ItemStat;
 import ru.endlesscode.rpginventory.item.Modifier;
@@ -24,7 +27,7 @@ import java.util.Map;
  * It is part of the RpgInventory.
  * All rights reserved 2014 - 2015 © «EndlessCode Group»
  */
-public class InventoryWrapper implements InventoryHolder {
+public class PlayerWrapper implements InventoryHolder {
     private final OfflinePlayer player;
     private final Inventory inventory;
     private final Map<String, Integer> buyedSlots = new HashMap<>();
@@ -39,7 +42,12 @@ public class InventoryWrapper implements InventoryHolder {
     private LivingEntity pet;
     private Modifier currentHealthModifier = new Modifier(0, 1);
 
-    public InventoryWrapper(OfflinePlayer player) {
+    private ItemStack savedArmor = null;
+    private boolean falling = false;
+    private boolean flying = false;
+    private int fallTime = 0;
+
+    public PlayerWrapper(OfflinePlayer player) {
         this.player = player;
         this.inventory = Bukkit.createInventory(this, 54, InventoryManager.TITLE);
 
@@ -219,5 +227,39 @@ public class InventoryWrapper implements InventoryHolder {
                 player.setHealth(health > player.getMaxHealth() ? player.getMaxHealth() : health);
             }
         }.runTaskLater(RPGInventory.getInstance(), 1);
+    }
+
+    private void startFlight() {
+        Slot elytraSlot = SlotManager.getSlotManager().getElytraSlot();
+        ItemStack itemStack = inventory.getItem(elytraSlot.getSlotId());
+        if (!elytraSlot.isCup(itemStack)) {
+
+        }
+
+        this.flying = true;
+    }
+
+    private void stopFlight() {
+        System.out.println("stopFlight(): " + fallTime);
+        this.flying = true;
+    }
+
+    public boolean isFalling() {
+        return falling;
+    }
+
+    public void setFalling(boolean falling) {
+        if (!falling && flying) {
+            stopFlight();
+        }
+
+        fallTime = 0;
+        this.falling = falling;
+    }
+
+    public void onFall() {
+        if (this.fallTime++ == 4) {
+            this.startFlight();
+        }
     }
 }
