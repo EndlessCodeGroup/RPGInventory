@@ -42,7 +42,7 @@ public class PlayerWrapper implements InventoryHolder {
     private LivingEntity pet;
     private Modifier currentHealthModifier = new Modifier(0, 1);
 
-    private ItemStack savedArmor = null;
+    private ItemStack savedChestplate = null;
     private boolean falling = false;
     private boolean flying = false;
     private int fallTime = 0;
@@ -231,17 +231,23 @@ public class PlayerWrapper implements InventoryHolder {
 
     private void startFlight() {
         Slot elytraSlot = SlotManager.getSlotManager().getElytraSlot();
-        ItemStack itemStack = inventory.getItem(elytraSlot.getSlotId());
+        ItemStack itemStack = this.inventory.getItem(elytraSlot.getSlotId());
         if (!elytraSlot.isCup(itemStack)) {
+            Player player = this.player.getPlayer();
+            this.savedChestplate = player.getEquipment().getChestplate();
+            player.getEquipment().setChestplate(this.inventory.getItem(elytraSlot.getSlotId()));
 
+            this.flying = true;
         }
-
-        this.flying = true;
     }
 
     private void stopFlight() {
-        System.out.println("stopFlight(): " + fallTime);
-        this.flying = true;
+        Player player = this.player.getPlayer();
+        Slot elytraSlot = SlotManager.getSlotManager().getElytraSlot();
+        this.inventory.setItem(elytraSlot.getSlotId(), player.getEquipment().getChestplate());
+        player.getEquipment().setChestplate(this.savedChestplate);
+        this.flying = false;
+        this.savedChestplate = null;
     }
 
     public boolean isFalling() {
