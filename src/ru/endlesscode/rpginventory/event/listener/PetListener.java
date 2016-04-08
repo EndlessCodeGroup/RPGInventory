@@ -23,7 +23,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import ru.endlesscode.rpginventory.RPGInventory;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
-import ru.endlesscode.rpginventory.inventory.InventoryWrapper;
+import ru.endlesscode.rpginventory.inventory.PlayerWrapper;
 import ru.endlesscode.rpginventory.inventory.slot.Slot;
 import ru.endlesscode.rpginventory.inventory.slot.SlotManager;
 import ru.endlesscode.rpginventory.misc.Config;
@@ -105,14 +105,14 @@ public class PetListener implements Listener {
             return;
         }
 
-        InventoryWrapper inventoryWrapper = InventoryManager.get(player);
-        if (PetFood.isFoodItem(itemInHand) && inventoryWrapper.hasPet() && event.getRightClicked() == inventoryWrapper.getPet()) {
+        PlayerWrapper playerWrapper = InventoryManager.get(player);
+        if (PetFood.isFoodItem(itemInHand) && playerWrapper.hasPet() && event.getRightClicked() == playerWrapper.getPet()) {
             event.setCancelled(true);
 
             LivingEntity pet = (LivingEntity) event.getRightClicked();
             PetFood petFood = PetManager.getFoodFromItem(itemInHand);
 
-            if (pet.getHealth() == pet.getMaxHealth() || petFood == null || !petFood.canBeEaten(inventoryWrapper.getPet())) {
+            if (pet.getHealth() == pet.getMaxHealth() || petFood == null || !petFood.canBeEaten(playerWrapper.getPet())) {
                 return;
             }
 
@@ -148,9 +148,9 @@ public class PetListener implements Listener {
             return;
         }
 
-        InventoryWrapper inventoryWrapper = InventoryManager.get(player);
-        if (petEntity == inventoryWrapper.getPet()) {
-            Inventory inventory = inventoryWrapper.getInventory();
+        PlayerWrapper playerWrapper = InventoryManager.get(player);
+        if (petEntity == playerWrapper.getPet()) {
+            Inventory inventory = playerWrapper.getInventory();
             final ItemStack petItem = inventory.getItem(PetManager.getPetSlotId());
             PetType petType = PetManager.getPetFromItem(petItem);
 
@@ -164,7 +164,7 @@ public class PetListener implements Listener {
             }
 
             event.getDrops().clear();
-            inventoryWrapper.setPet(null);
+            playerWrapper.setPet(null);
         }
     }
 
@@ -182,8 +182,8 @@ public class PetListener implements Listener {
             return;
         }
 
-        InventoryWrapper inventoryWrapper = InventoryManager.get(player);
-        if (inventoryWrapper.hasPet() && petEntity == inventoryWrapper.getPet()) {
+        PlayerWrapper playerWrapper = InventoryManager.get(player);
+        if (playerWrapper.hasPet() && petEntity == playerWrapper.getPet()) {
             PetType petType = PetManager.getPetFromEntity((Tameable) petEntity);
 
             if (petType == null) {
@@ -282,8 +282,8 @@ public class PetListener implements Listener {
             return;
         }
 
-        InventoryWrapper inventoryWrapper = InventoryManager.get(player);
-        if (event.getEntity() == inventoryWrapper.getPet()) {
+        PlayerWrapper playerWrapper = InventoryManager.get(player);
+        if (event.getEntity() == playerWrapper.getPet()) {
             PetManager.respawnPet(player);
         }
     }
@@ -295,9 +295,9 @@ public class PetListener implements Listener {
             return;
         }
 
-        InventoryWrapper inventoryWrapper = InventoryManager.get(player);
-        if (inventoryWrapper.hasPet() && event.getInventory().getHolder() == inventoryWrapper.getPet()) {
-            inventoryWrapper.openInventory();
+        PlayerWrapper playerWrapper = InventoryManager.get(player);
+        if (playerWrapper.hasPet() && event.getInventory().getHolder() == playerWrapper.getPet()) {
+            playerWrapper.openInventory();
             event.setCancelled(true);
         }
     }
@@ -309,11 +309,11 @@ public class PetListener implements Listener {
             return;
         }
 
-        InventoryWrapper inventoryWrapper = InventoryManager.get(player);
-        if (inventoryWrapper.hasPet() && inventoryWrapper.getPet().getPassenger() != player) {
-            PetType pet = PetManager.getPetFromEntity((Tameable) inventoryWrapper.getPet());
+        PlayerWrapper playerWrapper = InventoryManager.get(player);
+        if (playerWrapper.hasPet() && playerWrapper.getPet().getPassenger() != player) {
+            PetType pet = PetManager.getPetFromEntity((Tameable) playerWrapper.getPet());
             if (pet != null && pet.getRole() != PetType.Role.COMPANION) {
-                EntityUtils.goToPlayer(player, inventoryWrapper.getPet());
+                EntityUtils.goToPlayer(player, playerWrapper.getPet());
             }
         }
     }

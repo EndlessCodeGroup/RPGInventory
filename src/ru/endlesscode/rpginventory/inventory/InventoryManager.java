@@ -46,7 +46,7 @@ import java.util.*;
 public class InventoryManager {
     public static final int OPEN_ITEM_SLOT = Config.getConfig().getInt("alternate-view.slot") % 9;
     static final String TITLE = RPGInventory.getLanguage().getCaption("title");
-    private static final Map<UUID, InventoryWrapper> INVENTORIES = new HashMap<>();
+    private static final Map<UUID, PlayerWrapper> INVENTORIES = new HashMap<>();
 
     private static ItemStack fillSlot = null;
     private static ItemStack inventoryOpenItem = null;
@@ -433,12 +433,12 @@ public class InventoryManager {
                 Files.move(new File(folder, player.getName() + ".inv").toPath(), file.toPath(), StandardCopyOption.REPLACE_EXISTING);
             }
 
-            InventoryWrapper inventoryWrapper;
+            PlayerWrapper playerWrapper;
             if (file.exists()) {
-                inventoryWrapper = InventorySerializer.loadPlayer(player, file);
+                playerWrapper = InventorySerializer.loadPlayer(player, file);
             } else {
-                inventoryWrapper = new InventoryWrapper(player);
-                inventoryWrapper.setBuyedSlots(0);
+                playerWrapper = new PlayerWrapper(player);
+                playerWrapper.setBuyedSlots(0);
                 ResourcePackManager.wontResourcePack(player, ResourcePackManager.getMode() != ResourcePackManager.Mode.DISABLED);
             }
 
@@ -449,8 +449,8 @@ public class InventoryManager {
                 return;
             }
 
-            lockEmptySlots(player, inventoryWrapper.getInventory());
-            INVENTORIES.put(player.getUniqueId(), inventoryWrapper);
+            lockEmptySlots(player, playerWrapper.getInventory());
+            INVENTORIES.put(player.getUniqueId(), playerWrapper);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -469,13 +469,13 @@ public class InventoryManager {
         player.closeInventory();
         savePlayerInventory(player);
 
-        InventoryWrapper inventoryWrapper = INVENTORIES.get(player.getUniqueId());
+        PlayerWrapper playerWrapper = INVENTORIES.get(player.getUniqueId());
         InventoryLocker.unlockSlots(player);
-        inventoryWrapper.clearStats();
+        playerWrapper.clearStats();
 
         if (PetManager.isEnabled()) {
             PetManager.despawnPet(player);
-            Inventory inventory = inventoryWrapper.getInventory();
+            Inventory inventory = playerWrapper.getInventory();
             ItemStack petItem = inventory.getItem(PetManager.getPetSlotId());
             if (petItem != null) {
                 inventory.setItem(PetManager.getPetSlotId(), PetType.clone(petItem));
@@ -493,7 +493,7 @@ public class InventoryManager {
             return;
         }
 
-        InventoryWrapper inventoryWrapper = INVENTORIES.get(player.getUniqueId());
+        PlayerWrapper playerWrapper = INVENTORIES.get(player.getUniqueId());
         try {
             File folder = new File(RPGInventory.getInstance().getDataFolder(), "inventories");
             if (!folder.exists() && !folder.mkdir()) {
@@ -505,14 +505,14 @@ public class InventoryManager {
                 throw new IOException("Failed to delete file: " + file.getName());
             }
 
-            InventorySerializer.savePlayer(player, inventoryWrapper, file);
+            InventorySerializer.savePlayer(player, playerWrapper, file);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     @Nullable
-    public static InventoryWrapper get(@NotNull OfflinePlayer player) {
+    public static PlayerWrapper get(@NotNull OfflinePlayer player) {
         return INVENTORIES.get(player.getUniqueId());
     }
 
@@ -565,12 +565,12 @@ public class InventoryManager {
         return false;
     }
 
-    public static boolean buySlot(Player player, InventoryWrapper inventoryWrapper, Slot slot) {
+    public static boolean buySlot(Player player, PlayerWrapper playerWrapper, Slot slot) {
         double cost = slot.getCost();
 
-        if (!inventoryWrapper.isPreparedToBuy()) {
+        if (!playerWrapper.isPreparedToBuy()) {
             player.sendMessage(String.format(RPGInventory.getLanguage().getCaption("error.buyable"), slot.getCost()));
-            inventoryWrapper.prepareToBuy();
+            playerWrapper.prepareToBuy();
             return false;
         }
 
@@ -578,13 +578,13 @@ public class InventoryManager {
             return false;
         }
 
-        inventoryWrapper.setBuyedSlots(slot.getName());
+        playerWrapper.setBuyedSlots(slot.getName());
         player.sendMessage(RPGInventory.getLanguage().getCaption("message.buyed"));
 
         return true;
     }
 
-    enum ListType {
+    private enum ListType {
         BLACKLIST, WHITELIST
     }
 }

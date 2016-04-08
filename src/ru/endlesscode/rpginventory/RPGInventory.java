@@ -114,6 +114,7 @@ public class RPGInventory extends JavaPlugin {
 
         // Registering of listeners
         PluginManager pm = this.getServer().getPluginManager();
+        pm.registerEvents(new ArmorEquipListener(), this);
         pm.registerEvents(new InventoryListener(), this);
         pm.registerEvents(new BackpackListener(), this);
         pm.registerEvents(new LockerListener(), this);
@@ -123,6 +124,9 @@ public class RPGInventory extends JavaPlugin {
 
         if (VersionHandler.is1_9()) {
             pm.registerEvents(new HandSwitchListener(), this);
+            if (SlotManager.getSlotManager().getElytraSlot() != null) {
+                pm.registerEvents(new ElytraListener(), this);
+            }
         }
 
         if (!VersionHandler.is1_7_10()) {

@@ -119,6 +119,13 @@ slots:
       lore: "&6&oHere possible to put only shield"
     items:
     - SHIELD
+  elytra:
+    type: ELYTRA
+    slot: 30
+    holder:
+      item: STAINED_GLASS_PANE:8
+      name: "&a&lElytra slot"
+      lore: "&6&oHere possible to put only elytra"
   pet:
     type: PET
     slot: 33

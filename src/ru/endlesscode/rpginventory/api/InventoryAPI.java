@@ -6,7 +6,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
-import ru.endlesscode.rpginventory.inventory.InventoryWrapper;
+import ru.endlesscode.rpginventory.inventory.PlayerWrapper;
 import ru.endlesscode.rpginventory.inventory.slot.Slot;
 import ru.endlesscode.rpginventory.inventory.slot.SlotManager;
 
@@ -27,7 +27,7 @@ public class InventoryAPI {
      * @return true - if opened RPGInventory, false - otherwise
      */
     public static boolean isRPGInventory(@NotNull Inventory inventory) {
-        return inventory.getHolder() instanceof InventoryWrapper;
+        return inventory.getHolder() instanceof PlayerWrapper;
     }
 
     /**

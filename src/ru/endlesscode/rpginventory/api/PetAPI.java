@@ -6,7 +6,7 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
-import ru.endlesscode.rpginventory.inventory.InventoryWrapper;
+import ru.endlesscode.rpginventory.inventory.PlayerWrapper;
 import ru.endlesscode.rpginventory.pet.PetManager;
 import ru.endlesscode.rpginventory.pet.PetType;
 
@@ -25,8 +25,8 @@ public class PetAPI {
      */
     @Nullable
     public static ItemStack getPetItem(@NotNull Player player) {
-        InventoryWrapper inventoryWrapper = InventoryManager.get(player);
-        ItemStack petItem = PetManager.isEnabled() && inventoryWrapper != null ? inventoryWrapper.getInventory().getItem(PetManager.getPetSlotId()) : null;
+        PlayerWrapper playerWrapper = InventoryManager.get(player);
+        ItemStack petItem = PetManager.isEnabled() && playerWrapper != null ? playerWrapper.getInventory().getItem(PetManager.getPetSlotId()) : null;
 
         return petItem != null && petItem.getType() == Material.AIR ? null : petItem;
     }

@@ -7,8 +7,10 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
 import ru.endlesscode.rpginventory.inventory.slot.Slot;
+import ru.endlesscode.rpginventory.inventory.slot.SlotManager;
 
 /**
  * Created by OsipXD on 22.08.2015.
@@ -73,7 +75,7 @@ public class InventoryUtils {
         return slotId % 9;
     }
 
-    public static int getArmorSlot(Slot slot) {
+    public static int getArmorSlotId(Slot slot) {
         switch (slot.getName()) {
             case "helmet":
                 return 5;
@@ -83,6 +85,38 @@ public class InventoryUtils {
                 return 7;
             default:
                 return 8;
+        }
+    }
+
+    @Nullable
+    public static Slot getArmorSlotById(int id) {
+        switch (id) {
+            case 5:
+                return SlotManager.getSlotManager().getSlot("helmet");
+            case 6:
+                return SlotManager.getSlotManager().getSlot("chestplate");
+            case 7:
+                return SlotManager.getSlotManager().getSlot("leggings");
+            case 8:
+                return SlotManager.getSlotManager().getSlot("boots");
+            default:
+                return null;
+        }
+    }
+
+    @Nullable
+    public static ItemStack getArmorItemById(Player player, int id) {
+        switch (id) {
+            case 5:
+                return player.getEquipment().getHelmet();
+            case 6:
+                return player.getEquipment().getChestplate();
+            case 7:
+                return player.getEquipment().getLeggings();
+            case 8:
+                return player.getEquipment().getBoots();
+            default:
+                return null;
         }
     }
 

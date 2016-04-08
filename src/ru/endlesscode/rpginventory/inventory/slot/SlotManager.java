@@ -70,14 +70,17 @@ public class SlotManager {
     }
 
     private boolean validateSlot(@NotNull Slot slot) {
-        if (slot.getSlotType() == Slot.SlotType.SHIELD && !VersionHandler.is1_9()) {
-            RPGInventory.getPluginLogger().warning("Slot type SHIELD available only since Minecraft 1.9");
+        if (slot.getSlotType().is1_9Feature() && !VersionHandler.is1_9()) {
+            RPGInventory.getPluginLogger().warning("Slot type " + slot.getSlotType() + " available only since Minecraft 1.9");
             return false;
         }
 
-        if ((slot.getSlotType() == Slot.SlotType.ACTIVE || slot.getSlotType() == Slot.SlotType.PET || slot.getSlotType() == Slot.SlotType.SHIELD
-                || slot.getSlotType() == Slot.SlotType.BACKPACK || slot.getSlotType() == Slot.SlotType.ARMOR)
-                && slot.getSlotIds().size() > 1) {
+        if (!slot.getSlotType().isIgnoreItemList() && slot.itemListIsEmpty()) {
+            RPGInventory.getPluginLogger().warning("Slot with type " + slot.getSlotType()
+                    + " must contains list of allowed items");
+        }
+
+        if (!slot.getSlotType().isAllowMultiSlots() && slot.getSlotIds().size() > 1) {
             RPGInventory.getPluginLogger().warning("Slot with type " + slot.getSlotType()
                     + " can not contain more than one slotId");
             return false;
@@ -104,13 +107,13 @@ public class SlotManager {
                 int slotId = slot.getQuickSlot();
                 int existingSlotId = existingSlot.getQuickSlot();
                 if (slotId == existingSlotId) {
-                    RPGInventory.getPluginLogger().warning("Quickbar slot " + slotId + " is occupied by " + existingSlot.getName());
+                    RPGInventory.getPluginLogger().warning("Quickbar slot " + slotId + " is occupied by "
+                            + existingSlot.getName());
                     return false;
                 }
             }
 
-            if ((slot.getSlotType() == Slot.SlotType.PET || slot.getSlotType() == Slot.SlotType.SHIELD)
-                    && slot.getSlotType() == existingSlot.getSlotType()) {
+            if (slot.getSlotType().isUnique() && slot.getSlotType() == existingSlot.getSlotType()) {
                 RPGInventory.getPluginLogger().warning("You can not create more then one slot with type " +
                         slot.getSlotType() + "!");
                 return false;
@@ -121,7 +124,7 @@ public class SlotManager {
     }
 
     @Nullable
-    private Slot getSlot(String name) {
+    public Slot getSlot(String name) {
         for (Slot slot : this.slots) {
             if (slot.getName().equalsIgnoreCase(name)) {
                 return slot;
@@ -216,6 +219,17 @@ public class SlotManager {
         return null;
     }
 
+    @Nullable
+    public Slot getElytraSlot() {
+        for (Slot slot : this.slots) {
+            if (slot.getSlotType() == Slot.SlotType.ELYTRA) {
+                return slot;
+            }
+        }
+
+        return null;
+    }
+
     public int getHelmetSlotId() {
         return this.getArmorId(ArmorType.HELMET);
     }
@@ -245,10 +259,4 @@ public class SlotManager {
         }
     }
 
-    private enum ArmorType {
-        HELMET,
-        CHESTPLATE,
-        LEGGINGS,
-        BOOTS
-    }
 }

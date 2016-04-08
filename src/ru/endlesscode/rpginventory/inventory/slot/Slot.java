@@ -12,6 +12,7 @@ import ru.endlesscode.rpginventory.RPGInventory;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
 import ru.endlesscode.rpginventory.inventory.ResourcePackManager;
 import ru.endlesscode.rpginventory.misc.Config;
+import ru.endlesscode.rpginventory.nms.VersionHandler;
 import ru.endlesscode.rpginventory.utils.InventoryUtils;
 import ru.endlesscode.rpginventory.utils.ItemUtils;
 import ru.endlesscode.rpginventory.utils.StringUtils;
@@ -51,8 +52,7 @@ public class Slot {
         int quickSlot = config.contains("quickbar") ? InventoryUtils.getQuickSlot(config.getInt("quickbar")) : -1;
         if (slotType == SlotType.SHIELD) {
             this.quickSlot = 9; // Shield slot ID
-        } else if (slotType != SlotType.ACTIVE && quickSlot == -1 || slotType == SlotType.ACTION || slotType == SlotType.PET
-                || slotIds.size() > 1) {
+        } else if (slotType != SlotType.ACTIVE && quickSlot == -1 || !slotType.isAllowQuick() || slotIds.size() > 1) {
             if (config.contains("quickbar")) {
                 RPGInventory.getPluginLogger().warning("Option \"quickbar\" is ignored for slot \"" + name + "\"!");
             }
@@ -67,11 +67,21 @@ public class Slot {
             this.quickSlot = quickSlot;
         }
 
-        for (String item : config.getStringList("items")) {
-            if (item.startsWith("-")) {
-                this.denied.add(item.substring(1));
-            } else {
-                this.allowed.add(item);
+        if (!slotType.isIgnoreItemList()) {
+            for (String item : config.getStringList("items")) {
+                if (item.startsWith("-")) {
+                    this.denied.add(item.substring(1));
+                } else {
+                    this.allowed.add(item);
+                }
+            }
+        } else {
+            if (config.contains("items")) {
+                RPGInventory.getPluginLogger().warning("Option \"items\" is ignored for slot \"" + name + "\"!");
+            }
+
+            if (VersionHandler.is1_9() && slotType == SlotType.ELYTRA) {
+                this.allowed.add("ELYTRA");
             }
         }
 
@@ -141,6 +151,10 @@ public class Slot {
         return this.cost == 0;
     }
 
+    boolean itemListIsEmpty() {
+        return this.allowed.isEmpty() && this.denied.isEmpty();
+    }
+
     private boolean isDenied(@NotNull ItemStack item) {
         return searchItem(this.denied, item);
     }
@@ -188,13 +202,48 @@ public class Slot {
 
     @SuppressWarnings("unused")
     public enum SlotType {
-        GENERIC,
-        ACTION,
-        PET,
-        ARMOR,
-        ACTIVE,
-        BACKPACK,
-        PASSIVE,
-        SHIELD
+        GENERIC(true, true, false, false, false),
+        ACTION(false, true, false, true, false),
+        PET(false, false, true, true, false),
+        ARMOR(false, false, false, false, false),
+        ACTIVE(true, false, false, false, false),
+        BACKPACK(true, false, false, true, false),
+        PASSIVE(true, true, false, false, false),
+        SHIELD(false, false, true, false, true),
+        ELYTRA(false, false, true, true, true);
+
+        private final boolean allowQuick;
+        private final boolean allowMultiSlots;
+        private final boolean unique;
+        private final boolean ignoreItemList;
+        private final boolean is1_9Feature;
+
+        SlotType(boolean allowQuick, boolean allowMultiSlots, boolean unique, boolean ignoreItemList, boolean is1_9Feature) {
+            this.allowQuick = allowQuick;
+            this.allowMultiSlots = allowMultiSlots;
+            this.unique = unique;
+            this.ignoreItemList = ignoreItemList;
+            this.is1_9Feature = is1_9Feature;
+        }
+
+        public boolean isAllowQuick() {
+            return allowQuick;
+        }
+
+        public boolean isAllowMultiSlots() {
+            return allowMultiSlots;
+        }
+
+        public boolean isUnique() {
+            return unique;
+        }
+
+        public boolean isIgnoreItemList() {
+            return ignoreItemList;
+        }
+
+        public boolean is1_9Feature() {
+            return is1_9Feature;
+        }
     }
 }

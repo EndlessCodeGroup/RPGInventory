@@ -4,7 +4,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
-import ru.endlesscode.rpginventory.inventory.InventoryWrapper;
+import ru.endlesscode.rpginventory.inventory.PlayerWrapper;
 import ru.endlesscode.rpginventory.nms.VersionHandler;
 
 import java.util.ArrayList;
@@ -29,12 +29,12 @@ class StatsUpdater extends BukkitRunnable {
             return;
         }
 
-        InventoryWrapper inventoryWrapper = InventoryManager.get(this.player);
+        PlayerWrapper playerWrapper = InventoryManager.get(this.player);
 
         // Update permissions
-        inventoryWrapper.clearPermissions();
-        List<ItemStack> items = new ArrayList<>(inventoryWrapper.getInventory().getContents().length + 1);
-        Collections.addAll(items, inventoryWrapper.getInventory().getContents());
+        playerWrapper.clearPermissions();
+        List<ItemStack> items = new ArrayList<>(playerWrapper.getInventory().getContents().length + 1);
+        Collections.addAll(items, playerWrapper.getInventory().getContents());
         if (VersionHandler.is1_9()) {
             items.add(this.player.getEquipment().getItemInOffHand());
             items.add(this.player.getEquipment().getItemInMainHand());
@@ -49,9 +49,9 @@ class StatsUpdater extends BukkitRunnable {
             }
         }
 
-        inventoryWrapper.updateHealth();
+        playerWrapper.updateHealth();
 
         // Update speed
-        this.player.setWalkSpeed(inventoryWrapper.getBaseSpeed() * ItemManager.getModifier(this.player, ItemStat.StatType.SPEED, false).getMultiplier());
+        this.player.setWalkSpeed(playerWrapper.getBaseSpeed() * ItemManager.getModifier(this.player, ItemStat.StatType.SPEED, false).getMultiplier());
     }
 }

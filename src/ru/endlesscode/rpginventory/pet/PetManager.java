@@ -18,7 +18,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ru.endlesscode.rpginventory.RPGInventory;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
-import ru.endlesscode.rpginventory.inventory.InventoryWrapper;
+import ru.endlesscode.rpginventory.inventory.PlayerWrapper;
 import ru.endlesscode.rpginventory.inventory.slot.SlotManager;
 import ru.endlesscode.rpginventory.utils.EffectUtils;
 import ru.endlesscode.rpginventory.utils.EntityUtils;
@@ -166,10 +166,10 @@ public class PetManager {
             return;
         }
 
-        InventoryWrapper inventoryWrapper = InventoryManager.get(player);
-        Inventory inventory = inventoryWrapper.getInventory();
+        PlayerWrapper playerWrapper = InventoryManager.get(player);
+        Inventory inventory = playerWrapper.getInventory();
 
-        LivingEntity pet = inventoryWrapper.getPet();
+        LivingEntity pet = playerWrapper.getPet();
         ItemStack petItem = inventory.getItem(SLOT_PET);
 
         if (pet == null) {
@@ -188,7 +188,7 @@ public class PetManager {
 
         EffectUtils.playDespawnEffect(pet);
         pet.remove();
-        inventoryWrapper.setPet(null);
+        playerWrapper.setPet(null);
     }
 
     public static void respawnPet(@NotNull OfflinePlayer player) {
@@ -232,13 +232,13 @@ public class PetManager {
         }
 
         OfflinePlayer player = (OfflinePlayer) entity.getOwner();
-        InventoryWrapper inventoryWrapper = InventoryManager.get(player);
+        PlayerWrapper playerWrapper = InventoryManager.get(player);
 
-        if (!InventoryManager.playerIsLoaded(player) || !PetManager.isEnabled() || entity != inventoryWrapper.getPet()) {
+        if (!InventoryManager.playerIsLoaded(player) || !PetManager.isEnabled() || entity != playerWrapper.getPet()) {
             return null;
         }
 
-        return PetManager.getPetFromItem(inventoryWrapper.getInventory().getItem(SLOT_PET));
+        return PetManager.getPetFromItem(playerWrapper.getInventory().getItem(SLOT_PET));
     }
 
     public static void addGlow(@NotNull ItemStack itemStack) {
