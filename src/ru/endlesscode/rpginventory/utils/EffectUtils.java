@@ -1,6 +1,7 @@
 package ru.endlesscode.rpginventory.utils;
 
 import com.comphenix.packetwrapper.AbstractPacket;
+import com.comphenix.packetwrapper.AbstractPlayServerWorldParticlesPacket;
 import com.comphenix.packetwrapper.WrapperPlayServerWorldParticles;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.wrappers.EnumWrappers;
@@ -36,29 +37,21 @@ public class EffectUtils {
 
     private static void playParticles(Player player, EnumWrappers.Particle particle, int particleNum, Location location, Vector direction) {
         AbstractPacket packet;
+        AbstractPlayServerWorldParticlesPacket particles;
         if (VersionHandler.is1_7_10()) {
-            com.comphenix.packetwrapper.v1_7_R4.WrapperPlayServerWorldParticles particles = new com.comphenix.packetwrapper.v1_7_R4.WrapperPlayServerWorldParticles();
-            particles.setParticleType(particle);
-            particles.setNumberOfParticles(particleNum);
-            particles.setX((float) location.getX());
-            particles.setY((float) location.getY());
-            particles.setZ((float) location.getZ());
-            particles.setOffsetX((float) direction.getX());
-            particles.setOffsetY((float) direction.getY());
-            particles.setOffsetZ((float) direction.getZ());
-            packet = particles;
+            particles = new com.comphenix.packetwrapper.v1_7_R4.WrapperPlayServerWorldParticles();
         } else {
-            WrapperPlayServerWorldParticles particles = new WrapperPlayServerWorldParticles();
-            particles.setParticleType(particle);
-            particles.setNumberOfParticles(particleNum);
-            particles.setX((float) location.getX());
-            particles.setY((float) location.getY());
-            particles.setZ((float) location.getZ());
-            particles.setOffsetX((float) direction.getX());
-            particles.setOffsetY((float) direction.getY());
-            particles.setOffsetZ((float) direction.getZ());
-            packet = particles;
+            particles = new WrapperPlayServerWorldParticles();
         }
+        particles.setParticleType(particle);
+        particles.setNumberOfParticles(particleNum);
+        particles.setX((float) location.getX());
+        particles.setY((float) location.getY());
+        particles.setZ((float) location.getZ());
+        particles.setOffsetX((float) direction.getX());
+        particles.setOffsetY((float) direction.getY());
+        particles.setOffsetZ((float) direction.getZ());
+        packet = particles;
 
         try {
             ProtocolLibrary.getProtocolManager().sendServerPacket(player, packet.getHandle());

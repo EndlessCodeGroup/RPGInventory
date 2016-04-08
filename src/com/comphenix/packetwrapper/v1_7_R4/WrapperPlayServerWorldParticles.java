@@ -1,6 +1,6 @@
 package com.comphenix.packetwrapper.v1_7_R4;
 
-import com.comphenix.packetwrapper.AbstractPacket;
+import com.comphenix.packetwrapper.AbstractPlayServerWorldParticlesPacket;
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
@@ -10,7 +10,7 @@ import org.bukkit.World;
 import org.bukkit.util.Vector;
 
 @SuppressWarnings("ALL")
-public class WrapperPlayServerWorldParticles extends AbstractPacket {
+public class WrapperPlayServerWorldParticles extends AbstractPlayServerWorldParticlesPacket {
     private static final PacketType TYPE;
 
     static {
