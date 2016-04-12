@@ -15,16 +15,15 @@ public class CommandUtils {
      * @param player    The player
      * @param command   The command
      * @param runFromOp If true, command will be run from OP
-     * @return True, if command was successfully executed, in other case - false
      */
-    public static boolean sendCommand(Player player, String command, boolean runFromOp) {
+    public static void sendCommand(Player player, String command, boolean runFromOp) {
         command = command.replaceAll("%WORLD%", player.getWorld().getName());
         command = command.replaceAll("%PLAYER%", player.getName());
 
         if (runFromOp) {
-            return Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), command);
+            Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), command);
+        } else {
+            player.performCommand(command);
         }
-
-        return player.performCommand(command);
     }
 }

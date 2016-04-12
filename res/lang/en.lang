@@ -10,11 +10,12 @@ title: "RPG Inventory"
 locked.name: "&c&lLocked slot"
 locked.lore: "&6&oFirst unlock the previous slots"
 
-buyable.name: "&a&lAvaliable slot"
+buyable.name: "&a&lAvailable slot"
 buyable.lore: "&6&oTo purchase a slot, you must:"
 buyable.money: "&6&o• Have %s gold"
 buyable.level: "&6&o• Be %d lvl"
 
+error.fall: "&cYou can't do it while you are flying"
 error.money: "&6&lTo purchase slots still need %s gold"
 error.level: "&6&lTo purchase slots need %d lvl"
 error.buyable: "&6&lTo purchase this slots you need %d gold. Click on it again for 10 seconds to confirm purchase."

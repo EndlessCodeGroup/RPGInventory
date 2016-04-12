@@ -35,7 +35,7 @@ public class Backpack {
         this.holder = ItemUtils.setTag(this.backpackType.getItem().clone(), ItemUtils.BACKPACK_UID_TAG, this.id.toString());
     }
 
-    public UUID getUniqueId() {
+    UUID getUniqueId() {
         return this.id;
     }
 
@@ -67,7 +67,7 @@ public class Backpack {
         InventoryManager.get(player).setBackpack(this);
     }
 
-    public ItemStack[] getContents() {
+    ItemStack[] getContents() {
         return contents;
     }
 
@@ -79,15 +79,15 @@ public class Backpack {
         this.lastUse = System.currentTimeMillis();
     }
 
-    public long getLastUse() {
+    long getLastUse() {
         return this.lastUse;
     }
 
-    public void setLastUse(long lastUse) {
+    void setLastUse(long lastUse) {
         this.lastUse = lastUse;
     }
 
-    public boolean isOverdue() {
+    boolean isOverdue() {
         int lifeTime = Config.getConfig().getInt("backpacks.expiration-time", 0);
         return lifeTime != 0 && (System.currentTimeMillis() - this.lastUse) / (1_000 * 60 * 60 * 24) > lifeTime;
     }

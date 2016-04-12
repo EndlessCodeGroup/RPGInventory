@@ -1,13 +1,12 @@
 package ru.endlesscode.rpginventory.utils;
 
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import ru.endlesscode.rpginventory.inventory.ArmorType;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
 import ru.endlesscode.rpginventory.inventory.slot.Slot;
 import ru.endlesscode.rpginventory.inventory.slot.SlotManager;
@@ -18,32 +17,10 @@ import ru.endlesscode.rpginventory.inventory.slot.SlotManager;
  * Copyright © 2015 «EndlessCode Group»
  */
 public class InventoryUtils {
-    @NotNull
-    @Contract(pure = true)
-    public static ActionType getTypeOfAction(InventoryAction action) {
-        if (action == InventoryAction.PLACE_ALL || action == InventoryAction.PLACE_ONE
-                || action == InventoryAction.PLACE_SOME || action == InventoryAction.SWAP_WITH_CURSOR) {
-            return ActionType.SET;
-        }
-
-        if (action == InventoryAction.MOVE_TO_OTHER_INVENTORY || action == InventoryAction.PICKUP_ALL
-                || action == InventoryAction.PICKUP_ONE || action == InventoryAction.PICKUP_SOME
-                || action == InventoryAction.PICKUP_HALF) {
-            return ActionType.GET;
-        }
-
-        if (action == InventoryAction.DROP_ALL_CURSOR || action == InventoryAction.DROP_ALL_SLOT
-                || action == InventoryAction.DROP_ONE_CURSOR || action == InventoryAction.DROP_ONE_SLOT) {
-            return ActionType.DROP;
-        }
-
-        return ActionType.OTHER;
-    }
-
     public static int countEmptySlots(@NotNull Inventory inventory) {
         int emptySlots = 0;
         for (ItemStack itemStack : inventory.getContents()) {
-            if (itemStack == null || itemStack.getType() == Material.AIR) {
+            if (ItemUtils.isEmpty(itemStack)) {
                 emptySlots++;
             }
         }
@@ -71,8 +48,14 @@ public class InventoryUtils {
         }
     }
 
+    @Contract(pure = true)
     public static int getQuickSlot(int slotId) {
         return slotId % 9;
+    }
+
+    public static boolean playerHasArmor(Player player, ArmorType armorType) {
+        ItemStack armorItem = armorType.getItem(player);
+        return !ItemUtils.isEmpty(armorItem) || armorType == ArmorType.UNKNOWN;
     }
 
     public static int getArmorSlotId(Slot slot) {
@@ -104,31 +87,8 @@ public class InventoryUtils {
         }
     }
 
-    @Nullable
-    public static ItemStack getArmorItemById(Player player, int id) {
-        switch (id) {
-            case 5:
-                return player.getEquipment().getHelmet();
-            case 6:
-                return player.getEquipment().getChestplate();
-            case 7:
-                return player.getEquipment().getLeggings();
-            case 8:
-                return player.getEquipment().getBoots();
-            default:
-                return null;
-        }
-    }
-
     public enum SearchType {
         NEXT,
         PREV
-    }
-
-    public enum ActionType {
-        SET,
-        GET,
-        DROP,
-        OTHER
     }
 }

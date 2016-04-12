@@ -75,10 +75,6 @@ public class RPGInventory extends JavaPlugin {
         return economy != null;
     }
 
-    public static boolean isSkillAPIEnabled() {
-        return instance.getServer().getPluginManager().isPluginEnabled("SkillAPI");
-    }
-
     public static boolean isMythicMobsEnabled() {
         return instance.getServer().getPluginManager().isPluginEnabled("MythicMobs");
     }
@@ -257,9 +253,6 @@ public class RPGInventory extends JavaPlugin {
                     } else if (args[0].equals("reload")) {
                         CommandExecutor.reloadPlugin(sender);
                         return true;
-                    } else if (args[0].equals("update")) {
-                        this.updatePlugin(sender);
-                        return true;
                     }
                 }
 
@@ -334,7 +327,7 @@ public class RPGInventory extends JavaPlugin {
                             StringUtils.coloredLine("&6New version available: &a" + updater.getLatestName() + "&6!"),
                             StringUtils.coloredLine(updater.getDescription()),
                             StringUtils.coloredLine("&6Changelog: &e" + updater.getInfoLink()),
-                            StringUtils.coloredLine("&6Type &e/rpginv update &6to update plugin")
+                            StringUtils.coloredLine("&6Download it on SpigotMC!")
                     };
 
                     for (String line : lines) {
@@ -344,32 +337,6 @@ public class RPGInventory extends JavaPlugin {
                             player.sendMessage(line);
                         }
                     }
-                }
-            }
-        }.runTaskAsynchronously(RPGInventory.getInstance());
-    }
-
-    private void updatePlugin(@NotNull final CommandSender sender) {
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                Updater updater = new Updater(RPGInventory.instance, RPGInventory.instance.getFile(), Updater.UpdateType.DEFAULT, true);
-                switch (updater.getResult()) {
-                    case SUCCESS:
-                        sender.sendMessage(StringUtils.coloredLine("&a" + updater.getLatestName() + " &6successfully loaded!"));
-                        sender.sendMessage(StringUtils.coloredLine("&6Please reload server."));
-                        break;
-                    case NO_UPDATE:
-                        sender.sendMessage(StringUtils.coloredLine("&6Update not found."));
-                        break;
-                    case FAIL_DOWNLOAD:
-                        sender.sendMessage(StringUtils.coloredLine("&cDownload failed..."));
-                        break;
-                    case DISABLED:
-                        sender.sendMessage(StringUtils.coloredLine("&cUpdating system disabled."));
-                        break;
-                    default:
-                        sender.sendMessage(StringUtils.coloredLine("&cUpdate failed."));
                 }
             }
         }.runTaskAsynchronously(RPGInventory.getInstance());

@@ -32,6 +32,7 @@ import ru.endlesscode.rpginventory.pet.PetFood;
 import ru.endlesscode.rpginventory.pet.PetManager;
 import ru.endlesscode.rpginventory.pet.PetType;
 import ru.endlesscode.rpginventory.utils.EntityUtils;
+import ru.endlesscode.rpginventory.utils.ItemUtils;
 import ru.endlesscode.rpginventory.utils.StringUtils;
 
 import java.util.List;
@@ -91,7 +92,7 @@ public class PetListener implements Listener {
         }
 
         ItemStack petItem = InventoryManager.get(player).getInventory().getItem(PetManager.getPetSlotId());
-        if (petItem != null) {
+        if (!ItemUtils.isEmpty(petItem)) {
             PetManager.spawnPet(player, petItem);
         }
     }
@@ -138,12 +139,12 @@ public class PetListener implements Listener {
             return;
         }
 
-        LivingEntity petEntity = event.getEntity();
-        if (!((OfflinePlayer) ((Tameable) petEntity).getOwner()).isOnline()) {
+        Tameable petEntity = (Tameable) event.getEntity();
+        final OfflinePlayer player;
+        if (!petEntity.isTamed() || (player = (OfflinePlayer) petEntity.getOwner()) == null || !player.isOnline()) {
             return;
         }
 
-        final Player player = (Player) ((Tameable) petEntity).getOwner();
         if (!InventoryManager.playerIsLoaded(player)) {
             return;
         }
@@ -158,7 +159,7 @@ public class PetListener implements Listener {
                 PetManager.setCooldown(petItem, petType.getCooldown());
                 PetManager.saveHealth(petItem, 0);
                 inventory.setItem(PetManager.getPetSlotId(), petItem);
-                PetManager.startCooldownTimer(player, petItem);
+                PetManager.startCooldownTimer(player.getPlayer(), petItem);
             } else {
                 inventory.setItem(PetManager.getPetSlotId(), null);
             }

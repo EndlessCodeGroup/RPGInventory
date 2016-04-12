@@ -1,4 +1,4 @@
-package com.comphenix.packetwrapper;
+package com.comphenix.packetwrapper.included;
 
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketContainer;

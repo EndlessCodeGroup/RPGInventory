@@ -51,7 +51,7 @@ public class Updater {
     // Remote file's title
     private static final String TITLE_VALUE = "name";
     // Remote file's download link
-    private static final String DOWNLOAD_VALUE = "downloadUrl";
+//    private static final String DOWNLOAD_VALUE = "downloadUrl";
     // Remote file's download link
     private static final String LINK_VALUE = "fileUrl";
     // Remote file's release type
@@ -59,7 +59,7 @@ public class Updater {
     // Remote file's build version
     private static final String VERSION_VALUE = "gameVersion";
     // Remote file's md5
-    private static final String HASH_VALUE = "md5";
+//    private static final String HASH_VALUE = "md5";
     // Remote description
     private static final String DESCRIPTION_VALUE = "description";
     // Path to GET
@@ -619,8 +619,8 @@ public class Updater {
             this.versionType = (String) latestUpdate.get(Updater.TYPE_VALUE);
             this.infoLink = (String) latestUpdate.get(Updater.LINK_VALUE);
             this.description = (String) latestUpdate.get(Updater.DESCRIPTION_VALUE);
-            this.downloadLink = (String) latestUpdate.get(Updater.DOWNLOAD_VALUE);
-            this.hashSum = (String) latestUpdate.get(Updater.HASH_VALUE);
+//            this.downloadLink = (String) latestUpdate.get(Updater.DOWNLOAD_VALUE);
+//            this.hashSum = (String) latestUpdate.get(Updater.HASH_VALUE);
 
             return true;
         } catch (final IOException e) {

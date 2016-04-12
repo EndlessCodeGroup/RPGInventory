@@ -77,8 +77,12 @@ public class ItemUtils {
         return nbt.getString(tag);
     }
 
-    public static boolean hasTag(@NotNull ItemStack item, String tag) {
-        item = toBukkitItemStack(item);
+    public static boolean hasTag(@NotNull ItemStack originalItem, String tag) {
+        if (!originalItem.hasItemMeta()) {
+            return false;
+        }
+
+        ItemStack item = toBukkitItemStack(originalItem.clone());
         NbtCompound nbt = NbtFactory.asCompound(NbtFactory.fromItemTag(item));
         return nbt.containsKey(tag);
     }
@@ -101,15 +105,15 @@ public class ItemUtils {
         return item;
     }
 
-    public static NbtCompound itemStackToNBT(@NotNull ItemStack item, String name) {
+    public static NbtCompound itemStackToNBT(@NotNull ItemStack originalItem, String name) {
         NbtCompound nbt = NbtFactory.ofCompound(name);
 
-        nbt.put("material", item.getType().name());
-        nbt.put("amount", item.getAmount());
-        nbt.put("data", item.getDurability());
+        nbt.put("material", originalItem.getType().name());
+        nbt.put("amount", originalItem.getAmount());
+        nbt.put("data", originalItem.getDurability());
 
-        item = toBukkitItemStack(item);
-        NbtCompound tag = item.getType() == Material.AIR ? null : NbtFactory.asCompound(NbtFactory.fromItemTag(item));
+        ItemStack item = toBukkitItemStack(originalItem.clone());
+        NbtCompound tag = ItemUtils.isEmpty(item) ? null : NbtFactory.asCompound(NbtFactory.fromItemTag(item));
         if (tag != null) {
             nbt.put("tag", tag);
         }
@@ -120,7 +124,7 @@ public class ItemUtils {
     public static ItemStack nbtToItemStack(@NotNull NbtCompound nbt) {
         ItemStack item = new ItemStack(Material.valueOf(nbt.getString("material")));
 
-        if (item.getType() != Material.AIR) {
+        if (!ItemUtils.isEmpty(item)) {
             item.setAmount(nbt.getInteger("amount"));
             item.setDurability(nbt.getShort("data"));
 
@@ -143,7 +147,7 @@ public class ItemUtils {
 
     @Contract("null -> !null")
     private static ItemStack syncItem(ItemStack item) {
-        if (item == null || item.getType() == Material.AIR) {
+        if (ItemUtils.isEmpty(item)) {
             return new ItemStack(Material.AIR);
         }
 
@@ -185,6 +189,11 @@ public class ItemUtils {
         }
 
         return item;
+    }
+
+    @Contract("null -> true")
+    public static boolean isEmpty(ItemStack item) {
+        return item == null || item.getType() == Material.AIR;
     }
 
     private static ItemStack toBukkitItemStack(ItemStack item) {

@@ -23,14 +23,14 @@ import java.util.zip.GZIPOutputStream;
  * All rights reserved 2014 - 2015 © «EndlessCode Group»
  */
 class BackpackSerializer {
-    public static void saveBackpack(@NotNull Backpack backpack, @NotNull File file) throws IOException {
+    static void saveBackpack(@NotNull Backpack backpack, @NotNull File file) throws IOException {
         List<NbtCompound> nbtList = new ArrayList<>();
 
         try (DataOutputStream dataOutput = new DataOutputStream(new GZIPOutputStream(new FileOutputStream(file)))) {
             ItemStack[] contents = backpack.getContents();
             for (int i = 0; i < contents.length; i++) {
                 ItemStack item = contents[i];
-                nbtList.add(ItemUtils.itemStackToNBT(item == null ? new ItemStack(Material.AIR) : item, i + ""));
+                nbtList.add(ItemUtils.itemStackToNBT(ItemUtils.isEmpty(item) ? new ItemStack(Material.AIR) : item, i + ""));
             }
 
             NbtCompound backpackNbt = NbtFactory.ofCompound("Backpack");
@@ -42,7 +42,7 @@ class BackpackSerializer {
     }
 
     @Nullable
-    public static Backpack loadBackpack(@NotNull File file) throws IOException {
+    static Backpack loadBackpack(@NotNull File file) throws IOException {
         Backpack backpack;
         try (DataInputStream dataInput = new DataInputStream(new GZIPInputStream(new FileInputStream(file)))) {
             NbtCompound nbtList = NbtBinarySerializer.DEFAULT.deserializeCompound(dataInput);

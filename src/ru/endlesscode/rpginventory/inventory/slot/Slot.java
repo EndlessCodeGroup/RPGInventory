@@ -67,7 +67,7 @@ public class Slot {
             this.quickSlot = quickSlot;
         }
 
-        if (!slotType.isIgnoreItemList()) {
+        if (slotType.isReadItemList()) {
             for (String item : config.getStringList("items")) {
                 if (item.startsWith("-")) {
                     this.denied.add(item.substring(1));
@@ -144,7 +144,7 @@ public class Slot {
     }
 
     public boolean isValidItem(@Nullable ItemStack itemStack) {
-        return itemStack != null && itemStack.getType() != Material.AIR && !this.isDenied(itemStack) && this.isAllowed(itemStack);
+        return !ItemUtils.isEmpty(itemStack) && !this.isDenied(itemStack) && this.isAllowed(itemStack);
     }
 
     public boolean isFree() {
@@ -202,27 +202,27 @@ public class Slot {
 
     @SuppressWarnings("unused")
     public enum SlotType {
-        GENERIC(true, true, false, false, false),
-        ACTION(false, true, false, true, false),
-        PET(false, false, true, true, false),
-        ARMOR(false, false, false, false, false),
-        ACTIVE(true, false, false, false, false),
-        BACKPACK(true, false, false, true, false),
-        PASSIVE(true, true, false, false, false),
-        SHIELD(false, false, true, false, true),
-        ELYTRA(false, false, true, true, true);
+        GENERIC(true, true, false, true, false),
+        ACTION(false, true, false, false, false),
+        PET(false, false, true, false, false),
+        ARMOR(false, false, false, true, false),
+        ACTIVE(true, false, false, true, false),
+        BACKPACK(true, false, false, false, false),
+        PASSIVE(true, true, false, true, false),
+        SHIELD(false, false, true, true, true),
+        ELYTRA(false, false, true, false, true);
 
         private final boolean allowQuick;
         private final boolean allowMultiSlots;
         private final boolean unique;
-        private final boolean ignoreItemList;
+        private final boolean readItemList;
         private final boolean is1_9Feature;
 
-        SlotType(boolean allowQuick, boolean allowMultiSlots, boolean unique, boolean ignoreItemList, boolean is1_9Feature) {
+        SlotType(boolean allowQuick, boolean allowMultiSlots, boolean unique, boolean readItemList, boolean is1_9Feature) {
             this.allowQuick = allowQuick;
             this.allowMultiSlots = allowMultiSlots;
             this.unique = unique;
-            this.ignoreItemList = ignoreItemList;
+            this.readItemList = readItemList;
             this.is1_9Feature = is1_9Feature;
         }
 
@@ -238,8 +238,8 @@ public class Slot {
             return unique;
         }
 
-        public boolean isIgnoreItemList() {
-            return ignoreItemList;
+        public boolean isReadItemList() {
+            return readItemList;
         }
 
         public boolean is1_9Feature() {

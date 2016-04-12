@@ -22,7 +22,7 @@ import java.util.List;
  */
 @SuppressWarnings("deprecation")
 class CommandExecutor {
-    public static void givePet(CommandSender sender, String playerName, String petId) {
+    static void givePet(CommandSender sender, String playerName, String petId) {
         if (validatePlayer(sender, playerName)) {
             Player player = RPGInventory.getInstance().getServer().getPlayer(playerName);
             ItemStack petItem = PetManager.getPetItem(petId);
@@ -38,7 +38,7 @@ class CommandExecutor {
         sender.sendMessage(StringUtils.coloredLine("&3Use &6/rpginv pet [&eplayer&6] [&epetId&6]"));
     }
 
-    public static void giveFood(CommandSender sender, String playerName, String foodId, String stringAmount) {
+    static void giveFood(CommandSender sender, String playerName, String foodId, String stringAmount) {
         if (validatePlayer(sender, playerName)) {
             Player player = RPGInventory.getInstance().getServer().getPlayer(playerName);
             ItemStack foodItem = PetManager.getFoodItem(foodId);
@@ -60,7 +60,7 @@ class CommandExecutor {
         sender.sendMessage(StringUtils.coloredLine("&3Use &6/rpginv food [&eplayer&6] [&efoodId&6] (&eamount&6)"));
     }
 
-    public static void giveItem(CommandSender sender, String playerName, String itemId) {
+    static void giveItem(CommandSender sender, String playerName, String itemId) {
         if (validatePlayer(sender, playerName)) {
             Player player = RPGInventory.getInstance().getServer().getPlayer(playerName);
             ItemStack petItem = ItemManager.getItem(itemId);
@@ -76,7 +76,7 @@ class CommandExecutor {
         sender.sendMessage(StringUtils.coloredLine("&3Use &6/rpginv item [&eplayer&6] [&eitemId&6]"));
     }
 
-    public static void giveBackpack(CommandSender sender, String playerName, String id) {
+    static void giveBackpack(CommandSender sender, String playerName, String id) {
         if (validatePlayer(sender, playerName)) {
             Player player = RPGInventory.getInstance().getServer().getPlayer(playerName);
             ItemStack bpItem = BackpackManager.getItem(id);
@@ -92,7 +92,7 @@ class CommandExecutor {
         sender.sendMessage(StringUtils.coloredLine("&3Use &6/rpginv bp [&eplayer&6] [&eitemId&6]"));
     }
 
-    public static void printHelp(CommandSender sender) {
+    static void printHelp(CommandSender sender) {
         sender.sendMessage(StringUtils.coloredLine("&3===================&b[&eRPGInventory&b]&3====================="));
         sender.sendMessage(StringUtils.coloredLine("&8[] &7Required, &8() &7Optional"));
 
@@ -120,7 +120,7 @@ class CommandExecutor {
         sender.sendMessage(StringUtils.coloredLine("&3====================================================="));
     }
 
-    public static void printList(CommandSender sender, String type) {
+    static void printList(CommandSender sender, String type) {
         switch (type) {
             case "pet":
             case "pets":
@@ -148,14 +148,14 @@ class CommandExecutor {
         }
     }
 
-    public static void reloadPlugin(CommandSender sender) {
+    static void reloadPlugin(CommandSender sender) {
         PluginManager pm = RPGInventory.getInstance().getServer().getPluginManager();
         pm.disablePlugin(RPGInventory.getInstance());
         pm.enablePlugin(RPGInventory.getInstance());
         sender.sendMessage(StringUtils.coloredLine("&e[RPGInventory] Plugin successfully reloaded!"));
     }
 
-    public static void openInventory(CommandSender sender) {
+    static void openInventory(CommandSender sender) {
         if (!validatePlayer(sender)) {
             return;
         }
@@ -168,7 +168,7 @@ class CommandExecutor {
         InventoryManager.get(player).openInventory();
     }
 
-    public static void openInventory(CommandSender sender, String playerName) {
+    static void openInventory(CommandSender sender, String playerName) {
         if (!validatePlayer(sender) || !validatePlayer(sender, playerName)) {
             return;
         }
@@ -177,7 +177,7 @@ class CommandExecutor {
         ((Player) sender).openInventory(InventoryManager.get(player).getInventory());
     }
 
-    public static void updateTextures(CommandSender sender, String status) {
+    static void updateTextures(CommandSender sender, String status) {
         if (!validatePlayer(sender)) {
             return;
         }
@@ -186,7 +186,7 @@ class CommandExecutor {
         updateTextures(sender, player.getName(), status);
     }
 
-    public static void updateTextures(CommandSender sender, String playerName, String status) {
+    static void updateTextures(CommandSender sender, String playerName, String status) {
         if (validatePlayer(sender, playerName)) {
             final Player player = RPGInventory.getInstance().getServer().getPlayer(playerName);
             boolean flag = status.startsWith("e");

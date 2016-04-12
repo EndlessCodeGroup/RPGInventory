@@ -15,6 +15,7 @@ buyable.lore: "&6&o슬릇을 구입할려면 다음의 조건:"
 buyable.money: "&6&o• %s 만큼의 화폐가 필요하다"
 buyable.level: "&6&o• %d 만큼의 레벨이 필요하다"
 
+error.fall: "&cYou can't do it while you are flying"
 error.money: "&6&l%s 만큼의 돈이 더 필요합니다"
 error.level: "&6&l%d 만큼의 레벨이 더 필요합니다"
 error.buyable: "&6&l당신이 이 슬릇을 구입할려면 %d 만큼의 골드가 필요합니다. 구입 확인을 위해 10 초 이내로 다시 클릭해주시길 바랍니다."

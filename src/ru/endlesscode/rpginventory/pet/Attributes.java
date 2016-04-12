@@ -13,14 +13,14 @@ import java.lang.reflect.Method;
 import java.util.UUID;
 
 class Attributes {
-    public static final double BASE_SPEED = 0.30000001192092896D;
+    static final double BASE_SPEED = 0.30000001192092896D;
 
     private static final UUID MOVEMENT_SPEED_UID = UUID.fromString("2deaf4fc-1673-4c5b-ac4f-25e37e08760f");
 
     @Nullable
     private Object entity = null;
 
-    public Attributes(@NotNull LivingEntity entity) {
+    Attributes(@NotNull LivingEntity entity) {
         try {
             Method handleMethod = entity.getClass().getMethod("getHandle");
             this.entity = handleMethod.invoke(entity);
@@ -31,7 +31,7 @@ class Attributes {
 
     public void setSpeed(double speed) {
         String type = "d";
-        if (VersionHandler.is1_8_X()) {
+        if (!VersionHandler.is1_7_10() && !VersionHandler.is1_8()) {
             type = "MOVEMENT_SPEED";
         }
 

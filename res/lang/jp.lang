@@ -15,6 +15,7 @@ buyable.lore: "&6&oのスペースを購入するには、次の条件:"
 buyable.money: "&6&o• %s ほどの貨幣が必要である"
 buyable.level: "&6&o• %d ほどのレベルが必要である"
 
+error.fall: "&cYou can't do it while you are flying"
 error.money: "&6&l%sほどのお金が必要になります"
 error.level: "&6&l%dほどのレベルが必要です"
 error.buyable: "&6&lこのスペースを購入するには,%dだけのゴールドが必要になります。購入を確認するため、10秒以内に再度クリックして下さい"

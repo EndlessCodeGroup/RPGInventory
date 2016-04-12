@@ -1,6 +1,6 @@
-package com.comphenix.packetwrapper.v1_7_R4;
+package com.comphenix.packetwrapper.included.v1_7_R4;
 
-import com.comphenix.packetwrapper.AbstractPlayServerWorldParticlesPacket;
+import com.comphenix.packetwrapper.included.AbstractPlayServerWorldParticlesPacket;
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;

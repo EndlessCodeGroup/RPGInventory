@@ -1,6 +1,7 @@
 package ru.endlesscode.rpginventory.inventory;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -16,6 +17,7 @@ import ru.endlesscode.rpginventory.inventory.slot.SlotManager;
 import ru.endlesscode.rpginventory.item.ItemManager;
 import ru.endlesscode.rpginventory.item.ItemStat;
 import ru.endlesscode.rpginventory.item.Modifier;
+import ru.endlesscode.rpginventory.utils.ItemUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -234,7 +236,8 @@ public class PlayerWrapper implements InventoryHolder {
         ItemStack itemStack = this.inventory.getItem(elytraSlot.getSlotId());
         if (!elytraSlot.isCup(itemStack)) {
             Player player = this.player.getPlayer();
-            this.savedChestplate = player.getEquipment().getChestplate();
+            ItemStack chestplate = player.getEquipment().getChestplate();
+            this.savedChestplate = ItemUtils.isEmpty(chestplate) ? new ItemStack(Material.AIR) : chestplate;
             player.getEquipment().setChestplate(this.inventory.getItem(elytraSlot.getSlotId()));
 
             this.flying = true;
@@ -242,12 +245,14 @@ public class PlayerWrapper implements InventoryHolder {
     }
 
     private void stopFlight() {
-        Player player = this.player.getPlayer();
-        Slot elytraSlot = SlotManager.getSlotManager().getElytraSlot();
-        this.inventory.setItem(elytraSlot.getSlotId(), player.getEquipment().getChestplate());
-        player.getEquipment().setChestplate(this.savedChestplate);
+        if (savedChestplate != null) {
+            Player player = this.player.getPlayer();
+            Slot elytraSlot = SlotManager.getSlotManager().getElytraSlot();
+            this.inventory.setItem(elytraSlot.getSlotId(), player.getEquipment().getChestplate());
+            player.getEquipment().setChestplate(this.savedChestplate);
+            this.savedChestplate = null;
+        }
         this.flying = false;
-        this.savedChestplate = null;
     }
 
     public boolean isFalling() {
@@ -267,5 +272,13 @@ public class PlayerWrapper implements InventoryHolder {
         if (this.fallTime++ == 4) {
             this.startFlight();
         }
+    }
+
+    public boolean isFlying() {
+        return flying;
+    }
+
+    ItemStack getSavedChestplate() {
+        return savedChestplate;
     }
 }

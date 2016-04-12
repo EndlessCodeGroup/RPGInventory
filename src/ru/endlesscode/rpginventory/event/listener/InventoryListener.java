@@ -21,10 +21,7 @@ import ru.endlesscode.rpginventory.api.InventoryAPI;
 import ru.endlesscode.rpginventory.event.PetUnequipEvent;
 import ru.endlesscode.rpginventory.event.PlayerInventoryLoadEvent;
 import ru.endlesscode.rpginventory.event.PlayerInventoryUnloadEvent;
-import ru.endlesscode.rpginventory.inventory.InventoryLocker;
-import ru.endlesscode.rpginventory.inventory.InventoryManager;
-import ru.endlesscode.rpginventory.inventory.PlayerWrapper;
-import ru.endlesscode.rpginventory.inventory.ResourcePackManager;
+import ru.endlesscode.rpginventory.inventory.*;
 import ru.endlesscode.rpginventory.inventory.backpack.BackpackManager;
 import ru.endlesscode.rpginventory.inventory.slot.ActionSlot;
 import ru.endlesscode.rpginventory.inventory.slot.Slot;
@@ -232,7 +229,7 @@ public class InventoryListener implements Listener {
         final Slot slot = SlotManager.getSlotManager().getSlot(event.getSlot(), event.getSlotType());
         final Inventory inventory = event.getInventory();
         InventoryAction action = event.getAction();
-        InventoryUtils.ActionType actionType = InventoryUtils.getTypeOfAction(action);
+        ActionType actionType = ActionType.getTypeOfAction(action);
         ItemStack currentItem = event.getCurrentItem();
         ItemStack cursor = event.getCursor();
 
@@ -275,6 +272,13 @@ public class InventoryListener implements Listener {
             PlayerWrapper playerWrapper = null;
             if (InventoryAPI.isRPGInventory(inventory)) {
                 playerWrapper = (PlayerWrapper) inventory.getHolder();
+
+                // Check flying
+                if (playerWrapper.isFlying()) {
+                    player.sendMessage(RPGInventory.getLanguage().getCaption("error.fall"));
+                    event.setCancelled(true);
+                    return;
+                }
             }
 
             if (!validateClick(player, playerWrapper, slot, actionType, currentItem, event.getSlotType())) {
@@ -302,7 +306,7 @@ public class InventoryListener implements Listener {
             } else if (slot.getSlotType() == Slot.SlotType.BACKPACK) {
                 if (event.getClick() == ClickType.RIGHT && BackpackManager.open(player, currentItem)) {
                     event.setCancelled(true);
-                } else if (actionType != InventoryUtils.ActionType.GET) {
+                } else if (actionType != ActionType.GET) {
                     event.setCancelled(!BackpackManager.isBackpack(cursor));
                 }
             }
@@ -316,7 +320,7 @@ public class InventoryListener implements Listener {
                     InventoryManager.updateShieldSlot(player, inventory, slot, event.getSlot(), event.getSlotType(),
                             action, currentItem, cursor);
                     event.setCancelled(true);
-                } else if (actionType == InventoryUtils.ActionType.GET || actionType == InventoryUtils.ActionType.DROP) {
+                } else if (actionType == ActionType.GET || actionType == ActionType.DROP) {
                     new BukkitRunnable() {
                         @SuppressWarnings("deprecation")
                         @Override
@@ -338,7 +342,7 @@ public class InventoryListener implements Listener {
      * @return Click is valid
      */
     private boolean validateClick(Player player, PlayerWrapper playerWrapper, Slot slot,
-                                  InventoryUtils.ActionType actionType, ItemStack currentItem, InventoryType.SlotType slotType) {
+                                  ActionType actionType, ItemStack currentItem, InventoryType.SlotType slotType) {
         if (playerWrapper != null) {
             if (player != playerWrapper.getPlayer()) {
                 return false;
@@ -354,8 +358,8 @@ public class InventoryListener implements Listener {
             }
         }
 
-        return !((actionType == InventoryUtils.ActionType.GET && slot.getSlotType() != Slot.SlotType.ACTION
-                || actionType == InventoryUtils.ActionType.DROP) && slot.isCup(currentItem) && slotType != InventoryType.SlotType.QUICKBAR);
+        return !((actionType == ActionType.GET && slot.getSlotType() != Slot.SlotType.ACTION
+                || actionType == ActionType.DROP) && slot.isCup(currentItem) && slotType != InventoryType.SlotType.QUICKBAR);
     }
 
     /**
@@ -367,7 +371,7 @@ public class InventoryListener implements Listener {
         final Inventory inventory = event.getInventory();
         final int rawSlot = event.getRawSlot();
         InventoryAction action = event.getAction();
-        InventoryUtils.ActionType actionType = InventoryUtils.getTypeOfAction(action);
+        ActionType actionType = ActionType.getTypeOfAction(action);
 
         if (InventoryManager.validateArmor(action, slot, cursor)) {
             // Event of equip armor
@@ -382,7 +386,7 @@ public class InventoryListener implements Listener {
 
             InventoryManager.updateArmor(player, inventory, slot, rawSlot, action, currentItem, cursor);
 
-            if (actionType == InventoryUtils.ActionType.GET) {
+            if (actionType == ActionType.GET) {
                 inventory.setItem(rawSlot, slot.getCup());
             } else if (slot.isCup(currentItem)) {
                 player.setItemOnCursor(new ItemStack(Material.AIR));
@@ -392,7 +396,7 @@ public class InventoryListener implements Listener {
             player.updateInventory();
         }
 
-        if (actionType == InventoryUtils.ActionType.DROP) {
+        if (actionType == ActionType.DROP) {
             new BukkitRunnable() {
                 @SuppressWarnings("deprecation")
                 @Override

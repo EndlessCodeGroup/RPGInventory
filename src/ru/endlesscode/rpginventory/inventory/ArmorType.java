@@ -1,8 +1,11 @@
-package ru.endlesscode.rpginventory.inventory.slot;
+package ru.endlesscode.rpginventory.inventory;
 
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.Nullable;
 import ru.endlesscode.rpginventory.nms.VersionHandler;
+import ru.endlesscode.rpginventory.utils.ItemUtils;
 
 /**
  * Created by OsipXD on 08.04.2016
@@ -23,7 +26,7 @@ public enum ArmorType {
     }
 
     public static ArmorType matchType(ItemStack item) {
-        if (item == null) {
+        if (ItemUtils.isEmpty(item)) {
             return UNKNOWN;
         }
 
@@ -59,6 +62,22 @@ public enum ArmorType {
         }
 
         return UNKNOWN;
+    }
+
+    @Nullable
+    public ItemStack getItem(Player player) {
+        switch (this) {
+            case HELMET:
+                return player.getEquipment().getHelmet();
+            case CHESTPLATE:
+                return player.getEquipment().getChestplate();
+            case LEGGINGS:
+                return player.getEquipment().getLeggings();
+            case BOOTS:
+                return player.getEquipment().getBoots();
+            default:
+                return null;
+        }
     }
 
     public int getSlot() {

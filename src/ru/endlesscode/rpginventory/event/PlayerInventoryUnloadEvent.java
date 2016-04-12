@@ -26,6 +26,12 @@ public class PlayerInventoryUnloadEvent extends PlayerEvent {
         return handlers;
     }
 
+    public static class Pre extends PlayerInventoryUnloadEvent {
+        public Pre(Player who) {
+            super(who);
+        }
+    }
+
     public static class Post extends PlayerInventoryUnloadEvent {
         public Post(Player who) {
             super(who);
