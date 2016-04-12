@@ -13,6 +13,7 @@ import org.bukkit.inventory.ItemStack;
 import ru.endlesscode.rpginventory.RPGInventory;
 import ru.endlesscode.rpginventory.inventory.InventoryLocker;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
+import ru.endlesscode.rpginventory.utils.ItemUtils;
 
 import java.util.List;
 
@@ -46,7 +47,7 @@ public class LockerListener implements Listener {
             return;
         }
 
-        if (currentItem != null && InventoryLocker.isLockedSlot(currentItem)) {
+        if (!ItemUtils.isEmpty(currentItem) && InventoryLocker.isLockedSlot(currentItem)) {
             int slot = event.getSlot();
             int line = InventoryLocker.getLine(slot);
             if (InventoryLocker.isBuyableSlot(currentItem, line)) {

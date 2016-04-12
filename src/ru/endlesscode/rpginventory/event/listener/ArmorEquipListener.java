@@ -1,7 +1,6 @@
 package ru.endlesscode.rpginventory.event.listener;
 
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -17,11 +16,13 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import ru.endlesscode.rpginventory.RPGInventory;
 import ru.endlesscode.rpginventory.api.InventoryAPI;
+import ru.endlesscode.rpginventory.inventory.ActionType;
+import ru.endlesscode.rpginventory.inventory.ArmorType;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
-import ru.endlesscode.rpginventory.inventory.slot.ArmorType;
 import ru.endlesscode.rpginventory.inventory.slot.Slot;
 import ru.endlesscode.rpginventory.inventory.slot.SlotManager;
 import ru.endlesscode.rpginventory.utils.InventoryUtils;
+import ru.endlesscode.rpginventory.utils.ItemUtils;
 
 /**
  * Created by OsipXD on 08.04.2016
@@ -32,33 +33,33 @@ public class ArmorEquipListener implements Listener {
     @EventHandler
     public void onQuickEquip(PlayerInteractEvent event) {
         final Player player = event.getPlayer();
-        if (!InventoryManager.playerIsLoaded(player)) {
+        if (!InventoryManager.playerIsLoaded(player)
+                || event.getAction() != Action.RIGHT_CLICK_AIR && event.getAction() != Action.RIGHT_CLICK_BLOCK) {
             return;
         }
 
         ItemStack item = event.getItem();
-        if (item == null || item.getType() == Material.AIR) {
+        if (ItemUtils.isEmpty(item)) {
             return;
         }
 
         ArmorType armorType = ArmorType.matchType(item);
-        if (armorType != ArmorType.UNKNOWN
-                && (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK)) {
+        if (!InventoryUtils.playerHasArmor(player, armorType)) {
             Slot armorSlot = SlotManager.getSlotManager().getSlot(armorType.name());
             if (armorSlot == null) {
                 return;
             }
 
             event.setCancelled(!InventoryManager.validateArmor(InventoryAction.PLACE_ONE, armorSlot, item));
-        }
 
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                //noinspection deprecation
-                player.updateInventory();
-            }
-        }.runTaskLater(RPGInventory.getInstance(), 1);
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    //noinspection deprecation
+                    player.updateInventory();
+                }
+            }.runTaskLater(RPGInventory.getInstance(), 1);
+        }
     }
 
     @EventHandler
@@ -81,42 +82,49 @@ public class ArmorEquipListener implements Listener {
             return;
         }
 
-        InventoryUtils.ActionType actionType = InventoryUtils.getTypeOfAction(event.getAction());
-        if (actionType == InventoryUtils.ActionType.SET && event.getSlotType() != InventoryType.SlotType.ARMOR) {
+        ActionType actionType = ActionType.getTypeOfAction(event.getAction());
+        if (actionType == ActionType.SET && event.getSlotType() != InventoryType.SlotType.ARMOR) {
             return;
         }
 
-        // Validate classic method
-        if (actionType == InventoryUtils.ActionType.SET) {
+        if (InventoryManager.get(player).isFlying()) {
+            player.sendMessage(RPGInventory.getLanguage().getCaption("error.fall"));
+            event.setCancelled(true);
+            return;
+        }
+
+        if (actionType == ActionType.SET) {
+            // Validate classic method
             ItemStack item = event.getCursor();
             Slot armorSlot = InventoryUtils.getArmorSlotById(event.getRawSlot());
-            if (item == null || item.getType() == Material.AIR || armorSlot == null) {
+
+            if (ItemUtils.isEmpty(item) || armorSlot == null) {
                 return;
             }
-            event.setCancelled(!InventoryManager.validateArmor(event.getAction(), armorSlot, item));
-            return;
-        }
 
-        // Validate Shift-Click
-        ItemStack item = event.getCurrentItem();
-        ArmorType armorType = ArmorType.matchType(item);
-        if (event.getAction() == InventoryAction.MOVE_TO_OTHER_INVENTORY) {
+            event.setCancelled(!InventoryManager.validateArmor(event.getAction(), armorSlot, item));
+        } else if (event.getAction() == InventoryAction.HOTBAR_SWAP) {
+            // Prevent method when player press number
+            if (event.getInventory().getType() == InventoryType.CRAFTING) {
+                ItemStack hotbarItem = player.getInventory().getItem(event.getHotbarButton());
+                if (!ItemUtils.isEmpty(hotbarItem)) {
+                    event.setCancelled(true);
+                }
+            }
+        } else if (event.getAction() == InventoryAction.MOVE_TO_OTHER_INVENTORY) {
+            // Validate Shift-Click
+            ItemStack item = event.getCurrentItem();
+            ArmorType armorType = ArmorType.matchType(item);
+
             if (armorType == ArmorType.UNKNOWN) {
                 event.setCancelled(true);
                 return;
             }
 
             Slot armorSlot = SlotManager.getSlotManager().getSlot(armorType.name());
-            if (armorSlot == null) {
-                return;
+            if (armorSlot != null && !InventoryUtils.playerHasArmor(player, armorType)) {
+                event.setCancelled(!InventoryManager.validateArmor(InventoryAction.PLACE_ONE, armorSlot, item));
             }
-
-            ItemStack armorItem = InventoryUtils.getArmorItemById(player, armorType.getSlot());
-            if (armorItem != null && armorItem.getType() != Material.AIR) {
-                return;
-            }
-
-            event.setCancelled(!InventoryManager.validateArmor(InventoryAction.PLACE_ONE, armorSlot, item));
         }
     }
 

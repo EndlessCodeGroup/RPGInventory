@@ -1,7 +1,7 @@
 package ru.endlesscode.rpginventory.event.listener;
 
-import com.comphenix.packetwrapper.WrapperPlayClientResourcePackStatus;
-import com.comphenix.packetwrapper.WrapperPlayServerResourcePackSend;
+import com.comphenix.packetwrapper.included.WrapperPlayClientResourcePackStatus;
+import com.comphenix.packetwrapper.included.WrapperPlayServerResourcePackSend;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.wrappers.EnumWrappers;
@@ -77,7 +77,7 @@ public class ResourcePackListener extends PacketAdapter {
     private class InventoryUpdater extends BukkitRunnable {
         private final Player player;
 
-        public InventoryUpdater(Player player) {
+        InventoryUpdater(Player player) {
             this.player = player;
         }
 

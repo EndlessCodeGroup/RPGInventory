@@ -3,7 +3,6 @@ package ru.endlesscode.rpginventory.inventory;
 import com.comphenix.protocol.wrappers.nbt.NbtCompound;
 import com.comphenix.protocol.wrappers.nbt.NbtFactory;
 import com.comphenix.protocol.wrappers.nbt.io.NbtBinarySerializer;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -35,7 +34,7 @@ class InventorySerializer {
                 for (int i = 0; i < slotIds.size(); i++) {
                     int slotId = slotIds.get(i);
                     ItemStack itemStack = inventory.getItem(slotId);
-                    if (itemStack != null && itemStack.getType() != Material.AIR && !slot.isCup(itemStack)) {
+                    if (!ItemUtils.isEmpty(itemStack) && !slot.isCup(itemStack)) {
                         itemList.add(ItemUtils.itemStackToNBT(itemStack, i + ""));
                     }
                 }

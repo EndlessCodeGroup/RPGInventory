@@ -48,7 +48,7 @@ public class ItemListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onLoadInventory(PlayerInventoryLoadEvent.Post event) {
         Player player = event.getPlayer();
-        ItemManager.updateStats(player);
+        ItemManager.updateStatsLater(player);
 
         // Sync armor
         player.getInventory().setArmorContents(ItemUtils.syncItems(player.getInventory().getArmorContents()));
@@ -87,7 +87,7 @@ public class ItemListener implements Listener {
             //noinspection deprecation
             itemInHand = (VersionHandler.is1_9()) ? damager.getEquipment().getItemInMainHand() : damager.getItemInHand();
             damageModifier = ItemManager.getModifier(damager,
-                    (itemInHand == null || itemInHand.getType() == Material.AIR) ? ItemStat.StatType.HAND_DAMAGE : ItemStat.StatType.DAMAGE, false);
+                    ItemUtils.isEmpty(itemInHand) ? ItemStat.StatType.HAND_DAMAGE : ItemStat.StatType.DAMAGE, false);
         } else if (event.getDamager().getType() == EntityType.ARROW && ((Arrow) event.getDamager()).getShooter() instanceof Player) {
             damager = (Player) ((Arrow) event.getDamager()).getShooter();
             //noinspection deprecation
@@ -191,7 +191,7 @@ public class ItemListener implements Listener {
             event.setCancelled(true);
         }
 
-        ItemManager.updateStats(player);
+        ItemManager.updateStatsLater(player);
     }
 
     @EventHandler(priority = EventPriority.LOW)
@@ -247,7 +247,7 @@ public class ItemListener implements Listener {
             Slot shieldSlot = SlotManager.getSlotManager().getShieldSlot();
             if (shieldSlot != null && (!dropForPlayer || !shieldSlot.isDrop())) {
                 ItemStack itemInOffHand = player.getEquipment().getItemInOffHand();
-                if (itemInOffHand.getType() != Material.AIR) {
+                if (!ItemUtils.isEmpty(itemInOffHand)) {
                     contents.add(itemInOffHand);
                     event.getDrops().remove(itemInOffHand);
                 }
@@ -293,7 +293,7 @@ public class ItemListener implements Listener {
             return;
         }
 
-        ItemManager.updateStats(event.getPlayer());
+        ItemManager.updateStatsLater(event.getPlayer());
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
@@ -305,7 +305,7 @@ public class ItemListener implements Listener {
         }
 
         if (CustomItem.isCustomItem(event.getCursor()) || CustomItem.isCustomItem(event.getCurrentItem())) {
-            ItemManager.updateStats(player);
+            ItemManager.updateStatsLater(player);
         }
     }
 
@@ -324,7 +324,7 @@ public class ItemListener implements Listener {
                 for (int slot : event.getRawSlots()) {
                     ItemStack item = inventoryView.getItem(slot);
                     if (CustomItem.isCustomItem(item)) {
-                        ItemManager.updateStats((Player) event.getWhoClicked());
+                        ItemManager.updateStatsLater((Player) event.getWhoClicked());
                     }
                 }
             }
@@ -346,7 +346,7 @@ public class ItemListener implements Listener {
             @Override
             public void run() {
                 if (CustomItem.isCustomItem(oldItem) || CustomItem.isCustomItem(newItem)) {
-                    ItemManager.updateStats(event.getPlayer());
+                    ItemManager.updateStatsLater(event.getPlayer());
                 }
             }
         }.runTaskLater(RPGInventory.getInstance(), 1);
@@ -362,7 +362,7 @@ public class ItemListener implements Listener {
 
         ItemStack item = event.getItem().getItemStack();
         if (CustomItem.isCustomItem(item)) {
-            ItemManager.updateStats(player);
+            ItemManager.updateStatsLater(player);
         }
     }
 
@@ -375,7 +375,7 @@ public class ItemListener implements Listener {
         }
 
         if (CustomItem.isCustomItem(event.getItemDrop().getItemStack())) {
-            ItemManager.updateStats(player);
+            ItemManager.updateStatsLater(player);
         }
     }
 
@@ -388,7 +388,7 @@ public class ItemListener implements Listener {
         }
 
         if (CustomItem.isCustomItem(event.getBrokenItem())) {
-            ItemManager.updateStats(player);
+            ItemManager.updateStatsLater(player);
         }
     }
 }

@@ -7,6 +7,7 @@ import org.bukkit.event.inventory.InventoryType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ru.endlesscode.rpginventory.RPGInventory;
+import ru.endlesscode.rpginventory.inventory.ArmorType;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
 import ru.endlesscode.rpginventory.inventory.ResourcePackManager;
 import ru.endlesscode.rpginventory.misc.Config;
@@ -75,7 +76,7 @@ public class SlotManager {
             return false;
         }
 
-        if (!slot.getSlotType().isIgnoreItemList() && slot.itemListIsEmpty()) {
+        if (slot.getSlotType().isReadItemList() && slot.itemListIsEmpty()) {
             RPGInventory.getPluginLogger().warning("Slot with type " + slot.getSlotType()
                     + " must contains list of allowed items");
         }

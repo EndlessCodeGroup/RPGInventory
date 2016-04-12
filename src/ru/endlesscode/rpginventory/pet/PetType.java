@@ -46,7 +46,7 @@ public class PetType {
     private Disguise disguise;
     private ItemStack spawnItem;
 
-    public PetType(@NotNull ConfigurationSection config) {
+    PetType(@NotNull ConfigurationSection config) {
         this.name = StringUtils.coloredLine(config.getString("name"));
         this.itemName = StringUtils.coloredLine(config.getString("item-name"));
         this.lore = StringUtils.coloredLine(config.getString("lore"));
@@ -69,7 +69,7 @@ public class PetType {
 
     @Contract("null -> false")
     public static boolean isPetItem(ItemStack item) {
-        return item != null && item.getType() != Material.AIR && ItemUtils.hasTag(item, ItemUtils.PET_TAG);
+        return !ItemUtils.isEmpty(item) && ItemUtils.hasTag(item, ItemUtils.PET_TAG);
     }
 
     @Nullable
@@ -103,7 +103,7 @@ public class PetType {
         }
 
         // Build disguise
-        this.skin = DisguiseType.valueOf(config.getString("skin", this.role.getDeafultSkin()));
+        this.skin = DisguiseType.valueOf(config.getString("skin", this.role.getDefaultSkin()));
 
         Disguise disguise;
         if (features != null) {
@@ -190,6 +190,7 @@ public class PetType {
             disguise = new MobDisguise(this.skin, true);
         }
 
+        disguise.setReplaceSounds(true);
         this.disguise = disguise;
     }
 
@@ -256,7 +257,7 @@ public class PetType {
         return attackMobs;
     }
 
-    public boolean isAdult() {
+    boolean isAdult() {
         return disguise.getType() == DisguiseType.PLAYER || ((MobDisguise) disguise).isAdult();
     }
 
@@ -264,26 +265,26 @@ public class PetType {
         return role;
     }
 
-    public DisguiseType getSkin() {
+    DisguiseType getSkin() {
         return this.skin;
     }
 
-    public Disguise getDisguise() {
-        return this.disguise;
+    Disguise getDisguise() {
+        return this.disguise.clone();
     }
 
     public enum Role {
         COMPANION("WOLF"),
         MOUNT("HORSE");
 
-        private final String deafultSkin;
+        private final String defaultSkin;
 
         Role(String defaultSkin) {
-            this.deafultSkin = defaultSkin;
+            this.defaultSkin = defaultSkin;
         }
 
-        public String getDeafultSkin() {
-            return deafultSkin;
+        public String getDefaultSkin() {
+            return defaultSkin;
         }
     }
 }

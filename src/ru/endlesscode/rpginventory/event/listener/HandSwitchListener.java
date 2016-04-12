@@ -1,6 +1,5 @@
 package ru.endlesscode.rpginventory.event.listener;
 
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -8,11 +7,12 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.inventory.ItemStack;
+import ru.endlesscode.rpginventory.inventory.ActionType;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
 import ru.endlesscode.rpginventory.inventory.slot.Slot;
 import ru.endlesscode.rpginventory.inventory.slot.SlotManager;
 import ru.endlesscode.rpginventory.item.ItemManager;
-import ru.endlesscode.rpginventory.utils.InventoryUtils;
+import ru.endlesscode.rpginventory.utils.ItemUtils;
 
 /**
  * Created by OsipXD on 07.04.2016
@@ -35,8 +35,8 @@ public class HandSwitchListener implements Listener {
         }
 
         if (offHandSlot != null) {
-            if (newOffHandItem != null && newOffHandItem.getType() != Material.AIR
-                    && !InventoryManager.validateUpdate(player, InventoryUtils.ActionType.SET, offHandSlot, newOffHandItem)) {
+            if (!ItemUtils.isEmpty(newOffHandItem)
+                    && !InventoryManager.validateUpdate(player, ActionType.SET, offHandSlot, newOffHandItem)) {
                 event.setCancelled(true);
                 return;
             }
@@ -48,12 +48,12 @@ public class HandSwitchListener implements Listener {
         }
 
         if (mainHandSlot != null) {
-            if (newOffHandItem != null && mainHandSlot.isCup(newOffHandItem)) {
+            if (!ItemUtils.isEmpty(newOffHandItem) && mainHandSlot.isCup(newOffHandItem)) {
                 event.setCancelled(true);
                 return;
             }
 
-            if (!InventoryManager.validateUpdate(player, InventoryUtils.ActionType.SET, mainHandSlot, newMainHandItem)) {
+            if (!InventoryManager.validateUpdate(player, ActionType.SET, mainHandSlot, newMainHandItem)) {
                 event.setCancelled(true);
             }
         }
@@ -61,6 +61,6 @@ public class HandSwitchListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void afterHandSwitch(PlayerSwapHandItemsEvent event) {
-        ItemManager.updateStats(event.getPlayer());
+        ItemManager.updateStatsLater(event.getPlayer());
     }
 }

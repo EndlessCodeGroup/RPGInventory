@@ -1,8 +1,8 @@
 package ru.endlesscode.rpginventory.utils;
 
-import com.comphenix.packetwrapper.AbstractPacket;
-import com.comphenix.packetwrapper.AbstractPlayServerWorldParticlesPacket;
-import com.comphenix.packetwrapper.WrapperPlayServerWorldParticles;
+import com.comphenix.packetwrapper.included.AbstractPacket;
+import com.comphenix.packetwrapper.included.AbstractPlayServerWorldParticlesPacket;
+import com.comphenix.packetwrapper.included.WrapperPlayServerWorldParticles;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.wrappers.EnumWrappers;
 import org.bukkit.Location;
@@ -39,7 +39,7 @@ public class EffectUtils {
         AbstractPacket packet;
         AbstractPlayServerWorldParticlesPacket particles;
         if (VersionHandler.is1_7_10()) {
-            particles = new com.comphenix.packetwrapper.v1_7_R4.WrapperPlayServerWorldParticles();
+            particles = new com.comphenix.packetwrapper.included.v1_7_R4.WrapperPlayServerWorldParticles();
         } else {
             particles = new WrapperPlayServerWorldParticles();
         }

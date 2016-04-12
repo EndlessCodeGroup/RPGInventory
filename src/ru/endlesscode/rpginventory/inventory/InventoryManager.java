@@ -68,21 +68,21 @@ public class InventoryManager {
     }
 
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
-    public static boolean validateUpdate(Player player, InventoryUtils.ActionType actionType, @NotNull Slot slot, ItemStack item) {
-        return actionType == InventoryUtils.ActionType.GET || actionType == InventoryUtils.ActionType.DROP
-                || actionType == InventoryUtils.ActionType.SET && ItemManager.allowedForPlayer(player, item, true) && slot.isValidItem(item);
+    public static boolean validateUpdate(Player player, ActionType actionType, @NotNull Slot slot, ItemStack item) {
+        return actionType == ActionType.GET || actionType == ActionType.DROP
+                || actionType == ActionType.SET && ItemManager.allowedForPlayer(player, item, true) && slot.isValidItem(item);
     }
 
     public static boolean validatePet(Player player, InventoryAction action, @Nullable ItemStack currentItem, @NotNull ItemStack cursor) {
-        InventoryUtils.ActionType actionType = InventoryUtils.getTypeOfAction(action);
+        ActionType actionType = ActionType.getTypeOfAction(action);
 
-        if (currentItem != null && currentItem.getType() != Material.AIR
-                && (actionType == InventoryUtils.ActionType.GET || action == InventoryAction.SWAP_WITH_CURSOR || actionType == InventoryUtils.ActionType.DROP)
+        if (!ItemUtils.isEmpty(currentItem)
+                && (actionType == ActionType.GET || action == InventoryAction.SWAP_WITH_CURSOR || actionType == ActionType.DROP)
                 && PetManager.getCooldown(currentItem) > 0) {
             return false;
         }
 
-        if (actionType == InventoryUtils.ActionType.SET) {
+        if (actionType == ActionType.SET) {
             if (PetType.isPetItem(cursor)) {
                 PetEquipEvent event = new PetEquipEvent(player, cursor);
                 RPGInventory.getInstance().getServer().getPluginManager().callEvent(event);
@@ -94,7 +94,7 @@ public class InventoryManager {
                 PetManager.spawnPet(event.getPlayer(), event.getPetItem());
                 return true;
             }
-        } else if (actionType == InventoryUtils.ActionType.GET || actionType == InventoryUtils.ActionType.DROP) {
+        } else if (actionType == ActionType.GET || actionType == ActionType.DROP) {
             PetUnequipEvent event = new PetUnequipEvent(player);
             RPGInventory.getInstance().getServer().getPluginManager().callEvent(event);
             PetManager.despawnPet(event.getPlayer());
@@ -105,16 +105,16 @@ public class InventoryManager {
     }
 
     public static boolean validateArmor(InventoryAction action, @NotNull Slot slot, ItemStack cursor) {
-        InventoryUtils.ActionType actionType = InventoryUtils.getTypeOfAction(action);
+        ActionType actionType = ActionType.getTypeOfAction(action);
 
-        return !(actionType == InventoryUtils.ActionType.SET || action == InventoryAction.UNKNOWN) || slot.isValidItem(cursor);
+        return !(actionType == ActionType.SET || action == InventoryAction.UNKNOWN) || slot.isValidItem(cursor);
     }
 
     public static void updateShieldSlot(@NotNull Player player, @NotNull Inventory inventory, @NotNull Slot slot, int slotId,
                                         InventoryType.SlotType slotType, InventoryAction action,
                                         ItemStack currentItem, ItemStack cursor) {
-        InventoryUtils.ActionType actionType = InventoryUtils.getTypeOfAction(action);
-        if (actionType == InventoryUtils.ActionType.GET) {
+        ActionType actionType = ActionType.getTypeOfAction(action);
+        if (actionType == ActionType.GET) {
             if (slot.isCup(currentItem)) {
                 return;
             }
@@ -124,10 +124,7 @@ public class InventoryManager {
             } else {
                 player.getEquipment().setItemInOffHand(new ItemStack(Material.AIR));
             }
-
-//            action = InventoryAction.SWAP_WITH_CURSOR;
-//            cursor = slot.getCup();
-        } else if (actionType == InventoryUtils.ActionType.SET) {
+        } else if (actionType == ActionType.SET) {
             if (slot.isCup(currentItem)) {
                 currentItem = null;
                 action = InventoryAction.PLACE_ALL;
@@ -146,8 +143,8 @@ public class InventoryManager {
     public static void updateQuickSlot(@NotNull Player player, @NotNull Inventory inventory, @NotNull Slot slot, int slotId,
                                        InventoryType.SlotType slotType, InventoryAction action,
                                        ItemStack currentItem, ItemStack cursor) {
-        InventoryUtils.ActionType actionType = InventoryUtils.getTypeOfAction(action);
-        if (actionType == InventoryUtils.ActionType.GET) {
+        ActionType actionType = ActionType.getTypeOfAction(action);
+        if (actionType == ActionType.GET) {
             if (slot.isCup(currentItem)) {
                 return;
             }
@@ -164,7 +161,7 @@ public class InventoryManager {
 
             action = InventoryAction.SWAP_WITH_CURSOR;
             cursor = slot.getCup();
-        } else if (actionType == InventoryUtils.ActionType.SET) {
+        } else if (actionType == ActionType.SET) {
             if (slot.isCup(currentItem)) {
                 currentItem = null;
                 action = InventoryAction.PLACE_ALL;
@@ -181,10 +178,10 @@ public class InventoryManager {
     }
 
     public static void updateArmor(@NotNull Player player, @NotNull Inventory inventory, @NotNull Slot slot, int slotId, InventoryAction action, ItemStack currentItem, @NotNull ItemStack cursor) {
-        InventoryUtils.ActionType actionType = InventoryUtils.getTypeOfAction(action);
+        ActionType actionType = ActionType.getTypeOfAction(action);
 
         // Equip armor
-        if (actionType == InventoryUtils.ActionType.SET || action == InventoryAction.UNKNOWN) {
+        if (actionType == ActionType.SET || action == InventoryAction.UNKNOWN) {
             switch (slot.getName()) {
                 case "helmet":
                     InventoryManager.updateInventory(player, inventory, slotId, action, currentItem, cursor);
@@ -203,7 +200,7 @@ public class InventoryManager {
                     player.getEquipment().setBoots(inventory.getItem(slotId));
                     break;
             }
-        } else if (actionType == InventoryUtils.ActionType.GET || actionType == InventoryUtils.ActionType.DROP) { // Unequip armor
+        } else if (actionType == ActionType.GET || actionType == ActionType.DROP) { // Unequip armor
             InventoryManager.updateInventory(player, inventory, slotId, action, currentItem, cursor);
 
             switch (slot.getName()) {
@@ -228,25 +225,30 @@ public class InventoryManager {
         if (sm.getHelmetSlotId() != -1) {
             ItemStack helmet = player.getEquipment().getHelmet();
             Slot helmetSlot = sm.getSlot(sm.getHelmetSlotId(), InventoryType.SlotType.CONTAINER);
-            inventory.setItem(sm.getHelmetSlotId(), (helmet == null || helmet.getType() == Material.AIR) && helmetSlot != null ? helmetSlot.getCup() : helmet);
+            inventory.setItem(sm.getHelmetSlotId(), (ItemUtils.isEmpty(helmet))
+                    && helmetSlot != null ? helmetSlot.getCup() : helmet);
         }
 
         if (sm.getChestplateSlotId() != -1) {
-            ItemStack chestplate = player.getEquipment().getChestplate();
+            ItemStack savedChestplate = InventoryManager.get((OfflinePlayer) player).getSavedChestplate();
+            ItemStack chestplate = savedChestplate == null ? player.getEquipment().getChestplate() : savedChestplate;
             Slot chestplateSlot = sm.getSlot(sm.getChestplateSlotId(), InventoryType.SlotType.CONTAINER);
-            inventory.setItem(sm.getChestplateSlotId(), (chestplate == null || chestplate.getType() == Material.AIR) && chestplateSlot != null ? chestplateSlot.getCup() : chestplate);
+            inventory.setItem(sm.getChestplateSlotId(), (ItemUtils.isEmpty(chestplate))
+                    && chestplateSlot != null ? chestplateSlot.getCup() : chestplate);
         }
 
         if (sm.getLeggingsSlotId() != -1) {
             ItemStack leggings = player.getEquipment().getLeggings();
             Slot leggingsSlot = sm.getSlot(sm.getLeggingsSlotId(), InventoryType.SlotType.CONTAINER);
-            inventory.setItem(sm.getLeggingsSlotId(), (leggings == null || leggings.getType() == Material.AIR) && leggingsSlot != null ? leggingsSlot.getCup() : leggings);
+            inventory.setItem(sm.getLeggingsSlotId(), (ItemUtils.isEmpty(leggings))
+                    && leggingsSlot != null ? leggingsSlot.getCup() : leggings);
         }
 
         if (sm.getBootsSlotId() != -1) {
             ItemStack boots = player.getEquipment().getBoots();
             Slot bootsSlot = sm.getSlot(sm.getBootsSlotId(), InventoryType.SlotType.CONTAINER);
-            inventory.setItem(sm.getBootsSlotId(), (boots == null || boots.getType() == Material.AIR) && bootsSlot != null ? bootsSlot.getCup() : boots);
+            inventory.setItem(sm.getBootsSlotId(), (ItemUtils.isEmpty(boots))
+                    && bootsSlot != null ? bootsSlot.getCup() : boots);
         }
     }
 
@@ -263,11 +265,7 @@ public class InventoryManager {
         }
 
         ItemStack itemInHand = player.getEquipment().getItemInOffHand();
-        if (itemInHand.getType() == Material.AIR) {
-            inventory.setItem(slot.getSlotId(), slot.getCup());
-        } else {
-            inventory.setItem(slot.getSlotId(), itemInHand);
-        }
+        inventory.setItem(slot.getSlotId(), ItemUtils.isEmpty(itemInHand) ? slot.getCup() : itemInHand);
     }
 
     private static void updateInventory(@NotNull Player player, @NotNull Inventory inventory, int slot, InventoryAction action, ItemStack currentItem, @NotNull ItemStack cursor) {
@@ -276,12 +274,12 @@ public class InventoryManager {
 
     @SuppressWarnings("deprecation")
     private static void updateInventory(@NotNull Player player, @NotNull Inventory inventory, int slot, InventoryType.SlotType slotType, InventoryAction action, ItemStack currentItem, ItemStack cursorItem) {
-        if (InventoryUtils.getTypeOfAction(action) == InventoryUtils.ActionType.DROP) {
+        if (ActionType.getTypeOfAction(action) == ActionType.DROP) {
             return;
         }
 
         if (action == InventoryAction.PLACE_ALL) {
-            if (currentItem == null || currentItem.getType() == Material.AIR) {
+            if (ItemUtils.isEmpty(currentItem)) {
                 currentItem = cursorItem.clone();
             } else {
                 currentItem.setAmount(currentItem.getAmount() + cursorItem.getAmount());
@@ -289,7 +287,7 @@ public class InventoryManager {
 
             cursorItem = null;
         } else if (action == InventoryAction.PLACE_ONE) {
-            if (currentItem == null || currentItem.getType() == Material.AIR) {
+            if (ItemUtils.isEmpty(currentItem)) {
                 currentItem = cursorItem.clone();
                 currentItem.setAmount(1);
                 cursorItem.setAmount(cursorItem.getAmount() - 1);
@@ -340,16 +338,6 @@ public class InventoryManager {
         lockEmptySlots(player, INVENTORIES.get(player.getUniqueId()).getInventory());
     }
 
-//    static void lockShieldSlot(@NotNull Player player) {
-//        Slot shieldSlot = SlotManager.getSlotManager().getShieldSlot();
-//        if (shieldSlot == null) {
-//            return;
-//        }
-//
-//        int shieldSlotId = shieldSlot.getSlotId();
-//        if (player.getInventory())
-//    }
-
     @SuppressWarnings("WeakerAccess")
     public static void lockEmptySlots(@NotNull Player player, @NotNull Inventory inventory) {
         for (int i = 0; i < inventory.getSize(); i++) {
@@ -358,7 +346,7 @@ public class InventoryManager {
                 if (!ResourcePackManager.isLoadedResourcePack(player)) {
                     inventory.setItem(i, fillSlot);
                 }
-            } else if (inventory.getItem(i) == null || inventory.getItem(i).getType() == Material.AIR) {
+            } else if (ItemUtils.isEmpty(inventory.getItem(i))) {
                 inventory.setItem(i, slot.getCup());
             }
         }
@@ -394,7 +382,7 @@ public class InventoryManager {
         for (Slot quickSlot : SlotManager.getSlotManager().getQuickSlots()) {
             int slotId = quickSlot.getQuickSlot();
 
-            if (player.getInventory().getItem(slotId) == null || player.getInventory().getItem(slotId).getType() == Material.AIR) {
+            if (ItemUtils.isEmpty(player.getInventory().getItem(slotId))) {
                 player.getInventory().setItem(slotId, quickSlot.getCup());
             }
 
@@ -467,9 +455,13 @@ public class InventoryManager {
         }
 
         player.closeInventory();
-        savePlayerInventory(player);
 
         PlayerWrapper playerWrapper = INVENTORIES.get(player.getUniqueId());
+
+        if (playerWrapper.isFlying()) {
+            playerWrapper.setFalling(false);
+        }
+        savePlayerInventory(player);
         InventoryLocker.unlockSlots(player);
         playerWrapper.clearStats();
 
@@ -538,7 +530,7 @@ public class InventoryManager {
     }
 
     public static boolean isInventoryOpenItem(ItemStack item) {
-        return inventoryOpenItem != null && item != null && item.getType() != Material.AIR && inventoryOpenItem.equals(item);
+        return inventoryOpenItem != null && !ItemUtils.isEmpty(item) && inventoryOpenItem.equals(item);
     }
 
     public static ItemStack getInventoryOpenItem() {

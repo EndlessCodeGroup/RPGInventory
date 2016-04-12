@@ -1,7 +1,6 @@
 package ru.endlesscode.rpginventory.inventory;
 
 import org.bukkit.GameMode;
-import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -61,7 +60,7 @@ public class InventoryLocker {
 
     public static boolean buySlot(@NotNull Player player, int line) {
         if (RPGInventory.economyConnected() && RPGInventory.getEconomy().withdrawPlayer(player, Config.getConfig().getDouble("slots.money.cost.line" + line)).transactionSuccess()) {
-            if (!RPGInventory.isSkillAPIEnabled() && Config.getConfig().getBoolean("slots.level.spend")) {
+            if (RPGInventory.getLevelSystem() == PlayerUtils.LevelSystem.EXP && Config.getConfig().getBoolean("slots.level.spend")) {
                 player.setLevel(player.getLevel() - Config.getConfig().getInt("slots.level.required.line" + line));
             }
 
@@ -102,7 +101,7 @@ public class InventoryLocker {
     }
 
     public static boolean isLockedSlot(@Nullable ItemStack item) {
-        return isEnabled() && item != null && item.getType() != Material.AIR && ItemUtils.hasTag(item, "locked");
+        return isEnabled() && !ItemUtils.isEmpty(item) && ItemUtils.hasTag(item, "locked");
     }
 
     public static boolean isBuyableSlot(ItemStack currentItem, int line) {

@@ -82,6 +82,10 @@ public class ConfigUpdater {
                 });
                 config.set("items.separator", "");
                 config.set("auto-update", false);
+            case 127:
+            case 128:
+            case 129:
+                config.set("auto-update", true);
         }
     }
 }

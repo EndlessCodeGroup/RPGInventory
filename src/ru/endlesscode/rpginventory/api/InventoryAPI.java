@@ -1,6 +1,5 @@
 package ru.endlesscode.rpginventory.api;
 
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -9,6 +8,7 @@ import ru.endlesscode.rpginventory.inventory.InventoryManager;
 import ru.endlesscode.rpginventory.inventory.PlayerWrapper;
 import ru.endlesscode.rpginventory.inventory.slot.Slot;
 import ru.endlesscode.rpginventory.inventory.slot.SlotManager;
+import ru.endlesscode.rpginventory.utils.ItemUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,7 +48,7 @@ public class InventoryAPI {
         for (Slot slot : SlotManager.getSlotManager().getPassiveSlots()) {
             for (int slotId : slot.getSlotIds()) {
                 ItemStack item = inventory.getItem(slotId);
-                if (item != null && item.getType() != Material.AIR && !InventoryManager.isEmptySlot(item)) {
+                if (!ItemUtils.isEmpty(item) && !InventoryManager.isEmptySlot(item)) {
                     passiveItems.add(item);
                 }
             }
@@ -75,7 +75,7 @@ public class InventoryAPI {
         for (Slot slot : SlotManager.getSlotManager().getActiveSlots()) {
             ItemStack item = inventory.getItem(slot.getSlotId());
 
-            if (item != null && item.getType() != Material.AIR && !InventoryManager.isQuickEmptySlot(item)) {
+            if (!ItemUtils.isEmpty(item) && !InventoryManager.isQuickEmptySlot(item)) {
                 activeItems.add(item);
             }
         }

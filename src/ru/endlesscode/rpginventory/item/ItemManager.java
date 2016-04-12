@@ -125,11 +125,11 @@ public class ItemManager {
         return false;
     }
 
-    public static void updateStats(@NotNull final Player player) {
+    public static void updateStatsLater(@NotNull final Player player) {
         new StatsUpdater(player).runTaskLater(RPGInventory.getInstance(), 1);
     }
 
-    public static List<String> buildLore(CustomItem item) {
+    static List<String> buildLore(CustomItem item) {
         FileLanguage lang = RPGInventory.getLanguage();
         List<String> lore = new ArrayList<>();
         boolean lastIsSeparator = false;

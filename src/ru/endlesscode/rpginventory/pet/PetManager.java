@@ -107,12 +107,12 @@ public class PetManager {
         new CooldownTimer(player, petItem).runTaskTimer(RPGInventory.getInstance(), 20, 20);
     }
 
-    public static void spawnPet(@NotNull Player player, @NotNull ItemStack petItem) {
+    public static void spawnPet(@NotNull final Player player, @NotNull ItemStack petItem) {
         if (!InventoryManager.playerIsLoaded(player)) {
             return;
         }
 
-        PetType petType = PetManager.getPetFromItem(petItem);
+        final PetType petType = PetManager.getPetFromItem(petItem);
         if (petType == null) {
             return;
         }
@@ -124,7 +124,7 @@ public class PetManager {
 
         PetManager.despawnPet(player);
         Animals pet = (Animals) player.getWorld().spawnEntity(LocationUtils.getLocationNearPlayer(player, 3),
-                EntityType.valueOf(petType.getRole().getDeafultSkin()));
+                EntityType.valueOf(petType.getRole().getDefaultSkin()));
         EffectUtils.playSpawnEffect(pet);
 
         switch (petType.getRole()) {
@@ -143,7 +143,6 @@ public class PetManager {
         pet.setAgeLock(true);
 
         pet.setCustomName(String.format(RPGInventory.getLanguage().getCaption("pet.name"), petType.getName(), player.getName()));
-        pet.setCustomNameVisible(true);
         pet.setMaxHealth(petType.getHealth());
         pet.setCanPickupItems(false);
         pet.setRemoveWhenFarAway(false);
@@ -152,13 +151,13 @@ public class PetManager {
         Attributes attributes = new Attributes(pet);
         attributes.setSpeed(Attributes.BASE_SPEED * petType.getSpeed() / (petType.isAdult() ? 1 : 2));
 
+        InventoryManager.get(player).setPet(pet);
+
         // Pet skin
         Disguise disguise = petType.getDisguise();
         disguise.getWatcher().setCustomName(pet.getCustomName());
         disguise.getWatcher().setCustomNameVisible(true);
-        DisguiseAPI.disguiseToAll(pet, disguise);
-
-        InventoryManager.get(player).setPet(pet);
+        DisguiseAPI.disguiseEntity(pet, disguise);
     }
 
     public static void despawnPet(@NotNull OfflinePlayer player) {
@@ -206,7 +205,7 @@ public class PetManager {
     public static PetFood getFoodFromItem(@Nullable ItemStack item) {
         String id;
 
-        if (item == null || (id = ItemUtils.getTag(item, ItemUtils.FOOD_TAG)) == null) {
+        if (ItemUtils.isEmpty(item) || (id = ItemUtils.getTag(item, ItemUtils.FOOD_TAG)) == null) {
             return null;
         }
 
@@ -218,7 +217,7 @@ public class PetManager {
     public static PetType getPetFromItem(@Nullable ItemStack item) {
         String id;
 
-        if (item == null || (id = ItemUtils.getTag(item, ItemUtils.PET_TAG)) == null) {
+        if (ItemUtils.isEmpty(item) || (id = ItemUtils.getTag(item, ItemUtils.PET_TAG)) == null) {
             return null;
         }
 
@@ -241,9 +240,9 @@ public class PetManager {
         return PetManager.getPetFromItem(playerWrapper.getInventory().getItem(SLOT_PET));
     }
 
-    public static void addGlow(@NotNull ItemStack itemStack) {
+    static void addGlow(@NotNull ItemStack itemStack) {
         itemStack.addUnsafeEnchantment(Enchantment.DURABILITY, 88);
-        NbtCompound compound = (NbtCompound) NbtFactory.fromItemTag(itemStack);
+        NbtCompound compound = NbtFactory.asCompound(NbtFactory.fromItemTag(itemStack));
         compound.put(NbtFactory.ofList("ench"));
     }
 
@@ -260,7 +259,7 @@ public class PetManager {
     }
 
     public static int getCooldown(@NotNull ItemStack item) {
-        NbtCompound nbt = NbtFactory.asCompound(NbtFactory.fromItemTag(item));
+        NbtCompound nbt = NbtFactory.asCompound(NbtFactory.fromItemTag(item.clone()));
 
         if (!nbt.containsKey("pet.cooldown")) {
             return 0;
@@ -287,7 +286,7 @@ public class PetManager {
     }
 
     public static double getHealth(@NotNull ItemStack item, double maxHealth) {
-        NbtCompound nbt = NbtFactory.asCompound(NbtFactory.fromItemTag(item));
+        NbtCompound nbt = NbtFactory.asCompound(NbtFactory.fromItemTag(item.clone()));
 
         if (!nbt.containsKey("pet.health")) {
             return maxHealth;

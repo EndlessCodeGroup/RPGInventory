@@ -1,6 +1,5 @@
 package ru.endlesscode.rpginventory.item;
 
-import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -10,7 +9,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
 import ru.endlesscode.rpginventory.nms.VersionHandler;
-import ru.endlesscode.rpginventory.utils.CommandUtils;
 import ru.endlesscode.rpginventory.utils.ItemUtils;
 import ru.endlesscode.rpginventory.utils.StringUtils;
 
@@ -38,16 +36,14 @@ public class CustomItem {
     private final boolean statsHidden;
 
     // Commands
-    private final String rightClickCommand;
-    private final String rightClickCommandCaption;
-    private final boolean rightClickCommandOp;
-    private final String leftClickCommand;
-    private final String leftClickCommandCaption;
-    private final boolean leftClickCommandOp;
+    @Nullable
+    private final ItemAction rightClickAction;
+    @Nullable
+    private final ItemAction leftClickAction;
 
     private ItemStack customItem;
 
-    public CustomItem(String id, @NotNull ConfigurationSection config) {
+    CustomItem(String id, @NotNull ConfigurationSection config) {
         Rarity rarity = Rarity.valueOf(config.getString("rarity"));
         this.name = StringUtils.coloredLine(rarity.getColor() + config.getString("name"));
         this.texture = config.getString("texture");
@@ -61,23 +57,15 @@ public class CustomItem {
         this.lore = config.contains("lore") ? StringUtils.coloredLine(config.getString("lore")) : null;
 
         if (config.contains("abilities.left-click.command")) {
-            this.leftClickCommand = config.getString("abilities.left-click.command");
-            this.leftClickCommandCaption = config.getString("abilities.left-click.lore");
-            this.leftClickCommandOp = config.getBoolean("abilities.left-click.op", false);
+            this.leftClickAction = new ItemAction(config.getConfigurationSection("abilities.left-click"));
         } else {
-            this.leftClickCommand = null;
-            this.leftClickCommandCaption = null;
-            this.leftClickCommandOp = false;
+            this.leftClickAction = null;
         }
 
         if (config.contains("abilities.right-click.command")) {
-            this.rightClickCommand = config.getString("abilities.right-click.command");
-            this.rightClickCommandCaption = config.getString("abilities.right-click.lore");
-            this.rightClickCommandOp = config.getBoolean("abilities.right-click.op", false);
+            this.rightClickAction = new ItemAction(config.getConfigurationSection("abilities.right-click"));
         } else {
-            this.rightClickCommand = null;
-            this.rightClickCommandCaption = null;
-            this.rightClickCommandOp = false;
+            this.rightClickAction = null;
         }
 
         this.classes = config.contains("classes") ? config.getStringList("classes") : null;
@@ -92,10 +80,10 @@ public class CustomItem {
 
     @Contract("null -> false")
     public static boolean isCustomItem(ItemStack itemStack) {
-        return itemStack != null && itemStack.getType() != Material.AIR && ItemUtils.hasTag(itemStack, ItemUtils.ITEM_TAG);
+        return !ItemUtils.isEmpty(itemStack) && ItemUtils.hasTag(itemStack, ItemUtils.ITEM_TAG);
     }
 
-    public void onEquip(Player player) {
+    void onEquip(Player player) {
         if (this.permissions == null) {
             return;
         }
@@ -104,19 +92,15 @@ public class CustomItem {
     }
 
     public void onRightClick(Player player) {
-        if (this.rightClickCommand == null) {
-            return;
+        if (rightClickAction != null) {
+            rightClickAction.doAction(player);
         }
-
-        CommandUtils.sendCommand(player, this.rightClickCommand, this.rightClickCommandOp);
     }
 
     public void onLeftClick(Player player) {
-        if (this.leftClickCommand == null) {
-            return;
+        if (leftClickAction != null) {
+            leftClickAction.doAction(player);
         }
-
-        CommandUtils.sendCommand(player, this.leftClickCommand, this.leftClickCommandOp);
     }
 
     private void createItem(String id) {
@@ -143,7 +127,7 @@ public class CustomItem {
     }
 
     @Nullable
-    public ItemStat getStat(ItemStat.StatType type) {
+    ItemStat getStat(ItemStat.StatType type) {
         for (ItemStat stat : this.stats) {
             if (stat.getType() == type) {
                 return stat;
@@ -162,11 +146,11 @@ public class CustomItem {
     }
 
     @Nullable
-    public List<String> getClasses() {
+    List<String> getClasses() {
         return this.classes;
     }
 
-    public String getClassesString() {
+    String getClassesString() {
         String classesString = "";
         for (String theClass : this.classes) {
             if (!classesString.isEmpty()) {
@@ -183,36 +167,36 @@ public class CustomItem {
         return lore;
     }
 
-    public boolean hasLeftClickCaption() {
-        return this.leftClickCommandCaption != null;
+    boolean hasLeftClickCaption() {
+        return this.leftClickAction != null && this.leftClickAction.getCaption() != null;
     }
 
-    public boolean hasRightClickCaption() {
-        return this.rightClickCommandCaption != null;
+    boolean hasRightClickCaption() {
+        return this.rightClickAction != null && this.rightClickAction.getCaption() != null;
     }
 
-    public String getLeftClickCaption() {
-        return leftClickCommandCaption;
+    String getLeftClickCaption() {
+        return this.leftClickAction == null ? "" : this.leftClickAction.getCaption();
     }
 
-    public String getRightClickCaption() {
-        return rightClickCommandCaption;
+    String getRightClickCaption() {
+        return this.rightClickAction == null ? "" : this.rightClickAction.getCaption();
     }
 
-    public List<ItemStat> getStats() {
+    List<ItemStat> getStats() {
         return stats;
     }
 
-    public boolean isStatsHidden() {
+    boolean isStatsHidden() {
         return statsHidden;
     }
 
-    public boolean isUnbreakable() {
+    boolean isUnbreakable() {
         return unbreakable;
     }
 
     @SuppressWarnings("unused")
-    enum Rarity {
+    private enum Rarity {
         COMMON('7'),
         UNCOMMON('6'),
         RARE('9'),

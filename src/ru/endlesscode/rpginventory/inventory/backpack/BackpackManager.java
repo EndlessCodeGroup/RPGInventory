@@ -56,7 +56,7 @@ public class BackpackManager {
 
     @Contract("_, null -> false")
     public static boolean open(@NotNull Player player, @Nullable ItemStack bpItem) {
-        if (bpItem == null || bpItem.getType() == Material.AIR) {
+        if (ItemUtils.isEmpty(bpItem)) {
             return false;
         }
 
@@ -130,6 +130,6 @@ public class BackpackManager {
 
     @Contract("null -> false")
     public static boolean isBackpack(ItemStack item) {
-        return item != null && item.getType() != Material.AIR && ItemUtils.hasTag(item, ItemUtils.BACKPACK_TAG);
+        return !ItemUtils.isEmpty(item) && ItemUtils.hasTag(item, ItemUtils.BACKPACK_TAG);
     }
 }

@@ -22,6 +22,7 @@ import ru.endlesscode.rpginventory.inventory.slot.Slot;
 import ru.endlesscode.rpginventory.inventory.slot.SlotManager;
 import ru.endlesscode.rpginventory.misc.Config;
 import ru.endlesscode.rpginventory.utils.InventoryUtils;
+import ru.endlesscode.rpginventory.utils.ItemUtils;
 
 /**
  * Created by OsipXD on 18.09.2015
@@ -137,7 +138,7 @@ public class ChestListener implements Listener {
                 return;
             }
 
-            if (player.getGameMode() != GameMode.CREATIVE && action == InventoryAction.MOVE_TO_OTHER_INVENTORY && currentItem != null
+            if (player.getGameMode() != GameMode.CREATIVE && action == InventoryAction.MOVE_TO_OTHER_INVENTORY && !ItemUtils.isEmpty(currentItem)
                     && !InventoryManager.isQuickEmptySlot(event.getCurrentItem()) && !InventoryLocker.isLockedSlot(event.getCurrentItem())) {
                 ItemStack current = null;
 

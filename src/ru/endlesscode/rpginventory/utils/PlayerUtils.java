@@ -27,7 +27,8 @@ public class PlayerUtils {
                 level = player.getLevel();
                 break;
             case SKILLAPI:
-                level = SkillAPI.getPlayerData(player).getMainClass().getLevel();
+                PlayerData playerData = SkillAPI.getPlayerData(player);
+                level = playerData.hasClass() ? playerData.getMainClass().getLevel() : 0;
                 break;
             case BATTLELEVELS:
                 level = BattleLevelsAPI.getLevel(player.getUniqueId());

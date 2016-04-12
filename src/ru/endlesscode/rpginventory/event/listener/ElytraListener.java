@@ -21,6 +21,7 @@ public class ElytraListener implements Listener {
         }
 
         PlayerWrapper playerWrapper = InventoryManager.get(player);
+        //noinspection deprecation
         if (!player.isOnGround()) {
             if (!playerWrapper.isFalling() && event.getFrom().getY() > event.getTo().getY()) {
                 playerWrapper.setFalling(true);

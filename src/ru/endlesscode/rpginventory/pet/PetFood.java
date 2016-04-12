@@ -1,6 +1,5 @@
 package ru.endlesscode.rpginventory.pet;
 
-import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Tameable;
@@ -48,7 +47,7 @@ public class PetFood {
 
     @Contract("null -> false")
     public static boolean isFoodItem(ItemStack itemStack) {
-        return itemStack != null && itemStack.getType() != Material.AIR && ItemUtils.hasTag(itemStack, ItemUtils.FOOD_TAG);
+        return !ItemUtils.isEmpty(itemStack) && ItemUtils.hasTag(itemStack, ItemUtils.FOOD_TAG);
     }
 
     private void createFoodItem(String id) {

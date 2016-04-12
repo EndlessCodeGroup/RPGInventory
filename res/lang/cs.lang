@@ -15,6 +15,7 @@ buyable.lore: "&6&oAby si odemkl slot musis:"
 buyable.money: "&6&o• mit %s goldu"
 buyable.level: "&6&o• byt %d lvl"
 
+error.fall: "&cYou can't do it while you are flying"
 error.money: "&6&lAby si mohl odemknout slot jeste potrebujes %s gold"
 error.level: "&6&lAby si mohl odemknout slot potrebujes %d lvlu"
 error.buyable: "&6&lOdemknuti tohoto slotu te bude stat %d gold. Klikni na to znova do 10 vterin aby si potvrdil odemceni."
