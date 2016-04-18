@@ -56,17 +56,12 @@ public class CustomItem {
 
         this.lore = config.contains("lore") ? StringUtils.coloredLine(config.getString("lore")) : null;
 
-        if (config.contains("abilities.left-click.command")) {
-            this.leftClickAction = new ItemAction(config.getConfigurationSection("abilities.left-click"));
-        } else {
-            this.leftClickAction = null;
-        }
-
-        if (config.contains("abilities.right-click.command")) {
-            this.rightClickAction = new ItemAction(config.getConfigurationSection("abilities.right-click"));
-        } else {
-            this.rightClickAction = null;
-        }
+        this.leftClickAction = config.contains("abilities.left-click.command")
+                ? new ItemAction(config.getConfigurationSection("abilities.left-click"))
+                : null;
+        this.rightClickAction = config.contains("abilities.right-click.command")
+                ? new ItemAction(config.getConfigurationSection("abilities.right-click"))
+                : null;
 
         this.classes = config.contains("classes") ? config.getStringList("classes") : null;
         this.permissions = config.contains("abilities.permissions") ? config.getStringList("abilities.permissions") : null;
