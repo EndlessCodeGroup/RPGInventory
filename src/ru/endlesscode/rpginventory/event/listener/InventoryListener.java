@@ -226,7 +226,8 @@ public class InventoryListener implements Listener {
         }
 
         final int rawSlot = event.getRawSlot();
-        final Slot slot = SlotManager.getSlotManager().getSlot(event.getSlot(), event.getSlotType());
+        final InventoryType.SlotType slotType = InventoryUtils.getSlotType(event.getSlotType(), rawSlot);
+        final Slot slot = SlotManager.getSlotManager().getSlot(event.getSlot(), slotType);
         final Inventory inventory = event.getInventory();
         InventoryAction action = event.getAction();
         ActionType actionType = ActionType.getTypeOfAction(action);
@@ -258,14 +259,14 @@ public class InventoryListener implements Listener {
 
         // In RPG Inventory or quick slot
         if (InventoryAPI.isRPGInventory(inventory) ||
-                event.getSlotType() == InventoryType.SlotType.QUICKBAR && slot != null
+                slotType == InventoryType.SlotType.QUICKBAR && slot != null
                         && (slot.isQuick() || slot.getSlotType() == Slot.SlotType.SHIELD) && player.getGameMode() != GameMode.CREATIVE) {
             if (rawSlot < 54 && slot == null || action == InventoryAction.MOVE_TO_OTHER_INVENTORY) {
                 event.setCancelled(true);
                 return;
             }
 
-            if (rawSlot == -999 || rawSlot >= 54 && event.getSlotType() != InventoryType.SlotType.QUICKBAR || slot == null) {
+            if (rawSlot == -999 || rawSlot >= 54 && slotType != InventoryType.SlotType.QUICKBAR || slot == null) {
                 return;
             }
 
@@ -281,7 +282,7 @@ public class InventoryListener implements Listener {
                 }
             }
 
-            if (!validateClick(player, playerWrapper, slot, actionType, currentItem, event.getSlotType())) {
+            if (!validateClick(player, playerWrapper, slot, actionType, currentItem, slotType)) {
                 event.setCancelled(true);
                 return;
             }
@@ -312,23 +313,29 @@ public class InventoryListener implements Listener {
             }
 
             if (!event.isCancelled()) {
+                BukkitRunnable cupPlacer = new BukkitRunnable() {
+                    @SuppressWarnings("deprecation")
+                    @Override
+                    public void run() {
+                        inventory.setItem(rawSlot, slot.getCup());
+                        player.updateInventory();
+                    }
+                };
+
                 if (slot.isQuick()) {
-                    InventoryManager.updateQuickSlot(player, inventory, slot, event.getSlot(), event.getSlotType(),
+                    InventoryManager.updateQuickSlot(player, inventory, slot, event.getSlot(), slotType,
                             action, currentItem, cursor);
                     event.setCancelled(true);
                 } else if (slot.getSlotType() == Slot.SlotType.SHIELD) {
-                    InventoryManager.updateShieldSlot(player, inventory, slot, event.getSlot(), event.getSlotType(),
+                    InventoryManager.updateShieldSlot(player, inventory, slot, event.getSlot(), slotType,
                             action, currentItem, cursor);
                     event.setCancelled(true);
+
+                    if (actionType == ActionType.GET || actionType == ActionType.DROP) {
+                        cupPlacer.runTaskLater(RPGInventory.getInstance(), 1);
+                    }
                 } else if (actionType == ActionType.GET || actionType == ActionType.DROP) {
-                    new BukkitRunnable() {
-                        @SuppressWarnings("deprecation")
-                        @Override
-                        public void run() {
-                            inventory.setItem(rawSlot, slot.getCup());
-                            player.updateInventory();
-                        }
-                    }.runTaskLater(RPGInventory.getInstance(), 1);
+                    cupPlacer.runTaskLater(RPGInventory.getInstance(), 1);
                 } else if (slot.isCup(currentItem)) {
                     event.setCurrentItem(null);
                 }

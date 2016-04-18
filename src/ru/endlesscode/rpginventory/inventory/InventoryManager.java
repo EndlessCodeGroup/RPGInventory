@@ -107,7 +107,7 @@ public class InventoryManager {
     public static boolean validateArmor(InventoryAction action, @NotNull Slot slot, ItemStack cursor) {
         ActionType actionType = ActionType.getTypeOfAction(action);
 
-        return !(actionType == ActionType.SET || action == InventoryAction.UNKNOWN) || slot.isValidItem(cursor);
+        return actionType != ActionType.OTHER && (actionType != ActionType.SET || slot.isValidItem(cursor));
     }
 
     public static void updateShieldSlot(@NotNull Player player, @NotNull Inventory inventory, @NotNull Slot slot, int slotId,

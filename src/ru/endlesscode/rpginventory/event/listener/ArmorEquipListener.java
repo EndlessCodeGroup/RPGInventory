@@ -117,7 +117,6 @@ public class ArmorEquipListener implements Listener {
             ArmorType armorType = ArmorType.matchType(item);
 
             if (armorType == ArmorType.UNKNOWN) {
-                event.setCancelled(true);
                 return;
             }
 

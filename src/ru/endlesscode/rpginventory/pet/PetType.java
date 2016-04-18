@@ -208,7 +208,7 @@ public class PetType {
         lore.addAll(Arrays.asList(this.lore.split("\n")));
 
         lore.add(String.format(lang.getCaption("pet.health"), (int) (this.health)));
-        if (this.role == Role.COMPANION) {
+        if (this.role == Role.COMPANION && !this.attackMobs && !this.attackPlayers) {
             lore.add(String.format(lang.getCaption("pet.damage"), (int) (this.damage)));
         }
         lore.add(String.format(lang.getCaption("pet.speed"), (int) (this.speed * 100)));

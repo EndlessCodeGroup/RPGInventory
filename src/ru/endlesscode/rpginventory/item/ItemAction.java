@@ -19,9 +19,9 @@ class ItemAction {
 
     ItemAction(@NotNull ConfigurationSection config) {
         this.command = config.getString("command");
-        this.caption = config.getString("caption");
+        this.caption = config.getString("lore");
         this.message = config.getString("message");
-        this.asOp = config.getBoolean("abilities.left-click.op", false);
+        this.asOp = config.getBoolean("op", false);
     }
 
     void doAction(Player player) {

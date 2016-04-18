@@ -238,7 +238,7 @@ public class ItemListener implements Listener {
             // Saving quick slots
             for (Slot slot : SlotManager.getSlotManager().getQuickSlots()) {
                 ItemStack quickItem = player.getInventory().getItem(slot.getQuickSlot());
-                if ((!dropForPlayer || !slot.isDrop()) && !slot.isCup(quickItem)) {
+                if (!ItemUtils.isEmpty(quickItem) && (!dropForPlayer || !slot.isDrop()) && !slot.isCup(quickItem)) {
                     contents.add(quickItem);
                     event.getDrops().remove(quickItem);
                 }

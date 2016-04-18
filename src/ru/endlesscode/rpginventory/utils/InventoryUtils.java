@@ -1,6 +1,7 @@
 package ru.endlesscode.rpginventory.utils;
 
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Contract;
@@ -85,6 +86,15 @@ public class InventoryUtils {
             default:
                 return null;
         }
+    }
+
+    @Contract(pure = true)
+    public static InventoryType.SlotType getSlotType(InventoryType.SlotType slotType, int rawSlot) {
+        if (slotType == InventoryType.SlotType.QUICKBAR || rawSlot > 80) {
+            return InventoryType.SlotType.QUICKBAR;
+        }
+
+        return slotType;
     }
 
     public enum SearchType {
