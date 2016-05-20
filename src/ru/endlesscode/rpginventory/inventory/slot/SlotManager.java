@@ -173,14 +173,14 @@ public class SlotManager {
     }
 
     public List<Slot> getActiveSlots() {
-        List<Slot> passiveSlots = new ArrayList<>();
+        List<Slot> activeSlots = new ArrayList<>();
         for (Slot slot : this.slots) {
             if (slot.getSlotType() == Slot.SlotType.ACTIVE) {
-                passiveSlots.add(slot);
+                activeSlots.add(slot);
             }
         }
 
-        return passiveSlots;
+        return activeSlots;
     }
 
     public List<Slot> getArmorSlots() {
@@ -192,6 +192,17 @@ public class SlotManager {
         }
 
         return armorSlots;
+    }
+
+    public List<Slot> getInfoSlots() {
+        List<Slot> infoSlots = new ArrayList<>();
+        for (Slot slot : this.slots) {
+            if (slot.getSlotType() == Slot.SlotType.INFO) {
+                infoSlots.add(slot);
+            }
+        }
+
+        return infoSlots;
     }
 
     public List<Slot> getSlots() {
@@ -259,5 +270,4 @@ public class SlotManager {
             e.printStackTrace();
         }
     }
-
 }

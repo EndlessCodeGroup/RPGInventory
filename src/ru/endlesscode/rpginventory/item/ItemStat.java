@@ -29,7 +29,7 @@ public class ItemStat {
         }
     }
 
-    public String getStringValue() {
+    String getStringValue() {
         String value = this.operationType.getOperation() + StringUtils.roundDouble(this.minValue);
 
         if (this.maxValue != -1) {
@@ -43,6 +43,18 @@ public class ItemStat {
         return value;
     }
 
+    public double getMinValue() {
+        return minValue;
+    }
+
+    public double getMaxValue() {
+        return maxValue;
+    }
+
+    public boolean isRanged() {
+        return this.maxValue != -1;
+    }
+
     public double getValue() {
         double value = this.minValue;
 
@@ -53,11 +65,11 @@ public class ItemStat {
         return value;
     }
 
-    public boolean isPercentage() {
+    boolean isPercentage() {
         return percentage;
     }
 
-    public OperationType getOperationType() {
+    OperationType getOperationType() {
         return operationType;
     }
 
@@ -65,7 +77,8 @@ public class ItemStat {
         return type;
     }
 
-    public enum OperationType {
+
+    enum OperationType {
         PLUS('+'),
         MINUS('-');
 

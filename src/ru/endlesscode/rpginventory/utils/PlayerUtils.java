@@ -6,6 +6,7 @@ import com.sucy.skill.api.player.PlayerData;
 import de.tobiyas.racesandclasses.APIs.ClassAPI;
 import de.tobiyas.racesandclasses.APIs.LevelAPI;
 import de.tobiyas.racesandclasses.datacontainer.traitholdercontainer.classes.ClassContainer;
+import me.baks.rpl.api.API;
 import me.leothepro555.skills.Skills;
 import me.robin.battlelevels.api.BattleLevelsAPI;
 import org.bukkit.entity.Player;
@@ -41,6 +42,9 @@ public class PlayerUtils {
                 break;
             case RAC:
                 level = LevelAPI.getCurrentLevel(player);
+                break;
+            case RPGPL:
+                level = API.getPlayerLevel(player);
                 break;
         }
 
@@ -87,7 +91,13 @@ public class PlayerUtils {
     }
 
     public enum LevelSystem {
-        EXP("NONE"), SKILLAPI("SkillAPI"), BATTLELEVELS("BattleLevels"), SKILLS("Skills"), HEROES("Heroes"), RAC("RacesAndClasses");
+        EXP("NONE"),
+        SKILLAPI("SkillAPI"),
+        BATTLELEVELS("BattleLevels"),
+        SKILLS("Skills"),
+        HEROES("Heroes"),
+        RAC("RacesAndClasses"),
+        RPGPL("RPGPlayerLeveling");
 
         private final String pluginName;
 

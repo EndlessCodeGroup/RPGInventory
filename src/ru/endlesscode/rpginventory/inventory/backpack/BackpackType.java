@@ -20,16 +20,16 @@ import java.util.List;
 public class BackpackType {
     private final String id;
     private final String name;
-    private final String lore;
+    private final List<String> lore;
     private final int size;
     private final String texture;
 
     private ItemStack item;
 
-    public BackpackType(ConfigurationSection config) {
+    BackpackType(ConfigurationSection config) {
         this.id = config.getName();
         this.name = StringUtils.coloredLine(config.getString("name"));
-        this.lore = StringUtils.coloredLine(config.getString("lore"));
+        this.lore = StringUtils.coloredLines(config.getStringList("lore"));
         this.size = config.getInt("size") < 56 ? config.getInt("size") : 56;
         this.texture = config.getString("item");
 
@@ -45,7 +45,7 @@ public class BackpackType {
         FileLanguage lang = RPGInventory.getLanguage();
         List<String> lore = new ArrayList<>();
         lore.addAll(Arrays.asList(lang.getCaption("backpack.desc").split("\n")));
-        lore.addAll(Arrays.asList(this.lore.split("\n")));
+        lore.addAll(this.lore);
         lore.add(String.format(lang.getCaption("backpack.size"), this.size));
 
         meta.setLore(lore);
@@ -54,7 +54,7 @@ public class BackpackType {
         this.item = ItemUtils.setTag(spawnItem, ItemUtils.BACKPACK_TAG, this.id);
     }
 
-    public Backpack createBackpack() {
+    Backpack createBackpack() {
         return new Backpack(this);
     }
 
@@ -62,7 +62,7 @@ public class BackpackType {
         return this.size;
     }
 
-    public String getTitle() {
+    String getTitle() {
         return this.name;
     }
 

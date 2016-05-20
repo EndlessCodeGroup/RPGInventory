@@ -35,7 +35,10 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * Created by OsipXD on 18.08.2015.
@@ -63,7 +66,7 @@ public class InventoryManager {
 
         inventoryOpenItem = ItemUtils.getTexturedItem(Config.getConfig().getString("alternate-view.item"));
         meta.setDisplayName(StringUtils.coloredLine(Config.getConfig().getString("alternate-view.name")));
-        meta.setLore(Collections.singletonList(StringUtils.coloredLine(Config.getConfig().getString("alternate-view.lore"))));
+        meta.setLore(StringUtils.coloredLines(Config.getConfig().getStringList("alternate-view.lore")));
         inventoryOpenItem.setItemMeta(meta);
     }
 
@@ -258,6 +261,26 @@ public class InventoryManager {
         }
     }
 
+    public static void syncInfoSlots(@NotNull HumanEntity player, @NotNull Inventory inventory) {
+        for (Slot infoSlot : SlotManager.getSlotManager().getInfoSlots()) {
+            ItemStack cup = infoSlot.getCup();
+            ItemMeta meta = cup.getItemMeta();
+            List<String> lore = meta.getLore();
+
+            for (int i = 0; i < lore.size(); i++) {
+                String line = lore.get(i);
+                lore.set(i, StringUtils.applyPlaceHolders(line, (Player) player));
+            }
+
+            meta.setLore(lore);
+            cup.setItemMeta(meta);
+            inventory.setItem(infoSlot.getSlotId(), cup);
+        }
+
+        //noinspection deprecation
+        ((Player) player).updateInventory();
+    }
+
     public static void syncShieldSlot(@NotNull HumanEntity player, @NotNull Inventory inventory) {
         Slot slot = SlotManager.getSlotManager().getShieldSlot();
         if (slot == null) {
@@ -437,6 +460,7 @@ public class InventoryManager {
                 return;
             }
 
+            playerWrapper.startHealthUpdater();
             lockEmptySlots(player, playerWrapper.getInventory());
             INVENTORIES.put(player.getUniqueId(), playerWrapper);
         } catch (IOException e) {
@@ -456,23 +480,9 @@ public class InventoryManager {
 
         player.closeInventory();
 
-        PlayerWrapper playerWrapper = INVENTORIES.get(player.getUniqueId());
-
-        if (playerWrapper.isFlying()) {
-            playerWrapper.setFalling(false);
-        }
+        INVENTORIES.get(player.getUniqueId()).onUnload();
         savePlayerInventory(player);
         InventoryLocker.unlockSlots(player);
-        playerWrapper.clearStats();
-
-        if (PetManager.isEnabled()) {
-            PetManager.despawnPet(player);
-            Inventory inventory = playerWrapper.getInventory();
-            ItemStack petItem = inventory.getItem(PetManager.getPetSlotId());
-            if (petItem != null) {
-                inventory.setItem(PetManager.getPetSlotId(), PetType.clone(petItem));
-            }
-        }
 
         ResourcePackManager.removePlayer(player);
         INVENTORIES.remove(player.getUniqueId());

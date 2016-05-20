@@ -99,7 +99,7 @@ public class Slot {
 
             ItemMeta meta = this.cup.getItemMeta();
             meta.setDisplayName(config.contains("holder.name") ? StringUtils.coloredLine(config.getString("holder.name")) : "[Holder name missing]");
-            meta.setLore(Collections.singletonList(config.contains("holder.lore") ? StringUtils.coloredLine(config.getString("holder.lore")) : "[Holder lore missing]"));
+            meta.setLore(config.contains("holder.lore") ? StringUtils.coloredLines(config.getStringList("holder.lore")) : Collections.singletonList("[Holder lore missing]"));
             this.cup.setItemMeta(meta);
         } else {
             this.cup = new ItemStack(Material.AIR);
@@ -132,7 +132,7 @@ public class Slot {
 
     @NotNull
     public ItemStack getCup() {
-        return this.cup;
+        return this.cup.clone();
     }
 
     public boolean isCup(ItemStack itemStack) {
@@ -210,7 +210,8 @@ public class Slot {
         BACKPACK(true, false, false, false, false),
         PASSIVE(true, true, false, true, false),
         SHIELD(false, false, true, true, true),
-        ELYTRA(false, false, true, false, true);
+        ELYTRA(false, false, true, false, true),
+        INFO(false, false, false, false, false);
 
         private final boolean allowQuick;
         private final boolean allowMultiSlots;

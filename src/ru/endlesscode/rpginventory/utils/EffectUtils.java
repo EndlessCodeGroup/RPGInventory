@@ -38,7 +38,7 @@ public class EffectUtils {
     private static void playParticles(Player player, EnumWrappers.Particle particle, int particleNum, Location location, Vector direction) {
         AbstractPacket packet;
         AbstractPlayServerWorldParticlesPacket particles;
-        if (VersionHandler.is1_7_10()) {
+        if (VersionHandler.is1_7_R4()) {
             particles = new com.comphenix.packetwrapper.included.v1_7_R4.WrapperPlayServerWorldParticles();
         } else {
             particles = new WrapperPlayServerWorldParticles();

@@ -17,8 +17,7 @@ public class CommandUtils {
      * @param runFromOp If true, command will be run from OP
      */
     public static void sendCommand(Player player, String command, boolean runFromOp) {
-        command = command.replaceAll("%WORLD%", player.getWorld().getName());
-        command = command.replaceAll("%PLAYER%", player.getName());
+        command = StringUtils.applyPlaceHolders(command, player);
 
         if (runFromOp) {
             Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), command);

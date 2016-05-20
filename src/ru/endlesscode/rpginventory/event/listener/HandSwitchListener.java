@@ -61,6 +61,6 @@ public class HandSwitchListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void afterHandSwitch(PlayerSwapHandItemsEvent event) {
-        ItemManager.updateStatsLater(event.getPlayer());
+        ItemManager.updateStats(event.getPlayer());
     }
 }

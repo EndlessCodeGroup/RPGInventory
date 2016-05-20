@@ -27,8 +27,10 @@ error.rp.already: "&7Resource-pack is already %s."
 error.item.level: "&6Vyzaduje &c%s &6level"
 error.item.class: "&6Vyzaduje tridu &c%s"
 error.mount.owner: "&6Zvire patri %"
+error.fixhp: "&6Fixing HP not needed"
 
 message.buyed: "&a&lUspesne jsi zakoupil slot"
+message.fixhp: "&6Your HP was fixed, please login to server again."
 
 rp.enabled: "povolen"
 rp.disabled: "zakázan"
@@ -60,6 +62,7 @@ item.right-click: "&aRMB - %s"
 item.hide: "&7&oItem stats are hidden"
 item.unbreakable: "&7Unbreakable item"
 
+stat.message.no_bonus: "No bonus"
 stat.damage: "&cUtok: &7%s"
 stat.bow_damage: "&cUtok (na dalku): &7%s"
 stat.hand_damage: "&cUtok (na blizko): &7%s"

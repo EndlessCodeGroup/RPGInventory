@@ -16,7 +16,10 @@ import ru.endlesscode.rpginventory.misc.FileLanguage;
 import ru.endlesscode.rpginventory.utils.ItemUtils;
 import ru.endlesscode.rpginventory.utils.StringUtils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by OsipXD on 26.08.2015
@@ -30,7 +33,7 @@ public class PetType {
     @NotNull
     private final String itemName;
     @NotNull
-    private final String lore;
+    private final List<String> lore;
     private final String texture;
     // Stats
     private final Role role;
@@ -49,7 +52,7 @@ public class PetType {
     PetType(@NotNull ConfigurationSection config) {
         this.name = StringUtils.coloredLine(config.getString("name"));
         this.itemName = StringUtils.coloredLine(config.getString("item-name"));
-        this.lore = StringUtils.coloredLine(config.getString("lore"));
+        this.lore = StringUtils.coloredLines(config.getStringList("lore"));
         this.texture = config.getString("item");
 
         this.role = Role.valueOf(config.getString("type", "COMPANION"));
@@ -205,7 +208,7 @@ public class PetType {
         FileLanguage lang = RPGInventory.getLanguage();
         List<String> lore = new ArrayList<>();
         lore.add(StringUtils.coloredLine("&8" + lang.getCaption("pet.role." + this.role.name().toLowerCase())));
-        lore.addAll(Arrays.asList(this.lore.split("\n")));
+        lore.addAll(this.lore);
 
         lore.add(String.format(lang.getCaption("pet.health"), (int) (this.health)));
         if (this.role == Role.COMPANION && !this.attackMobs && !this.attackPlayers) {

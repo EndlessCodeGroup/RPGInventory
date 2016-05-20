@@ -2,7 +2,9 @@ items:
   all-stats:
     texture: INK_SACK:10
     name: "Ring with all stats"
-    lore: "&e&oThis is ring of my grandfather...\n&e&oIt has something unusual"
+    lore:
+    - "&e&oThis is ring of my grandfather..."
+    - "&e&oIt has something unusual"
     rarity: UNCOMMON
     level: 4
     drop: false
@@ -18,10 +20,12 @@ items:
         op: true
         command: "time set day %WORLD%"
         lore: "Set day"
+        message: "Good day!"
       left-click:
         op: true
         command: "weather %WORLD% sun"
         lore: "Clear weather"
+        message: "Sunshine!"
     stats:
     - DAMAGE +5-10
     - BOW_DAMAGE +2

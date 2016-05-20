@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import ru.endlesscode.rpginventory.event.updater.HealthUpdater;
 import ru.endlesscode.rpginventory.inventory.slot.Slot;
 import ru.endlesscode.rpginventory.inventory.slot.SlotManager;
 import ru.endlesscode.rpginventory.misc.Config;
@@ -20,8 +21,7 @@ import java.util.zip.GZIPOutputStream;
 
 class InventorySerializer {
     static void savePlayer(@NotNull Player player, @NotNull PlayerWrapper playerWrapper, @NotNull File file) throws IOException {
-        List<NbtCompound> nbtList = new ArrayList<>();
-
+        List<NbtCompound> slotList = new ArrayList<>();
         try (DataOutputStream dataOutput = new DataOutputStream(new GZIPOutputStream(new FileOutputStream(file)))) {
             for (Slot slot : SlotManager.getSlotManager().getSlots()) {
                 if (slot.getSlotType() == Slot.SlotType.ARMOR) {
@@ -46,16 +46,25 @@ class InventorySerializer {
                         slotNbt.put("buyed", "true");
                     }
                     slotNbt.put(NbtFactory.ofCompound("items", itemList));
-                    nbtList.add(slotNbt);
+                    slotList.add(slotNbt);
                 }
             }
 
-            NbtCompound itemList = NbtFactory.ofCompound("Inventory");
-            itemList.put(NbtFactory.ofCompound("slots", nbtList));
-            itemList.put("buyed-slots", playerWrapper.getBuyedGenericSlots());
-            itemList.put("resource-pack", Boolean.toString(ResourcePackManager.isWontResourcePack(player)));
+            NbtCompound playerNbt = NbtFactory.ofCompound("Inventory");
+            playerNbt.put(NbtFactory.ofCompound("slots", slotList));
+            playerNbt.put("buyed-slots", playerWrapper.getBuyedGenericSlots());
+            playerNbt.put("resource-pack", Boolean.toString(ResourcePackManager.isWontResourcePack(player)));
 
-            NbtBinarySerializer.DEFAULT.serialize(itemList, dataOutput);
+            HealthUpdater healthUpdater = playerWrapper.getHealthUpdater();
+            double attributesBonus = healthUpdater.getAttributesBonus();
+            double otherPluginsBonus = healthUpdater.getOtherPluginsBonus();
+            double initHealth = (attributesBonus == 0 && otherPluginsBonus == 0) ? -1 : healthUpdater.getHealth();
+
+            playerNbt.put("health.current", initHealth == 0 ? player.getHealth() : initHealth);
+            playerNbt.put("health.attributes", healthUpdater.getAttributesBonus());
+            playerNbt.put("health.other-plugins", healthUpdater.getOtherPluginsBonus());
+
+            NbtBinarySerializer.DEFAULT.serialize(playerNbt, dataOutput);
         }
     }
 
@@ -64,29 +73,42 @@ class InventorySerializer {
         Inventory inventory = playerWrapper.getInventory();
 
         try (DataInputStream dataInput = new DataInputStream(new GZIPInputStream(new FileInputStream(file)))) {
-            NbtCompound inventoryNbt = NbtBinarySerializer.DEFAULT.deserializeCompound(dataInput);
+            NbtCompound playerNbt = NbtBinarySerializer.DEFAULT.deserializeCompound(dataInput);
 
             // =========== Added in v1.1.8 ============
-            if (inventoryNbt.containsKey("free-slots")) {
-                playerWrapper.setBuyedSlots(inventoryNbt.getInteger("free-slots") - Config.getConfig().getInt("slots.free"));
-                inventoryNbt.remove("free-slots");
+            if (playerNbt.containsKey("free-slots")) {
+                playerWrapper.setBuyedSlots(playerNbt.getInteger("free-slots") - Config.getConfig().getInt("slots.free"));
+                playerNbt.remove("free-slots");
             } else {
-                playerWrapper.setBuyedSlots(inventoryNbt.getInteger("buyed-slots"));
-                inventoryNbt.remove("buyed-slots");
+                playerWrapper.setBuyedSlots(playerNbt.getInteger("buyed-slots"));
+                playerNbt.remove("buyed-slots");
             }
             // ========================================
 
             // =========== Added in v1.1.7 ============
-            if (inventoryNbt.containsKey("resource-pack")) {
-                ResourcePackManager.wontResourcePack(player, Boolean.parseBoolean(inventoryNbt.getString("resource-pack"))
+            if (playerNbt.containsKey("resource-pack")) {
+                ResourcePackManager.wontResourcePack(player, Boolean.parseBoolean(playerNbt.getString("resource-pack"))
                         && ResourcePackManager.getMode() != ResourcePackManager.Mode.DISABLED);
             } else {
                 ResourcePackManager.wontResourcePack(player, ResourcePackManager.getMode() != ResourcePackManager.Mode.DISABLED);
             }
             // ========================================
 
+            // =========== Added in v1.3.3 ============
+            HealthUpdater healthUpdater = playerWrapper.getHealthUpdater();
+            if (playerNbt.containsKey("health.current")) {
+                double health = playerNbt.getDouble("health.current");
+                if (health != -1) {
+                    healthUpdater.setHealth(health);
+                }
+
+                healthUpdater.setAttributesBonus(playerNbt.getDouble("health.attributes"));
+                healthUpdater.setOtherPluginsBonus(playerNbt.getDouble("health.other-plugins"));
+            }
+            // ========================================
+
             // =========== Added in v1.2.1 ============
-            NbtCompound itemsNbt = inventoryNbt.containsKey("slots") ? inventoryNbt.getCompound("slots") : inventoryNbt;
+            NbtCompound itemsNbt = playerNbt.containsKey("slots") ? playerNbt.getCompound("slots") : playerNbt;
             // ========================================
 
             for (Slot slot : SlotManager.getSlotManager().getSlots()) {

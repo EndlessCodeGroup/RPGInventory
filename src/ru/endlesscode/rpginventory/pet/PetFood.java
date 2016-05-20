@@ -13,7 +13,6 @@ import ru.endlesscode.rpginventory.utils.ItemUtils;
 import ru.endlesscode.rpginventory.utils.StringUtils;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -25,7 +24,7 @@ public class PetFood {
     @NotNull
     private final String name;
     @NotNull
-    private final String lore;
+    private final List<String> lore;
     private final String texture;
 
     private final double value;
@@ -34,9 +33,9 @@ public class PetFood {
 
     private ItemStack foodItem;
 
-    public PetFood(@NotNull ConfigurationSection config) {
+    PetFood(@NotNull ConfigurationSection config) {
         this.name = StringUtils.coloredLine(config.getString("name"));
-        this.lore = StringUtils.coloredLine(config.getString("lore"));
+        this.lore = StringUtils.coloredLines(config.getStringList("lore"));
         this.texture = config.getString("item");
         this.value = config.getDouble("value");
         this.stackSize = config.getInt("stack-size", 1);
@@ -60,7 +59,7 @@ public class PetFood {
 
         FileLanguage lang = RPGInventory.getLanguage();
         List<String> lore = new ArrayList<>();
-        lore.addAll(Arrays.asList(this.lore.split("\n")));
+        lore.addAll(this.lore);
         lore.add(String.format(lang.getCaption("pet.food.value"), (int) (this.value)));
         meta.setLore(lore);
         spawnItem.setItemMeta(meta);

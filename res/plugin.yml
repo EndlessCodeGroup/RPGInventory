@@ -1,5 +1,5 @@
 name: RPGInventory
-version: 1.3.2
+version: 1.3.3
 description: Change inventory how you need
 author: OsipXD
 
@@ -53,3 +53,11 @@ permissions:
   rpginventory.keep.armor:
     description: Player with this permission will not lose armor on dead
     default: op
+  rpginventory.fixhp:
+    description: Allows you to fix corrupted hp
+    default: true
+  rpginventory.fixhp.others:
+    description: Allows you to fix corrupted hp for you or other players
+    default: op
+    children:
+      rpginventory.textures: true
