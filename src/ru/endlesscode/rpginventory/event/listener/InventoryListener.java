@@ -226,7 +226,14 @@ public class InventoryListener implements Listener {
         }
 
         final int rawSlot = event.getRawSlot();
-        final InventoryType.SlotType slotType = InventoryUtils.getSlotType(event.getSlotType(), rawSlot);
+        InventoryType.SlotType slotType = InventoryUtils.getSlotType(event.getSlotType(), rawSlot);
+
+        //======= FIXING BUG of 1.9 ==========
+        if (VersionHandler.is1_9() && rawSlot > event.getView().getTopInventory().getSize() && event.getSlot() < 9) {
+            slotType = InventoryType.SlotType.QUICKBAR;
+        }
+        //=================================
+
         final Slot slot = SlotManager.getSlotManager().getSlot(event.getSlot(), slotType);
         final Inventory inventory = event.getInventory();
         InventoryAction action = event.getAction();
@@ -258,9 +265,9 @@ public class InventoryListener implements Listener {
         }
 
         // In RPG Inventory or quick slot
-        if (InventoryAPI.isRPGInventory(inventory) ||
-                slotType == InventoryType.SlotType.QUICKBAR && slot != null
-                        && (slot.isQuick() || slot.getSlotType() == Slot.SlotType.SHIELD) && player.getGameMode() != GameMode.CREATIVE) {
+        if (InventoryAPI.isRPGInventory(inventory)
+                || slotType == InventoryType.SlotType.QUICKBAR && slot != null
+                && (slot.isQuick() || slot.getSlotType() == Slot.SlotType.SHIELD) && player.getGameMode() != GameMode.CREATIVE) {
             if (rawSlot < 54 && slot == null || action == InventoryAction.MOVE_TO_OTHER_INVENTORY) {
                 event.setCancelled(true);
                 return;
@@ -282,7 +289,7 @@ public class InventoryListener implements Listener {
                 }
             }
 
-            if (!validateClick(player, playerWrapper, slot, actionType, currentItem, slotType)) {
+            if (!validateClick(player, playerWrapper, slot, actionType, currentItem, slotType) || slot.getSlotType() == Slot.SlotType.INFO) {
                 event.setCancelled(true);
                 return;
             }
@@ -433,6 +440,7 @@ public class InventoryListener implements Listener {
             }
 
             InventoryManager.syncQuickSlots(player, inventory);
+            InventoryManager.syncInfoSlots(player, inventory);
             InventoryManager.syncShieldSlot(player, inventory);
             InventoryManager.syncArmor(player, inventory);
         }
@@ -470,7 +478,7 @@ public class InventoryListener implements Listener {
                 public void run() {
                     player.setResourcePack(Config.getConfig().getString("resource-pack.url"));
 
-                    if (VersionHandler.is1_7_10()) {
+                    if (VersionHandler.is1_7_R4()) {
                         ResourcePackManager.loadedResourcePack(player, true);
                         InventoryManager.loadPlayerInventory(player);
                     }

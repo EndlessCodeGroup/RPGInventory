@@ -39,6 +39,7 @@ public class WrapperPlayClientResourcePackStatus extends AbstractPacket {
      * Retrieve Hash.
      * <p>
      * Notes: the hash sent in the Resource Pack Send packet.
+     *
      * @return The current Hash
      */
     public String getHash() {
@@ -47,6 +48,7 @@ public class WrapperPlayClientResourcePackStatus extends AbstractPacket {
 
     /**
      * Set Hash.
+     *
      * @param value - new value.
      */
     public void setHash(String value) {
@@ -57,6 +59,7 @@ public class WrapperPlayClientResourcePackStatus extends AbstractPacket {
      * Retrieve Result.
      * <p>
      * Notes: successfully loaded: 0, Declined: 1, Failed download: 2, Accepted: 3
+     *
      * @return The current Result
      */
     public ResourcePackStatus getResult() {
@@ -65,6 +68,7 @@ public class WrapperPlayClientResourcePackStatus extends AbstractPacket {
 
     /**
      * Set Result.
+     *
      * @param value - new value.
      */
     public void setResult(ResourcePackStatus value) {

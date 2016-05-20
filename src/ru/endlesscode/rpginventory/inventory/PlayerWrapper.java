@@ -9,14 +9,17 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.scheduler.BukkitRunnable;
 import ru.endlesscode.rpginventory.RPGInventory;
+import ru.endlesscode.rpginventory.event.updater.HealthUpdater;
+import ru.endlesscode.rpginventory.event.updater.StatsUpdater;
 import ru.endlesscode.rpginventory.inventory.backpack.Backpack;
 import ru.endlesscode.rpginventory.inventory.slot.Slot;
 import ru.endlesscode.rpginventory.inventory.slot.SlotManager;
+import ru.endlesscode.rpginventory.item.CustomItem;
 import ru.endlesscode.rpginventory.item.ItemManager;
-import ru.endlesscode.rpginventory.item.ItemStat;
-import ru.endlesscode.rpginventory.item.Modifier;
+import ru.endlesscode.rpginventory.nms.VersionHandler;
+import ru.endlesscode.rpginventory.pet.PetManager;
+import ru.endlesscode.rpginventory.pet.PetType;
 import ru.endlesscode.rpginventory.utils.ItemUtils;
 
 import java.util.ArrayList;
@@ -30,19 +33,18 @@ import java.util.Map;
  * All rights reserved 2014 - 2015 © «EndlessCode Group»
  */
 public class PlayerWrapper implements InventoryHolder {
+    private final static float BASE_SPEED = 0.2f;
+
     private final OfflinePlayer player;
     private final Inventory inventory;
     private final Map<String, Integer> buyedSlots = new HashMap<>();
     private final List<String> permissions = new ArrayList<>();
-    private final float baseSpeed;
-    private final double baseHealth;
+    private final HealthUpdater healthUpdater;
 
     private InventoryView inventoryView;
     private long timeWhenPreparedToBuy = 0;
     private Backpack backpack;
-
     private LivingEntity pet;
-    private Modifier currentHealthModifier = new Modifier(0, 1);
 
     private ItemStack savedChestplate = null;
     private boolean falling = false;
@@ -53,8 +55,15 @@ public class PlayerWrapper implements InventoryHolder {
         this.player = player;
         this.inventory = Bukkit.createInventory(this, 54, InventoryManager.TITLE);
 
-        this.baseSpeed = player.getPlayer().getWalkSpeed();
-        this.baseHealth = player.getPlayer().getMaxHealth();
+        this.healthUpdater = new HealthUpdater(player.getPlayer());
+    }
+
+    void startHealthUpdater() {
+        this.healthUpdater.runTaskTimer(RPGInventory.getInstance(), 1, 1);
+    }
+
+    public HealthUpdater getHealthUpdater() {
+        return healthUpdater;
     }
 
     @Override
@@ -130,7 +139,7 @@ public class PlayerWrapper implements InventoryHolder {
         }
     }
 
-    public void clearPermissions() {
+    private void clearPermissions() {
         for (String permission : this.permissions) {
             RPGInventory.getPermissions().playerRemove(this.player.getPlayer(), permission);
         }
@@ -139,18 +148,14 @@ public class PlayerWrapper implements InventoryHolder {
     }
 
     public float getBaseSpeed() {
-        return baseSpeed;
+        return BASE_SPEED;
     }
 
-    void clearStats() {
+    private void clearStats() {
         Player player = this.player.getPlayer();
-        player.setWalkSpeed(this.baseSpeed);
-
-        if (RPGInventory.isMythicMobsEnabled()) {
-            this.player.getPlayer().setMaxHealth(this.baseHealth);
-        } else {
-            player.setMaxHealth(player.getMaxHealth() / this.currentHealthModifier.getMultiplier() - this.currentHealthModifier.getBonus());
-        }
+        player.setWalkSpeed(BASE_SPEED);
+        this.healthUpdater.setHealth(player.getHealth());
+        this.healthUpdater.stop();
     }
 
     public Backpack getBackpack() {
@@ -175,60 +180,6 @@ public class PlayerWrapper implements InventoryHolder {
 
     public OfflinePlayer getPlayer() {
         return player;
-    }
-
-    public void updateHealth() {
-        final Player player = this.player.getPlayer();
-        Modifier healthModifier = ItemManager.getModifier(player, ItemStat.StatType.HEALTH, false);
-        final double oldMaxHealth = player.getMaxHealth();
-
-        // TODO: Добавить нормальную интеграцию c MythicMobs
-        final double mythicMobsBonus;
-        if (RPGInventory.isMythicMobsEnabled()) {
-            mythicMobsBonus = oldMaxHealth - (this.baseHealth + this.currentHealthModifier.getBonus())
-                    * this.currentHealthModifier.getMultiplier();
-        } else {
-            mythicMobsBonus = 0;
-        }
-
-        double newMaxHealth;
-        if (RPGInventory.isMythicMobsEnabled()) {
-            newMaxHealth = (this.baseHealth + healthModifier.getBonus()) * healthModifier.getMultiplier();
-        } else {
-            newMaxHealth =
-                    (oldMaxHealth / this.currentHealthModifier.getMultiplier() - this.currentHealthModifier.getBonus()
-                            + healthModifier.getBonus()) * healthModifier.getMultiplier();
-        }
-
-        if (oldMaxHealth == newMaxHealth) {
-            return;
-        }
-
-        this.currentHealthModifier = healthModifier;
-
-        final double oldHealth = player.getHealth();
-        player.setMaxHealth(newMaxHealth);
-
-        double currentHealth;
-        if (newMaxHealth > oldMaxHealth) {
-            currentHealth = oldHealth + newMaxHealth - oldMaxHealth;
-        } else if (newMaxHealth < oldMaxHealth) {
-            currentHealth = oldHealth - oldMaxHealth + newMaxHealth;
-            if (currentHealth < 1) {
-                currentHealth = 1;
-            }
-        } else {
-            currentHealth = oldHealth;
-        }
-
-        final double finalCurrentHealth = currentHealth;
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                double health = finalCurrentHealth + mythicMobsBonus;
-                player.setHealth(health > player.getMaxHealth() ? player.getMaxHealth() : health);
-            }
-        }.runTaskLater(RPGInventory.getInstance(), 1);
     }
 
     private void startFlight() {
@@ -281,4 +232,76 @@ public class PlayerWrapper implements InventoryHolder {
     ItemStack getSavedChestplate() {
         return savedChestplate;
     }
+
+    void onUnload() {
+        // Disabling of flight mode
+        if (this.flying) {
+            this.setFalling(false);
+        }
+
+        this.clearStats();
+
+        // Restoring of scale settings
+        player.getPlayer().setHealthScaled(false);
+
+        // Removing pet
+        if (PetManager.isEnabled()) {
+            PetManager.despawnPet(player);
+            Inventory inventory = this.inventory;
+            ItemStack petItem = inventory.getItem(PetManager.getPetSlotId());
+            if (petItem != null) {
+                inventory.setItem(PetManager.getPetSlotId(), PetType.clone(petItem));
+            }
+        }
+    }
+
+    public void updateStatsLater() {
+        new StatsUpdater(player.getPlayer()).runTaskLater(RPGInventory.getInstance(), 1);
+    }
+
+    public boolean resetMaxHealth() {
+        if (this.healthUpdater.getAttributesBonus() == 0 && this.healthUpdater.getOtherPluginsBonus() == 0) {
+            return false;
+        }
+
+        this.healthUpdater.setAttributesBonus(0);
+        this.healthUpdater.setOtherPluginsBonus(0);
+        this.player.getPlayer().kickPlayer(RPGInventory.getLanguage().getCaption("message.fixhp"));
+        return true;
+    }
+
+    public void updatePermissions() {
+        Player player = this.player.getPlayer();
+        this.clearPermissions();
+        List<CustomItem> customItems = new ArrayList<>();
+        for (ItemStack item : this.getInventory().getContents()) {
+            if (CustomItem.isCustomItem(item)) {
+                customItems.add(ItemManager.getCustomItem(item));
+            }
+        }
+
+        if (VersionHandler.is1_9()) {
+            ItemStack itemInOffHand = player.getEquipment().getItemInOffHand();
+            ItemStack itemInMainHand = player.getEquipment().getItemInMainHand();
+
+            if (CustomItem.isCustomItem(itemInOffHand)) {
+                customItems.add(ItemManager.getCustomItem(itemInOffHand));
+            }
+
+            if (CustomItem.isCustomItem(itemInMainHand)) {
+                customItems.add(ItemManager.getCustomItem(itemInMainHand));
+            }
+        } else {
+            //noinspection deprecation
+            ItemStack itemInHand = player.getItemInHand();
+            if (CustomItem.isCustomItem(itemInHand)) {
+                customItems.add(ItemManager.getCustomItem(itemInHand));
+            }
+        }
+
+        for (CustomItem customItem : customItems) {
+            customItem.onEquip(player);
+        }
+    }
+
 }

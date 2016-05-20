@@ -27,7 +27,7 @@ public class CustomItem {
     private final List<ItemStat> stats = new ArrayList<>();
 
     // Not required options
-    private final String lore;
+    private final List<String> lore;
     private final List<String> classes;
     private final List<String> permissions;
     private final int level;
@@ -54,7 +54,7 @@ public class CustomItem {
             }
         }
 
-        this.lore = config.contains("lore") ? StringUtils.coloredLine(config.getString("lore")) : null;
+        this.lore = config.contains("lore") ? StringUtils.coloredLines(config.getStringList("lore")) : null;
 
         this.leftClickAction = config.contains("abilities.left-click.command")
                 ? new ItemAction(config.getConfigurationSection("abilities.left-click"))
@@ -78,7 +78,7 @@ public class CustomItem {
         return !ItemUtils.isEmpty(itemStack) && ItemUtils.hasTag(itemStack, ItemUtils.ITEM_TAG);
     }
 
-    void onEquip(Player player) {
+    public void onEquip(Player player) {
         if (this.permissions == null) {
             return;
         }
@@ -111,7 +111,7 @@ public class CustomItem {
         if (this.unbreakable) {
             customItem = ItemUtils.setTag(customItem, ItemUtils.UNBREAKABLE_TAG, "1");
         }
-        if (!VersionHandler.is1_7_10()) {
+        if (!VersionHandler.is1_7_R4()) {
             customItem = ItemUtils.setTag(customItem, ItemUtils.HIDE_FLAGS_TAG, "63");
         }
         this.customItem = ItemUtils.setTag(customItem, ItemUtils.ITEM_TAG, id);
@@ -158,7 +158,7 @@ public class CustomItem {
         return classesString;
     }
 
-    public String getLore() {
+    public List<String> getLore() {
         return lore;
     }
 

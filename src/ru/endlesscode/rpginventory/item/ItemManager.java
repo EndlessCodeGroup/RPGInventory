@@ -8,6 +8,7 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import ru.endlesscode.rpginventory.RPGInventory;
 import ru.endlesscode.rpginventory.api.InventoryAPI;
+import ru.endlesscode.rpginventory.inventory.InventoryManager;
 import ru.endlesscode.rpginventory.misc.Config;
 import ru.endlesscode.rpginventory.misc.FileLanguage;
 import ru.endlesscode.rpginventory.nms.VersionHandler;
@@ -47,9 +48,15 @@ public class ItemManager {
         RPGInventory.getPluginLogger().info(CUSTOM_ITEMS.size() + " item(s) has been loaded");
     }
 
-    public static Modifier getModifier(@NotNull Player player, ItemStat.StatType statType, boolean notifyPlayer) {
-        double bonus = 0;
-        float multiplier = 1;
+    public static Modifier getModifier(@NotNull Player player, ItemStat.StatType statType) {
+        return getModifier(player, statType, false);
+    }
+
+    private static Modifier getModifier(@NotNull Player player, ItemStat.StatType statType, boolean notifyPlayer) {
+        double minBonus = 0;
+        double maxBonus = 0;
+        float minMultiplier = 1;
+        float maxMultiplier = 1;
 
         List<ItemStack> items = new ArrayList<>(InventoryAPI.getPassiveItems(player));
         Collections.addAll(items, player.getInventory().getArmorContents());
@@ -76,13 +83,25 @@ public class ItemManager {
             }
 
             if (stat.isPercentage()) {
-                multiplier += stat.getOperationType() == ItemStat.OperationType.MINUS ? -stat.getValue() / 100 : stat.getValue() / 100;
+                minMultiplier += stat.getOperationType() == ItemStat.OperationType.MINUS ? -stat.getMinValue() / 100 : stat.getMinValue() / 100;
+
+                if (stat.isRanged()) {
+                    maxMultiplier += stat.getOperationType() == ItemStat.OperationType.MINUS ? -stat.getMaxValue() / 100 : stat.getMaxValue() / 100;
+                } else {
+                    maxMultiplier += stat.getOperationType() == ItemStat.OperationType.MINUS ? -stat.getMinValue() / 100 : stat.getMinValue() / 100;
+                }
             } else {
-                bonus += stat.getOperationType() == ItemStat.OperationType.MINUS ? -stat.getValue() : stat.getValue();
+                minBonus += stat.getOperationType() == ItemStat.OperationType.MINUS ? -stat.getMinValue() : stat.getMinValue();
+
+                if (stat.isRanged()) {
+                    maxBonus += stat.getOperationType() == ItemStat.OperationType.MINUS ? -stat.getMaxValue() : stat.getMaxValue();
+                } else {
+                    maxBonus += stat.getOperationType() == ItemStat.OperationType.MINUS ? -stat.getMinValue() : stat.getMinValue();
+                }
             }
         }
 
-        return new Modifier(bonus, multiplier);
+        return new Modifier(minBonus, maxBonus, minMultiplier, maxMultiplier);
     }
 
     public static List<String> getItemList() {
@@ -125,8 +144,12 @@ public class ItemManager {
         return false;
     }
 
-    public static void updateStatsLater(@NotNull final Player player) {
-        new StatsUpdater(player).runTaskLater(RPGInventory.getInstance(), 1);
+    public static void updateStats(@NotNull final Player player) {
+        if (!InventoryManager.playerIsLoaded(player)) {
+            return;
+        }
+
+        InventoryManager.get(player).updateStatsLater();
     }
 
     static List<String> buildLore(CustomItem item) {
@@ -167,7 +190,7 @@ public class ItemManager {
                     break;
                 case "_LORE_":
                     if (item.getLore() != null) {
-                        lore.addAll(Arrays.asList(item.getLore().split("\n")));
+                        lore.addAll(item.getLore());
                         lastIsSeparator = false;
                     }
                     break;

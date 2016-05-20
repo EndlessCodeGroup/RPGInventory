@@ -48,7 +48,7 @@ public class ItemListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onLoadInventory(PlayerInventoryLoadEvent.Post event) {
         Player player = event.getPlayer();
-        ItemManager.updateStatsLater(player);
+        ItemManager.updateStats(player);
 
         // Sync armor
         player.getInventory().setArmorContents(ItemUtils.syncItems(player.getInventory().getArmorContents()));
@@ -68,7 +68,7 @@ public class ItemListener implements Listener {
         // Defensive stats
         try {
             if (event.getEntityType() == EntityType.PLAYER) {
-                Modifier armorModifier = ItemManager.getModifier((Player) event.getEntity(), ItemStat.StatType.ARMOR, false);
+                Modifier armorModifier = ItemManager.getModifier((Player) event.getEntity(), ItemStat.StatType.ARMOR);
                 double armor = (event.getDamage(EntityDamageEvent.DamageModifier.ARMOR) - armorModifier.getBonus()) * armorModifier.getMultiplier();
                 if (armor > 0.0D) {
                     armor = 0.0D;
@@ -87,12 +87,12 @@ public class ItemListener implements Listener {
             //noinspection deprecation
             itemInHand = (VersionHandler.is1_9()) ? damager.getEquipment().getItemInMainHand() : damager.getItemInHand();
             damageModifier = ItemManager.getModifier(damager,
-                    ItemUtils.isEmpty(itemInHand) ? ItemStat.StatType.HAND_DAMAGE : ItemStat.StatType.DAMAGE, false);
+                    ItemUtils.isEmpty(itemInHand) ? ItemStat.StatType.HAND_DAMAGE : ItemStat.StatType.DAMAGE);
         } else if (event.getDamager().getType() == EntityType.ARROW && ((Arrow) event.getDamager()).getShooter() instanceof Player) {
             damager = (Player) ((Arrow) event.getDamager()).getShooter();
             //noinspection deprecation
             itemInHand = (VersionHandler.is1_9()) ? damager.getEquipment().getItemInMainHand() : damager.getItemInHand();
-            damageModifier = ItemManager.getModifier(damager, ItemStat.StatType.BOW_DAMAGE, false);
+            damageModifier = ItemManager.getModifier(damager, ItemStat.StatType.BOW_DAMAGE);
         } else {
             return;
         }
@@ -108,9 +108,9 @@ public class ItemListener implements Listener {
 
         double damage = (CustomItem.isCustomItem(itemInHand) ? 1 : event.getDamage(EntityDamageEvent.DamageModifier.BASE))
                 + damageModifier.getBonus() * damageModifier.getMultiplier();
-        float critChance = ItemManager.getModifier(damager, ItemStat.StatType.CRIT_CHANCE, false).getMultiplier() - 1.0f;
+        double critChance = ItemManager.getModifier(damager, ItemStat.StatType.CRIT_CHANCE).getMultiplier() - 1.0;
         if (Math.random() <= critChance) {
-            damage *= ItemManager.getModifier(damager, ItemStat.StatType.CRIT_DAMAGE, false).getMultiplier();
+            damage *= ItemManager.getModifier(damager, ItemStat.StatType.CRIT_DAMAGE).getMultiplier();
             damager.getWorld().playSound(event.getEntity().getLocation(),
                     VersionHandler.is1_9() ? Sound.ENTITY_PLAYER_ATTACK_CRIT : Sound.valueOf("SUCCESSFUL_HIT"),
                     1, (float) (0.5 + Math.random() * 0.4));
@@ -129,7 +129,7 @@ public class ItemListener implements Listener {
         }
 
         Vector velocity = player.getVelocity();
-        Modifier jumpModifier = ItemManager.getModifier(player, ItemStat.StatType.JUMP, false);
+        Modifier jumpModifier = ItemManager.getModifier(player, ItemStat.StatType.JUMP);
 
         if (jumpModifier.getBonus() == 0 && jumpModifier.getMultiplier() == 1) {
             return;
@@ -156,7 +156,7 @@ public class ItemListener implements Listener {
                 return;
             }
 
-            Modifier jumpModifier = ItemManager.getModifier(player, ItemStat.StatType.JUMP, false);
+            Modifier jumpModifier = ItemManager.getModifier(player, ItemStat.StatType.JUMP);
             double height = (1.5D + jumpModifier.getBonus()) * jumpModifier.getMultiplier() * 1.5;
             event.setDamage(event.getDamage() - height);
 
@@ -191,7 +191,7 @@ public class ItemListener implements Listener {
             event.setCancelled(true);
         }
 
-        ItemManager.updateStatsLater(player);
+        ItemManager.updateStats(player);
     }
 
     @EventHandler(priority = EventPriority.LOW)
@@ -293,7 +293,7 @@ public class ItemListener implements Listener {
             return;
         }
 
-        ItemManager.updateStatsLater(event.getPlayer());
+        ItemManager.updateStats(event.getPlayer());
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
@@ -305,7 +305,7 @@ public class ItemListener implements Listener {
         }
 
         if (CustomItem.isCustomItem(event.getCursor()) || CustomItem.isCustomItem(event.getCurrentItem())) {
-            ItemManager.updateStatsLater(player);
+            ItemManager.updateStats(player);
         }
     }
 
@@ -324,7 +324,7 @@ public class ItemListener implements Listener {
                 for (int slot : event.getRawSlots()) {
                     ItemStack item = inventoryView.getItem(slot);
                     if (CustomItem.isCustomItem(item)) {
-                        ItemManager.updateStatsLater((Player) event.getWhoClicked());
+                        ItemManager.updateStats((Player) event.getWhoClicked());
                     }
                 }
             }
@@ -346,10 +346,10 @@ public class ItemListener implements Listener {
             @Override
             public void run() {
                 if (CustomItem.isCustomItem(oldItem) || CustomItem.isCustomItem(newItem)) {
-                    ItemManager.updateStatsLater(event.getPlayer());
+                    ItemManager.updateStats(event.getPlayer());
                 }
             }
-        }.runTaskLater(RPGInventory.getInstance(), 1);
+        }.runTaskLater(RPGInventory.getInstance(), 2);
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
@@ -362,7 +362,7 @@ public class ItemListener implements Listener {
 
         ItemStack item = event.getItem().getItemStack();
         if (CustomItem.isCustomItem(item)) {
-            ItemManager.updateStatsLater(player);
+            ItemManager.updateStats(player);
         }
     }
 
@@ -375,7 +375,7 @@ public class ItemListener implements Listener {
         }
 
         if (CustomItem.isCustomItem(event.getItemDrop().getItemStack())) {
-            ItemManager.updateStatsLater(player);
+            ItemManager.updateStats(player);
         }
     }
 
@@ -388,7 +388,7 @@ public class ItemListener implements Listener {
         }
 
         if (CustomItem.isCustomItem(event.getBrokenItem())) {
-            ItemManager.updateStatsLater(player);
+            ItemManager.updateStats(player);
         }
     }
 }

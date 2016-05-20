@@ -31,7 +31,7 @@ class Attributes {
 
     public void setSpeed(double speed) {
         String type = "d";
-        if (!VersionHandler.is1_7_10() && !VersionHandler.is1_8()) {
+        if (!VersionHandler.is1_7_R4() && !VersionHandler.is1_8_R1()) {
             type = "MOVEMENT_SPEED";
         }
 

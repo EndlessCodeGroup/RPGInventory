@@ -3,15 +3,12 @@ package ru.endlesscode.rpginventory;
 import com.comphenix.protocol.ProtocolLibrary;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ru.endlesscode.rpginventory.event.listener.*;
 import ru.endlesscode.rpginventory.inventory.InventoryLocker;
@@ -75,10 +72,6 @@ public class RPGInventory extends JavaPlugin {
         return economy != null;
     }
 
-    public static boolean isMythicMobsEnabled() {
-        return instance.getServer().getPluginManager().isPluginEnabled("MythicMobs");
-    }
-
     public static PlayerUtils.LevelSystem getLevelSystem() {
         return levelSystem;
     }
@@ -100,6 +93,12 @@ public class RPGInventory extends JavaPlugin {
             this.onFirstStart();
             this.getLogger().warning("Plugin is not enabled!");
             this.setEnabled(false);
+            return;
+        }
+
+        if (!VersionHandler.checkVersion()) {
+            this.getLogger().warning("This version of RPG Inventory is not compatible with your version of Bukkit!");
+            this.getPluginLoader().disablePlugin(this);
             return;
         }
 
@@ -125,7 +124,7 @@ public class RPGInventory extends JavaPlugin {
             }
         }
 
-        if (!VersionHandler.is1_7_10()) {
+        if (!VersionHandler.is1_7_R4()) {
             ProtocolLibrary.getProtocolManager().addPacketListener(new ResourcePackListener(this));
         }
 
@@ -159,6 +158,9 @@ public class RPGInventory extends JavaPlugin {
 
         this.loadPlayers();
         this.startMetrics();
+
+        // Enable commands
+        this.getCommand("rpginventory").setExecutor(new RPGInventoryCommandExecutor());
 
         this.checkUpdates(null);
     }
@@ -230,63 +232,6 @@ public class RPGInventory extends JavaPlugin {
         }
     }
 
-    @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command cmd, String label, @NotNull String[] args) {
-        if (cmd.getName().equalsIgnoreCase("rpginventory") || cmd.getName().equalsIgnoreCase("rpginv")) {
-            if (args.length > 0) {
-                if (perms.has(sender, "rpginventory.admin")) {
-                    if (args[0].equals("pet") && args.length >= 3) {
-                        CommandExecutor.givePet(sender, args[1], args[2]);
-                        return true;
-                    } else if (args[0].equals("food") && args.length >= 3) {
-                        CommandExecutor.giveFood(sender, args[1], args[2], args.length > 3 ? args[3] : "1");
-                        return true;
-                    } else if (args[0].equals("item") && args.length >= 3) {
-                        CommandExecutor.giveItem(sender, args[1], args[2]);
-                        return true;
-                    } else if (args[0].equals("bp") && args.length >= 3) {
-                        CommandExecutor.giveBackpack(sender, args[1], args[2]);
-                        return true;
-                    } else if (args[0].equals("list") && args.length >= 2) {
-                        CommandExecutor.printList(sender, args[1]);
-                        return true;
-                    } else if (args[0].equals("reload")) {
-                        CommandExecutor.reloadPlugin(sender);
-                        return true;
-                    }
-                }
-
-                if (args[0].equals("open")) {
-                    if (args.length == 1) {
-                        if (perms.has(sender, "rpginventory.open")) {
-                            CommandExecutor.openInventory(sender);
-                        }
-                    } else if (perms.has(sender, "rpginventory.open.others")) {
-                        CommandExecutor.openInventory(sender, args[1]);
-                    }
-
-                    CommandExecutor.openInventory(sender);
-                } else if (args[0].equals("textures") && args.length >= 2) {
-                    if (args.length == 2) {
-                        if (perms.has(sender, "rpginventory.textures")) {
-                            CommandExecutor.updateTextures(sender, args[1]);
-                        }
-                    } else if (perms.has(sender, "rpginventory.textures.others")) {
-                        CommandExecutor.updateTextures(sender, args[1], args[2]);
-                    }
-                } else {
-                    CommandExecutor.printHelp(sender);
-                }
-            } else {
-                CommandExecutor.printHelp(sender);
-            }
-
-            return true;
-        }
-
-        return false;
-    }
-
     private void onFirstStart() {
         StringUtils.coloredConsole(RPGInventory.getLanguage().getCaption("firststart"));
     }
@@ -324,10 +269,12 @@ public class RPGInventory extends JavaPlugin {
                 Updater updater = new Updater(RPGInventory.instance, RPGInventory.instance.getFile(), Updater.UpdateType.NO_DOWNLOAD, false);
                 if (updater.getResult() == Updater.UpdateResult.UPDATE_AVAILABLE) {
                     String[] lines = {
+                            StringUtils.coloredLine("&3=================&b[&eRPGInventory&b]&3==================="),
                             StringUtils.coloredLine("&6New version available: &a" + updater.getLatestName() + "&6!"),
                             StringUtils.coloredLine(updater.getDescription()),
                             StringUtils.coloredLine("&6Changelog: &e" + updater.getInfoLink()),
-                            StringUtils.coloredLine("&6Download it on SpigotMC!")
+                            StringUtils.coloredLine("&6Download it on &eSpigotMC&6!"),
+                            StringUtils.coloredLine("&3==================================================")
                     };
 
                     for (String line : lines) {

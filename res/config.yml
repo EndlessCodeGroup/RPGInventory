@@ -28,7 +28,7 @@ worlds:
     - blocked_world
 
 # What system used for level
-# Can be: EXP (exp bar from Minecraft), SKILLAPI, BATTLELEVELS, SKILLS, HEROES, RAC
+# Can be: EXP (exp bar from Minecraft), SKILLAPI, BATTLELEVELS, SKILLS, HEROES, RAC, RPGPL
 level-system: EXP
 
 # What system used for class
@@ -113,10 +113,28 @@ alternate-view:
 
   # Options of item
   name: "&6Equipment"
-  lore: "&7&o(Right click to open equipment)"
+  lore:
+  - "&7&o(Right click to open equipment)"
 
   # Texture to fill unavailable slots
   fill: STAINED_GLASS_PANE:0
+
+  # Health setting
+  health:
+
+    # Base health for all players
+    base: 20.0
+
+    # Enable HP auto-scale system
+    scale: true
+
+    # Max value of hearts (half-hearts)
+    hearts: 20
+
+    # Minimal and maximal value of HP in one heart (half-heart)
+    heart-capacity:
+      min: 1
+      max: 5
 
 
 ###############################

@@ -1,5 +1,8 @@
 package ru.endlesscode.rpginventory;
 
+import net.milkbowl.vault.permission.Permission;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -21,8 +24,8 @@ import java.util.List;
  * All rights reserved 2014 - 2015 © «EndlessCode Group»
  */
 @SuppressWarnings("deprecation")
-class CommandExecutor {
-    static void givePet(CommandSender sender, String playerName, String petId) {
+class RPGInventoryCommandExecutor implements CommandExecutor {
+    private static void givePet(CommandSender sender, String playerName, String petId) {
         if (validatePlayer(sender, playerName)) {
             Player player = RPGInventory.getInstance().getServer().getPlayer(playerName);
             ItemStack petItem = PetManager.getPetItem(petId);
@@ -38,7 +41,7 @@ class CommandExecutor {
         sender.sendMessage(StringUtils.coloredLine("&3Use &6/rpginv pet [&eplayer&6] [&epetId&6]"));
     }
 
-    static void giveFood(CommandSender sender, String playerName, String foodId, String stringAmount) {
+    private static void giveFood(CommandSender sender, String playerName, String foodId, String stringAmount) {
         if (validatePlayer(sender, playerName)) {
             Player player = RPGInventory.getInstance().getServer().getPlayer(playerName);
             ItemStack foodItem = PetManager.getFoodItem(foodId);
@@ -60,7 +63,7 @@ class CommandExecutor {
         sender.sendMessage(StringUtils.coloredLine("&3Use &6/rpginv food [&eplayer&6] [&efoodId&6] (&eamount&6)"));
     }
 
-    static void giveItem(CommandSender sender, String playerName, String itemId) {
+    private static void giveItem(CommandSender sender, String playerName, String itemId) {
         if (validatePlayer(sender, playerName)) {
             Player player = RPGInventory.getInstance().getServer().getPlayer(playerName);
             ItemStack petItem = ItemManager.getItem(itemId);
@@ -76,7 +79,7 @@ class CommandExecutor {
         sender.sendMessage(StringUtils.coloredLine("&3Use &6/rpginv item [&eplayer&6] [&eitemId&6]"));
     }
 
-    static void giveBackpack(CommandSender sender, String playerName, String id) {
+    private static void giveBackpack(CommandSender sender, String playerName, String id) {
         if (validatePlayer(sender, playerName)) {
             Player player = RPGInventory.getInstance().getServer().getPlayer(playerName);
             ItemStack bpItem = BackpackManager.getItem(id);
@@ -92,7 +95,7 @@ class CommandExecutor {
         sender.sendMessage(StringUtils.coloredLine("&3Use &6/rpginv bp [&eplayer&6] [&eitemId&6]"));
     }
 
-    static void printHelp(CommandSender sender) {
+    private static void printHelp(CommandSender sender) {
         sender.sendMessage(StringUtils.coloredLine("&3===================&b[&eRPGInventory&b]&3====================="));
         sender.sendMessage(StringUtils.coloredLine("&8[] &7Required, &8() &7Optional"));
 
@@ -108,6 +111,12 @@ class CommandExecutor {
             sender.sendMessage(StringUtils.coloredLine("&6rpginv textures [&eenable&6|&edisable&6] &7- use textures or not"));
         }
 
+        if (RPGInventory.getPermissions().has(sender, "rpginventory.fixhp.others")) {
+            sender.sendMessage(StringUtils.coloredLine("&6rpginv fixhp (&eplayer&6) &7- fix incorrect hp"));
+        } else if (RPGInventory.getPermissions().has(sender, "rpginventory.fixhp")) {
+            sender.sendMessage(StringUtils.coloredLine("&6rpginv fixhp &7- fix incorrect hp"));
+        }
+
         if (RPGInventory.getPermissions().has(sender, "rpginventory.admin")) {
             sender.sendMessage(StringUtils.coloredLine("&6rpginv reload &7- reload config"));
             sender.sendMessage(StringUtils.coloredLine("&6rpginv list [&etype&6] &7- show list of pets, food or items"));
@@ -120,7 +129,7 @@ class CommandExecutor {
         sender.sendMessage(StringUtils.coloredLine("&3====================================================="));
     }
 
-    static void printList(CommandSender sender, String type) {
+    private static void printList(CommandSender sender, String type) {
         switch (type) {
             case "pet":
             case "pets":
@@ -148,14 +157,14 @@ class CommandExecutor {
         }
     }
 
-    static void reloadPlugin(CommandSender sender) {
+    private static void reloadPlugin(CommandSender sender) {
         PluginManager pm = RPGInventory.getInstance().getServer().getPluginManager();
         pm.disablePlugin(RPGInventory.getInstance());
         pm.enablePlugin(RPGInventory.getInstance());
         sender.sendMessage(StringUtils.coloredLine("&e[RPGInventory] Plugin successfully reloaded!"));
     }
 
-    static void openInventory(CommandSender sender) {
+    private static void openInventory(CommandSender sender) {
         if (!validatePlayer(sender)) {
             return;
         }
@@ -168,7 +177,7 @@ class CommandExecutor {
         InventoryManager.get(player).openInventory();
     }
 
-    static void openInventory(CommandSender sender, String playerName) {
+    private static void openInventory(CommandSender sender, String playerName) {
         if (!validatePlayer(sender) || !validatePlayer(sender, playerName)) {
             return;
         }
@@ -177,7 +186,27 @@ class CommandExecutor {
         ((Player) sender).openInventory(InventoryManager.get(player).getInventory());
     }
 
-    static void updateTextures(CommandSender sender, String status) {
+    private static void fixHp(CommandSender sender) {
+        if (!validatePlayer(sender)) {
+            return;
+        }
+
+        Player player = ((Player) sender).getPlayer();
+        if (!InventoryManager.get(player).resetMaxHealth()) {
+            player.sendMessage(RPGInventory.getLanguage().getCaption(""));
+        }
+    }
+
+    private static void fixHp(CommandSender sender, String playerName) {
+        if (!validatePlayer(sender, playerName)) {
+            return;
+        }
+
+        Player player = RPGInventory.getInstance().getServer().getPlayer(playerName);
+        InventoryManager.get(player).resetMaxHealth();
+    }
+
+    private static void updateTextures(CommandSender sender, String status) {
         if (!validatePlayer(sender)) {
             return;
         }
@@ -186,7 +215,7 @@ class CommandExecutor {
         updateTextures(sender, player.getName(), status);
     }
 
-    static void updateTextures(CommandSender sender, String playerName, String status) {
+    private static void updateTextures(CommandSender sender, String playerName, String status) {
         if (validatePlayer(sender, playerName)) {
             final Player player = RPGInventory.getInstance().getServer().getPlayer(playerName);
             boolean flag = status.startsWith("e");
@@ -251,6 +280,69 @@ class CommandExecutor {
         if (!InventoryManager.playerIsLoaded(player)) {
             sender.sendMessage(StringUtils.coloredLine("&cThis command not allowed here."));
             return false;
+        }
+
+        return true;
+    }
+
+    @Override
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        Permission perms = RPGInventory.getPermissions();
+
+        if (args.length > 0) {
+            String subCommand = args[0];
+
+            if (perms.has(sender, "rpginventory.admin")) {
+                if (subCommand.equals("pet") && args.length >= 3) {
+                    RPGInventoryCommandExecutor.givePet(sender, args[1], args[2]);
+                    return true;
+                } else if (subCommand.equals("food") && args.length >= 3) {
+                    RPGInventoryCommandExecutor.giveFood(sender, args[1], args[2], args.length > 3 ? args[3] : "1");
+                    return true;
+                } else if (subCommand.equals("item") && args.length >= 3) {
+                    RPGInventoryCommandExecutor.giveItem(sender, args[1], args[2]);
+                    return true;
+                } else if (subCommand.equals("bp") && args.length >= 3) {
+                    RPGInventoryCommandExecutor.giveBackpack(sender, args[1], args[2]);
+                    return true;
+                } else if (subCommand.equals("list") && args.length >= 2) {
+                    RPGInventoryCommandExecutor.printList(sender, args[1]);
+                    return true;
+                } else if (subCommand.equals("reload")) {
+                    RPGInventoryCommandExecutor.reloadPlugin(sender);
+                    return true;
+                }
+            }
+
+            if (subCommand.equals("open")) {
+                if (args.length == 1) {
+                    if (perms.has(sender, "rpginventory.open")) {
+                        RPGInventoryCommandExecutor.openInventory(sender);
+                    }
+                } else if (perms.has(sender, "rpginventory.open.others")) {
+                    RPGInventoryCommandExecutor.openInventory(sender, args[1]);
+                }
+            } else if (subCommand.equals("textures") && args.length >= 2) {
+                if (args.length == 2) {
+                    if (perms.has(sender, "rpginventory.textures")) {
+                        RPGInventoryCommandExecutor.updateTextures(sender, args[1]);
+                    }
+                } else if (perms.has(sender, "rpginventory.textures.others")) {
+                    RPGInventoryCommandExecutor.updateTextures(sender, args[1], args[2]);
+                }
+            } else if (subCommand.equals("fixhp")) {
+                if (args.length == 1) {
+                    if (perms.has(sender, "rpginventory.fixhp")) {
+                        RPGInventoryCommandExecutor.fixHp(sender);
+                    }
+                } else if (perms.has(sender, "rpginventory.fixhp.others")) {
+                    RPGInventoryCommandExecutor.fixHp(sender, args[1]);
+                }
+            } else {
+                RPGInventoryCommandExecutor.printHelp(sender);
+            }
+        } else {
+            RPGInventoryCommandExecutor.printHelp(sender);
         }
 
         return true;

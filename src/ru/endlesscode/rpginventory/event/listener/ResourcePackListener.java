@@ -49,7 +49,7 @@ public class ResourcePackListener extends PacketAdapter {
                     ResourcePackManager.loadedResourcePack(player, true);
                     break;
                 case FAILED_DOWNLOAD:
-                    if (VersionHandler.is1_8()) {
+                    if (VersionHandler.is1_8_R1()) {
                         return;
                     }
                 case DECLINED:

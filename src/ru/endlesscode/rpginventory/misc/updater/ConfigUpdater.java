@@ -86,6 +86,14 @@ public class ConfigUpdater {
             case 128:
             case 129:
                 config.set("auto-update", true);
+            case 130:
+            case 131:
+            case 132:
+                config.set("health.base", 20);
+                config.set("health.scale", false);
+                config.set("health.hearts", 20);
+                config.set("health.heart-capacity.min", 1);
+                config.set("health.heart-capacity.max", 5);
         }
     }
 }

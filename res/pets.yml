@@ -2,7 +2,8 @@ pets:
   kitty:
     name: "&7&lKitty"
     item-name: "&7&lKitty's Summoning Stone"
-    lore: "&e&oMeow! Meow! Meow!"
+    lore:
+    - "&e&oMeow! Meow! Meow!"
     item: MONSTER_EGG:56
     type: COMPANION
     skin: OCELOT
@@ -19,7 +20,8 @@ pets:
   rare-wolf:
     name: "&9&lWolf"
     item-name: "&9&lWolf's Summoning Stone"
-    lore: "&e&oBest friend - a proven friend"
+    lore:
+    - "&e&oBest friend - a proven friend"
     item: MONSTER_EGG:51
     type: COMPANION
     health: 30
@@ -34,7 +36,8 @@ pets:
   legendary-wolf:
     name: "&5&lGrand Wolf"
     item-name: "&5&lGrand Wolf's Summoning Stone"
-    lore: "&e&o...but only a few become legends..."
+    lore:
+    - "&e&o...but only a few become legends..."
     item: MONSTER_EGG:60
     type: COMPANION
     health: 50
@@ -50,7 +53,8 @@ pets:
   horse:
     name: "&6&lHorse"
     item-name: "&5&lHorse's Summoning Stone"
-    lore: "&e&oRide like the wind!"
+    lore:
+    - "&e&oRide like the wind!"
     item: MONSTER_EGG:101
     type: MOUNT
     skin: HORSE
@@ -67,7 +71,9 @@ pets:
 food:
   bone:
     name: "&f&lBone"
-    lore: "&e&o- Rex, come here!\n&e&o- Woof! Woof! Woof!"
+    lore:
+    - "&e&o- Rex, come here!"
+    - "&e&o- Woof! Woof! Woof!"
     item: BONE
     eaters:
     - WOLF
