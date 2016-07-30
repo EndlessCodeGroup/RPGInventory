@@ -5,7 +5,7 @@ author: OsipXD
 
 main: ru.endlesscode.rpginventory.RPGInventory
 depend: [ProtocolLib, Vault, LibsDisguises]
-softdepend: [BattleLevels, Skills, Heroes, RacesAndClasses, SkillAPI]
+softdepend: [BattleLevels, Skills, Heroes, RacesAndClasses, SkillAPI, MyPet]
 
 commands:
   rpginventory:

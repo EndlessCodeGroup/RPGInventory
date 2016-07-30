@@ -1,0 +1,77 @@
+firststart: "\n
+&3============================== RPGInventory ================================\n
+&cBefore using &eRPGInventory&c, add changed textures to your server resource-pack\n
+and configure items that can be put in the inventory slots. After that,\n
+set value in the config &eenabled: true\n
+&3============================================================================"
+
+title: "RPG Inventory"
+
+locked.name: "&c&lGesperrter Slot"
+locked.lore: "&6&oSchalte zuerst vorherige Slots frei"
+
+buyable.name: "&a&lSlot freischaltbar"
+buyable.lore: "&6&oVorraussetzungen für diesen Slot:"
+buyable.money: "&6&o• %s Gold"
+buyable.level: "&6&o• Level %d"
+
+error.fall: "&cDu kannst das nicht tun während du fliegst."
+error.money: "&6&lUm weitere Slots freizuschalten benötigst du noch %s Gold"
+error.level: "&6&lUm weitere Slots freizuschalten must du Level %d erreicht haben."
+error.buyable: "&6&lUm diesen Slot freizuschalten benötigst du %d Gold. Klicke zum Bestätigen innerhalb von 10 Sekunden erneut."
+error.previous: "&6&lDu musst zuerst die vorherigen Slots freischalten."
+error.rp.denied: "&cDu musst dem Download des Resource-Packs zustimmen!"
+error.rp.force: "&cDu darfst das Resource-Pack nicht deaktivieren."
+error.rp.disabled: "&cDu darfst das Resource-Pack nicht aktivieren."
+error.rp.already: "&7Das Resource-Pack ist bereits %s."
+error.item.level: "&6Benötigtes &c%s &6Level"
+error.item.class: "&6Benötigte Klasse &c%s"
+error.mount.owner: "&6Dieses Reittier gehört: %s"
+error.fixhp: "&6Fixen der LP nicht nötig."
+
+message.buyed: "&a&lDu hast den Slot erfolgreich freigeschaltet"
+message.fixhp: "&6Deine LP wurden gefixt. Bitte logge dich erneut auf dem Server ein."
+
+rp.enabled: "Aktiviert"
+rp.disabled: "Deaktiviert"
+
+chest.cap.name: "&7&lSlot nicht verfügbar"
+chest.cap.lore: "&8&oKiste abgelaufen"
+chest.occupied: "&6&lEin anderer Spieler hat diese Kiste gerade geöffnet."
+
+container.chest: "Kiste"
+container.chestDouble: "Große Kiste"
+container.enderchest: "Ender-Kiste"
+
+pet.name: "%s &f[%s]"
+pet.health: "&cLeben: %d"
+pet.damage: "&cSChaden: %d"
+pet.speed: "&cGeschwindigkeit: %d"
+pet.revival.yes: "&bAbklingzeit: %ds"
+pet.revival.no: "&bWird nicht wiederbelebt"
+pet.cooldown: " &a&l&o(%ds)"
+pet.food.value: "&aStellt %d LP wieder her"
+pet.role.companion: "Begleiter"
+pet.role.mount: "Reittier"
+
+item.level: "&fBenötigt %d Level"
+item.class: "&fNur für &b%s"
+item.nodrop: "&7Dropt nicht beim Tod"
+item.left-click: "&aLMB - %s"
+item.right-click: "&aRMB - %s"
+item.hide: "&7&oGegenstandstwerte nicht sichtbar"
+item.unbreakable: "&7Unzerstörbarer Gegenstand"
+
+stat.message.no_bonus: "Kein Bonus"
+stat.damage: "&cSchaden: &7%s"
+stat.bow_damage: "&cSchaden (Bogen): &7%s"
+stat.hand_damage: "&cSchaden (Hand): &7%s"
+stat.health: "&2Leben: &7%s"
+stat.armor: "&3Rüstung: &7%s"
+stat.crit_chance: "&6Krit. Chance: &7%s"
+stat.crit_damage: "&6Krit. Damage: &7%s"
+stat.speed: "&9Geschwindigkeit: &7%s"
+stat.jump: "&9Sprung: &7%s"
+
+backpack.desc: "&8&oPlatzieren in den dafür vorgesehenen Slot und drücke &fRMB"
+backpack.size: "&aGröße: &7%d"

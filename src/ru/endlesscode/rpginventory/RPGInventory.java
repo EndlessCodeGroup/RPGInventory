@@ -3,6 +3,7 @@ package ru.endlesscode.rpginventory;
 import com.comphenix.protocol.ProtocolLibrary;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
@@ -16,6 +17,7 @@ import ru.endlesscode.rpginventory.inventory.InventoryManager;
 import ru.endlesscode.rpginventory.inventory.ResourcePackManager;
 import ru.endlesscode.rpginventory.inventory.backpack.BackpackManager;
 import ru.endlesscode.rpginventory.inventory.chest.ChestManager;
+import ru.endlesscode.rpginventory.inventory.mypet.MyPetManager;
 import ru.endlesscode.rpginventory.inventory.slot.SlotManager;
 import ru.endlesscode.rpginventory.item.ItemManager;
 import ru.endlesscode.rpginventory.misc.Config;
@@ -158,6 +160,11 @@ public class RPGInventory extends JavaPlugin {
 
         this.loadPlayers();
         this.startMetrics();
+
+        if (Bukkit.getPluginManager().isPluginEnabled("MyPet")) {
+            pm.registerEvents(new MyPetManager(), this);
+            MyPetManager.init();
+        }
 
         // Enable commands
         this.getCommand("rpginventory").setExecutor(new RPGInventoryCommandExecutor());

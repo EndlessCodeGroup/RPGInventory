@@ -211,7 +211,8 @@ public class Slot {
         PASSIVE(true, true, false, true, false),
         SHIELD(false, false, true, true, true),
         ELYTRA(false, false, true, false, true),
-        INFO(false, false, false, false, false);
+        INFO(false, false, false, false, false),
+        MYPET(false, false, true, false, false);
 
         private final boolean allowQuick;
         private final boolean allowMultiSlots;
