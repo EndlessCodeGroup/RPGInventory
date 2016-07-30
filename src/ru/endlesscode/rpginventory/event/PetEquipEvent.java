@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
  * It is part of the RpgInventory.
  * All rights reserved 2014 - 2015 © «EndlessCode Group»
  */
-public final class PetEquipEvent extends PlayerEvent implements Cancellable {
+public class PetEquipEvent extends PlayerEvent implements Cancellable {
     private static final HandlerList handlers = new HandlerList();
     private final ItemStack petItem;
 
@@ -33,6 +33,7 @@ public final class PetEquipEvent extends PlayerEvent implements Cancellable {
     }
 
     @NotNull
+    @Override
     public HandlerList getHandlers() {
         return handlers;
     }
