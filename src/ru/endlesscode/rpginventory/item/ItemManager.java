@@ -22,7 +22,7 @@ import java.util.*;
 /**
  * Created by OsipXD on 18.09.2015
  * It is part of the RpgInventory.
- * All rights reserved 2014 - 2015 © «EndlessCode Group»
+ * All rights reserved 2014 - 2016 © «EndlessCode Group»
  */
 public class ItemManager {
     private static final Map<String, CustomItem> CUSTOM_ITEMS = new HashMap<>();
@@ -62,12 +62,12 @@ public class ItemManager {
         Collections.addAll(items, player.getInventory().getArmorContents());
 
         //noinspection deprecation
-        ItemStack itemInHand = (VersionHandler.is1_9()) ? player.getEquipment().getItemInMainHand() : player.getItemInHand();
+        ItemStack itemInHand = (VersionHandler.isHigher1_9()) ? player.getEquipment().getItemInMainHand() : player.getItemInHand();
         if (CustomItem.isCustomItem(itemInHand) && ItemManager.allowedForPlayer(player, itemInHand, notifyPlayer)) {
             items.add(itemInHand);
         }
 
-        if (VersionHandler.is1_9()) {
+        if (VersionHandler.isHigher1_9()) {
             itemInHand = player.getEquipment().getItemInOffHand();
             if (CustomItem.isCustomItem(itemInHand) && ItemManager.allowedForPlayer(player, itemInHand, notifyPlayer)) {
                 items.add(itemInHand);

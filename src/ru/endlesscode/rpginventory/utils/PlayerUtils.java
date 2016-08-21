@@ -17,7 +17,7 @@ import java.util.List;
 /**
  * Created by OsipXD on 09.11.2015
  * It is part of the RpgInventory.
- * All rights reserved 2014 - 2015 © «EndlessCode Group»
+ * All rights reserved 2014 - 2016 © «EndlessCode Group»
  */
 public class PlayerUtils {
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")

@@ -11,7 +11,7 @@ import ru.endlesscode.rpginventory.inventory.backpack.BackpackManager;
 /**
  * Created by OsipXD on 24.11.2015
  * It is part of the RpgInventory.
- * All rights reserved 2014 - 2015 © «EndlessCode Group»
+ * All rights reserved 2014 - 2016 © «EndlessCode Group»
  */
 public class WorldListener implements Listener {
     @EventHandler

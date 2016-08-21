@@ -7,7 +7,7 @@ import org.bukkit.event.player.PlayerEvent;
 /**
  * Created by OsipXD on 11.09.2015
  * It is part of the RpgInventory.
- * All rights reserved 2014 - 2015 © «EndlessCode Group»
+ * All rights reserved 2014 - 2016 © «EndlessCode Group»
  */
 public class PlayerInventoryUnloadEvent extends PlayerEvent {
     private static final HandlerList handlers = new HandlerList();

@@ -158,13 +158,13 @@ public class RPGInventory extends JavaPlugin {
             pm.registerEvents(new InventoryOpenItemListener(), this);
         }
 
-        this.loadPlayers();
-        this.startMetrics();
-
         if (Bukkit.getPluginManager().isPluginEnabled("MyPet")) {
             pm.registerEvents(new MyPetManager(), this);
             MyPetManager.init();
         }
+
+        this.loadPlayers();
+        this.startMetrics();
 
         // Enable commands
         this.getCommand("rpginventory").setExecutor(new RPGInventoryCommandExecutor());

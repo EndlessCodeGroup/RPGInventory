@@ -10,7 +10,7 @@ import ru.endlesscode.rpginventory.item.ItemStat;
 /**
  * Created by OsipXD on 21.09.2015
  * It is part of the RpgInventory.
- * All rights reserved 2014 - 2015 © «EndlessCode Group»
+ * All rights reserved 2014 - 2016 © «EndlessCode Group»
  */
 public class StatsUpdater extends BukkitRunnable {
     private final Player player;
@@ -32,6 +32,8 @@ public class StatsUpdater extends BukkitRunnable {
         this.player.setWalkSpeed(playerWrapper.getBaseSpeed() * (float) ItemManager.getModifier(this.player, ItemStat.StatType.SPEED).getMultiplier());
 
         // Update info slots
-        InventoryManager.syncInfoSlots(player, playerWrapper.getInventory());
+        if (playerWrapper.isOpened()) {
+            InventoryManager.syncInfoSlots(player, playerWrapper.getInventory());
+        }
     }
 }

@@ -12,7 +12,7 @@ import ru.endlesscode.rpginventory.utils.ItemUtils;
 /**
  * Created by OsipXD on 27.08.2015
  * It is part of the RpgInventory.
- * All rights reserved 2014 - 2015 © «EndlessCode Group»
+ * All rights reserved 2014 - 2016 © «EndlessCode Group»
  */
 class CooldownTimer extends BukkitRunnable {
     private final Player player;

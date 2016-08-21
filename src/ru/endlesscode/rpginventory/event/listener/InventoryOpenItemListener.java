@@ -26,7 +26,7 @@ import java.util.ArrayList;
 /**
  * Created by OsipXD on 26.09.2015
  * It is part of the RpgInventory.
- * All rights reserved 2014 - 2015 © «EndlessCode Group»
+ * All rights reserved 2014 - 2016 © «EndlessCode Group»
  */
 public class InventoryOpenItemListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST)
@@ -34,7 +34,7 @@ public class InventoryOpenItemListener implements Listener {
         Player player = event.getPlayer();
         if (!InventoryManager.playerIsLoaded(player) || ResourcePackManager.isLoadedResourcePack(player)) {
             if (InventoryManager.isInventoryOpenItem(event.getItem())) {
-                if (VersionHandler.is1_9()) {
+                if (VersionHandler.isHigher1_9()) {
                     player.getEquipment().setItemInMainHand(new ItemStack(Material.AIR));
                 } else {
                     //noinspection deprecation

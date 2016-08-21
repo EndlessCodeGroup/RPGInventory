@@ -6,7 +6,7 @@ import ru.endlesscode.rpginventory.utils.Utils;
 /**
  * Created by OsipXD on 21.09.2015
  * It is part of the RpgInventory.
- * All rights reserved 2014 - 2015 © «EndlessCode Group»
+ * All rights reserved 2014 - 2016 © «EndlessCode Group»
  */
 public class Modifier {
     public static final Modifier EMPTY = new Modifier(0, 1);

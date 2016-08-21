@@ -16,7 +16,7 @@ import java.util.UUID;
 /**
  * Created by OsipXD on 01.09.2015
  * It is part of the RpgInventory.
- * All rights reserved 2014 - 2015 © «EndlessCode Group»
+ * All rights reserved 2014 - 2016 © «EndlessCode Group»
  */
 public class ChestManager {
     public static final int PREV = 6;

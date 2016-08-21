@@ -14,7 +14,7 @@ import java.util.UUID;
 /**
  * Created by OsipXD on 19.10.2015
  * It is part of the RpgInventory.
- * All rights reserved 2014 - 2015 © «EndlessCode Group»
+ * All rights reserved 2014 - 2016 © «EndlessCode Group»
  */
 public class Backpack {
     private final UUID id;

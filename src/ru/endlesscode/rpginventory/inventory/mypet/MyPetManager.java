@@ -1,7 +1,7 @@
 /**
  * Created by Keyle on 21.05.2016
- * It is part of the RpgInventory.
- * All rights reserved 2014 - 2015 © «EndlessCode Group»
+ * It is part of the RPGInventory.
+ * All rights reserved 2014 - 2016 © «EndlessCode Group»
  */
 
 package ru.endlesscode.rpginventory.inventory.mypet;
@@ -40,7 +40,7 @@ import ru.endlesscode.rpginventory.utils.ItemUtils;
 import java.util.UUID;
 
 public class MyPetManager implements Listener {
-    public static final String MYPET_TAG = "mypet.uuid";
+    private static final String MYPET_TAG = "mypet.uuid";
 
     public static boolean validatePet(Player player, @Nullable ItemStack currentItem, @NotNull ItemStack cursor) {
         boolean hasPet = isMyPetItem(currentItem);
@@ -52,7 +52,7 @@ public class MyPetManager implements Listener {
         return swapMyPets(player, hasPet, newPet);
     }
 
-    public static Slot getMyPetSlot() {
+    private static Slot getMyPetSlot() {
         for (Slot slot : SlotManager.getSlotManager().getSlots()) {
             if (slot.getSlotType() == Slot.SlotType.MYPET) {
                 return slot;
@@ -62,7 +62,7 @@ public class MyPetManager implements Listener {
         return null;
     }
 
-    public static boolean swapMyPets(final Player player, boolean hasPet, ItemStack newPet) {
+    private static boolean swapMyPets(final Player player, boolean hasPet, ItemStack newPet) {
         if (hasPet) {
             PetUnequipEvent event = new PetUnequipEvent(player);
             RPGInventory.getInstance().getServer().getPluginManager().callEvent(event);
@@ -90,16 +90,16 @@ public class MyPetManager implements Listener {
         return true;
     }
 
-    public static boolean isMyPetItem(ItemStack item) {
+    private static boolean isMyPetItem(ItemStack item) {
         return !ItemUtils.isEmpty(item) && ItemUtils.hasTag(item, MYPET_TAG);
     }
 
-    public static boolean activateMyPet(final Player player, UUID petUUID) {
+    private static boolean activateMyPet(final Player player, UUID petUUID) {
         final MyPetPlayer user;
-        if (!MyPetApi.getPlayerManager().isMyPetPlayer(player)) {
-            user = MyPetApi.getPlayerManager().createMyPetPlayer(player);
-        } else {
+        if (MyPetApi.getPlayerManager().isMyPetPlayer(player)) {
             user = MyPetApi.getPlayerManager().getMyPetPlayer(player);
+        } else {
+            user = MyPetApi.getPlayerManager().createMyPetPlayer(player);
         }
 
         if (user.hasMyPet()) {
@@ -133,7 +133,7 @@ public class MyPetManager implements Listener {
         return true;
     }
 
-    public static boolean deactivateMyPet(final Player player) {
+    private static boolean deactivateMyPet(final Player player) {
         if (!MyPetApi.getPlayerManager().isMyPetPlayer(player)) {
             return false;
         }
@@ -239,7 +239,7 @@ public class MyPetManager implements Listener {
                     currentPet = null;
                 }
 
-                if (VersionHandler.is1_9()) {
+                if (VersionHandler.isHigher1_9()) {
                     player.getEquipment().setItemInMainHand(currentPet);
                 } else {
                     //noinspection deprecation

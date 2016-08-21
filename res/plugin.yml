@@ -1,11 +1,11 @@
 name: RPGInventory
-version: 1.3.3
+version: 1.3.4
 description: Change inventory how you need
 author: OsipXD
 
 main: ru.endlesscode.rpginventory.RPGInventory
 depend: [ProtocolLib, Vault, LibsDisguises]
-softdepend: [BattleLevels, Skills, Heroes, RacesAndClasses, SkillAPI, MyPet]
+softdepend: [BattleLevels, Skills, Heroes, RacesAndClasses, SkillAPI, MyPet, RPGPlayerLeveling]
 
 commands:
   rpginventory:
@@ -22,6 +22,7 @@ permissions:
       rpginventory.user: true
       rpginventory.textures.others: true
       rpginventory.open.others: true
+      rpginventory.fixhp.others: true
   rpginventory.user:
     description: Gives access to all user commands
     default: true

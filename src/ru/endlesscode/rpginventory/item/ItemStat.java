@@ -5,7 +5,7 @@ import ru.endlesscode.rpginventory.utils.StringUtils;
 /**
  * Created by OsipXD on 19.09.2015
  * It is part of the RpgInventory.
- * All rights reserved 2014 - 2015 © «EndlessCode Group»
+ * All rights reserved 2014 - 2016 © «EndlessCode Group»
  */
 public class ItemStat {
     private final StatType type;

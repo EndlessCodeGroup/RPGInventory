@@ -24,7 +24,7 @@ import java.util.List;
 /**
  * Created by OsipXD on 05.09.2015
  * It is part of the RpgInventory.
- * All rights reserved 2014 - 2015 © «EndlessCode Group»
+ * All rights reserved 2014 - 2016 © «EndlessCode Group»
  */
 public class Slot {
     private final String name;
@@ -80,7 +80,7 @@ public class Slot {
                 RPGInventory.getPluginLogger().warning("Option \"items\" is ignored for slot \"" + name + "\"!");
             }
 
-            if (VersionHandler.is1_9() && slotType == SlotType.ELYTRA) {
+            if (VersionHandler.isHigher1_9() && slotType == SlotType.ELYTRA) {
                 this.allowed.add("ELYTRA");
             }
         }
