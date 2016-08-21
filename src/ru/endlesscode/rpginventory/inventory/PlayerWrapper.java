@@ -30,7 +30,7 @@ import java.util.Map;
 /**
  * Created by OsipXD on 09.11.2015
  * It is part of the RpgInventory.
- * All rights reserved 2014 - 2015 © «EndlessCode Group»
+ * All rights reserved 2014 - 2016 © «EndlessCode Group»
  */
 public class PlayerWrapper implements InventoryHolder {
     private final static float BASE_SPEED = 0.2f;
@@ -280,7 +280,7 @@ public class PlayerWrapper implements InventoryHolder {
             }
         }
 
-        if (VersionHandler.is1_9()) {
+        if (VersionHandler.isHigher1_9()) {
             ItemStack itemInOffHand = player.getEquipment().getItemInOffHand();
             ItemStack itemInMainHand = player.getEquipment().getItemInMainHand();
 

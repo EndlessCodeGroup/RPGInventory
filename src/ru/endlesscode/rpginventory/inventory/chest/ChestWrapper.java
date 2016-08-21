@@ -13,7 +13,7 @@ import ru.endlesscode.rpginventory.RPGInventory;
 /**
  * Created by OsipXD on 02.09.2015
  * It is part of the RpgInventory.
- * All rights reserved 2014 - 2015 © «EndlessCode Group»
+ * All rights reserved 2014 - 2016 © «EndlessCode Group»
  */
 public class ChestWrapper {
     private static final int PAGE_SIZE = 6;

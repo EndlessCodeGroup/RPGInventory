@@ -6,6 +6,7 @@ import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.wrappers.EnumWrappers;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import ru.endlesscode.rpginventory.RPGInventory;
@@ -14,12 +15,18 @@ import ru.endlesscode.rpginventory.inventory.ResourcePackManager;
 import ru.endlesscode.rpginventory.misc.Config;
 import ru.endlesscode.rpginventory.nms.VersionHandler;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
 /**
  * Created by OsipXD on 02.10.2015
  * It is part of the RpgInventory.
- * All rights reserved 2014 - 2015 © «EndlessCode Group»
+ * All rights reserved 2014 - 2016 © «EndlessCode Group»
  */
-public class ResourcePackListener extends PacketAdapter {
+public class ResourcePackListener extends PacketAdapter implements Listener {
+    private final List<UUID> preparedPlayers = new ArrayList<>();
+
     public ResourcePackListener(Plugin plugin) {
         super(plugin, WrapperPlayClientResourcePackStatus.TYPE, WrapperPlayServerResourcePackSend.TYPE);
     }
@@ -29,6 +36,7 @@ public class ResourcePackListener extends PacketAdapter {
         WrapperPlayServerResourcePackSend packet = new WrapperPlayServerResourcePackSend(event.getPacket());
         if (packet.getUrl().equals(Config.getConfig().getString("resource-pack.url"))) {
             packet.setHash(Config.getConfig().getString("resource-pack.hash"));
+            preparedPlayers.add(event.getPlayer().getUniqueId());
         }
     }
 
@@ -41,15 +49,17 @@ public class ResourcePackListener extends PacketAdapter {
         WrapperPlayClientResourcePackStatus packet = new WrapperPlayClientResourcePackStatus(event.getPacket());
 
         final Player player = event.getPlayer();
-        if (packet.getHash().contains(Config.getConfig().getString("resource-pack.hash"))) {
+        if (preparedPlayers.contains(player.getUniqueId())) {
             switch (packet.getResult()) {
                 case ACCEPTED:
                     return;
                 case SUCCESSFULLY_LOADED:
                     ResourcePackManager.loadedResourcePack(player, true);
+                    preparedPlayers.remove(player.getUniqueId());
                     break;
                 case FAILED_DOWNLOAD:
                     if (VersionHandler.is1_8_R1()) {
+                        preparedPlayers.remove(player.getUniqueId());
                         return;
                     }
                 case DECLINED:
@@ -63,6 +73,7 @@ public class ResourcePackListener extends PacketAdapter {
                     }
 
                     ResourcePackManager.loadedResourcePack(player, false);
+                    preparedPlayers.remove(player.getUniqueId());
             }
 
             new InventoryUpdater(player).runTaskLater(this.plugin, 5);

@@ -13,7 +13,7 @@ import java.util.UUID;
 /**
  * Created by OsipXD on 07.12.2015
  * It is part of the RpgInventory.
- * All rights reserved 2014 - 2015 © «EndlessCode Group»
+ * All rights reserved 2014 - 2016 © «EndlessCode Group»
  */
 public class FileUtils {
     @SuppressWarnings({"unchecked", "ResultOfMethodCallIgnored"})

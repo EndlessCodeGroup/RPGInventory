@@ -39,7 +39,7 @@ import ru.endlesscode.rpginventory.utils.PlayerUtils;
 /**
  * Created by OsipXD on 18.09.2015
  * It is part of the RpgInventory.
- * All rights reserved 2014 - 2015 © «EndlessCode Group»
+ * All rights reserved 2014 - 2016 © «EndlessCode Group»
  */
 public class InventoryListener implements Listener {
     @EventHandler(priority = EventPriority.LOW)
@@ -126,23 +126,23 @@ public class InventoryListener implements Listener {
 
     @EventHandler
     public void onQuickSlotBreakItem(PlayerItemBreakEvent event) {
-        this.onItemDisappeared(event);
+        this.onItemDisappeared(event, event.getBrokenItem());
     }
 
     @EventHandler
     public void onDropQuickSlot(PlayerDropItemEvent event) {
-        this.onItemDisappeared(event);
+        this.onItemDisappeared(event, event.getItemDrop().getItemStack());
     }
 
-    private void onItemDisappeared(PlayerEvent event) {
+    private void onItemDisappeared(PlayerEvent event, ItemStack item) {
         final Player player = event.getPlayer();
         final PlayerInventory inventory = player.getInventory();
+        final int slotId = inventory.getHeldItemSlot();
 
-        if (!InventoryManager.playerIsLoaded(player)) {
+        if (!InventoryManager.playerIsLoaded(player) || inventory.getItemInHand() != item) {
             return;
         }
 
-        final int slotId = inventory.getHeldItemSlot();
         final Slot slot = InventoryManager.getQuickSlot(slotId);
         if (slot != null) {
             new BukkitRunnable() {
@@ -170,7 +170,7 @@ public class InventoryListener implements Listener {
                 event.getItem().remove();
 
                 player.playSound(player.getLocation(),
-                        VersionHandler.is1_9() ? Sound.ENTITY_ITEM_PICKUP : Sound.valueOf("ITEM_PICKUP"),
+                        VersionHandler.isHigher1_9() ? Sound.ENTITY_ITEM_PICKUP : Sound.valueOf("ITEM_PICKUP"),
                         .3f, 1.7f);
                 if (Config.getConfig().getBoolean("attack.auto-held")) {
                     player.getInventory().setHeldItemSlot(quickSlot.getQuickSlot());

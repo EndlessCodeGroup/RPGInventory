@@ -2,6 +2,7 @@ package ru.endlesscode.rpginventory.event.listener;
 
 import org.bukkit.Location;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.BlockState;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -34,7 +35,8 @@ public class ArmorEquipListener implements Listener {
     public void onQuickEquip(PlayerInteractEvent event) {
         final Player player = event.getPlayer();
         if (!InventoryManager.playerIsLoaded(player)
-                || event.getAction() != Action.RIGHT_CLICK_AIR && event.getAction() != Action.RIGHT_CLICK_BLOCK) {
+                || event.getAction() != Action.RIGHT_CLICK_AIR && event.getAction() != Action.RIGHT_CLICK_BLOCK
+                || event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getClickedBlock().getState().getClass() != BlockState.class) {
             return;
         }
 

@@ -21,7 +21,7 @@ import java.util.List;
 /**
  * Created by OsipXD on 05.09.2015
  * It is part of the RpgInventory.
- * All rights reserved 2014 - 2015 © «EndlessCode Group»
+ * All rights reserved 2014 - 2016 © «EndlessCode Group»
  */
 public class SlotManager {
     @Nullable
@@ -71,7 +71,7 @@ public class SlotManager {
     }
 
     private boolean validateSlot(@NotNull Slot slot) {
-        if (slot.getSlotType().is1_9Feature() && !VersionHandler.is1_9()) {
+        if (slot.getSlotType().is1_9Feature() && !VersionHandler.isHigher1_9()) {
             RPGInventory.getPluginLogger().warning("Slot type " + slot.getSlotType() + " available only since Minecraft 1.9");
             return false;
         }

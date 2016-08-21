@@ -30,7 +30,7 @@ public enum ArmorType {
             return UNKNOWN;
         }
 
-        if (VersionHandler.is1_9() && item.getType() == Material.ELYTRA) {
+        if (VersionHandler.isHigher1_9() && item.getType() == Material.ELYTRA) {
             return CHESTPLATE;
         }
 
