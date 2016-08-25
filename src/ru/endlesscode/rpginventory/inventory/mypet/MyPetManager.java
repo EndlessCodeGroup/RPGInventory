@@ -12,7 +12,7 @@ import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.StoredMyPet;
 import de.Keyle.MyPet.api.event.MyPetCallEvent;
-import de.Keyle.MyPet.api.event.MyPetLeashEvent;
+import de.Keyle.MyPet.api.event.MyPetCreateEvent;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.repository.RepositoryCallback;
 import org.bukkit.Bukkit;
@@ -43,13 +43,7 @@ public class MyPetManager implements Listener {
     private static final String MYPET_TAG = "mypet.uuid";
 
     public static boolean validatePet(Player player, @Nullable ItemStack currentItem, @NotNull ItemStack cursor) {
-        boolean hasPet = isMyPetItem(currentItem);
-        ItemStack newPet = null;
-        if (isMyPetItem(cursor)) {
-            newPet = cursor;
-        }
-
-        return swapMyPets(player, hasPet, newPet);
+        return isMyPetItem(cursor) && swapMyPets(player, isMyPetItem(currentItem), cursor);
     }
 
     private static Slot getMyPetSlot() {
@@ -62,13 +56,14 @@ public class MyPetManager implements Listener {
         return null;
     }
 
-    private static boolean swapMyPets(final Player player, boolean hasPet, ItemStack newPet) {
+    private static boolean swapMyPets(final Player player, boolean hasPet, @NotNull ItemStack newPet) {
         if (hasPet) {
             PetUnequipEvent event = new PetUnequipEvent(player);
             RPGInventory.getInstance().getServer().getPluginManager().callEvent(event);
 
             deactivateMyPet(player);
         }
+
         if (newPet != null) {
             PetEquipEvent event = new PetEquipEvent(player, newPet);
             Bukkit.getPluginManager().callEvent(event);
@@ -173,20 +168,20 @@ public class MyPetManager implements Listener {
     }
 
     @EventHandler
-    public void onMyPetLeash(MyPetLeashEvent event) {
-        ItemStack petitem = new ItemStack(Material.MONSTER_EGG);
-        ItemMeta meta = petitem.getItemMeta();
-        meta.setDisplayName("MyPet Egg: " + event.getPet().getPetName());
-        petitem.setItemMeta(meta);
-        petitem = ItemUtils.setTag(petitem, MYPET_TAG, event.getPet().getUUID().toString());
+    public void onMyPetLeash(MyPetCreateEvent event) {
+        ItemStack petItem = new ItemStack(Material.MONSTER_EGG);
+        ItemMeta meta = petItem.getItemMeta();
+        meta.setDisplayName("MyPet Egg: " + event.getMyPet().getPetName());
+        petItem.setItemMeta(meta);
+        petItem = ItemUtils.setTag(petItem, MYPET_TAG, event.getMyPet().getUUID().toString());
 
-        Player player = event.getLeasher().getPlayer();
+        Player player = event.getOwner().getPlayer();
         Inventory inventory = InventoryManager.get(player).getInventory();
         Slot petSlot = getMyPetSlot();
 
         ItemStack currentPet = inventory.getItem(petSlot.getSlotId());
         boolean hasPet = !petSlot.isCup(currentPet);
-        inventory.setItem(petSlot.getSlotId(), petitem);
+        inventory.setItem(petSlot.getSlotId(), petItem);
 
         if (hasPet) {
             player.getInventory().addItem(currentPet);

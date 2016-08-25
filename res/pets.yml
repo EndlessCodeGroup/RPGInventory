@@ -4,12 +4,12 @@ pets:
     item-name: "&7&lKitty's Summoning Stone"
     lore:
     - "&e&oMeow! Meow! Meow!"
-    item: MONSTER_EGG:56
+    item: MONSTER_EGG:Ghast
     type: COMPANION
     skin: OCELOT
     health: 20
     damage: 3
-    speed: 1
+    speed: 3.5
     attack-mobs: true
     attack-players: false
     revival: true
@@ -22,11 +22,11 @@ pets:
     item-name: "&9&lWolf's Summoning Stone"
     lore:
     - "&e&oBest friend - a proven friend"
-    item: MONSTER_EGG:51
+    item: MONSTER_EGG:Skeleton
     type: COMPANION
     health: 30
     damage: 5
-    speed: 1.5
+    speed: 4
     attack-mobs: false
     attack-players: true
     revival: true
@@ -38,11 +38,11 @@ pets:
     item-name: "&5&lGrand Wolf's Summoning Stone"
     lore:
     - "&e&o...but only a few become legends..."
-    item: MONSTER_EGG:60
+    item: MONSTER_EGG:Silverfish
     type: COMPANION
     health: 50
     damage: 10
-    speed: 2.4
+    speed: 6
     mount: true
     attack-mobs: true
     attack-players: true
@@ -55,11 +55,11 @@ pets:
     item-name: "&5&lHorse's Summoning Stone"
     lore:
     - "&e&oRide like the wind!"
-    item: MONSTER_EGG:101
+    item: MONSTER_EGG:Zombie
     type: MOUNT
     skin: HORSE
     health: 100
-    speed: 1
+    speed: 10
     revival: true
     cooldown: 30
     features:

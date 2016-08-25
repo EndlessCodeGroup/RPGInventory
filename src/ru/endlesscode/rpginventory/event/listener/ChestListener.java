@@ -11,6 +11,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.*;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitRunnable;
 import ru.endlesscode.rpginventory.RPGInventory;
 import ru.endlesscode.rpginventory.api.InventoryAPI;
 import ru.endlesscode.rpginventory.inventory.InventoryLocker;
@@ -45,7 +46,7 @@ public class ChestListener implements Listener {
         }
 
         if (inventory.getType() == InventoryType.CHEST || inventory.getType() == InventoryType.ENDER_CHEST) {
-            if (inventory.getViewers().size() > 1) {
+            if (InventoryUtils.getViewersOfInventory(inventory).size() > 1) {
                 player.sendMessage(RPGInventory.getLanguage().getCaption("chest.occupied"));
                 event.setCancelled(true);
                 return;
@@ -53,7 +54,7 @@ public class ChestListener implements Listener {
 
             ChestWrapper chestWrapper = new ChestWrapper(inventory, event.getView(), player);
             ChestManager.add(player, chestWrapper);
-            player.openInventory(chestWrapper.getChestInventory());
+            player.openInventory(chestWrapper.createChestInventory());
 
             event.setCancelled(true);
             return;
@@ -102,29 +103,24 @@ public class ChestListener implements Listener {
 
     @SuppressWarnings("deprecation")
     @EventHandler(priority = EventPriority.LOW)
-    public void onInventoryClick(final InventoryClickEvent event) {
+    public void onInventoryClick(InventoryClickEvent event) {
         final Player player = (Player) event.getWhoClicked();
 
         if (ChestManager.chestOpened(player)) {
-            ChestWrapper chest = ChestManager.getChest(player);
+            final ChestWrapper chest = ChestManager.getChest(player);
             if (event.getView().equals(chest.getView())) {
                 return;
             }
 
             InventoryAction action = event.getAction();
-            Inventory inventory = event.getInventory();
+            final Inventory inventory = event.getInventory();
             final ItemStack currentItem = event.getCurrentItem();
             int rawSlot = event.getRawSlot();
 
-            if (rawSlot == ChestManager.PREV) {
+            if (rawSlot == ChestManager.PREV || rawSlot == ChestManager.NEXT) {
                 chest.keepOpen(true);
                 chest.setContents(event.getInventory().getContents());
-                player.openInventory(chest.getPrevPage());
-                event.setCancelled(true);
-            } else if (rawSlot == ChestManager.NEXT) {
-                chest.keepOpen(true);
-                chest.setContents(event.getInventory().getContents());
-                player.openInventory(chest.getNextPage());
+                player.openInventory(rawSlot == ChestManager.PREV ? chest.getPrevPage() : chest.getNextPage());
                 event.setCancelled(true);
             } else if (rawSlot == ChestManager.NONE || ChestManager.isCapSlot(currentItem)) {
                 event.setCancelled(true);
@@ -172,6 +168,13 @@ public class ChestListener implements Listener {
                 event.setCurrentItem(current);
                 player.updateInventory();
             }
+
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    chest.setContents(inventory.getContents());
+                }
+            }.runTaskLater(RPGInventory.getInstance(), 1);
         }
     }
 }

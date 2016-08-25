@@ -75,7 +75,7 @@ public class Backpack {
         this.contents = contents;
     }
 
-    public void onClose() {
+    public void onUse() {
         this.lastUse = System.currentTimeMillis();
     }
 

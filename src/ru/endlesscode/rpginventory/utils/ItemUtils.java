@@ -12,6 +12,7 @@ import ru.endlesscode.rpginventory.inventory.backpack.BackpackManager;
 import ru.endlesscode.rpginventory.inventory.backpack.BackpackType;
 import ru.endlesscode.rpginventory.item.CustomItem;
 import ru.endlesscode.rpginventory.item.ItemManager;
+import ru.endlesscode.rpginventory.nms.VersionHandler;
 import ru.endlesscode.rpginventory.pet.PetFood;
 import ru.endlesscode.rpginventory.pet.PetManager;
 import ru.endlesscode.rpginventory.pet.PetType;
@@ -99,7 +100,13 @@ public class ItemUtils {
         ItemStack item = new ItemStack(Material.getMaterial(textures[0]));
 
         if (textures.length == 2) {
-            item.setDurability(Byte.parseByte(textures[1]));
+            if (VersionHandler.isHigher1_9() && item.getType() == Material.MONSTER_EGG) {
+                item = toBukkitItemStack(item);
+                NbtCompound nbt = NbtFactory.asCompound(NbtFactory.fromItemTag(item));
+                nbt.put("EntityTag", NbtFactory.ofCompound("temp").put("id", textures[1]));
+            } else {
+                item.setDurability(Byte.parseByte(textures[1]));
+            }
         }
 
         return item;
@@ -158,7 +165,12 @@ public class ItemUtils {
         } else if (BackpackManager.isBackpack(item)) {
             String bpUID = ItemUtils.getTag(item, ItemUtils.BACKPACK_UID_TAG);
             BackpackType type = BackpackManager.getBackpackType(ItemUtils.getTag(item, ItemUtils.BACKPACK_TAG));
-            item = type == null ? new ItemStack(Material.AIR) : type.getItem();
+
+            if (type == null) {
+                return new ItemStack(Material.AIR);
+            }
+
+            item = type.getItem();
             if (bpUID != null) {
                 ItemUtils.setTag(item, ItemUtils.BACKPACK_UID_TAG, bpUID);
             }

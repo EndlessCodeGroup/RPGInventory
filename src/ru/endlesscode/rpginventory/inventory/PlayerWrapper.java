@@ -3,6 +3,9 @@ package ru.endlesscode.rpginventory.inventory;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeInstance;
+import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -18,6 +21,7 @@ import ru.endlesscode.rpginventory.inventory.slot.SlotManager;
 import ru.endlesscode.rpginventory.item.CustomItem;
 import ru.endlesscode.rpginventory.item.ItemManager;
 import ru.endlesscode.rpginventory.nms.VersionHandler;
+import ru.endlesscode.rpginventory.pet.Attributes;
 import ru.endlesscode.rpginventory.pet.PetManager;
 import ru.endlesscode.rpginventory.pet.PetType;
 import ru.endlesscode.rpginventory.utils.ItemUtils;
@@ -153,7 +157,23 @@ public class PlayerWrapper implements InventoryHolder {
 
     private void clearStats() {
         Player player = this.player.getPlayer();
-        player.setWalkSpeed(BASE_SPEED);
+
+        if (VersionHandler.isHigher1_9()) {
+            AttributeInstance speedAttribute = player.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED);
+            AttributeModifier rpgInvModifier = null;
+            for (AttributeModifier modifier : speedAttribute.getModifiers()) {
+                if (modifier.getUniqueId().compareTo(Attributes.SPEED_MODIFIER_ID) == 0) {
+                    rpgInvModifier = modifier;
+                }
+            }
+
+            if (rpgInvModifier != null) {
+                speedAttribute.removeModifier(rpgInvModifier);
+            }
+        } else {
+            player.setWalkSpeed(BASE_SPEED);
+        }
+
         this.healthUpdater.setHealth(player.getHealth());
         this.healthUpdater.stop();
     }

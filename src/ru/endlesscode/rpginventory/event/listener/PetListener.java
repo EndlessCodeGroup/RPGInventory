@@ -1,6 +1,7 @@
 package ru.endlesscode.rpginventory.event.listener;
 
 import org.bukkit.GameMode;
+import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Sound;
 import org.bukkit.entity.*;
@@ -19,8 +20,10 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.vehicle.VehicleEnterEvent;
+import org.bukkit.inventory.HorseInventory;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitRunnable;
 import ru.endlesscode.rpginventory.RPGInventory;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
 import ru.endlesscode.rpginventory.inventory.PlayerWrapper;
@@ -296,10 +299,18 @@ public class PetListener implements Listener {
             return;
         }
 
-        PlayerWrapper playerWrapper = InventoryManager.get(player);
+        final PlayerWrapper playerWrapper = InventoryManager.get(player);
         if (playerWrapper.hasPet() && event.getInventory().getHolder() == playerWrapper.getPet()) {
             playerWrapper.openInventory();
             event.setCancelled(true);
+
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    HorseInventory horseInv = ((Horse) playerWrapper.getPet()).getInventory();
+                    horseInv.setSaddle(new ItemStack(Material.SADDLE));
+                }
+            }.runTaskLater(RPGInventory.getInstance(), 1);
         }
     }
 
@@ -312,9 +323,10 @@ public class PetListener implements Listener {
 
         PlayerWrapper playerWrapper = InventoryManager.get(player);
         if (playerWrapper.hasPet() && playerWrapper.getPet().getPassenger() != player) {
-            PetType pet = PetManager.getPetFromEntity((Tameable) playerWrapper.getPet());
+            LivingEntity petEntity = playerWrapper.getPet();
+            PetType pet = PetManager.getPetFromEntity((Tameable) petEntity);
             if (pet != null && pet.getRole() != PetType.Role.COMPANION) {
-                EntityUtils.goToPlayer(player, playerWrapper.getPet());
+                EntityUtils.goPetToPlayer(player, petEntity);
             }
         }
     }
