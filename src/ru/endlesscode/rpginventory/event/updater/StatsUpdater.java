@@ -1,11 +1,16 @@
 package ru.endlesscode.rpginventory.event.updater;
 
+import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeInstance;
+import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
 import ru.endlesscode.rpginventory.inventory.PlayerWrapper;
 import ru.endlesscode.rpginventory.item.ItemManager;
 import ru.endlesscode.rpginventory.item.ItemStat;
+import ru.endlesscode.rpginventory.nms.VersionHandler;
+import ru.endlesscode.rpginventory.pet.Attributes;
 
 /**
  * Created by OsipXD on 21.09.2015
@@ -29,7 +34,30 @@ public class StatsUpdater extends BukkitRunnable {
         playerWrapper.updatePermissions();
 
         // Update speed
-        this.player.setWalkSpeed(playerWrapper.getBaseSpeed() * (float) ItemManager.getModifier(this.player, ItemStat.StatType.SPEED).getMultiplier());
+        if (VersionHandler.isHigher1_9()) {
+            AttributeInstance speedAttribute = this.player.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED);
+            AttributeModifier rpgInvModifier = null;
+            for (AttributeModifier modifier : speedAttribute.getModifiers()) {
+                if (modifier.getUniqueId().compareTo(Attributes.SPEED_MODIFIER_ID) == 0) {
+                    rpgInvModifier = modifier;
+                }
+            }
+
+            if (rpgInvModifier != null) {
+                speedAttribute.removeModifier(rpgInvModifier);
+            }
+
+            rpgInvModifier = new AttributeModifier(
+                    Attributes.SPEED_MODIFIER_ID, Attributes.SPEED_MODIFIER,
+                    ItemManager.getModifier(this.player, ItemStat.StatType.SPEED).getMultiplier() - 1,
+                    AttributeModifier.Operation.MULTIPLY_SCALAR_1
+            );
+
+            speedAttribute.addModifier(rpgInvModifier);
+            int i = 0;
+        } else {
+            this.player.setWalkSpeed(playerWrapper.getBaseSpeed() * (float) ItemManager.getModifier(this.player, ItemStat.StatType.SPEED).getMultiplier());
+        }
 
         // Update info slots
         if (playerWrapper.isOpened()) {

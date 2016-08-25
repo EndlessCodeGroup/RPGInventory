@@ -15,6 +15,7 @@ import ru.endlesscode.rpginventory.RPGInventory;
 import ru.endlesscode.rpginventory.misc.FileLanguage;
 import ru.endlesscode.rpginventory.utils.ItemUtils;
 import ru.endlesscode.rpginventory.utils.StringUtils;
+import ru.endlesscode.rpginventory.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -211,10 +212,10 @@ public class PetType {
         lore.addAll(this.lore);
 
         lore.add(String.format(lang.getCaption("pet.health"), (int) (this.health)));
-        if (this.role == Role.COMPANION && !this.attackMobs && !this.attackPlayers) {
+        if (this.role == Role.COMPANION && (this.attackMobs || this.attackPlayers)) {
             lore.add(String.format(lang.getCaption("pet.damage"), (int) (this.damage)));
         }
-        lore.add(String.format(lang.getCaption("pet.speed"), (int) (this.speed * 100)));
+        lore.add(String.format(lang.getCaption("pet.speed"), Utils.round(this.speed, 2)));
         lore.add(String.format(lang.getCaption("pet.revival." + (this.revival ? "yes" : "no")), this.cooldown));
 
         meta.setLore(lore);
@@ -245,6 +246,16 @@ public class PetType {
     }
 
     public double getSpeed() {
+        double speed = this.speed * Attributes.ONE_BPS;
+
+        if (this.role == Role.MOUNT) {
+            speed /= Attributes.GALLOP_MULTIPLIER;
+        }
+
+        if (!isAdult()) {
+            speed /= 1.5;
+        }
+
         return speed;
     }
 

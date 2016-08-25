@@ -6,6 +6,8 @@ import me.libraryaddict.disguise.DisguiseAPI;
 import me.libraryaddict.disguise.disguisetypes.Disguise;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.enchantments.Enchantment;
@@ -20,8 +22,8 @@ import ru.endlesscode.rpginventory.RPGInventory;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
 import ru.endlesscode.rpginventory.inventory.PlayerWrapper;
 import ru.endlesscode.rpginventory.inventory.slot.SlotManager;
+import ru.endlesscode.rpginventory.nms.VersionHandler;
 import ru.endlesscode.rpginventory.utils.EffectUtils;
-import ru.endlesscode.rpginventory.utils.EntityUtils;
 import ru.endlesscode.rpginventory.utils.ItemUtils;
 import ru.endlesscode.rpginventory.utils.LocationUtils;
 
@@ -132,14 +134,17 @@ public class PetManager {
                 ((Horse) pet).setCarryingChest(false);
                 HorseInventory horseInv = ((Horse) pet).getInventory();
                 horseInv.setSaddle(new ItemStack(Material.SADDLE));
-                EntityUtils.goToPlayer(player, pet);
             case COMPANION:
                 ((Tameable) pet).setTamed(true);
                 ((Tameable) pet).setOwner(player);
         }
 
         pet.setBreed(false);
-        pet.setAdult();
+        if (petType.isAdult()) {
+            pet.setAdult();
+        } else {
+            pet.setBaby();
+        }
         pet.setAgeLock(true);
 
         pet.setCustomName(String.format(RPGInventory.getLanguage().getCaption("pet.name"), petType.getName(), player.getName()));
@@ -148,8 +153,13 @@ public class PetManager {
         pet.setRemoveWhenFarAway(false);
         pet.setHealth(PetManager.getHealth(petItem, pet.getMaxHealth()));
 
-        Attributes attributes = new Attributes(pet);
-        attributes.setSpeed(Attributes.BASE_SPEED * petType.getSpeed() / (petType.isAdult() ? 1 : 2));
+        if (VersionHandler.isHigher1_9()) {
+            AttributeInstance speedAttribute = pet.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED);
+            speedAttribute.setBaseValue(petType.getSpeed());
+        } else {
+            Attributes attributes = new Attributes(pet);
+            attributes.setSpeed(petType.getSpeed());
+        }
 
         InventoryManager.get(player).setPet(pet);
 

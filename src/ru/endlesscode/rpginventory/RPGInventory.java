@@ -93,7 +93,7 @@ public class RPGInventory extends JavaPlugin {
         // Check flag `enabled`
         if (!Config.getConfig().getBoolean("enabled")) {
             this.onFirstStart();
-            this.getLogger().warning("Plugin is not enabled!");
+            this.getLogger().warning("Plugin is not enabled in config!");
             this.setEnabled(false);
             return;
         }
@@ -161,6 +161,7 @@ public class RPGInventory extends JavaPlugin {
         if (Bukkit.getPluginManager().isPluginEnabled("MyPet")) {
             pm.registerEvents(new MyPetManager(), this);
             MyPetManager.init();
+            this.getLogger().info("MyPet hooked!");
         }
 
         this.loadPlayers();

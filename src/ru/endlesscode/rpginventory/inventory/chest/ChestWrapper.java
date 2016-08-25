@@ -47,6 +47,11 @@ public class ChestWrapper {
     }
 
     @NotNull
+    public Inventory getInventory() {
+        return this.inventory;
+    }
+
+    @NotNull
     private ItemStack[] getContents() {
         ItemStack[] contents = new ItemStack[SIZE];
 
@@ -78,15 +83,15 @@ public class ChestWrapper {
 
     public Inventory getNextPage() {
         this.page = (this.page + 1) % this.pageNum;
-        return getChestInventory();
+        return createChestInventory();
     }
 
     public Inventory getPrevPage() {
         this.page = (this.page - 1 + this.pageNum) % this.pageNum;
-        return getChestInventory();
+        return createChestInventory();
     }
 
-    public Inventory getChestInventory() {
+    public Inventory createChestInventory() {
         Inventory chest = Bukkit.createInventory(this.inventory.getHolder(), InventoryType.DISPENSER, this.getTitle());
         chest.setContents(this.getContents());
         return chest;

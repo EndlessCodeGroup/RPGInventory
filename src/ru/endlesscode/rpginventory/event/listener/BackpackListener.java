@@ -5,6 +5,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -14,10 +15,10 @@ import ru.endlesscode.rpginventory.inventory.PlayerWrapper;
 import ru.endlesscode.rpginventory.inventory.backpack.Backpack;
 import ru.endlesscode.rpginventory.inventory.backpack.BackpackHolder;
 import ru.endlesscode.rpginventory.inventory.backpack.BackpackManager;
+import ru.endlesscode.rpginventory.inventory.backpack.BackpackUpdater;
 import ru.endlesscode.rpginventory.inventory.chest.ChestManager;
+import ru.endlesscode.rpginventory.inventory.chest.ChestWrapper;
 import ru.endlesscode.rpginventory.utils.ItemUtils;
-
-import java.util.Arrays;
 
 /**
  * Created by OsipXD on 19.10.2015
@@ -41,18 +42,33 @@ public class BackpackListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
-    public void onInventoryClick(InventoryClickEvent event) {
-        Inventory inventory = event.getInventory();
-        Player player = (Player) event.getWhoClicked();
+    public void onInventoryClick(final InventoryClickEvent event) {
+        final Inventory inventory = event.getInventory();
+        final Player player = (Player) event.getWhoClicked();
 
         if (!InventoryManager.playerIsLoaded(player) || !(inventory.getHolder() instanceof BackpackHolder)) {
             return;
         }
 
+        // Avoid fake event
+        if (ChestManager.chestOpened(player)) {
+            if (event.getView().equals(ChestManager.getChest(player).getView())) {
+                return;
+            }
+        }
+
         if (BackpackManager.isBackpack(event.getCurrentItem()) || BackpackManager.isBackpack(event.getCursor()) ||
                 ChestManager.isCapSlot(event.getCurrentItem()) || ChestManager.isCapSlot(event.getCursor())) {
             event.setCancelled(true);
+            return;
         }
+
+        // Save changes
+        if (event.getAction() == InventoryAction.NOTHING) {
+            return;
+        }
+
+        BackpackUpdater.update(player, inventory, InventoryManager.get(player).getBackpack());
     }
 
     @EventHandler
@@ -71,8 +87,14 @@ public class BackpackListener implements Listener {
             return;
         }
 
-        backpack.setContents(Arrays.copyOfRange(inventory.getContents(), 0, backpack.getType().getSize()));
-        backpack.onClose();
+        if (ChestManager.chestOpened(player)) {
+            ChestWrapper chest = ChestManager.getChest(player);
+            if (chest.isKeepOpen()) {
+                return;
+            }
+        }
+
+        backpack.onUse();
         playerWrapper.setBackpack(null);
     }
 }

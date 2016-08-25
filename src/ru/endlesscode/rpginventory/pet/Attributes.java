@@ -6,16 +6,17 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ru.endlesscode.rpginventory.nms.VersionHandler;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.UUID;
 
-class Attributes {
-    static final double BASE_SPEED = 0.30000001192092896D;
+public class Attributes {
+    public static final String SPEED_MODIFIER = "RPGInventory Speed Bonus";
+    public static final UUID SPEED_MODIFIER_ID = UUID.fromString("2deaf4fc-1673-4c5b-ac4f-25e37e08760f");
 
-    private static final UUID MOVEMENT_SPEED_UID = UUID.fromString("2deaf4fc-1673-4c5b-ac4f-25e37e08760f");
+    static final double ONE_BPS = 0.10638297872;
+    static final double GALLOP_MULTIPLIER = 4.46808510803;
 
     @Nullable
     private Object entity = null;
@@ -35,22 +36,20 @@ class Attributes {
             type = "MOVEMENT_SPEED";
         }
 
-        this.setAttributeMultiplier(type, MOVEMENT_SPEED_UID, "RPGInventory movement speed", speed, 1);
+        this.setAttribute(type, speed);
     }
 
-    private void setAttributeMultiplier(@NotNull String type, UUID uid, String desc, double multiplier, int xz) {
+    private void setAttribute(@NotNull String type, double speed) {
         try {
             Method getAttributeMethod = MinecraftReflection.getMinecraftClass("EntityLiving")
                     .getMethod("getAttributeInstance", MinecraftReflection.getMinecraftClass("IAttribute"));
 
             Field iAttributeField = MinecraftReflection.getMinecraftClass("GenericAttributes").getField(type);
-            Object attributes = getAttributeMethod.invoke(this.entity, iAttributeField.get(null));
-            Constructor modifierConstructor = MinecraftReflection.getAttributeModifierClass().getConstructor(UUID.class, String.class, double.class, int.class);
-            Object modifier = modifierConstructor.newInstance(uid, desc, multiplier, xz);
+            Object attribute = getAttributeMethod.invoke(this.entity, iAttributeField.get(null));
 
-            Method aMethod = MinecraftReflection.getMinecraftClass("AttributeInstance").getMethod("a", MinecraftReflection.getAttributeModifierClass());
-            aMethod.invoke(attributes, modifier);
-        } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchFieldException e) {
+            Method aMethod = MinecraftReflection.getMinecraftClass("AttributeInstance").getMethod("setValue", double.class);
+            aMethod.invoke(attribute, speed);
+        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException | NoSuchFieldException e) {
             e.printStackTrace();
         }
     }
