@@ -76,6 +76,10 @@ public class InventoryManager {
                 || actionType == ActionType.SET && ItemManager.allowedForPlayer(player, item, true) && slot.isValidItem(item);
     }
 
+    public static ItemStack getFillSlot() {
+        return fillSlot;
+    }
+
     public static boolean validatePet(Player player, InventoryAction action, @Nullable ItemStack currentItem, @NotNull ItemStack cursor) {
         ActionType actionType = ActionType.getTypeOfAction(action);
 
@@ -86,7 +90,7 @@ public class InventoryManager {
         }
 
         if (actionType == ActionType.SET) {
-            if (PetType.isPetItem(cursor)) {
+            if (PetType.isPetItem(cursor) && ItemManager.allowedForPlayer(player, cursor, true)) {
                 PetEquipEvent event = new PetEquipEvent(player, cursor);
                 RPGInventory.getInstance().getServer().getPluginManager().callEvent(event);
 
@@ -366,7 +370,7 @@ public class InventoryManager {
         for (int i = 0; i < inventory.getSize(); i++) {
             Slot slot = SlotManager.getSlotManager().getSlot(i, InventoryType.SlotType.CONTAINER);
             if (slot == null) {
-                if (!ResourcePackManager.isLoadedResourcePack(player)) {
+                if (!ResourcePackManager.isLoadedResourcePack(player) || ResourcePackManager.getMode() == ResourcePackManager.Mode.EXPERIMENTAL) {
                     inventory.setItem(i, fillSlot);
                 }
             } else if (ItemUtils.isEmpty(inventory.getItem(i))) {

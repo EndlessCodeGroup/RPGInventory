@@ -1,9 +1,3 @@
-/**
- * Created by Keyle on 21.05.2016
- * It is part of the RPGInventory.
- * All rights reserved 2014 - 2016 © «EndlessCode Group»
- */
-
 package ru.endlesscode.rpginventory.inventory.mypet;
 
 import com.google.common.base.Optional;
@@ -38,6 +32,12 @@ import ru.endlesscode.rpginventory.nms.VersionHandler;
 import ru.endlesscode.rpginventory.utils.ItemUtils;
 
 import java.util.UUID;
+
+/**
+ * Created by Keyle on 21.05.2016
+ * It is part of the RPGInventory.
+ * All rights reserved 2014 - 2016 © «EndlessCode Group»
+ */
 
 public class MyPetManager implements Listener {
     private static final String MYPET_TAG = "mypet.uuid";
@@ -89,7 +89,7 @@ public class MyPetManager implements Listener {
         return !ItemUtils.isEmpty(item) && ItemUtils.hasTag(item, MYPET_TAG);
     }
 
-    private static boolean activateMyPet(final Player player, UUID petUUID) {
+    private static void activateMyPet(final Player player, UUID petUUID) {
         final MyPetPlayer user;
         if (MyPetApi.getPlayerManager().isMyPetPlayer(player)) {
             user = MyPetApi.getPlayerManager().getMyPetPlayer(player);
@@ -125,12 +125,11 @@ public class MyPetManager implements Listener {
                 MyPetApi.getRepository().updateMyPetPlayer(user, null);
             }
         });
-        return true;
     }
 
-    private static boolean deactivateMyPet(final Player player) {
+    private static void deactivateMyPet(final Player player) {
         if (!MyPetApi.getPlayerManager().isMyPetPlayer(player)) {
-            return false;
+            return;
         }
 
         final MyPetPlayer user = MyPetApi.getPlayerManager().getMyPetPlayer(player);
@@ -141,7 +140,6 @@ public class MyPetManager implements Listener {
             MyPetApi.getRepository().updateMyPetPlayer(user, null);
         }
 
-        return true;
     }
 
     public static void init() {

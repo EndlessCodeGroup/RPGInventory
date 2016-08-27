@@ -58,7 +58,7 @@ public class Slot {
             }
             this.quickSlot = -1;
         } else if (Config.getConfig().getBoolean("alternate-view.use-item")
-                && ResourcePackManager.getMode() != ResourcePackManager.Mode.FORCE
+                && ResourcePackManager.getMode() != ResourcePackManager.Mode.FORCE && ResourcePackManager.getMode() != ResourcePackManager.Mode.EXPERIMENTAL
                 && quickSlot == InventoryManager.OPEN_ITEM_SLOT) {
             RPGInventory.getPluginLogger().warning("Option \"quickbar\" is ignored for slot \"" + name + "\"!");
             RPGInventory.getPluginLogger().warning("Slot " + quickSlot + " already reserved for inventory open item.");
@@ -119,8 +119,24 @@ public class Slot {
             }
 
             if (data.length > 1) {
-                if (itemStack.getDurability() != Short.valueOf(data[1])) {
+                String[] borders = data[1].split("-");
+                int itemDurability = itemStack.getDurability();
+
+                if (borders.length == 1 && itemDurability != Integer.parseInt(data[1])) {
                     continue;
+                } else if (borders.length == 2) {
+                    int min = Integer.parseInt(borders[0]);
+                    int max = Integer.parseInt(borders[1]);
+
+                    if (min > max) {
+                        min *= max;
+                        max = min / max;
+                        min /= max;
+                    }
+
+                    if (itemDurability < min || itemDurability > max) {
+                        continue;
+                    }
                 }
             }
 

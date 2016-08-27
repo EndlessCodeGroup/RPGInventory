@@ -17,6 +17,9 @@ import ru.endlesscode.rpginventory.pet.PetFood;
 import ru.endlesscode.rpginventory.pet.PetManager;
 import ru.endlesscode.rpginventory.pet.PetType;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * Created by OsipXD on 28.08.2015
  * It is part of the RpgInventory.
@@ -31,31 +34,25 @@ public class ItemUtils {
     public static final String FOOD_TAG = "food.id";
     public static final String PET_TAG = "pet.id";
 
-    public static void setMaxStackSize(@NotNull ItemStack inputItem, int amount) {
-        /* TODO: Add setting of max stack size
-        try {
-            inputItem = MinecraftReflection.getBukkitItemStack(inputItem);
-            Field handle = MinecraftReflection.getCraftItemStackClass().getDeclaredField("handle");
-            handle.setAccessible(true);
-            Object itemStack = handle.get(inputItem);
-            Field itemField = MinecraftReflection.getItemStackClass().getDeclaredField("item");
-            itemField.setAccessible(true);
-            Object item = itemField.get(itemStack);
-            Field sizeField = MinecraftReflection.getMinecraftClass("Item").getDeclaredField("maxStackSize");
-            sizeField.setAccessible(true);
-            sizeField.set(item, amount);
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            e.printStackTrace();
-        }*/
-    }
+    private static final List<Material> itemsWithDurability = Arrays.asList(
+            Material.WOOD_AXE, Material.WOOD_PICKAXE, Material.WOOD_HOE, Material.WOOD_SWORD,
+            Material.STONE_AXE, Material.STONE_PICKAXE, Material.STONE_HOE, Material.STONE_SWORD,
+            Material.IRON_AXE, Material.IRON_PICKAXE, Material.IRON_HOE, Material.IRON_SWORD,
+            Material.GOLD_AXE, Material.GOLD_PICKAXE, Material.GOLD_HOE, Material.GOLD_SWORD,
+            Material.DIAMOND_AXE, Material.DIAMOND_PICKAXE, Material.DIAMOND_HOE, Material.DIAMOND_SWORD,
+            Material.BOW, Material.FLINT_AND_STEEL, Material.SHEARS, Material.FISHING_ROD
+    );
 
     public static ItemStack setTag(@NotNull ItemStack item, String tag, String value) {
         item = toBukkitItemStack(item);
         NbtCompound nbt = NbtFactory.asCompound(NbtFactory.fromItemTag(item));
-        if (UNBREAKABLE_TAG.equals(tag) || HIDE_FLAGS_TAG.equals(tag)) {
-            nbt.put(tag, Integer.valueOf(value));
-        } else {
-            nbt.put(tag, value);
+
+        if (!nbt.containsKey(tag)) {
+            if (UNBREAKABLE_TAG.equals(tag) || HIDE_FLAGS_TAG.equals(tag)) {
+                nbt.put(tag, Integer.valueOf(value));
+            } else {
+                nbt.put(tag, value);
+            }
         }
         NbtFactory.setItemTag(item, nbt);
 
@@ -106,10 +103,19 @@ public class ItemUtils {
                 nbt.put("EntityTag", NbtFactory.ofCompound("temp").put("id", textures[1]));
             } else {
                 item.setDurability(Byte.parseByte(textures[1]));
+
+                if (isItemHasDurability(item)) {
+                    item = setTag(item, UNBREAKABLE_TAG, "1");
+                    item = setTag(item, HIDE_FLAGS_TAG, "63");
+                }
             }
         }
 
         return item;
+    }
+
+    private static boolean isItemHasDurability(ItemStack item) {
+        return itemsWithDurability.contains(item.getType());
     }
 
     public static NbtCompound itemStackToNBT(@NotNull ItemStack originalItem, String name) {

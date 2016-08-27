@@ -233,7 +233,7 @@ class RPGInventoryCommandExecutor implements CommandExecutor {
 
                 ResourcePackManager.wontResourcePack(player, true);
             } else {
-                if (ResourcePackManager.getMode() == ResourcePackManager.Mode.FORCE) {
+                if (ResourcePackManager.getMode() == ResourcePackManager.Mode.FORCE || ResourcePackManager.getMode() == ResourcePackManager.Mode.EXPERIMENTAL) {
                     sender.sendMessage(RPGInventory.getLanguage().getCaption("error.rp.force"));
                     return;
                 }

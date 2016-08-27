@@ -87,7 +87,7 @@ public class SlotManager {
             return false;
         }
 
-        if (slot.isQuick() && ResourcePackManager.getMode() != ResourcePackManager.Mode.FORCE
+        if (slot.isQuick() && ResourcePackManager.getMode() != ResourcePackManager.Mode.FORCE && ResourcePackManager.getMode() != ResourcePackManager.Mode.EXPERIMENTAL
                 && Config.getConfig().getBoolean("alternate-view.use-item")
                 && slot.getQuickSlot() == InventoryManager.OPEN_ITEM_SLOT) {
             RPGInventory.getPluginLogger().warning("Quickbar slot " + slot.getQuickSlot()

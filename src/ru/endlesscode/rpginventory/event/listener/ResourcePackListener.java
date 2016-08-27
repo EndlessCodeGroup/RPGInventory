@@ -63,7 +63,7 @@ public class ResourcePackListener extends PacketAdapter implements Listener {
                         return;
                     }
                 case DECLINED:
-                    if (ResourcePackManager.getMode() == ResourcePackManager.Mode.FORCE) {
+                    if (ResourcePackManager.getMode() == ResourcePackManager.Mode.FORCE || ResourcePackManager.getMode() == ResourcePackManager.Mode.EXPERIMENTAL) {
                         new BukkitRunnable() {
                             @Override
                             public void run() {

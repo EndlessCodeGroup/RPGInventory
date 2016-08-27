@@ -1,3 +1,13 @@
+package com.comphenix.packetwrapper.included;
+
+import com.comphenix.protocol.PacketType;
+import com.comphenix.protocol.ProtocolLibrary;
+import com.comphenix.protocol.events.PacketContainer;
+import com.google.common.base.Objects;
+import org.bukkit.entity.Player;
+
+import java.lang.reflect.InvocationTargetException;
+
 /**
  * This file is part of PacketWrapper.
  * Copyright (C) 2012-2015 Kristian S. Strangeland
@@ -16,15 +26,6 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with PacketWrapper.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.comphenix.packetwrapper.included;
-
-import com.comphenix.protocol.PacketType;
-import com.comphenix.protocol.ProtocolLibrary;
-import com.comphenix.protocol.events.PacketContainer;
-import com.google.common.base.Objects;
-import org.bukkit.entity.Player;
-
-import java.lang.reflect.InvocationTargetException;
 
 @SuppressWarnings("ALL")
 public abstract class AbstractPacket {

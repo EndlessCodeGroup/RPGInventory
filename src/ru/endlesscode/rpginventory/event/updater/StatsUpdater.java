@@ -54,7 +54,6 @@ public class StatsUpdater extends BukkitRunnable {
             );
 
             speedAttribute.addModifier(rpgInvModifier);
-            int i = 0;
         } else {
             this.player.setWalkSpeed(playerWrapper.getBaseSpeed() * (float) ItemManager.getModifier(this.player, ItemStat.StatType.SPEED).getMultiplier());
         }

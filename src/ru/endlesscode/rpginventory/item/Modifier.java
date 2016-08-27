@@ -132,6 +132,6 @@ public class Modifier {
 
         Modifier other = (Modifier) obj;
         return other.getMinBonus() == this.minBonus && other.getMinMultiplier() == this.minMultiplier &&
-               other.getMaxBonus() == this.maxBonus && other.getMaxMultiplier() == this.maxMultiplier;
+                other.getMaxBonus() == this.maxBonus && other.getMaxMultiplier() == this.maxMultiplier;
     }
 }
