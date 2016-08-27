@@ -65,6 +65,6 @@ public class ResourcePackManager {
 
     @SuppressWarnings("unused")
     public enum Mode {
-        AUTO, FORCE, DISABLED
+        AUTO, FORCE, DISABLED, EXPERIMENTAL
     }
 }

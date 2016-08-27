@@ -20,7 +20,7 @@ import java.util.List;
  * It is part of the RpgInventory.
  * All rights reserved 2014 - 2016 © «EndlessCode Group»
  */
-public class CustomItem {
+public class CustomItem extends ClassedItem {
     // Required options
     private final String name;
     private final String texture;
@@ -28,9 +28,7 @@ public class CustomItem {
 
     // Not required options
     private final List<String> lore;
-    private final List<String> classes;
     private final List<String> permissions;
-    private final int level;
     private final boolean drop;
     private final boolean unbreakable;
     private final boolean statsHidden;
@@ -44,6 +42,8 @@ public class CustomItem {
     private ItemStack customItem;
 
     CustomItem(String id, @NotNull ConfigurationSection config) {
+        super(config);
+
         Rarity rarity = Rarity.valueOf(config.getString("rarity"));
         this.name = StringUtils.coloredLine(rarity.getColor() + config.getString("name"));
         this.texture = config.getString("texture");
@@ -63,9 +63,7 @@ public class CustomItem {
                 ? new ItemAction(config.getConfigurationSection("abilities.right-click"))
                 : null;
 
-        this.classes = config.contains("classes") ? config.getStringList("classes") : null;
         this.permissions = config.contains("abilities.permissions") ? config.getStringList("abilities.permissions") : null;
-        this.level = config.getInt("level", -1);
         this.drop = config.getBoolean("drop", true);
         this.unbreakable = config.getBoolean("unbreakable", false);
         this.statsHidden = config.getBoolean("hide-stats", false);
@@ -107,13 +105,15 @@ public class CustomItem {
         meta.setDisplayName(this.name);
         meta.setLore(ItemManager.buildLore(this));
         customItem.setItemMeta(meta);
-        ItemUtils.setMaxStackSize(customItem, 1);
+
         if (this.unbreakable) {
             customItem = ItemUtils.setTag(customItem, ItemUtils.UNBREAKABLE_TAG, "1");
         }
+
         if (!VersionHandler.is1_7_R4()) {
             customItem = ItemUtils.setTag(customItem, ItemUtils.HIDE_FLAGS_TAG, "63");
         }
+
         this.customItem = ItemUtils.setTag(customItem, ItemUtils.ITEM_TAG, id);
     }
 
@@ -132,30 +132,8 @@ public class CustomItem {
         return null;
     }
 
-    public int getLevel() {
-        return this.level;
-    }
-
     public boolean isDrop() {
         return drop;
-    }
-
-    @Nullable
-    List<String> getClasses() {
-        return this.classes;
-    }
-
-    String getClassesString() {
-        String classesString = "";
-        for (String theClass : this.classes) {
-            if (!classesString.isEmpty()) {
-                classesString += ", ";
-            }
-
-            classesString += theClass;
-        }
-
-        return classesString;
     }
 
     public List<String> getLore() {

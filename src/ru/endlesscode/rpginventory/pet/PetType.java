@@ -12,6 +12,7 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ru.endlesscode.rpginventory.RPGInventory;
+import ru.endlesscode.rpginventory.item.ClassedItem;
 import ru.endlesscode.rpginventory.misc.FileLanguage;
 import ru.endlesscode.rpginventory.utils.ItemUtils;
 import ru.endlesscode.rpginventory.utils.StringUtils;
@@ -27,7 +28,7 @@ import java.util.Map;
  * It is part of the RpgInventory.
  * All rights reserved 2014 - 2016 © «EndlessCode Group»
  */
-public class PetType {
+public class PetType extends ClassedItem {
     // Design
     @NotNull
     private final String name;
@@ -51,6 +52,8 @@ public class PetType {
     private ItemStack spawnItem;
 
     PetType(@NotNull ConfigurationSection config) {
+        super(config);
+
         this.name = StringUtils.coloredLine(config.getString("name"));
         this.itemName = StringUtils.coloredLine(config.getString("item-name"));
         this.lore = StringUtils.coloredLines(config.getStringList("lore"));
@@ -209,6 +212,16 @@ public class PetType {
         FileLanguage lang = RPGInventory.getLanguage();
         List<String> lore = new ArrayList<>();
         lore.add(StringUtils.coloredLine("&8" + lang.getCaption("pet.role." + this.role.name().toLowerCase())));
+
+        // Add class and level requirements
+        if (this.getLevel() != -1) {
+            lore.add(String.format(lang.getCaption("item.level"), this.getLevel()));
+        }
+
+        if (this.getClasses() != null) {
+            lore.add(String.format(lang.getCaption("item.class"), this.getClassesString()));
+        }
+
         lore.addAll(this.lore);
 
         lore.add(String.format(lang.getCaption("pet.health"), (int) (this.health)));
@@ -220,7 +233,7 @@ public class PetType {
 
         meta.setLore(lore);
         spawnItem.setItemMeta(meta);
-        ItemUtils.setMaxStackSize(spawnItem, 1);
+
         this.spawnItem = ItemUtils.setTag(spawnItem, ItemUtils.PET_TAG, id);
     }
 

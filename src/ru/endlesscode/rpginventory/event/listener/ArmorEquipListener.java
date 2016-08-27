@@ -46,7 +46,7 @@ public class ArmorEquipListener implements Listener {
         }
 
         ArmorType armorType = ArmorType.matchType(item);
-        if (!InventoryUtils.playerHasArmor(player, armorType)) {
+        if (InventoryUtils.playerNeedArmor(player, armorType)) {
             Slot armorSlot = SlotManager.getSlotManager().getSlot(armorType.name());
             if (armorSlot == null) {
                 return;
@@ -123,7 +123,7 @@ public class ArmorEquipListener implements Listener {
             }
 
             Slot armorSlot = SlotManager.getSlotManager().getSlot(armorType.name());
-            if (armorSlot != null && !InventoryUtils.playerHasArmor(player, armorType)) {
+            if (armorSlot != null && InventoryUtils.playerNeedArmor(player, armorType)) {
                 event.setCancelled(!InventoryManager.validateArmor(InventoryAction.PLACE_ONE, armorSlot, item));
             }
         }

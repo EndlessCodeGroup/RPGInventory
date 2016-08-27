@@ -1,11 +1,11 @@
 package ru.endlesscode.rpginventory.inventory.chest;
 
-import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import ru.endlesscode.rpginventory.RPGInventory;
+import ru.endlesscode.rpginventory.inventory.InventoryManager;
 import ru.endlesscode.rpginventory.misc.Config;
 
 import java.util.Collections;
@@ -31,7 +31,7 @@ public class ChestManager {
 
     public static void init() {
         // Setup cap slot
-        capSlot = new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 8);
+        capSlot = InventoryManager.getFillSlot().clone();
         ItemMeta meta = capSlot.getItemMeta();
         meta.setDisplayName(RPGInventory.getLanguage().getCaption("chest.cap.name"));
         meta.setLore(Collections.singletonList(RPGInventory.getLanguage().getCaption("chest.cap.lore")));

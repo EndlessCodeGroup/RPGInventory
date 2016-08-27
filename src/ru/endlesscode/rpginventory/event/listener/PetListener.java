@@ -29,6 +29,7 @@ import ru.endlesscode.rpginventory.inventory.InventoryManager;
 import ru.endlesscode.rpginventory.inventory.PlayerWrapper;
 import ru.endlesscode.rpginventory.inventory.slot.Slot;
 import ru.endlesscode.rpginventory.inventory.slot.SlotManager;
+import ru.endlesscode.rpginventory.item.ItemManager;
 import ru.endlesscode.rpginventory.misc.Config;
 import ru.endlesscode.rpginventory.nms.VersionHandler;
 import ru.endlesscode.rpginventory.pet.PetFood;
@@ -68,9 +69,11 @@ public class PetListener implements Listener {
                 }
             }
 
-            if (PetType.isPetItem(petItem) && (event.getAction() == Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.RIGHT_CLICK_AIR)) {
+            if (PetType.isPetItem(petItem)
+                    && (event.getAction() == Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.RIGHT_CLICK_AIR)) {
                 Slot petSlot = SlotManager.getSlotManager().getPetSlot();
-                if (petSlot != null && petSlot.isCup(inventory.getItem(PetManager.getPetSlotId()))) {
+                if (petSlot != null && petSlot.isCup(inventory.getItem(PetManager.getPetSlotId()))
+                        && ItemManager.allowedForPlayer(player, petItem, false)) {
                     inventory.setItem(PetManager.getPetSlotId(), event.getItem());
                     PetManager.spawnPet(player, petItem);
                     if (VersionHandler.isHigher1_9()) {

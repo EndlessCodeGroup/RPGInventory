@@ -50,7 +50,7 @@ public class BackpackType {
 
         meta.setLore(lore);
         spawnItem.setItemMeta(meta);
-        ItemUtils.setMaxStackSize(spawnItem, 1);
+
         this.item = ItemUtils.setTag(spawnItem, ItemUtils.BACKPACK_TAG, this.id);
     }
 

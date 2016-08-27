@@ -12,6 +12,8 @@ import ru.endlesscode.rpginventory.inventory.InventoryManager;
 import ru.endlesscode.rpginventory.misc.Config;
 import ru.endlesscode.rpginventory.misc.FileLanguage;
 import ru.endlesscode.rpginventory.nms.VersionHandler;
+import ru.endlesscode.rpginventory.pet.PetManager;
+import ru.endlesscode.rpginventory.pet.PetType;
 import ru.endlesscode.rpginventory.utils.ItemUtils;
 import ru.endlesscode.rpginventory.utils.PlayerUtils;
 import ru.endlesscode.rpginventory.utils.StringUtils;
@@ -120,25 +122,29 @@ public class ItemManager {
     }
 
     public static boolean allowedForPlayer(@NotNull Player player, @NotNull ItemStack item, boolean notifyPlayer) {
-        if (!CustomItem.isCustomItem(item)) {
+        ClassedItem classedItem;
+        if (CustomItem.isCustomItem(item)) {
+            classedItem = ItemManager.getCustomItem(item);
+        } else if (PetType.isPetItem(item)) {
+            classedItem = PetManager.getPetFromItem(item);
+        } else {
             return true;
         }
 
-        CustomItem customItem = ItemManager.getCustomItem(item);
-        if (!PlayerUtils.checkLevel(player, customItem.getLevel())) {
+        if (!PlayerUtils.checkLevel(player, classedItem.getLevel())) {
             if (notifyPlayer) {
-                player.sendMessage(String.format(RPGInventory.getLanguage().getCaption("error.item.level"), customItem.getLevel()));
+                player.sendMessage(String.format(RPGInventory.getLanguage().getCaption("error.item.level"), classedItem.getLevel()));
             }
 
             return false;
         }
 
-        if (customItem.getClasses() == null || PlayerUtils.checkClass(player, customItem.getClasses())) {
+        if (classedItem.getClasses() == null || PlayerUtils.checkClass(player, classedItem.getClasses())) {
             return true;
         }
 
         if (notifyPlayer) {
-            player.sendMessage(String.format(RPGInventory.getLanguage().getCaption("error.item.class"), customItem.getClassesString()));
+            player.sendMessage(String.format(RPGInventory.getLanguage().getCaption("error.item.class"), classedItem.getClassesString()));
         }
 
         return false;

@@ -28,7 +28,6 @@ public class PetFood {
     private final String texture;
 
     private final double value;
-    private final int stackSize;
     private final List<String> eaters;
 
     private ItemStack foodItem;
@@ -38,7 +37,6 @@ public class PetFood {
         this.lore = StringUtils.coloredLines(config.getStringList("lore"));
         this.texture = config.getString("item");
         this.value = config.getDouble("value");
-        this.stackSize = config.getInt("stack-size", 1);
         this.eaters = config.getStringList("eaters");
 
         this.createFoodItem(config.getName());
@@ -63,7 +61,7 @@ public class PetFood {
         lore.add(String.format(lang.getCaption("pet.food.value"), (int) (this.value)));
         meta.setLore(lore);
         spawnItem.setItemMeta(meta);
-        ItemUtils.setMaxStackSize(spawnItem, stackSize);
+
         this.foodItem = ItemUtils.setTag(spawnItem, ItemUtils.FOOD_TAG, id);
     }
 

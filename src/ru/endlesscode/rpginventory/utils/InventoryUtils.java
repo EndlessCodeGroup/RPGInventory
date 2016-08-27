@@ -58,9 +58,9 @@ public class InventoryUtils {
         return slotId % 9;
     }
 
-    public static boolean playerHasArmor(Player player, ArmorType armorType) {
+    public static boolean playerNeedArmor(Player player, ArmorType armorType) {
         ItemStack armorItem = armorType.getItem(player);
-        return !ItemUtils.isEmpty(armorItem) || armorType == ArmorType.UNKNOWN;
+        return ItemUtils.isEmpty(armorItem) && armorType != ArmorType.UNKNOWN;
     }
 
     public static int getArmorSlotId(Slot slot) {

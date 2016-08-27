@@ -7,7 +7,6 @@ import org.bukkit.inventory.ItemStack;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
 import ru.endlesscode.rpginventory.inventory.chest.ChestManager;
 import ru.endlesscode.rpginventory.misc.Config;
-import ru.endlesscode.rpginventory.utils.ItemUtils;
 
 import java.util.UUID;
 
@@ -19,7 +18,6 @@ import java.util.UUID;
 public class Backpack {
     private final UUID id;
     private final BackpackType backpackType;
-    private final ItemStack holder;
 
     private long lastUse;
     private ItemStack[] contents;
@@ -32,15 +30,10 @@ public class Backpack {
         this.id = uuid;
         this.backpackType = backpackType;
         this.contents = new ItemStack[backpackType.getSize()];
-        this.holder = ItemUtils.setTag(this.backpackType.getItem().clone(), ItemUtils.BACKPACK_UID_TAG, this.id.toString());
     }
 
     UUID getUniqueId() {
         return this.id;
-    }
-
-    public ItemStack getItem() {
-        return this.holder;
     }
 
     public BackpackType getType() {
