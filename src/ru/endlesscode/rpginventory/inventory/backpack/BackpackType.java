@@ -4,6 +4,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import ru.endlesscode.rpginventory.RPGInventory;
+import ru.endlesscode.rpginventory.item.TexturedItem;
 import ru.endlesscode.rpginventory.misc.FileLanguage;
 import ru.endlesscode.rpginventory.utils.ItemUtils;
 import ru.endlesscode.rpginventory.utils.StringUtils;
@@ -17,21 +18,21 @@ import java.util.List;
  * It is part of the RpgInventory.
  * All rights reserved 2014 - 2016 © «EndlessCode Group»
  */
-public class BackpackType {
+public class BackpackType extends TexturedItem {
     private final String id;
     private final String name;
     private final List<String> lore;
     private final int size;
-    private final String texture;
 
     private ItemStack item;
 
     BackpackType(ConfigurationSection config) {
+        super(config.getString("item"));
+
         this.id = config.getName();
         this.name = StringUtils.coloredLine(config.getString("name"));
         this.lore = StringUtils.coloredLines(config.getStringList("lore"));
         this.size = config.getInt("size") < 56 ? config.getInt("size") : 56;
-        this.texture = config.getString("item");
 
         this.createItem();
     }

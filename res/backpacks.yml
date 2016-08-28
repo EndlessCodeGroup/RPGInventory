@@ -1,18 +1,18 @@
 backpacks:
   small:
-    item: CHEST
+    item: DIAMOND_HOE:20
     name: "&7Small backpack"
     lore:
     - "&e&oIt seems a trifle, but useful"
     size: 5
   medium:
-    item: CHEST
+    item: DIAMOND_HOE:21
     name: "&6Medium backpack"
     lore:
     - "&e&oHere your text"
     size: 10
   large:
-    item: CHEST
+    item: DIAMOND_HOE:22
     name: "&5Large backpack"
     lore:
     - "&e&oOh, its really big!"

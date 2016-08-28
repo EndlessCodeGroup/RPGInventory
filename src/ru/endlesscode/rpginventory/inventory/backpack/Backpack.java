@@ -5,7 +5,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
-import ru.endlesscode.rpginventory.inventory.chest.ChestManager;
 import ru.endlesscode.rpginventory.misc.Config;
 
 import java.util.UUID;
@@ -40,7 +39,7 @@ public class Backpack {
         return backpackType;
     }
 
-    public void open(Player player) {
+    void open(Player player) {
         int realSize = (int) Math.ceil(this.backpackType.getSize() / 9.0) * 9;
         BackpackHolder holder = new BackpackHolder();
         Inventory inventory = Bukkit.createInventory(holder, realSize, backpackType.getTitle());
@@ -52,7 +51,7 @@ public class Backpack {
                     inventory.setItem(i, this.contents[i]);
                 }
             } else {
-                inventory.setItem(i, ChestManager.getCapSlot());
+                inventory.setItem(i, BackpackManager.getCapSlot());
             }
         }
 
@@ -64,7 +63,7 @@ public class Backpack {
         return contents;
     }
 
-    public void setContents(ItemStack[] contents) {
+    void setContents(ItemStack[] contents) {
         this.contents = contents;
     }
 

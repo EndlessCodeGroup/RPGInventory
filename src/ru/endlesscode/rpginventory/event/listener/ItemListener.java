@@ -30,7 +30,6 @@ import ru.endlesscode.rpginventory.item.CustomItem;
 import ru.endlesscode.rpginventory.item.ItemManager;
 import ru.endlesscode.rpginventory.item.ItemStat;
 import ru.endlesscode.rpginventory.item.Modifier;
-import ru.endlesscode.rpginventory.nms.VersionHandler;
 import ru.endlesscode.rpginventory.utils.EffectUtils;
 import ru.endlesscode.rpginventory.utils.ItemUtils;
 
@@ -84,14 +83,12 @@ public class ItemListener implements Listener {
         ItemStack itemInHand;
         if (event.getDamager().getType() == EntityType.PLAYER) {
             damager = (Player) event.getDamager();
-            //noinspection deprecation
-            itemInHand = (VersionHandler.isHigher1_9()) ? damager.getEquipment().getItemInMainHand() : damager.getItemInHand();
+            itemInHand = damager.getEquipment().getItemInMainHand();
             damageModifier = ItemManager.getModifier(damager,
                     ItemUtils.isEmpty(itemInHand) ? ItemStat.StatType.HAND_DAMAGE : ItemStat.StatType.DAMAGE);
         } else if (event.getDamager().getType() == EntityType.ARROW && ((Arrow) event.getDamager()).getShooter() instanceof Player) {
             damager = (Player) ((Arrow) event.getDamager()).getShooter();
-            //noinspection deprecation
-            itemInHand = (VersionHandler.isHigher1_9()) ? damager.getEquipment().getItemInMainHand() : damager.getItemInHand();
+            itemInHand = damager.getEquipment().getItemInMainHand();
             damageModifier = ItemManager.getModifier(damager, ItemStat.StatType.BOW_DAMAGE);
         } else {
             return;
@@ -111,8 +108,7 @@ public class ItemListener implements Listener {
         double critChance = ItemManager.getModifier(damager, ItemStat.StatType.CRIT_CHANCE).getMultiplier() - 1.0;
         if (Math.random() <= critChance) {
             damage *= ItemManager.getModifier(damager, ItemStat.StatType.CRIT_DAMAGE).getMultiplier();
-            damager.getWorld().playSound(event.getEntity().getLocation(),
-                    VersionHandler.isHigher1_9() ? Sound.ENTITY_PLAYER_ATTACK_CRIT : Sound.valueOf("SUCCESSFUL_HIT"),
+            damager.getWorld().playSound(event.getEntity().getLocation(), Sound.ENTITY_PLAYER_ATTACK_CRIT,
                     1, (float) (0.5 + Math.random() * 0.4));
             EffectUtils.playParticlesToAll(EnumWrappers.Particle.CRIT, 10, event.getEntity().getLocation());
         }

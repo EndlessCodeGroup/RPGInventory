@@ -36,12 +36,13 @@ public class PetType extends ClassedItem {
     private final String itemName;
     @NotNull
     private final List<String> lore;
-    private final String texture;
+
     // Stats
     private final Role role;
     private final double health;
     private final double damage;
     private final double speed;
+
     // Options
     private final boolean attackMobs;
     private final boolean attackPlayers;
@@ -52,12 +53,11 @@ public class PetType extends ClassedItem {
     private ItemStack spawnItem;
 
     PetType(@NotNull ConfigurationSection config) {
-        super(config);
+        super(config, config.getString("item"));
 
         this.name = StringUtils.coloredLine(config.getString("name"));
         this.itemName = StringUtils.coloredLine(config.getString("item-name"));
         this.lore = StringUtils.coloredLines(config.getStringList("lore"));
-        this.texture = config.getString("item");
 
         this.role = Role.valueOf(config.getString("type", "COMPANION"));
 
@@ -160,7 +160,7 @@ public class PetType extends ClassedItem {
                     break;
                 case ENDERMAN:
                     if (features.containsKey("ITEM")) {
-                        disguise.getWatcher().setItemInHand(new ItemStack(Material.valueOf(features.get("ITEM"))));
+                        disguise.getWatcher().setItemInMainHand(new ItemStack(Material.valueOf(features.get("ITEM"))));
                     }
                     break;
                 case OCELOT:
@@ -174,7 +174,7 @@ public class PetType extends ClassedItem {
                     }
 
                     if (features.containsKey("ITEM")) {
-                        disguise.getWatcher().setItemInHand(new ItemStack(Material.valueOf(features.get("ITEM"))));
+                        disguise.getWatcher().setItemInMainHand(new ItemStack(Material.valueOf(features.get("ITEM"))));
                     }
                     break;
                 case RABBIT:

@@ -16,8 +16,6 @@ import ru.endlesscode.rpginventory.inventory.backpack.Backpack;
 import ru.endlesscode.rpginventory.inventory.backpack.BackpackHolder;
 import ru.endlesscode.rpginventory.inventory.backpack.BackpackManager;
 import ru.endlesscode.rpginventory.inventory.backpack.BackpackUpdater;
-import ru.endlesscode.rpginventory.inventory.chest.ChestManager;
-import ru.endlesscode.rpginventory.inventory.chest.ChestWrapper;
 import ru.endlesscode.rpginventory.utils.ItemUtils;
 
 /**
@@ -50,15 +48,8 @@ public class BackpackListener implements Listener {
             return;
         }
 
-        // Avoid fake event
-        if (ChestManager.chestOpened(player)) {
-            if (event.getView().equals(ChestManager.getChest(player).getView())) {
-                return;
-            }
-        }
-
         if (BackpackManager.isBackpack(event.getCurrentItem()) || BackpackManager.isBackpack(event.getCursor()) ||
-                ChestManager.isCapSlot(event.getCurrentItem()) || ChestManager.isCapSlot(event.getCursor())) {
+                BackpackManager.isCap(event.getCurrentItem()) || BackpackManager.isCap(event.getCursor())) {
             event.setCancelled(true);
             return;
         }
@@ -85,13 +76,6 @@ public class BackpackListener implements Listener {
 
         if (backpack == null) {
             return;
-        }
-
-        if (ChestManager.chestOpened(player)) {
-            ChestWrapper chest = ChestManager.getChest(player);
-            if (chest.isKeepOpen()) {
-                return;
-            }
         }
 
         backpack.onUse();

@@ -125,7 +125,7 @@ public class InventoryListener implements Listener {
     }
 
     @EventHandler
-    public void onQuickSlotBreakItem(PlayerItemBreakEvent event) {
+    public void onBreakItem(PlayerItemBreakEvent event) {
         this.onItemDisappeared(event, event.getBrokenItem());
     }
 
@@ -139,19 +139,31 @@ public class InventoryListener implements Listener {
         final PlayerInventory inventory = player.getInventory();
         final int slotId = inventory.getHeldItemSlot();
 
-        if (!InventoryManager.playerIsLoaded(player) || inventory.getItemInHand() != item) {
+        if (!InventoryManager.playerIsLoaded(player)) {
             return;
         }
 
-        final Slot slot = InventoryManager.getQuickSlot(slotId);
-        if (slot != null) {
-            new BukkitRunnable() {
-                @Override
-                public void run() {
-                    InventoryUtils.heldFreeSlot(player, slotId, InventoryUtils.SearchType.NEXT);
-                    inventory.setItem(slotId, slot.getCup());
-                }
-            }.runTaskLater(RPGInventory.getInstance(), 1);
+        if (inventory.getItemInMainHand() == item) {
+            final Slot slot = InventoryManager.getQuickSlot(slotId);
+            if (slot != null) {
+                new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        InventoryUtils.heldFreeSlot(player, slotId, InventoryUtils.SearchType.NEXT);
+                        inventory.setItem(slotId, slot.getCup());
+                    }
+                }.runTaskLater(RPGInventory.getInstance(), 1);
+            }
+        } else if (inventory.getItemInOffHand() == item) {
+            final Slot slot = SlotManager.getSlotManager().getShieldSlot();
+            if (slot != null) {
+                new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        inventory.setItemInOffHand(slot.getCup());
+                    }
+                }.runTaskLater(RPGInventory.getInstance(), 1);
+            }
         }
     }
 
@@ -169,9 +181,7 @@ public class InventoryListener implements Listener {
                 player.getInventory().setItem(slotId, event.getItem().getItemStack());
                 event.getItem().remove();
 
-                player.playSound(player.getLocation(),
-                        VersionHandler.isHigher1_9() ? Sound.ENTITY_ITEM_PICKUP : Sound.valueOf("ITEM_PICKUP"),
-                        .3f, 1.7f);
+                player.playSound(player.getLocation(), Sound.ENTITY_ITEM_PICKUP, .3f, 1.7f);
                 if (Config.getConfig().getBoolean("attack.auto-held")) {
                     player.getInventory().setHeldItemSlot(quickSlot.getQuickSlot());
                 }
@@ -199,8 +209,7 @@ public class InventoryListener implements Listener {
             }
 
             if (inventory.getType() == InventoryType.CRAFTING) {
-                if (InventoryManager.get(player).isOpened()
-                        || (Config.getConfig().getBoolean("alternate-view.enable-craft") && !ResourcePackManager.isLoadedResourcePack(player))) {
+                if (InventoryManager.get(player).isOpened()) {
                     return;
                 }
 
@@ -253,15 +262,13 @@ public class InventoryListener implements Listener {
                 return;
             }
 
-            if (!Config.getConfig().getBoolean("alternate-view.enable-craft") || ResourcePackManager.isLoadedResourcePack(player)) {
-                switch (event.getSlotType()) {
-                    case RESULT:
-                        InventoryManager.get(player).openInventory(true);
-                    case ARMOR:
-                    case CRAFTING:
-                        event.setCancelled(true);
-                        return;
-                }
+            switch (event.getSlotType()) {
+                case RESULT:
+                    InventoryManager.get(player).openInventory(true);
+                case ARMOR:
+                case CRAFTING:
+                    event.setCancelled(true);
+                    return;
             }
         }
 
@@ -465,26 +472,11 @@ public class InventoryListener implements Listener {
     public void onInventoryLoad(PlayerInventoryLoadEvent.Pre event) {
         final Player player = event.getPlayer();
 
-        if (ResourcePackManager.getMode() == ResourcePackManager.Mode.DISABLED && !ResourcePackManager.isPlayerInitialised(player)) {
-            ResourcePackManager.wontResourcePack(player, false);
-            ResourcePackManager.loadedResourcePack(player, false);
-            new BukkitRunnable() {
-                @Override
-                public void run() {
-                    InventoryManager.loadPlayerInventory(player);
-                }
-            }.runTaskLater(RPGInventory.getInstance(), 1);
-            event.setCancelled(true);
-        } else if (!ResourcePackManager.isLoadedResourcePack(player) && ResourcePackManager.isWontResourcePack(player)) {
+        if (!ResourcePackManager.isLoadedResourcePack(player)) {
             new BukkitRunnable() {
                 @Override
                 public void run() {
                     player.setResourcePack(Config.getConfig().getString("resource-pack.url"));
-
-                    if (VersionHandler.is1_7_R4()) {
-                        ResourcePackManager.loadedResourcePack(player, true);
-                        InventoryManager.loadPlayerInventory(player);
-                    }
                 }
             }.runTaskLater(RPGInventory.getInstance(), 20);
             event.setCancelled(true);

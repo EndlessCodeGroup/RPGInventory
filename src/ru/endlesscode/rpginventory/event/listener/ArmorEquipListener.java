@@ -98,7 +98,7 @@ public class ArmorEquipListener implements Listener {
         if (actionType == ActionType.SET) {
             // Validate classic method
             ItemStack item = event.getCursor();
-            Slot armorSlot = InventoryUtils.getArmorSlotById(event.getRawSlot());
+            Slot armorSlot = ArmorType.getArmorSlotById(event.getRawSlot());
 
             if (ItemUtils.isEmpty(item) || armorSlot == null) {
                 return;

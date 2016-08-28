@@ -22,8 +22,6 @@ error.buyable: "&6&lUm diesen Slot freizuschalten benötigst du %d Gold. Klicke 
 error.previous: "&6&lDu musst zuerst die vorherigen Slots freischalten."
 error.rp.denied: "&cDu musst dem Download des Resource-Packs zustimmen!"
 error.rp.force: "&cDu darfst das Resource-Pack nicht deaktivieren."
-error.rp.disabled: "&cDu darfst das Resource-Pack nicht aktivieren."
-error.rp.already: "&7Das Resource-Pack ist bereits %s."
 error.item.level: "&6Benötigtes &c%s &6Level"
 error.item.class: "&6Benötigte Klasse &c%s"
 error.mount.owner: "&6Dieses Reittier gehört: %s"
@@ -31,17 +29,6 @@ error.fixhp: "&6Fixen der LP nicht nötig."
 
 message.buyed: "&a&lDu hast den Slot erfolgreich freigeschaltet"
 message.fixhp: "&6Deine LP wurden gefixt. Bitte logge dich erneut auf dem Server ein."
-
-rp.enabled: "Aktiviert"
-rp.disabled: "Deaktiviert"
-
-chest.cap.name: "&7&lSlot nicht verfügbar"
-chest.cap.lore: "&8&oKiste abgelaufen"
-chest.occupied: "&6&lEin anderer Spieler hat diese Kiste gerade geöffnet."
-
-container.chest: "Kiste"
-container.chestDouble: "Große Kiste"
-container.enderchest: "Ender-Kiste"
 
 pet.name: "%s &f[%s]"
 pet.health: "&cLeben: &7%d"

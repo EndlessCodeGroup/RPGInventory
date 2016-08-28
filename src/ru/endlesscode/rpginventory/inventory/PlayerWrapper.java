@@ -20,7 +20,6 @@ import ru.endlesscode.rpginventory.inventory.slot.Slot;
 import ru.endlesscode.rpginventory.inventory.slot.SlotManager;
 import ru.endlesscode.rpginventory.item.CustomItem;
 import ru.endlesscode.rpginventory.item.ItemManager;
-import ru.endlesscode.rpginventory.nms.VersionHandler;
 import ru.endlesscode.rpginventory.pet.Attributes;
 import ru.endlesscode.rpginventory.pet.PetManager;
 import ru.endlesscode.rpginventory.pet.PetType;
@@ -151,27 +150,19 @@ public class PlayerWrapper implements InventoryHolder {
         this.permissions.clear();
     }
 
-    public float getBaseSpeed() {
-        return BASE_SPEED;
-    }
-
     private void clearStats() {
         Player player = this.player.getPlayer();
 
-        if (VersionHandler.isHigher1_9()) {
-            AttributeInstance speedAttribute = player.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED);
-            AttributeModifier rpgInvModifier = null;
-            for (AttributeModifier modifier : speedAttribute.getModifiers()) {
-                if (modifier.getUniqueId().compareTo(Attributes.SPEED_MODIFIER_ID) == 0) {
-                    rpgInvModifier = modifier;
-                }
+        AttributeInstance speedAttribute = player.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED);
+        AttributeModifier rpgInvModifier = null;
+        for (AttributeModifier modifier : speedAttribute.getModifiers()) {
+            if (modifier.getUniqueId().compareTo(Attributes.SPEED_MODIFIER_ID) == 0) {
+                rpgInvModifier = modifier;
             }
+        }
 
-            if (rpgInvModifier != null) {
-                speedAttribute.removeModifier(rpgInvModifier);
-            }
-        } else {
-            player.setWalkSpeed(BASE_SPEED);
+        if (rpgInvModifier != null) {
+            speedAttribute.removeModifier(rpgInvModifier);
         }
 
         this.healthUpdater.setHealth(player.getHealth());
@@ -300,23 +291,15 @@ public class PlayerWrapper implements InventoryHolder {
             }
         }
 
-        if (VersionHandler.isHigher1_9()) {
-            ItemStack itemInOffHand = player.getEquipment().getItemInOffHand();
-            ItemStack itemInMainHand = player.getEquipment().getItemInMainHand();
+        ItemStack itemInOffHand = player.getEquipment().getItemInOffHand();
+        ItemStack itemInMainHand = player.getEquipment().getItemInMainHand();
 
-            if (CustomItem.isCustomItem(itemInOffHand)) {
-                customItems.add(ItemManager.getCustomItem(itemInOffHand));
-            }
+        if (CustomItem.isCustomItem(itemInOffHand)) {
+            customItems.add(ItemManager.getCustomItem(itemInOffHand));
+        }
 
-            if (CustomItem.isCustomItem(itemInMainHand)) {
-                customItems.add(ItemManager.getCustomItem(itemInMainHand));
-            }
-        } else {
-            //noinspection deprecation
-            ItemStack itemInHand = player.getItemInHand();
-            if (CustomItem.isCustomItem(itemInHand)) {
-                customItems.add(ItemManager.getCustomItem(itemInHand));
-            }
+        if (CustomItem.isCustomItem(itemInMainHand)) {
+            customItems.add(ItemManager.getCustomItem(itemInMainHand));
         }
 
         for (CustomItem customItem : customItems) {

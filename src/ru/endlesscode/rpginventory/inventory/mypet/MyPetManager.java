@@ -28,7 +28,6 @@ import ru.endlesscode.rpginventory.event.PetUnequipEvent;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
 import ru.endlesscode.rpginventory.inventory.slot.Slot;
 import ru.endlesscode.rpginventory.inventory.slot.SlotManager;
-import ru.endlesscode.rpginventory.nms.VersionHandler;
 import ru.endlesscode.rpginventory.utils.ItemUtils;
 
 import java.util.UUID;
@@ -64,23 +63,21 @@ public class MyPetManager implements Listener {
             deactivateMyPet(player);
         }
 
-        if (newPet != null) {
-            PetEquipEvent event = new PetEquipEvent(player, newPet);
-            Bukkit.getPluginManager().callEvent(event);
+        PetEquipEvent event = new PetEquipEvent(player, newPet);
+        Bukkit.getPluginManager().callEvent(event);
 
-            if (event.isCancelled()) {
-                return false;
-            }
-
-            final UUID petUUID = UUID.fromString(ItemUtils.getTag(newPet, MYPET_TAG));
-            new BukkitRunnable() {
-
-                @Override
-                public void run() {
-                    activateMyPet(player, petUUID);
-                }
-            }.runTaskLater(RPGInventory.getInstance(), 1);
+        if (event.isCancelled()) {
+            return false;
         }
+
+        final UUID petUUID = UUID.fromString(ItemUtils.getTag(newPet, MYPET_TAG));
+        new BukkitRunnable() {
+
+            @Override
+            public void run() {
+                activateMyPet(player, petUUID);
+            }
+        }.runTaskLater(RPGInventory.getInstance(), 1);
 
         return true;
     }
@@ -232,12 +229,7 @@ public class MyPetManager implements Listener {
                     currentPet = null;
                 }
 
-                if (VersionHandler.isHigher1_9()) {
-                    player.getEquipment().setItemInMainHand(currentPet);
-                } else {
-                    //noinspection deprecation
-                    player.setItemInHand(currentPet);
-                }
+                player.getEquipment().setItemInMainHand(currentPet);
                 inventory.setItem(petSlot.getSlotId(), newPet);
 
                 swapMyPets(player, hasPet, newPet);

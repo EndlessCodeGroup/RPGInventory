@@ -97,7 +97,7 @@ public class ItemUtils {
         ItemStack item = new ItemStack(Material.getMaterial(textures[0]));
 
         if (textures.length == 2) {
-            if (VersionHandler.isHigher1_9() && item.getType() == Material.MONSTER_EGG) {
+            if (item.getType() == Material.MONSTER_EGG) {
                 item = toBukkitItemStack(item);
                 NbtCompound nbt = NbtFactory.asCompound(NbtFactory.fromItemTag(item));
                 nbt.put("EntityTag", NbtFactory.ofCompound("temp").put("id", textures[1]));
@@ -165,9 +165,12 @@ public class ItemUtils {
         }
 
         short durability = item.getDurability();
+        short textureDurability;
         if (CustomItem.isCustomItem(item)) {
+            CustomItem custom = ItemManager.getCustomItem(item);
+            textureDurability = custom.getTextureDurability();
+
             item = ItemManager.getItem(ItemUtils.getTag(item, ItemUtils.ITEM_TAG));
-            item.setDurability(durability);
         } else if (BackpackManager.isBackpack(item)) {
             String bpUID = ItemUtils.getTag(item, ItemUtils.BACKPACK_UID_TAG);
             BackpackType type = BackpackManager.getBackpackType(ItemUtils.getTag(item, ItemUtils.BACKPACK_TAG));
@@ -176,22 +179,22 @@ public class ItemUtils {
                 return new ItemStack(Material.AIR);
             }
 
+            textureDurability = type.getTextureDurability();
             item = type.getItem();
             if (bpUID != null) {
                 ItemUtils.setTag(item, ItemUtils.BACKPACK_UID_TAG, bpUID);
             }
-            item.setDurability(durability);
         } else if (PetType.isPetItem(item)) {
             PetType petType = PetManager.getPetFromItem(item);
             if (petType == null) {
                 return new ItemStack(Material.AIR);
             }
+            textureDurability = petType.getTextureDurability();
 
             int cooldown = PetManager.getCooldown(item);
             double health = PetManager.getHealth(item, petType.getHealth());
 
             item = petType.getSpawnItem();
-            item.setDurability(durability);
             PetManager.setCooldown(item, cooldown);
             PetManager.saveHealth(item, health);
         } else if (PetFood.isFoodItem(item)) {
@@ -200,12 +203,15 @@ public class ItemUtils {
             if (food == null) {
                 return new ItemStack(Material.AIR);
             }
+            textureDurability = food.getTextureDurability();
 
             item = food.getFoodItem();
             item.setAmount(amount);
-            item.setDurability(durability);
+        } else {
+            return item;
         }
 
+        item.setDurability(textureDurability == -1 ? durability : textureDurability);
         return item;
     }
 

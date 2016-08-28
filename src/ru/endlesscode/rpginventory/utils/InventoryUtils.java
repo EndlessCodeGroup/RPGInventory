@@ -7,11 +7,9 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import ru.endlesscode.rpginventory.inventory.ArmorType;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
 import ru.endlesscode.rpginventory.inventory.slot.Slot;
-import ru.endlesscode.rpginventory.inventory.slot.SlotManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -73,22 +71,6 @@ public class InventoryUtils {
                 return 7;
             default:
                 return 8;
-        }
-    }
-
-    @Nullable
-    public static Slot getArmorSlotById(int id) {
-        switch (id) {
-            case 5:
-                return SlotManager.getSlotManager().getSlot("helmet");
-            case 6:
-                return SlotManager.getSlotManager().getSlot("chestplate");
-            case 7:
-                return SlotManager.getSlotManager().getSlot("leggings");
-            case 8:
-                return SlotManager.getSlotManager().getSlot("boots");
-            default:
-                return null;
         }
     }
 

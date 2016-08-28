@@ -11,7 +11,6 @@ import ru.endlesscode.rpginventory.api.InventoryAPI;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
 import ru.endlesscode.rpginventory.misc.Config;
 import ru.endlesscode.rpginventory.misc.FileLanguage;
-import ru.endlesscode.rpginventory.nms.VersionHandler;
 import ru.endlesscode.rpginventory.pet.PetManager;
 import ru.endlesscode.rpginventory.pet.PetType;
 import ru.endlesscode.rpginventory.utils.ItemUtils;
@@ -63,17 +62,14 @@ public class ItemManager {
         List<ItemStack> items = new ArrayList<>(InventoryAPI.getPassiveItems(player));
         Collections.addAll(items, player.getInventory().getArmorContents());
 
-        //noinspection deprecation
-        ItemStack itemInHand = (VersionHandler.isHigher1_9()) ? player.getEquipment().getItemInMainHand() : player.getItemInHand();
+        ItemStack itemInHand = player.getEquipment().getItemInMainHand();
         if (CustomItem.isCustomItem(itemInHand) && ItemManager.allowedForPlayer(player, itemInHand, notifyPlayer)) {
             items.add(itemInHand);
         }
 
-        if (VersionHandler.isHigher1_9()) {
-            itemInHand = player.getEquipment().getItemInOffHand();
-            if (CustomItem.isCustomItem(itemInHand) && ItemManager.allowedForPlayer(player, itemInHand, notifyPlayer)) {
-                items.add(itemInHand);
-            }
+        itemInHand = player.getEquipment().getItemInOffHand();
+        if (CustomItem.isCustomItem(itemInHand) && ItemManager.allowedForPlayer(player, itemInHand, notifyPlayer)) {
+            items.add(itemInHand);
         }
 
         for (ItemStack item : items) {
