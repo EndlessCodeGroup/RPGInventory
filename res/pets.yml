@@ -40,6 +40,10 @@ pets:
     - "&e&o...but only a few become legends..."
     item: MONSTER_EGG:Silverfish
     type: COMPANION
+    level: 10
+    classes:
+    - Mage
+    - Warrior
     health: 50
     damage: 10
     speed: 6

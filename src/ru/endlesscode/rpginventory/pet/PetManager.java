@@ -22,7 +22,6 @@ import ru.endlesscode.rpginventory.RPGInventory;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
 import ru.endlesscode.rpginventory.inventory.PlayerWrapper;
 import ru.endlesscode.rpginventory.inventory.slot.SlotManager;
-import ru.endlesscode.rpginventory.nms.VersionHandler;
 import ru.endlesscode.rpginventory.utils.EffectUtils;
 import ru.endlesscode.rpginventory.utils.ItemUtils;
 import ru.endlesscode.rpginventory.utils.LocationUtils;
@@ -153,13 +152,8 @@ public class PetManager {
         pet.setRemoveWhenFarAway(false);
         pet.setHealth(PetManager.getHealth(petItem, pet.getMaxHealth()));
 
-        if (VersionHandler.isHigher1_9()) {
-            AttributeInstance speedAttribute = pet.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED);
-            speedAttribute.setBaseValue(petType.getSpeed());
-        } else {
-            Attributes attributes = new Attributes(pet);
-            attributes.setSpeed(petType.getSpeed());
-        }
+        AttributeInstance speedAttribute = pet.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED);
+        speedAttribute.setBaseValue(petType.getSpeed());
 
         InventoryManager.get(player).setPet(pet);
 

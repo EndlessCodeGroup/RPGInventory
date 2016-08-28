@@ -8,7 +8,6 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
-import ru.endlesscode.rpginventory.nms.VersionHandler;
 import ru.endlesscode.rpginventory.utils.ItemUtils;
 import ru.endlesscode.rpginventory.utils.StringUtils;
 
@@ -23,7 +22,6 @@ import java.util.List;
 public class CustomItem extends ClassedItem {
     // Required options
     private final String name;
-    private final String texture;
     private final List<ItemStat> stats = new ArrayList<>();
 
     // Not required options
@@ -42,11 +40,10 @@ public class CustomItem extends ClassedItem {
     private ItemStack customItem;
 
     CustomItem(String id, @NotNull ConfigurationSection config) {
-        super(config);
+        super(config, config.getString("texture"));
 
         Rarity rarity = Rarity.valueOf(config.getString("rarity"));
         this.name = StringUtils.coloredLine(rarity.getColor() + config.getString("name"));
-        this.texture = config.getString("texture");
 
         if (config.contains("stats")) {
             for (String stat : config.getStringList("stats")) {
@@ -110,14 +107,11 @@ public class CustomItem extends ClassedItem {
             customItem = ItemUtils.setTag(customItem, ItemUtils.UNBREAKABLE_TAG, "1");
         }
 
-        if (!VersionHandler.is1_7_R4()) {
-            customItem = ItemUtils.setTag(customItem, ItemUtils.HIDE_FLAGS_TAG, "63");
-        }
-
+        customItem = ItemUtils.setTag(customItem, ItemUtils.HIDE_FLAGS_TAG, "63");
         this.customItem = ItemUtils.setTag(customItem, ItemUtils.ITEM_TAG, id);
     }
 
-    public ItemStack getItemStack() {
+    ItemStack getItemStack() {
         return this.customItem;
     }
 

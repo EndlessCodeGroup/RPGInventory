@@ -22,8 +22,6 @@ error.buyable: "&6&lOdemknuti tohoto slotu te bude stat %d gold. Klikni na to zn
 error.previous: "&6&lNejdrive odemkni predchozi sloty"
 error.rp.denied: "&cMusis povolit stazeni resource-packu!"
 error.rp.force: "&cVypnuti resource-packu neni povoleno!"
-error.rp.disabled: "&cZapnuti resource-packu neni povoleno!"
-error.rp.already: "&7Resource-pack is already %s."
 error.item.level: "&6Vyzaduje &c%s &6level"
 error.item.class: "&6Vyzaduje tridu &c%s"
 error.mount.owner: "&6Zvire patri %"
@@ -31,17 +29,6 @@ error.fixhp: "&6Fixing HP not needed"
 
 message.buyed: "&a&lUspesne jsi zakoupil slot"
 message.fixhp: "&6Your HP was fixed, please login to server again."
-
-rp.enabled: "povolen"
-rp.disabled: "zakázan"
-
-chest.cap.name: "&7&lSlot neni k dispozici"
-chest.cap.lore: "&8&oTruhla skoncila"
-chest.occupied: "&6&lTruhlu ma otevrenou jiny hrac"
-
-container.chest: "Truhla"
-container.chestDouble: "Velka truhla"
-container.enderchest: "Ender truhla"
 
 pet.name: "%s &f[%s]"
 pet.health: "&cZivoty: &7%d"

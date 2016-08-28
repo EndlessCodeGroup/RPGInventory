@@ -11,11 +11,13 @@ import java.util.List;
  * It is part of the RpgInventory.
  * All rights reserved 2014 - 2016 © «EndlessCode Group»
  */
-public class ClassedItem {
+public class ClassedItem extends TexturedItem {
     private final int level;
     private final List<String> classes;
 
-    protected ClassedItem(@NotNull ConfigurationSection config) {
+    protected ClassedItem(@NotNull ConfigurationSection config, String texture) {
+        super(texture);
+
         this.level = config.getInt("level", -1);
         this.classes = config.contains("classes") ? config.getStringList("classes") : null;
     }

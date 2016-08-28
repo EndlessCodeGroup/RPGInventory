@@ -94,6 +94,15 @@ public class ConfigUpdater {
                 config.set("health.hearts", 20);
                 config.set("health.heart-capacity.min", 1);
                 config.set("health.heart-capacity.max", 5);
+            case 133:
+            case 134:
+            case 135:
+                config.set("resource-pack.fill", "DIAMOND_HOE:1");
+                config.set("resource-pack.mode", null);
+                config.set("alternate-view", null);
+                config.set("containers.block", false);
+                config.set("slots.locked", "DIAMOND_HOE:19");
+                config.set("slots.buyable", "DIAMOND_HOE:18");
         }
     }
 }

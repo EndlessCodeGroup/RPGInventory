@@ -47,7 +47,6 @@ import java.util.UUID;
  */
 @SuppressWarnings("ResultOfMethodCallIgnored")
 public class InventoryManager {
-    public static final int OPEN_ITEM_SLOT = Config.getConfig().getInt("alternate-view.slot") % 9;
     static final String TITLE = RPGInventory.getLanguage().getCaption("title");
     private static final Map<UUID, PlayerWrapper> INVENTORIES = new HashMap<>();
 
@@ -59,15 +58,10 @@ public class InventoryManager {
 
     public static void init() {
         // Setup alternate view
-        fillSlot = ItemUtils.getTexturedItem(Config.getConfig().getString("alternate-view.fill"));
+        fillSlot = ItemUtils.getTexturedItem(Config.getConfig().getString("resource-pack.fill"));
         ItemMeta meta = fillSlot.getItemMeta();
         meta.setDisplayName(" ");
         fillSlot.setItemMeta(meta);
-
-        inventoryOpenItem = ItemUtils.getTexturedItem(Config.getConfig().getString("alternate-view.item"));
-        meta.setDisplayName(StringUtils.coloredLine(Config.getConfig().getString("alternate-view.name")));
-        meta.setLore(StringUtils.coloredLines(Config.getConfig().getStringList("alternate-view.lore")));
-        inventoryOpenItem.setItemMeta(meta);
     }
 
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
@@ -229,32 +223,32 @@ public class InventoryManager {
 
     public static void syncArmor(@NotNull HumanEntity player, @NotNull Inventory inventory) {
         SlotManager sm = SlotManager.getSlotManager();
-        if (sm.getHelmetSlotId() != -1) {
+        if (ArmorType.HELMET.getSlot() != -1) {
             ItemStack helmet = player.getEquipment().getHelmet();
-            Slot helmetSlot = sm.getSlot(sm.getHelmetSlotId(), InventoryType.SlotType.CONTAINER);
-            inventory.setItem(sm.getHelmetSlotId(), (ItemUtils.isEmpty(helmet))
+            Slot helmetSlot = sm.getSlot(ArmorType.HELMET.getSlot(), InventoryType.SlotType.CONTAINER);
+            inventory.setItem(ArmorType.HELMET.getSlot(), (ItemUtils.isEmpty(helmet))
                     && helmetSlot != null ? helmetSlot.getCup() : helmet);
         }
 
-        if (sm.getChestplateSlotId() != -1) {
+        if (ArmorType.CHESTPLATE.getSlot() != -1) {
             ItemStack savedChestplate = InventoryManager.get((OfflinePlayer) player).getSavedChestplate();
             ItemStack chestplate = savedChestplate == null ? player.getEquipment().getChestplate() : savedChestplate;
-            Slot chestplateSlot = sm.getSlot(sm.getChestplateSlotId(), InventoryType.SlotType.CONTAINER);
-            inventory.setItem(sm.getChestplateSlotId(), (ItemUtils.isEmpty(chestplate))
+            Slot chestplateSlot = sm.getSlot(ArmorType.CHESTPLATE.getSlot(), InventoryType.SlotType.CONTAINER);
+            inventory.setItem(ArmorType.CHESTPLATE.getSlot(), (ItemUtils.isEmpty(chestplate))
                     && chestplateSlot != null ? chestplateSlot.getCup() : chestplate);
         }
 
-        if (sm.getLeggingsSlotId() != -1) {
+        if (ArmorType.LEGGINGS.getSlot() != -1) {
             ItemStack leggings = player.getEquipment().getLeggings();
-            Slot leggingsSlot = sm.getSlot(sm.getLeggingsSlotId(), InventoryType.SlotType.CONTAINER);
-            inventory.setItem(sm.getLeggingsSlotId(), (ItemUtils.isEmpty(leggings))
+            Slot leggingsSlot = sm.getSlot(ArmorType.LEGGINGS.getSlot(), InventoryType.SlotType.CONTAINER);
+            inventory.setItem(ArmorType.LEGGINGS.getSlot(), (ItemUtils.isEmpty(leggings))
                     && leggingsSlot != null ? leggingsSlot.getCup() : leggings);
         }
 
-        if (sm.getBootsSlotId() != -1) {
+        if (ArmorType.BOOTS.getSlot() != -1) {
             ItemStack boots = player.getEquipment().getBoots();
-            Slot bootsSlot = sm.getSlot(sm.getBootsSlotId(), InventoryType.SlotType.CONTAINER);
-            inventory.setItem(sm.getBootsSlotId(), (ItemUtils.isEmpty(boots))
+            Slot bootsSlot = sm.getSlot(ArmorType.BOOTS.getSlot(), InventoryType.SlotType.CONTAINER);
+            inventory.setItem(ArmorType.BOOTS.getSlot(), (ItemUtils.isEmpty(boots))
                     && bootsSlot != null ? bootsSlot.getCup() : boots);
         }
     }
@@ -362,17 +356,15 @@ public class InventoryManager {
     }
 
     static void lockEmptySlots(@NotNull Player player) {
-        lockEmptySlots(player, INVENTORIES.get(player.getUniqueId()).getInventory());
+        lockEmptySlots(INVENTORIES.get(player.getUniqueId()).getInventory());
     }
 
     @SuppressWarnings("WeakerAccess")
-    public static void lockEmptySlots(@NotNull Player player, @NotNull Inventory inventory) {
+    public static void lockEmptySlots(@NotNull Inventory inventory) {
         for (int i = 0; i < inventory.getSize(); i++) {
             Slot slot = SlotManager.getSlotManager().getSlot(i, InventoryType.SlotType.CONTAINER);
             if (slot == null) {
-                if (!ResourcePackManager.isLoadedResourcePack(player) || ResourcePackManager.getMode() == ResourcePackManager.Mode.EXPERIMENTAL) {
-                    inventory.setItem(i, fillSlot);
-                }
+                inventory.setItem(i, fillSlot);
             } else if (ItemUtils.isEmpty(inventory.getItem(i))) {
                 inventory.setItem(i, slot.getCup());
             }
@@ -454,7 +446,6 @@ public class InventoryManager {
             } else {
                 playerWrapper = new PlayerWrapper(player);
                 playerWrapper.setBuyedSlots(0);
-                ResourcePackManager.wontResourcePack(player, ResourcePackManager.getMode() != ResourcePackManager.Mode.DISABLED);
             }
 
             PlayerInventoryLoadEvent.Pre event = new PlayerInventoryLoadEvent.Pre(player);
@@ -465,7 +456,7 @@ public class InventoryManager {
             }
 
             playerWrapper.startHealthUpdater();
-            lockEmptySlots(player, playerWrapper.getInventory());
+            lockEmptySlots(playerWrapper.getInventory());
             INVENTORIES.put(player.getUniqueId(), playerWrapper);
         } catch (IOException e) {
             e.printStackTrace();

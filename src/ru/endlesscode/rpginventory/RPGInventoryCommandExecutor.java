@@ -7,10 +7,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginManager;
-import org.bukkit.scheduler.BukkitRunnable;
 import ru.endlesscode.rpginventory.api.InventoryAPI;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
-import ru.endlesscode.rpginventory.inventory.ResourcePackManager;
 import ru.endlesscode.rpginventory.inventory.backpack.BackpackManager;
 import ru.endlesscode.rpginventory.item.ItemManager;
 import ru.endlesscode.rpginventory.pet.PetManager;
@@ -206,57 +204,6 @@ class RPGInventoryCommandExecutor implements CommandExecutor {
         InventoryManager.get(player).resetMaxHealth();
     }
 
-    private static void updateTextures(CommandSender sender, String status) {
-        if (!validatePlayer(sender)) {
-            return;
-        }
-
-        Player player = (Player) sender;
-        updateTextures(sender, player.getName(), status);
-    }
-
-    private static void updateTextures(CommandSender sender, String playerName, String status) {
-        if (validatePlayer(sender, playerName)) {
-            final Player player = RPGInventory.getInstance().getServer().getPlayer(playerName);
-            boolean flag = status.startsWith("e");
-
-            if (flag == ResourcePackManager.isLoadedResourcePack(player)) {
-                sender.sendMessage(String.format(RPGInventory.getLanguage().getCaption("error.rp.already"), RPGInventory.getLanguage().getCaption("rp." + (flag ? "enabled" : "disabled"))));
-                return;
-            }
-
-            if (flag) {
-                if (ResourcePackManager.getMode() == ResourcePackManager.Mode.DISABLED) {
-                    sender.sendMessage(RPGInventory.getLanguage().getCaption("error.rp.disabled"));
-                    return;
-                }
-
-                ResourcePackManager.wontResourcePack(player, true);
-            } else {
-                if (ResourcePackManager.getMode() == ResourcePackManager.Mode.FORCE || ResourcePackManager.getMode() == ResourcePackManager.Mode.EXPERIMENTAL) {
-                    sender.sendMessage(RPGInventory.getLanguage().getCaption("error.rp.force"));
-                    return;
-                }
-
-                new BukkitRunnable() {
-                    @Override
-                    public void run() {
-                        player.setResourcePack("https://dl.dropboxusercontent.com/u/105899524/RPGInventory/Empty.zip");
-                    }
-                }.runTaskLater(RPGInventory.getInstance(), 5);
-                ResourcePackManager.wontResourcePack(player, false);
-            }
-
-            new BukkitRunnable() {
-                @Override
-                public void run() {
-                    InventoryManager.unloadPlayerInventory(player);
-                    InventoryManager.loadPlayerInventory(player);
-                }
-            }.runTaskLater(RPGInventory.getInstance(), 5);
-        }
-    }
-
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     private static boolean validatePlayer(CommandSender sender) {
         if (!(sender instanceof Player)) {
@@ -314,32 +261,28 @@ class RPGInventoryCommandExecutor implements CommandExecutor {
                 }
             }
 
-            if (subCommand.equals("open")) {
-                if (args.length == 1) {
-                    if (perms.has(sender, "rpginventory.open")) {
-                        RPGInventoryCommandExecutor.openInventory(sender);
+            switch (subCommand) {
+                case "open":
+                    if (args.length == 1) {
+                        if (perms.has(sender, "rpginventory.open")) {
+                            RPGInventoryCommandExecutor.openInventory(sender);
+                        }
+                    } else if (perms.has(sender, "rpginventory.open.others")) {
+                        RPGInventoryCommandExecutor.openInventory(sender, args[1]);
                     }
-                } else if (perms.has(sender, "rpginventory.open.others")) {
-                    RPGInventoryCommandExecutor.openInventory(sender, args[1]);
-                }
-            } else if (subCommand.equals("textures") && args.length >= 2) {
-                if (args.length == 2) {
-                    if (perms.has(sender, "rpginventory.textures")) {
-                        RPGInventoryCommandExecutor.updateTextures(sender, args[1]);
+                    break;
+                case "fixhp":
+                    if (args.length == 1) {
+                        if (perms.has(sender, "rpginventory.fixhp")) {
+                            RPGInventoryCommandExecutor.fixHp(sender);
+                        }
+                    } else if (perms.has(sender, "rpginventory.fixhp.others")) {
+                        RPGInventoryCommandExecutor.fixHp(sender, args[1]);
                     }
-                } else if (perms.has(sender, "rpginventory.textures.others")) {
-                    RPGInventoryCommandExecutor.updateTextures(sender, args[1], args[2]);
-                }
-            } else if (subCommand.equals("fixhp")) {
-                if (args.length == 1) {
-                    if (perms.has(sender, "rpginventory.fixhp")) {
-                        RPGInventoryCommandExecutor.fixHp(sender);
-                    }
-                } else if (perms.has(sender, "rpginventory.fixhp.others")) {
-                    RPGInventoryCommandExecutor.fixHp(sender, args[1]);
-                }
-            } else {
-                RPGInventoryCommandExecutor.printHelp(sender);
+                    break;
+                default:
+                    RPGInventoryCommandExecutor.printHelp(sender);
+                    break;
             }
         } else {
             RPGInventoryCommandExecutor.printHelp(sender);

@@ -1,5 +1,5 @@
 name: RPGInventory
-version: 1.3.5
+version: 2.0.0
 description: Change inventory how you need
 author: OsipXD
 
@@ -20,7 +20,6 @@ permissions:
     children:
       rpginventory.container: true
       rpginventory.user: true
-      rpginventory.textures.others: true
       rpginventory.open.others: true
       rpginventory.fixhp.others: true
   rpginventory.user:
@@ -40,14 +39,6 @@ permissions:
     default: op
     children:
       rpginventory.open: true
-  rpginventory.textures:
-    description: Allows you to enable/disable textures
-    default: true
-  rpginventory.textures.others:
-    description: Allows you to enable/disable textures for you or other players
-    default: op
-    children:
-      rpginventory.textures: true
   rpginventory.keep.items:
     description: Player with this permission will not lose items on dead
     default: op

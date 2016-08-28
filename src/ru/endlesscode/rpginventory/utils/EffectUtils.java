@@ -11,7 +11,6 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
-import ru.endlesscode.rpginventory.nms.VersionHandler;
 
 import java.lang.reflect.InvocationTargetException;
 
@@ -38,11 +37,7 @@ public class EffectUtils {
     private static void playParticles(Player player, EnumWrappers.Particle particle, int particleNum, Location location, Vector direction) {
         AbstractPacket packet;
         AbstractPlayServerWorldParticlesPacket particles;
-        if (VersionHandler.is1_7_R4()) {
-            particles = new com.comphenix.packetwrapper.included.v1_7_R4.WrapperPlayServerWorldParticles();
-        } else {
-            particles = new WrapperPlayServerWorldParticles();
-        }
+        particles = new WrapperPlayServerWorldParticles();
         particles.setParticleType(particle);
         particles.setNumberOfParticles(particleNum);
         particles.setX((float) location.getX());
@@ -63,18 +58,14 @@ public class EffectUtils {
     public static void playSpawnEffect(@NotNull Entity entity) {
         Location loc = entity.getLocation();
 
-        entity.getWorld().playSound(loc,
-                VersionHandler.isHigher1_9() ? Sound.ENTITY_ENDERMEN_TELEPORT : Sound.valueOf("ENDERMAN_TELEPORT"),
-                1, (float) (1.2 + Math.random() * 0.4));
+        entity.getWorld().playSound(loc, Sound.ENTITY_ENDERMEN_TELEPORT, 1, (float) (1.2 + Math.random() * 0.4));
         playParticlesToAll(EnumWrappers.Particle.EXPLOSION_LARGE, 3, loc);
     }
 
     public static void playDespawnEffect(@NotNull Entity entity) {
         Location loc = entity.getLocation();
 
-        entity.getWorld().playSound(loc,
-                VersionHandler.isHigher1_9() ? Sound.ENTITY_ENDERMEN_TELEPORT : Sound.valueOf("ENDERMAN_TELEPORT"),
-                1, (float) (0.6 + Math.random() * 0.4));
+        entity.getWorld().playSound(loc, Sound.ENTITY_ENDERMEN_TELEPORT, 1, (float) (0.6 + Math.random() * 0.4));
         playParticlesToAll(EnumWrappers.Particle.SMOKE_NORMAL, 3, loc);
     }
 }

@@ -9,10 +9,6 @@ import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ru.endlesscode.rpginventory.RPGInventory;
-import ru.endlesscode.rpginventory.inventory.InventoryManager;
-import ru.endlesscode.rpginventory.inventory.ResourcePackManager;
-import ru.endlesscode.rpginventory.misc.Config;
-import ru.endlesscode.rpginventory.nms.VersionHandler;
 import ru.endlesscode.rpginventory.utils.InventoryUtils;
 import ru.endlesscode.rpginventory.utils.ItemUtils;
 import ru.endlesscode.rpginventory.utils.StringUtils;
@@ -57,12 +53,6 @@ public class Slot {
                 RPGInventory.getPluginLogger().warning("Option \"quickbar\" is ignored for slot \"" + name + "\"!");
             }
             this.quickSlot = -1;
-        } else if (Config.getConfig().getBoolean("alternate-view.use-item")
-                && ResourcePackManager.getMode() != ResourcePackManager.Mode.FORCE && ResourcePackManager.getMode() != ResourcePackManager.Mode.EXPERIMENTAL
-                && quickSlot == InventoryManager.OPEN_ITEM_SLOT) {
-            RPGInventory.getPluginLogger().warning("Option \"quickbar\" is ignored for slot \"" + name + "\"!");
-            RPGInventory.getPluginLogger().warning("Slot " + quickSlot + " already reserved for inventory open item.");
-            this.quickSlot = -1;
         } else {
             this.quickSlot = quickSlot;
         }
@@ -80,7 +70,7 @@ public class Slot {
                 RPGInventory.getPluginLogger().warning("Option \"items\" is ignored for slot \"" + name + "\"!");
             }
 
-            if (VersionHandler.isHigher1_9() && slotType == SlotType.ELYTRA) {
+            if (slotType == SlotType.ELYTRA) {
                 this.allowed.add("ELYTRA");
             }
         }
@@ -218,30 +208,28 @@ public class Slot {
 
     @SuppressWarnings("unused")
     public enum SlotType {
-        GENERIC(true, true, false, true, false),
-        ACTION(false, true, false, false, false),
-        PET(false, false, true, false, false),
-        ARMOR(false, false, false, true, false),
-        ACTIVE(true, false, false, true, false),
-        BACKPACK(true, false, false, false, false),
-        PASSIVE(true, true, false, true, false),
-        SHIELD(false, false, true, true, true),
-        ELYTRA(false, false, true, false, true),
-        INFO(false, false, false, false, false),
-        MYPET(false, false, true, false, false);
+        GENERIC(true, true, false, true),
+        ACTION(false, true, false, false),
+        PET(false, false, true, false),
+        ARMOR(false, false, false, true),
+        ACTIVE(true, false, false, true),
+        BACKPACK(true, false, false, false),
+        PASSIVE(true, true, false, true),
+        SHIELD(false, false, true, true),
+        ELYTRA(false, false, true, false),
+        INFO(false, false, false, false),
+        MYPET(false, false, true, false);
 
         private final boolean allowQuick;
         private final boolean allowMultiSlots;
         private final boolean unique;
         private final boolean readItemList;
-        private final boolean is1_9Feature;
 
-        SlotType(boolean allowQuick, boolean allowMultiSlots, boolean unique, boolean readItemList, boolean is1_9Feature) {
+        SlotType(boolean allowQuick, boolean allowMultiSlots, boolean unique, boolean readItemList) {
             this.allowQuick = allowQuick;
             this.allowMultiSlots = allowMultiSlots;
             this.unique = unique;
             this.readItemList = readItemList;
-            this.is1_9Feature = is1_9Feature;
         }
 
         public boolean isAllowQuick() {
@@ -258,10 +246,6 @@ public class Slot {
 
         public boolean isReadItemList() {
             return readItemList;
-        }
-
-        public boolean is1_9Feature() {
-            return is1_9Feature;
         }
     }
 }

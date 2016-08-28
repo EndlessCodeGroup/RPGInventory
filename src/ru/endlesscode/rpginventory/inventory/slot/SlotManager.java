@@ -7,11 +7,6 @@ import org.bukkit.event.inventory.InventoryType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ru.endlesscode.rpginventory.RPGInventory;
-import ru.endlesscode.rpginventory.inventory.ArmorType;
-import ru.endlesscode.rpginventory.inventory.InventoryManager;
-import ru.endlesscode.rpginventory.inventory.ResourcePackManager;
-import ru.endlesscode.rpginventory.misc.Config;
-import ru.endlesscode.rpginventory.nms.VersionHandler;
 
 import java.io.File;
 import java.io.IOException;
@@ -71,11 +66,6 @@ public class SlotManager {
     }
 
     private boolean validateSlot(@NotNull Slot slot) {
-        if (slot.getSlotType().is1_9Feature() && !VersionHandler.isHigher1_9()) {
-            RPGInventory.getPluginLogger().warning("Slot type " + slot.getSlotType() + " available only since Minecraft 1.9");
-            return false;
-        }
-
         if (slot.getSlotType().isReadItemList() && slot.itemListIsEmpty()) {
             RPGInventory.getPluginLogger().warning("Slot with type " + slot.getSlotType()
                     + " must contains list of allowed items");
@@ -84,14 +74,6 @@ public class SlotManager {
         if (!slot.getSlotType().isAllowMultiSlots() && slot.getSlotIds().size() > 1) {
             RPGInventory.getPluginLogger().warning("Slot with type " + slot.getSlotType()
                     + " can not contain more than one slotId");
-            return false;
-        }
-
-        if (slot.isQuick() && ResourcePackManager.getMode() != ResourcePackManager.Mode.FORCE && ResourcePackManager.getMode() != ResourcePackManager.Mode.EXPERIMENTAL
-                && Config.getConfig().getBoolean("alternate-view.use-item")
-                && slot.getQuickSlot() == InventoryManager.OPEN_ITEM_SLOT) {
-            RPGInventory.getPluginLogger().warning("Quickbar slot " + slot.getQuickSlot()
-                    + " is reserved for inventory item");
             return false;
         }
 
@@ -240,27 +222,6 @@ public class SlotManager {
         }
 
         return null;
-    }
-
-    public int getHelmetSlotId() {
-        return this.getArmorId(ArmorType.HELMET);
-    }
-
-    public int getChestplateSlotId() {
-        return this.getArmorId(ArmorType.CHESTPLATE);
-    }
-
-    public int getLeggingsSlotId() {
-        return this.getArmorId(ArmorType.LEGGINGS);
-    }
-
-    public int getBootsSlotId() {
-        return this.getArmorId(ArmorType.BOOTS);
-    }
-
-    private int getArmorId(ArmorType armorType) {
-        Slot armor = this.getSlot(armorType.name());
-        return (armor != null && armor.getSlotType() == Slot.SlotType.ARMOR) ? armor.getSlotId() : -1;
     }
 
     public void saveDefaults() {

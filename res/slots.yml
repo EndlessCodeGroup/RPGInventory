@@ -3,7 +3,7 @@ slots:
     type: ARMOR
     slot: 4
     holder:
-      item: STAINED_GLASS_PANE:8
+      item: DIAMOND_HOE:4
       name: "&a&lHelmet slot"
       lore:
       - "&6&oHere possible to put only helmet"
@@ -17,7 +17,7 @@ slots:
     type: ARMOR
     slot: 13
     holder:
-      item: STAINED_GLASS_PANE:8
+      item: DIAMOND_HOE:5
       name: "&a&lChestplate slot"
       lore:
       - "&6&oHere possible to put only chestplate"
@@ -31,7 +31,7 @@ slots:
     type: ARMOR
     slot: 22
     holder:
-      item: STAINED_GLASS_PANE:8
+      item: DIAMOND_HOE:6
       name: "&a&lLeggings slot"
       lore:
       - "&6&oHere possible to put only leggings"
@@ -45,7 +45,7 @@ slots:
     type: ARMOR
     slot: 31
     holder:
-      item: STAINED_GLASS_PANE:8
+      item: DIAMOND_HOE:7
       name: "&a&lBoots slot"
       lore:
       - "&6&oHere possible to put only boots"
@@ -60,7 +60,7 @@ slots:
     slot: 12
     quickbar: 0
     holder:
-      item: STAINED_GLASS_PANE:8
+      item: DIAMOND_HOE:9
       name: "&a&lWeapon slot"
       lore:
       - "&6&oHere possible to put only weapon"
@@ -80,7 +80,7 @@ slots:
     type: PASSIVE
     slot: 14
     holder:
-      item: STAINED_GLASS_PANE:8
+      item: DIAMOND_HOE:8
       name: "&a&lGloves slot"
       lore:
       - "&6&oHere possible to put only gloves"
@@ -90,7 +90,7 @@ slots:
     type: PASSIVE
     slot: [10, 28]
     holder:
-      item: STAINED_GLASS_PANE:8
+      item: DIAMOND_HOE:12
       name: "&a&lRing slot"
       lore:
       - "&6&oHere possible to put only ring"
@@ -103,7 +103,7 @@ slots:
       required-level: 4
       money: 1000
     holder:
-      item: STAINED_GLASS_PANE:8
+      item: DIAMOND_HOE:13
       name: "&a&lAmulet slot"
       lore:
       - "&6&oHere possible to put only amulet"
@@ -113,7 +113,7 @@ slots:
     type: PASSIVE
     slot: [47, 48, 49, 50, 51]
     holder:
-      item: STAINED_GLASS_PANE:8
+      item: DIAMOND_HOE:16
       name: "&a&lArtifact slot"
       lore:
       - "&6&oHere possible to put only artifacts"
@@ -123,7 +123,7 @@ slots:
     type: SHIELD
     slot: 21
     holder:
-      item: STAINED_GLASS_PANE:8
+      item: DIAMOND_HOE:10
       name: "&a&lShield slot"
       lore:
       - "&6&oHere possible to put only shield"
@@ -133,7 +133,7 @@ slots:
     type: ELYTRA
     slot: 30
     holder:
-      item: STAINED_GLASS_PANE:8
+      item: DIAMOND_HOE:11
       name: "&a&lElytra slot"
       lore:
       - "&6&oHere possible to put only elytra"
@@ -141,7 +141,7 @@ slots:
     type: PET
     slot: 33
     holder:
-      item: STAINED_GLASS_PANE:8
+      item: DIAMOND_HOE:14
       name: "&a&lPet slot"
       lore:
       - "&6&oHere possible to put only pet"
@@ -150,7 +150,7 @@ slots:
     slot: 34
     drop: false
     holder:
-      item: STAINED_GLASS_PANE:8
+      item: DIAMOND_HOE:15
       name: "&a&lBackpack slot"
       lore:
       - "&6&oHere possible to put only backpack"
@@ -159,7 +159,7 @@ slots:
     slot: 16
     gui: true
     holder:
-      item: STAINED_GLASS_PANE:8
+      item: DIAMOND_HOE:2
       name: "&a&lWorkbench"
       lore:
       - "&6&oClick to open workbench"
@@ -168,7 +168,7 @@ slots:
     type: INFO
     slot: 5
     holder:
-      item: STAINED_GLASS_PANE:8
+      item: DIAMOND_HOE:3
       name: "&a&lYour stats"
       lore:
       - "&2&lMax HP: &3%MAX_HP% &7: &e%PLUGIN_HP% &f(RPGInventory) &7+ &6%OTHER_HP% &f(Other plugins)"

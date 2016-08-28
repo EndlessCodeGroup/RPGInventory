@@ -13,7 +13,6 @@ import ru.endlesscode.rpginventory.RPGInventory;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
 import ru.endlesscode.rpginventory.inventory.ResourcePackManager;
 import ru.endlesscode.rpginventory.misc.Config;
-import ru.endlesscode.rpginventory.nms.VersionHandler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,10 +41,6 @@ public class ResourcePackListener extends PacketAdapter implements Listener {
 
     @Override
     public void onPacketReceiving(PacketEvent event) {
-        if (ResourcePackManager.getMode() == ResourcePackManager.Mode.DISABLED) {
-            return;
-        }
-
         WrapperPlayClientResourcePackStatus packet = new WrapperPlayClientResourcePackStatus(event.getPacket());
 
         final Player player = event.getPlayer();
@@ -58,19 +53,13 @@ public class ResourcePackListener extends PacketAdapter implements Listener {
                     preparedPlayers.remove(player.getUniqueId());
                     break;
                 case FAILED_DOWNLOAD:
-                    if (VersionHandler.is1_8_R1()) {
-                        preparedPlayers.remove(player.getUniqueId());
-                        return;
-                    }
                 case DECLINED:
-                    if (ResourcePackManager.getMode() == ResourcePackManager.Mode.FORCE || ResourcePackManager.getMode() == ResourcePackManager.Mode.EXPERIMENTAL) {
-                        new BukkitRunnable() {
-                            @Override
-                            public void run() {
-                                player.kickPlayer(RPGInventory.getLanguage().getCaption("error.rp.denied"));
-                            }
-                        }.runTaskLater(this.plugin, 20);
-                    }
+                    new BukkitRunnable() {
+                        @Override
+                        public void run() {
+                            player.kickPlayer(RPGInventory.getLanguage().getCaption("error.rp.denied"));
+                        }
+                    }.runTaskLater(this.plugin, 20);
 
                     ResourcePackManager.loadedResourcePack(player, false);
                     preparedPlayers.remove(player.getUniqueId());

@@ -22,8 +22,6 @@ error.buyable: "&6&lこのスペースを購入するには,%dだけのゴール
 error.previous: "&6&l以前スペースのロックを解除する必要があります"
 error.rp.denied: "&cリソースパックをダウンロードする権限が必要です!"
 error.rp.force: "&cリソースパックが無効になっています。"
-error.rp.disabled: "&cリソースパックを使用することができません"
-error.rp.already: "&7リソースパックが既に存在します %s."
 error.item.level: "&6それは&c%s&6レベルが必要になります"
 error.item.class: "&6それはクラスが必要になります &c%s"
 error.mount.owner: "&6主人に帰属しています %s"
@@ -31,17 +29,6 @@ error.fixhp: "&6体力を固定する必要がありません"
 
 message.buyed: "&a&l正常にスペースを購入しました"
 message.fixhp: "&6体力が固定されました"
-
-rp.enabled: "有効"
-rp.disabled: "無効"
-
-chest.cap.name: "&7&l使用できないスペース"
-chest.cap.lore: "&8&oチェスト 終了"
-chest.occupied: "&6&l他のプレイヤーによってロックされてチェスト"
-
-container.chest: "チェスト"
-container.chestDouble: "大きなチェスト"
-container.enderchest: "エンダーチェスト"
 
 pet.name: "%s &f[%s]"
 pet.health: "&c健康: &7%d"

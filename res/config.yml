@@ -69,7 +69,7 @@ backpacks:
 
 containers:
   # Disallow to open containers
-  block: true
+  block: false
 
   # List of disallowed containers
   list:
@@ -83,12 +83,6 @@ containers:
 
 # Resource-pack options
 resource-pack:
-  # Mode of resource pack. It can be:
-  # DISABLED - not load RP, and not touch chest GUI, always use alternate view
-  # AUTO - if player denies RP downloading, he use alternate view otherwise, normal view
-  # FORCE - always use normal view (if player denies RP, he will be kicked from server)
-  mode: AUTO
-
   # URL of your RP
   # Example: https://dl.dropboxusercontent.com/u/105899524/RPGInventory/ResourcePack_en.zip
   url: PUT_YOUR_URL_HERE
@@ -96,45 +90,24 @@ resource-pack:
   # Hash (works as identifier of RP)
   hash: PUT_YOUR_HASH_HERE
 
-# Alternate view - works when RP not loaded
-alternate-view:
-  # Enabling of item for inventory opening
-  use-item: true
-
-  # Enabling of craft grid in player inventory
-  # false - when player click on result slot, will be opened RPGInventory (like in the normal mode)
-  enable-craft: true
-
-  # Texture of inventory item
-  item: ENCHANTED_BOOK
-
-  # Slot of inventory item (0 - 8)
-  slot: 8
-
-  # Options of item
-  name: "&6Equipment"
-  lore:
-  - "&7&o(Right click to open equipment)"
-
   # Texture to fill unavailable slots
-  fill: STAINED_GLASS_PANE:0
+  fill: DIAMOND_HOE:1
 
-  # Health setting
-  health:
+# Health settings
+health:
+  # Base health for all players (used for command /rpginv fixhp)
+  base: 20.0
 
-    # Base health for all players
-    base: 20.0
+  # Enable HP auto-scale system
+  scale: true
 
-    # Enable HP auto-scale system
-    scale: true
+  # Max value of hearts (half-hearts)
+  hearts: 20
 
-    # Max value of hearts (half-hearts)
-    hearts: 20
-
-    # Minimal and maximal value of HP in one heart (half-heart)
-    heart-capacity:
-      min: 1
-      max: 5
+  # Minimal and maximal value of HP in one heart (half-heart)
+  heart-capacity:
+    min: 1
+    max: 5
 
 
 ###############################
@@ -164,10 +137,10 @@ slots:
   enabled: true
 
   # Texture of locked slot
-  locked: STAINED_GLASS_PANE:14
+  locked: DIAMOND_HOE:19
 
   # Texture of buyable slot
-  buyable: STAINED_GLASS_PANE:1
+  buyable: DIAMOND_HOE:18
 
   # Default available (free) slots
   free: 2

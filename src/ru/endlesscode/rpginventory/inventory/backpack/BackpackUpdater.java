@@ -4,8 +4,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.scheduler.BukkitRunnable;
 import ru.endlesscode.rpginventory.RPGInventory;
-import ru.endlesscode.rpginventory.inventory.chest.ChestManager;
-import ru.endlesscode.rpginventory.inventory.chest.ChestWrapper;
 
 import java.util.Arrays;
 
@@ -32,12 +30,6 @@ public class BackpackUpdater extends BukkitRunnable {
     @Override
     public void run() {
         backpack.onUse();
-        if (ChestManager.chestOpened(player)) {
-            ChestWrapper chest = ChestManager.getChest(player);
-            Inventory chestInventory = chest.getInventory();
-            backpack.setContents(Arrays.copyOfRange(chestInventory.getContents(), 0, backpack.getType().getSize()));
-        } else {
-            backpack.setContents(Arrays.copyOfRange(inventory.getContents(), 0, backpack.getType().getSize()));
-        }
+        backpack.setContents(Arrays.copyOfRange(inventory.getContents(), 0, backpack.getType().getSize()));
     }
 }

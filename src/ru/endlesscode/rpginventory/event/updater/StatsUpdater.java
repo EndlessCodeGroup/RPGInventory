@@ -9,7 +9,6 @@ import ru.endlesscode.rpginventory.inventory.InventoryManager;
 import ru.endlesscode.rpginventory.inventory.PlayerWrapper;
 import ru.endlesscode.rpginventory.item.ItemManager;
 import ru.endlesscode.rpginventory.item.ItemStat;
-import ru.endlesscode.rpginventory.nms.VersionHandler;
 import ru.endlesscode.rpginventory.pet.Attributes;
 
 /**
@@ -34,29 +33,25 @@ public class StatsUpdater extends BukkitRunnable {
         playerWrapper.updatePermissions();
 
         // Update speed
-        if (VersionHandler.isHigher1_9()) {
-            AttributeInstance speedAttribute = this.player.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED);
-            AttributeModifier rpgInvModifier = null;
-            for (AttributeModifier modifier : speedAttribute.getModifiers()) {
-                if (modifier.getUniqueId().compareTo(Attributes.SPEED_MODIFIER_ID) == 0) {
-                    rpgInvModifier = modifier;
-                }
+        AttributeInstance speedAttribute = this.player.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED);
+        AttributeModifier rpgInvModifier = null;
+        for (AttributeModifier modifier : speedAttribute.getModifiers()) {
+            if (modifier.getUniqueId().compareTo(Attributes.SPEED_MODIFIER_ID) == 0) {
+                rpgInvModifier = modifier;
             }
-
-            if (rpgInvModifier != null) {
-                speedAttribute.removeModifier(rpgInvModifier);
-            }
-
-            rpgInvModifier = new AttributeModifier(
-                    Attributes.SPEED_MODIFIER_ID, Attributes.SPEED_MODIFIER,
-                    ItemManager.getModifier(this.player, ItemStat.StatType.SPEED).getMultiplier() - 1,
-                    AttributeModifier.Operation.MULTIPLY_SCALAR_1
-            );
-
-            speedAttribute.addModifier(rpgInvModifier);
-        } else {
-            this.player.setWalkSpeed(playerWrapper.getBaseSpeed() * (float) ItemManager.getModifier(this.player, ItemStat.StatType.SPEED).getMultiplier());
         }
+
+        if (rpgInvModifier != null) {
+            speedAttribute.removeModifier(rpgInvModifier);
+        }
+
+        rpgInvModifier = new AttributeModifier(
+                Attributes.SPEED_MODIFIER_ID, Attributes.SPEED_MODIFIER,
+                ItemManager.getModifier(this.player, ItemStat.StatType.SPEED).getMultiplier() - 1,
+                AttributeModifier.Operation.MULTIPLY_SCALAR_1
+        );
+
+        speedAttribute.addModifier(rpgInvModifier);
 
         // Update info slots
         if (playerWrapper.isOpened()) {

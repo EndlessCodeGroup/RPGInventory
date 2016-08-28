@@ -16,7 +16,6 @@ import ru.endlesscode.rpginventory.inventory.InventoryLocker;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
 import ru.endlesscode.rpginventory.inventory.ResourcePackManager;
 import ru.endlesscode.rpginventory.inventory.backpack.BackpackManager;
-import ru.endlesscode.rpginventory.inventory.chest.ChestManager;
 import ru.endlesscode.rpginventory.inventory.mypet.MyPetManager;
 import ru.endlesscode.rpginventory.inventory.slot.SlotManager;
 import ru.endlesscode.rpginventory.item.ItemManager;
@@ -125,16 +124,13 @@ public class RPGInventory extends JavaPlugin {
             }
         }
 
-        if (!VersionHandler.is1_7_R4()) {
-            ProtocolLibrary.getProtocolManager().addPacketListener(new ResourcePackListener(this));
-        }
+        ProtocolLibrary.getProtocolManager().addPacketListener(new ResourcePackListener(this));
 
         // Initialization
         ResourcePackManager.init();
         InventoryManager.init();
         InventoryLocker.init();
         BackpackManager.init();
-        ChestManager.init();
         ItemManager.init();
         SlotManager.init();
 
@@ -145,31 +141,14 @@ public class RPGInventory extends JavaPlugin {
         }
 
         // Check resource-pack settings
-        if (ResourcePackManager.getMode() != ResourcePackManager.Mode.DISABLED) {
-            if (Config.getConfig().getString("resource-pack.url").equals("PUT_YOUR_URL_HERE")) {
-                this.getLogger().warning("Set resource-pack's url in config or set resource-pack.mode to DISABLED!");
-                this.getPluginLoader().disablePlugin(this);
-                return;
-            }
-
-            if (Config.getConfig().getString("resource-pack.hash").equals("PUT_YOUR_HASH_HERE")) {
-                this.getLogger().warning("Your resource pack hash incorrect!");
-            }
-        }
-
-        if (ResourcePackManager.getMode() == ResourcePackManager.Mode.EXPERIMENTAL && !VersionHandler.isHigher1_9()) {
-            this.getLogger().warning("EXPERIMENTAL resource pack allowed only on minecraft 1.9+!");
+        if (Config.getConfig().getString("resource-pack.url").equals("PUT_YOUR_URL_HERE")) {
+            this.getLogger().warning("Set resource-pack's url in config or set resource-pack.mode to DISABLED!");
             this.getPluginLoader().disablePlugin(this);
             return;
         }
 
-        if (ResourcePackManager.getMode() != ResourcePackManager.Mode.FORCE && ResourcePackManager.getMode() != ResourcePackManager.Mode.EXPERIMENTAL
-                && Config.getConfig().getBoolean("alternate-view.use-item")) {
-            pm.registerEvents(new InventoryOpenItemListener(), this);
-        }
-
-        if (ResourcePackManager.getMode() != ResourcePackManager.Mode.EXPERIMENTAL && ResourcePackManager.getMode() != ResourcePackManager.Mode.DISABLED) {
-            pm.registerEvents(new ChestListener(), this);
+        if (Config.getConfig().getString("resource-pack.hash").equals("PUT_YOUR_HASH_HERE")) {
+            this.getLogger().warning("Your resource pack hash incorrect!");
         }
 
         if (Bukkit.getPluginManager().isPluginEnabled("MyPet")) {

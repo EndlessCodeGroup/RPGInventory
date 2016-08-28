@@ -53,7 +53,6 @@ class InventorySerializer {
             NbtCompound playerNbt = NbtFactory.ofCompound("Inventory");
             playerNbt.put(NbtFactory.ofCompound("slots", slotList));
             playerNbt.put("buyed-slots", playerWrapper.getBuyedGenericSlots());
-            playerNbt.put("resource-pack", Boolean.toString(ResourcePackManager.isWontResourcePack(player)));
 
             HealthUpdater healthUpdater = playerWrapper.getHealthUpdater();
             double attributesBonus = healthUpdater.getAttributesBonus();
@@ -82,15 +81,6 @@ class InventorySerializer {
             } else {
                 playerWrapper.setBuyedSlots(playerNbt.getInteger("buyed-slots"));
                 playerNbt.remove("buyed-slots");
-            }
-            // ========================================
-
-            // =========== Added in v1.1.7 ============
-            if (playerNbt.containsKey("resource-pack")) {
-                ResourcePackManager.wontResourcePack(player, Boolean.parseBoolean(playerNbt.getString("resource-pack"))
-                        && ResourcePackManager.getMode() != ResourcePackManager.Mode.DISABLED);
-            } else {
-                ResourcePackManager.wontResourcePack(player, ResourcePackManager.getMode() != ResourcePackManager.Mode.DISABLED);
             }
             // ========================================
 

@@ -4,7 +4,6 @@ import com.comphenix.protocol.utility.MinecraftReflection;
 import org.bukkit.entity.LivingEntity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import ru.endlesscode.rpginventory.nms.VersionHandler;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -31,10 +30,7 @@ public class Attributes {
     }
 
     public void setSpeed(double speed) {
-        String type = "d";
-        if (!VersionHandler.is1_7_R4() && !VersionHandler.is1_8_R1()) {
-            type = "MOVEMENT_SPEED";
-        }
+        String type = "MOVEMENT_SPEED";
 
         this.setAttribute(type, speed);
     }

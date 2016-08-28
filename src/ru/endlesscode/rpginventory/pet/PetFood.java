@@ -8,6 +8,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import ru.endlesscode.rpginventory.RPGInventory;
+import ru.endlesscode.rpginventory.item.TexturedItem;
 import ru.endlesscode.rpginventory.misc.FileLanguage;
 import ru.endlesscode.rpginventory.utils.ItemUtils;
 import ru.endlesscode.rpginventory.utils.StringUtils;
@@ -20,12 +21,11 @@ import java.util.List;
  * It is part of the RpgInventory.
  * All rights reserved 2014 - 2016 © «EndlessCode Group»
  */
-public class PetFood {
+public class PetFood extends TexturedItem {
     @NotNull
     private final String name;
     @NotNull
     private final List<String> lore;
-    private final String texture;
 
     private final double value;
     private final List<String> eaters;
@@ -33,9 +33,10 @@ public class PetFood {
     private ItemStack foodItem;
 
     PetFood(@NotNull ConfigurationSection config) {
+        super(config.getString("item"));
+
         this.name = StringUtils.coloredLine(config.getString("name"));
         this.lore = StringUtils.coloredLines(config.getStringList("lore"));
-        this.texture = config.getString("item");
         this.value = config.getDouble("value");
         this.eaters = config.getStringList("eaters");
 

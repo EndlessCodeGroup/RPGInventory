@@ -22,8 +22,6 @@ error.buyable: "&6&lTo purchase this slots you need %d gold. Click on it again i
 error.previous: "&6&lFirst unlock previous slots"
 error.rp.denied: "&cYou must allow downloading the resource-pack!"
 error.rp.force: "&cDisabling of the resource-pack is not allowed."
-error.rp.disabled: "&cEnabling of the resource-pack is not allowed."
-error.rp.already: "&7Resource-pack is already %s."
 error.item.level: "&6Required &c%s &6level"
 error.item.class: "&6Required class &c%s"
 error.mount.owner: "&6Mount belongs to %s"
@@ -31,17 +29,6 @@ error.fixhp: "&6Fixing HP not needed"
 
 message.buyed: "&a&lYou have successfully purchased the slot"
 message.fixhp: "&6Your HP was fixed, please login to server again"
-
-rp.enabled: "enabled"
-rp.disabled: "disabled"
-
-chest.cap.name: "&7&lSlot not available"
-chest.cap.lore: "&8&oChest ended"
-chest.occupied: "&6&lChest is occupied by another player"
-
-container.chest: "Chest"
-container.chestDouble: "Large Chest"
-container.enderchest: "Ender Chest"
 
 pet.name: "%s &f[%s]"
 pet.health: "&cHealth: &7%d"

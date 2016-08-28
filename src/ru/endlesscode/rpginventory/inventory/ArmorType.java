@@ -4,7 +4,8 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
-import ru.endlesscode.rpginventory.nms.VersionHandler;
+import ru.endlesscode.rpginventory.inventory.slot.Slot;
+import ru.endlesscode.rpginventory.inventory.slot.SlotManager;
 import ru.endlesscode.rpginventory.utils.ItemUtils;
 
 /**
@@ -30,7 +31,7 @@ public enum ArmorType {
             return UNKNOWN;
         }
 
-        if (VersionHandler.isHigher1_9() && item.getType() == Material.ELYTRA) {
+        if (item.getType() == Material.ELYTRA) {
             return CHESTPLATE;
         }
 
@@ -75,6 +76,22 @@ public enum ArmorType {
                 return player.getEquipment().getLeggings();
             case BOOTS:
                 return player.getEquipment().getBoots();
+            default:
+                return null;
+        }
+    }
+
+    @Nullable
+    public static Slot getArmorSlotById(int id) {
+        switch (id) {
+            case 5:
+                return SlotManager.getSlotManager().getSlot("helmet");
+            case 6:
+                return SlotManager.getSlotManager().getSlot("chestplate");
+            case 7:
+                return SlotManager.getSlotManager().getSlot("leggings");
+            case 8:
+                return SlotManager.getSlotManager().getSlot("boots");
             default:
                 return null;
         }
