@@ -14,8 +14,13 @@ public class TexturedItem {
 
     public short getTextureDurability() {
         String[] data = texture.split(":");
+
         if (data.length == 2) {
-            return Short.parseShort(data[1]);
+            try {
+                return  Short.parseShort(data[1]);
+            } catch (NumberFormatException e) {
+                return -1;
+            }
         }
 
         return -1;

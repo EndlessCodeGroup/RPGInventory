@@ -12,7 +12,6 @@ import ru.endlesscode.rpginventory.inventory.backpack.BackpackManager;
 import ru.endlesscode.rpginventory.inventory.backpack.BackpackType;
 import ru.endlesscode.rpginventory.item.CustomItem;
 import ru.endlesscode.rpginventory.item.ItemManager;
-import ru.endlesscode.rpginventory.nms.VersionHandler;
 import ru.endlesscode.rpginventory.pet.PetFood;
 import ru.endlesscode.rpginventory.pet.PetManager;
 import ru.endlesscode.rpginventory.pet.PetType;
@@ -168,8 +167,12 @@ public class ItemUtils {
         short textureDurability;
         if (CustomItem.isCustomItem(item)) {
             CustomItem custom = ItemManager.getCustomItem(item);
-            textureDurability = custom.getTextureDurability();
 
+            if (custom == null) {
+                return new ItemStack(Material.AIR);
+            }
+
+            textureDurability = custom.getTextureDurability();
             item = ItemManager.getItem(ItemUtils.getTag(item, ItemUtils.ITEM_TAG));
         } else if (BackpackManager.isBackpack(item)) {
             String bpUID = ItemUtils.getTag(item, ItemUtils.BACKPACK_UID_TAG);

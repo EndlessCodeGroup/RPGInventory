@@ -4,18 +4,16 @@ import com.comphenix.packetwrapper.included.WrapperPlayClientResourcePackStatus;
 import com.comphenix.packetwrapper.included.WrapperPlayServerResourcePackSend;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketEvent;
-import com.comphenix.protocol.wrappers.EnumWrappers;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import ru.endlesscode.rpginventory.RPGInventory;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
-import ru.endlesscode.rpginventory.inventory.ResourcePackManager;
 import ru.endlesscode.rpginventory.misc.Config;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -24,7 +22,7 @@ import java.util.UUID;
  * All rights reserved 2014 - 2016 © «EndlessCode Group»
  */
 public class ResourcePackListener extends PacketAdapter implements Listener {
-    private final List<UUID> preparedPlayers = new ArrayList<>();
+    private static final Map<UUID, Boolean> preparedPlayers = new HashMap<>();
 
     public ResourcePackListener(Plugin plugin) {
         super(plugin, WrapperPlayClientResourcePackStatus.TYPE, WrapperPlayServerResourcePackSend.TYPE);
@@ -34,8 +32,16 @@ public class ResourcePackListener extends PacketAdapter implements Listener {
     public void onPacketSending(PacketEvent event) {
         WrapperPlayServerResourcePackSend packet = new WrapperPlayServerResourcePackSend(event.getPacket());
         if (packet.getUrl().equals(Config.getConfig().getString("resource-pack.url"))) {
+            final Player player = event.getPlayer();
             packet.setHash(Config.getConfig().getString("resource-pack.hash"));
-            preparedPlayers.add(event.getPlayer().getUniqueId());
+            preparedPlayers.put(player.getUniqueId(), false);
+
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    preparedPlayers.put(player.getUniqueId(), true);
+                }
+            }.runTaskLater(RPGInventory.getInstance(), 40);
         }
     }
 
@@ -44,47 +50,40 @@ public class ResourcePackListener extends PacketAdapter implements Listener {
         WrapperPlayClientResourcePackStatus packet = new WrapperPlayClientResourcePackStatus(event.getPacket());
 
         final Player player = event.getPlayer();
-        if (preparedPlayers.contains(player.getUniqueId())) {
+        if (preparedPlayers.containsKey(player.getUniqueId())) {
             switch (packet.getResult()) {
                 case ACCEPTED:
                     return;
                 case SUCCESSFULLY_LOADED:
-                    ResourcePackManager.loadedResourcePack(player, true);
+                    new BukkitRunnable() {
+                        @Override
+                        public void run() {
+                            InventoryManager.loadPlayerInventory(player);
+                        }
+                    }.runTaskLater(RPGInventory.getInstance(), 1);
                     preparedPlayers.remove(player.getUniqueId());
+
                     break;
-                case FAILED_DOWNLOAD:
                 case DECLINED:
+                case FAILED_DOWNLOAD:
                     new BukkitRunnable() {
                         @Override
                         public void run() {
                             player.kickPlayer(RPGInventory.getLanguage().getCaption("error.rp.denied"));
                         }
                     }.runTaskLater(this.plugin, 20);
-
-                    ResourcePackManager.loadedResourcePack(player, false);
                     preparedPlayers.remove(player.getUniqueId());
-            }
-
-            new InventoryUpdater(player).runTaskLater(this.plugin, 5);
-        } else {
-            if (packet.getResult() == EnumWrappers.ResourcePackStatus.SUCCESSFULLY_LOADED) {
-                ResourcePackManager.loadedResourcePack(player, false);
-                new InventoryUpdater(player).runTaskLater(this.plugin, 5);
             }
         }
     }
 
-    private class InventoryUpdater extends BukkitRunnable {
-        private final Player player;
+    static boolean isPreparedPlayer(Player player) {
+        return preparedPlayers.containsKey(player.getUniqueId()) && preparedPlayers.get(player.getUniqueId());
+    }
 
-        InventoryUpdater(Player player) {
-            this.player = player;
-        }
-
-        @Override
-        public void run() {
-            InventoryManager.unloadPlayerInventory(this.player);
-            InventoryManager.loadPlayerInventory(this.player);
+    static void removePlayer(Player player) {
+        if (preparedPlayers.containsKey(player.getUniqueId())) {
+            preparedPlayers.remove(player.getUniqueId());
         }
     }
 }

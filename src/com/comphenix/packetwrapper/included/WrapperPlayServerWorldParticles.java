@@ -24,7 +24,7 @@ import com.comphenix.protocol.wrappers.EnumWrappers.Particle;
  */
 
 @SuppressWarnings("ALL")
-public class WrapperPlayServerWorldParticles extends AbstractPlayServerWorldParticlesPacket {
+public class WrapperPlayServerWorldParticles extends AbstractPacket {
     public static final PacketType TYPE = PacketType.Play.Server.WORLD_PARTICLES;
 
     public WrapperPlayServerWorldParticles() {
@@ -117,7 +117,8 @@ public class WrapperPlayServerWorldParticles extends AbstractPlayServerWorldPart
     /**
      * Retrieve Offset X.
      * <p>
-     * Notes: this is added to the X position after being multiplied by random.nextGaussian()
+     * Notes: this is added to the X position after being multiplied by
+     * random.nextGaussian()
      *
      * @return The current Offset X
      */
@@ -137,7 +138,8 @@ public class WrapperPlayServerWorldParticles extends AbstractPlayServerWorldPart
     /**
      * Retrieve Offset Y.
      * <p>
-     * Notes: this is added to the Y position after being multiplied by random.nextGaussian()
+     * Notes: this is added to the Y position after being multiplied by
+     * random.nextGaussian()
      *
      * @return The current Offset Y
      */
@@ -157,7 +159,8 @@ public class WrapperPlayServerWorldParticles extends AbstractPlayServerWorldPart
     /**
      * Retrieve Offset Z.
      * <p>
-     * Notes: this is added to the Z position after being multiplied by random.nextGaussian()
+     * Notes: this is added to the Z position after being multiplied by
+     * random.nextGaussian()
      *
      * @return The current Offset Z
      */
@@ -237,7 +240,8 @@ public class WrapperPlayServerWorldParticles extends AbstractPlayServerWorldPart
     /**
      * Retrieve Data.
      * <p>
-     * Notes: length depends on particle. IRON_CRACK has a length of 2, BLOCK_CRACK and BLOCK_DUST have lengths of 1, the rest have 0.
+     * Notes: length depends on particle. IRON_CRACK has a length of 2,
+     * BLOCK_CRACK and BLOCK_DUST have lengths of 1, the rest have 0.
      *
      * @return The current Data
      * @see Particle#getDataLength()

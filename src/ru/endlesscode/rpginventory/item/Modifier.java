@@ -9,15 +9,15 @@ import ru.endlesscode.rpginventory.utils.Utils;
  * All rights reserved 2014 - 2016 © «EndlessCode Group»
  */
 public class Modifier {
-    public static final Modifier EMPTY = new Modifier(0, 1);
+    public static final Modifier EMPTY = new Modifier();
 
     private final double minBonus;
     private final double maxBonus;
     private final double minMultiplier;
     private final double maxMultiplier;
 
-    private Modifier(double bonus, float multiplier) {
-        this(bonus, bonus, multiplier, multiplier);
+    private Modifier() {
+        this(0, 0, 1, 1);
     }
 
     Modifier(double minBonus, double maxBonus, double minMultiplier, double maxMultiplier) {

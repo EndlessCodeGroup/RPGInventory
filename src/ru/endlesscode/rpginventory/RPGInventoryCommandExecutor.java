@@ -191,7 +191,7 @@ class RPGInventoryCommandExecutor implements CommandExecutor {
 
         Player player = ((Player) sender).getPlayer();
         if (!InventoryManager.get(player).resetMaxHealth()) {
-            player.sendMessage(RPGInventory.getLanguage().getCaption(""));
+            player.sendMessage(RPGInventory.getLanguage().getCaption("error.fixhp"));
         }
     }
 
@@ -201,7 +201,9 @@ class RPGInventoryCommandExecutor implements CommandExecutor {
         }
 
         Player player = RPGInventory.getInstance().getServer().getPlayer(playerName);
-        InventoryManager.get(player).resetMaxHealth();
+        if (!InventoryManager.get(player).resetMaxHealth()) {
+            sender.sendMessage(RPGInventory.getLanguage().getCaption("error.fixhp"));
+        }
     }
 
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")

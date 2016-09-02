@@ -85,7 +85,7 @@ slots:
       lore:
       - "&6&oHere possible to put only gloves"
     items:
-    - INK_SACK:13
+    - DIAMOND_HOE:24
   rings:
     type: PASSIVE
     slot: [10, 28]
@@ -95,7 +95,7 @@ slots:
       lore:
       - "&6&oHere possible to put only ring"
     items:
-    - INK_SACK:10
+    - DIAMOND_HOE:23
   amulet:
     type: PASSIVE
     slot: 19
@@ -108,7 +108,7 @@ slots:
       lore:
       - "&6&oHere possible to put only amulet"
     items:
-    - INK_SACK:12
+    - DIAMOND_HOE:25
   artifacts:
     type: PASSIVE
     slot: [47, 48, 49, 50, 51]
@@ -118,7 +118,7 @@ slots:
       lore:
       - "&6&oHere possible to put only artifacts"
     items:
-    - INK_SACK:14
+    - DIAMOND_HOE:26
   shield:
     type: SHIELD
     slot: 21

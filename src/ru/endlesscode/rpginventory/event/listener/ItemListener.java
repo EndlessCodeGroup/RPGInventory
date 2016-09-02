@@ -207,7 +207,7 @@ public class ItemListener implements Listener {
             List<ItemStack> armorList = new ArrayList<>();
             Inventory inventory = InventoryManager.get(player).getInventory();
             List<Slot> armorSlots = SlotManager.getSlotManager().getArmorSlots();
-            InventoryManager.syncArmor(player, inventory);
+            InventoryManager.syncArmor(InventoryManager.get(player));
             for (ItemStack armor : player.getInventory().getArmorContents()) {
                 if (dropArmorForPlayer && (!CustomItem.isCustomItem(armor) || ItemManager.getCustomItem(armor).isDrop())) {
                     boolean drop = true;

@@ -4,6 +4,9 @@ import org.bukkit.configuration.file.FileConfiguration;
 import ru.endlesscode.rpginventory.inventory.slot.SlotManager;
 import ru.endlesscode.rpginventory.misc.Config;
 
+import java.util.Arrays;
+import java.util.Collections;
+
 /**
  * Created by OsipXD on 05.09.2015
  * It is part of the RpgInventory.
@@ -97,12 +100,36 @@ public class ConfigUpdater {
             case 133:
             case 134:
             case 135:
+                // Removed RP settings
                 config.set("resource-pack.fill", "DIAMOND_HOE:1");
                 config.set("resource-pack.mode", null);
                 config.set("alternate-view", null);
                 config.set("containers.block", false);
                 config.set("slots.locked", "DIAMOND_HOE:19");
                 config.set("slots.buyable", "DIAMOND_HOE:18");
+
+                // Added craft extensions
+                config.set("craft.enabled", true);
+                config.set("craft.extendable", "DIAMOND_HOE:0");
+                config.set("craft.extensions.journeyman.name", "&aJourneyman slots");
+                config.set("craft.extensions.journeyman.lore", "&eYou must be a journeyman to use it");
+                config.set("craft.extensions.journeyman.slots", Arrays.asList(8, 9));
+                config.set("craft.extensions.master.name", "&3Master slots");
+                config.set("craft.extensions.master.lore", "&eYou must be a master to use it");
+                config.set("craft.extensions.master.includes", Collections.singletonList("journeyman"));
+                config.set("craft.extensions.master.slots", Arrays.asList(1, 4, 7));
+
+                // Added join-messages
+                config.set("join-messages.enabled", true);
+                config.set("join-messages.delay", 3);
+                config.set("join-messages.default.title", "&l&4It is important!");
+                config.set("join-messages.default.text", Arrays.asList("&6Glad to see you, &3%PLAYER%", "&6This server using &9RPGInventory"));
+                config.set("join-messages.rp-info.title", "&l&2Welcome to server!");
+                config.set("join-messages.rp-info.text", Arrays.asList(
+                        "&6You should &callow &6resource pack to play on this server",
+                        "&6This will allow you fully immerse in the RPG atmosphere",
+                        "&6But if you declined downloading of RP you can fix it...",
+                        "&6Select the server in list, click &e'Edit' &6 and set &e'Resource-Pack: Accept'"));
         }
     }
 }

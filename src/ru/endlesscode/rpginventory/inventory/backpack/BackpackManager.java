@@ -5,12 +5,10 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ru.endlesscode.rpginventory.RPGInventory;
-import ru.endlesscode.rpginventory.inventory.InventoryManager;
 import ru.endlesscode.rpginventory.utils.ItemUtils;
 
 import java.io.File;
@@ -25,8 +23,6 @@ import java.util.*;
 public class BackpackManager {
     private static final HashMap<String, BackpackType> BACKPACK_TYPES = new HashMap<>();
     private static final HashMap<UUID, Backpack> BACKPACKS = new HashMap<>();
-
-    private static ItemStack capSlot;
 
     public static void init() {
         File petsFile = new File(RPGInventory.getInstance().getDataFolder(), "backpacks.yml");
@@ -45,21 +41,6 @@ public class BackpackManager {
         BackpackManager.loadBackpacks();
         RPGInventory.getPluginLogger().info(BACKPACK_TYPES.size() + " backpack type(s) has been loaded");
         RPGInventory.getPluginLogger().info(BACKPACKS.size() + " backpack(s) has been loaded");
-
-        // Setup cap slot
-        capSlot = InventoryManager.getFillSlot().clone();
-        ItemMeta meta = capSlot.getItemMeta();
-        meta.setDisplayName("");
-        meta.setLore(Collections.singletonList(""));
-        capSlot.setItemMeta(meta);
-    }
-
-    static ItemStack getCapSlot() {
-        return capSlot;
-    }
-
-    public static boolean isCap(ItemStack item) {
-        return capSlot.equals(item);
     }
 
     public static List<String> getBackpackList() {

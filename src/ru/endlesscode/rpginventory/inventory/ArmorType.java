@@ -14,17 +14,11 @@ import ru.endlesscode.rpginventory.utils.ItemUtils;
  * All rights reserved 2014 - 2016 © «EndlessCode Group»
  */
 public enum ArmorType {
-    HELMET(5),
-    CHESTPLATE(6),
-    LEGGINGS(7),
-    BOOTS(8),
-    UNKNOWN(-1);
-
-    private final int slot;
-
-    ArmorType(int slot) {
-        this.slot = slot;
-    }
+    HELMET,
+    CHESTPLATE,
+    LEGGINGS,
+    BOOTS,
+    UNKNOWN;
 
     public static ArmorType matchType(ItemStack item) {
         if (ItemUtils.isEmpty(item)) {
@@ -98,6 +92,21 @@ public enum ArmorType {
     }
 
     public int getSlot() {
-        return slot;
+        Slot temp = null;
+        switch (this) {
+            case HELMET:
+                temp = SlotManager.getSlotManager().getSlot("helmet");
+                break;
+            case CHESTPLATE:
+                temp = SlotManager.getSlotManager().getSlot("chestplate");
+                break;
+            case LEGGINGS:
+                temp = SlotManager.getSlotManager().getSlot("leggings");
+                break;
+            case BOOTS:
+                temp = SlotManager.getSlotManager().getSlot("boots");
+        }
+
+        return temp == null ? -1 : temp.getSlotId();
     }
 }
