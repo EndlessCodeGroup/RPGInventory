@@ -49,7 +49,7 @@ public class BackpackListener implements Listener {
         }
 
         if (BackpackManager.isBackpack(event.getCurrentItem()) || BackpackManager.isBackpack(event.getCursor()) ||
-                BackpackManager.isCap(event.getCurrentItem()) || BackpackManager.isCap(event.getCursor())) {
+                InventoryManager.isFilledSlot(event.getCurrentItem()) || InventoryManager.isFilledSlot(event.getCursor())) {
             event.setCancelled(true);
             return;
         }
@@ -59,7 +59,7 @@ public class BackpackListener implements Listener {
             return;
         }
 
-        BackpackUpdater.update(player, inventory, InventoryManager.get(player).getBackpack());
+        BackpackUpdater.update(inventory, InventoryManager.get(player).getBackpack());
     }
 
     @EventHandler

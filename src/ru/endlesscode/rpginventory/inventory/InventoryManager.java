@@ -4,13 +4,13 @@ import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.entity.AnimalTamer;
-import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -26,15 +26,10 @@ import ru.endlesscode.rpginventory.item.ItemManager;
 import ru.endlesscode.rpginventory.misc.Config;
 import ru.endlesscode.rpginventory.pet.PetManager;
 import ru.endlesscode.rpginventory.pet.PetType;
-import ru.endlesscode.rpginventory.utils.InventoryUtils;
-import ru.endlesscode.rpginventory.utils.ItemUtils;
-import ru.endlesscode.rpginventory.utils.PlayerUtils;
-import ru.endlesscode.rpginventory.utils.StringUtils;
+import ru.endlesscode.rpginventory.utils.*;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,7 +46,6 @@ public class InventoryManager {
     private static final Map<UUID, PlayerWrapper> INVENTORIES = new HashMap<>();
 
     private static ItemStack fillSlot = null;
-    private static ItemStack inventoryOpenItem = null;
 
     private InventoryManager() {
     }
@@ -221,7 +215,9 @@ public class InventoryManager {
         }
     }
 
-    public static void syncArmor(@NotNull HumanEntity player, @NotNull Inventory inventory) {
+    public static void syncArmor(PlayerWrapper playerWrapper) {
+        Player player = (Player) playerWrapper.getPlayer();
+        Inventory inventory = playerWrapper.getInventory();
         SlotManager sm = SlotManager.getSlotManager();
         if (ArmorType.HELMET.getSlot() != -1) {
             ItemStack helmet = player.getEquipment().getHelmet();
@@ -231,7 +227,7 @@ public class InventoryManager {
         }
 
         if (ArmorType.CHESTPLATE.getSlot() != -1) {
-            ItemStack savedChestplate = InventoryManager.get((OfflinePlayer) player).getSavedChestplate();
+            ItemStack savedChestplate = InventoryManager.get(player).getSavedChestplate();
             ItemStack chestplate = savedChestplate == null ? player.getEquipment().getChestplate() : savedChestplate;
             Slot chestplateSlot = sm.getSlot(ArmorType.CHESTPLATE.getSlot(), InventoryType.SlotType.CONTAINER);
             inventory.setItem(ArmorType.CHESTPLATE.getSlot(), (ItemUtils.isEmpty(chestplate))
@@ -253,13 +249,15 @@ public class InventoryManager {
         }
     }
 
-    public static void syncQuickSlots(@NotNull HumanEntity player, @NotNull Inventory inventory) {
+    public static void syncQuickSlots(PlayerWrapper playerWrapper) {
+        Player player = (Player) playerWrapper.getPlayer();
         for (Slot quickSlot : SlotManager.getSlotManager().getQuickSlots()) {
-            inventory.setItem(quickSlot.getSlotId(), player.getInventory().getItem(quickSlot.getQuickSlot()));
+            playerWrapper.getInventory().setItem(quickSlot.getSlotId(), player.getInventory().getItem(quickSlot.getQuickSlot()));
         }
     }
 
-    public static void syncInfoSlots(@NotNull HumanEntity player, @NotNull Inventory inventory) {
+    public static void syncInfoSlots(PlayerWrapper playerWrapper) {
+        final Player player = (Player) playerWrapper.getPlayer();
         for (Slot infoSlot : SlotManager.getSlotManager().getInfoSlots()) {
             ItemStack cup = infoSlot.getCup();
             ItemMeta meta = cup.getItemMeta();
@@ -267,33 +265,32 @@ public class InventoryManager {
 
             for (int i = 0; i < lore.size(); i++) {
                 String line = lore.get(i);
-                lore.set(i, StringUtils.applyPlaceHolders(line, (Player) player));
+                lore.set(i, StringUtils.applyPlaceHolders(line, player));
             }
 
             meta.setLore(lore);
             cup.setItemMeta(meta);
-            inventory.setItem(infoSlot.getSlotId(), cup);
+            playerWrapper.getInventory().setItem(infoSlot.getSlotId(), cup);
         }
 
-        //noinspection deprecation
-        ((Player) player).updateInventory();
+        player.updateInventory();
     }
 
-    public static void syncShieldSlot(@NotNull HumanEntity player, @NotNull Inventory inventory) {
+    public static void syncShieldSlot(PlayerWrapper playerWrapper) {
         Slot slot = SlotManager.getSlotManager().getShieldSlot();
         if (slot == null) {
             return;
         }
 
+        Player player = (Player) playerWrapper.getPlayer();
         ItemStack itemInHand = player.getEquipment().getItemInOffHand();
-        inventory.setItem(slot.getSlotId(), ItemUtils.isEmpty(itemInHand) ? slot.getCup() : itemInHand);
+        playerWrapper.getInventory().setItem(slot.getSlotId(), ItemUtils.isEmpty(itemInHand) ? slot.getCup() : itemInHand);
     }
 
     private static void updateInventory(@NotNull Player player, @NotNull Inventory inventory, int slot, InventoryAction action, ItemStack currentItem, @NotNull ItemStack cursor) {
         InventoryManager.updateInventory(player, inventory, slot, InventoryType.SlotType.CONTAINER, action, currentItem, cursor);
     }
 
-    @SuppressWarnings("deprecation")
     private static void updateInventory(@NotNull Player player, @NotNull Inventory inventory, int slot, InventoryType.SlotType slotType, InventoryAction action, ItemStack currentItem, ItemStack cursorItem) {
         if (ActionType.getTypeOfAction(action) == ActionType.DROP) {
             return;
@@ -422,6 +419,19 @@ public class InventoryManager {
         }
     }
 
+    private static void sendResourcePack(final Player player) {
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                player.setResourcePack(Config.getConfig().getString("resource-pack.url"));
+            }
+        }.runTaskLater(RPGInventory.getInstance(), 20);
+    }
+
+    private static boolean isNewPlayer(Player player) {
+        return !new File(RPGInventory.getInstance().getDataFolder(), "inventories/" + player.getUniqueId() + ".inv").exists();
+    }
+
     public static void loadPlayerInventory(@NotNull Player player) {
         if (!InventoryManager.isAllowedWorld(player.getWorld())) {
             INVENTORIES.remove(player.getUniqueId());
@@ -436,9 +446,6 @@ public class InventoryManager {
 
             // Load inventory from file
             File file = new File(folder, player.getUniqueId() + ".inv");
-            if (new File(folder, player.getName() + ".inv").exists()) {
-                Files.move(new File(folder, player.getName() + ".inv").toPath(), file.toPath(), StandardCopyOption.REPLACE_EXISTING);
-            }
 
             PlayerWrapper playerWrapper;
             if (file.exists()) {
@@ -456,7 +463,6 @@ public class InventoryManager {
             }
 
             playerWrapper.startHealthUpdater();
-            lockEmptySlots(playerWrapper.getInventory());
             INVENTORIES.put(player.getUniqueId(), playerWrapper);
         } catch (IOException e) {
             e.printStackTrace();
@@ -479,7 +485,6 @@ public class InventoryManager {
         savePlayerInventory(player);
         InventoryLocker.unlockSlots(player);
 
-        ResourcePackManager.removePlayer(player);
         INVENTORIES.remove(player.getUniqueId());
 
         RPGInventory.getInstance().getServer().getPluginManager().callEvent(new PlayerInventoryUnloadEvent.Post(player));
@@ -524,6 +529,10 @@ public class InventoryManager {
         return false;
     }
 
+    public static boolean isFilledSlot(ItemStack item) {
+        return fillSlot.equals(item);
+    }
+
     public static boolean isEmptySlot(ItemStack item) {
         for (Slot slot : SlotManager.getSlotManager().getSlots()) {
             if (slot.isCup(item)) {
@@ -532,14 +541,6 @@ public class InventoryManager {
         }
 
         return false;
-    }
-
-    public static boolean isInventoryOpenItem(ItemStack item) {
-        return inventoryOpenItem != null && !ItemUtils.isEmpty(item) && inventoryOpenItem.equals(item);
-    }
-
-    public static ItemStack getInventoryOpenItem() {
-        return inventoryOpenItem;
     }
 
     @Contract("null -> false")
@@ -579,6 +580,34 @@ public class InventoryManager {
         player.sendMessage(RPGInventory.getLanguage().getCaption("message.buyed"));
 
         return true;
+    }
+
+    public static void initPlayer(final Player player, boolean skipJoinMessage) {
+        if (InventoryManager.isNewPlayer(player)) {
+            Runnable callback = new Runnable() {
+                @Override
+                public void run() {
+                    InventoryManager.sendResourcePack(player);
+                }
+            };
+            EffectUtils.sendTitle(player,
+                    Config.getConfig().getInt("join-messages.delay"),
+                    Config.getConfig().getString("join-messages.rp-info.title"),
+                    Config.getConfig().getStringList("join-messages.rp-info.text"), callback);
+        } else {
+            if (!skipJoinMessage) {
+                EffectUtils.sendTitle(player,
+                        Config.getConfig().getInt("join-messages.delay"),
+                        Config.getConfig().getString("join-messages.default.title"),
+                        Config.getConfig().getStringList("join-messages.default.text"), null);
+            }
+
+            InventoryManager.sendResourcePack(player);
+        }
+
+        if (RPGInventory.getPermissions().has(player, "rpginventory.admin")) {
+            RPGInventory.getInstance().checkUpdates(player);
+        }
     }
 
     private enum ListType {

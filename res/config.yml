@@ -109,6 +109,29 @@ health:
     min: 1
     max: 5
 
+# Join messages
+join-messages:
+  # Enable join messages
+  enabled: true
+
+  # Delay in seconds for every message
+  delay: 3
+
+  # Default message on every join
+  default:
+    title: "&l&2Welcome to server!"
+    text:
+    - "&6Glad to see you, &3%PLAYER%"
+    - "&6This server using &9RPGInventory"
+
+  # Message on first join and if player declined resource-pack
+  rp-info:
+    title: "&l&4It is important!"
+    text:
+    - "&6You should &callow &6resource pack to play on this server"
+    - "&6This will allow you fully immerse in the RPG atmosphere"
+    - "&6But if you declined downloading of RP you can fix it..."
+    - "&6Select the server in list, click &e'Edit' &6 and set &e'Resource-Pack: Accept'"
 
 ###############################
 #        Battle system        #
@@ -149,12 +172,10 @@ slots:
     # Whether to take the money for the purchase of slots
     enabled: true
 
+    # Price for different lines of inventory
     cost:
-      # Price for 1st line of inventory
       line1: 1000
-      # Price for 2nd line of inventory
       line2: 2000
-      # Price for 3rd line of inventory
       line3: 3000
 
   level:
@@ -164,10 +185,53 @@ slots:
     # Spend levels for the purchase of slots or not
     spend: false
 
+    # Level for different lines of inventory
     required:
-      # Price for 1st line of inventory
       line1: 20
-      # Price for 2nd line of inventory
       line2: 30
-      # Price for 3rd line of inventory
       line3: 40
+
+
+###############################
+#            Craft            #
+###############################
+
+# Settings of craft system
+craft:
+  # Enable craft extensions
+  enabled: true
+
+  # Texture of extendable slots
+  extendable: DIAMOND_HOE:0
+
+  # List of extensions
+  extensions:
+
+    # Name of extension (permission will be rpginventory.craft.<extension>)
+    # In this case permission will be: rpginventory.craft.journeyman
+    journeyman:
+      # Name of extendable slot
+      name: "&aJourneyman slots"
+
+      # Lore of extendable slot
+      lore:
+      - "&eYou must be a journeyman to use it"
+
+      # Slots in extension
+      slots: [8, 9]
+
+    # Name of extension
+    master:
+      # Name of extendable slot
+      name: "&3Master slots"
+
+      # Lore of extendable slot
+      lore:
+      - "&eYou must be a master to use it"
+
+      # Whats extensions included to this extension
+      includes:
+      - journeyman
+
+      # Slots in extension
+      slots: [1, 4, 7]

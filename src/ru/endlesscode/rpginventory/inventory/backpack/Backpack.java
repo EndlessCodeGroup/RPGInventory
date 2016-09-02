@@ -51,7 +51,7 @@ public class Backpack {
                     inventory.setItem(i, this.contents[i]);
                 }
             } else {
-                inventory.setItem(i, BackpackManager.getCapSlot());
+                inventory.setItem(i, InventoryManager.getFillSlot());
             }
         }
 

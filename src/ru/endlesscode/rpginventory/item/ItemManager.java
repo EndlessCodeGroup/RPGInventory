@@ -3,6 +3,7 @@ package ru.endlesscode.rpginventory.item;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.craftbukkit.libs.jline.internal.Nullable;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -113,6 +114,7 @@ public class ItemManager {
         return customItem == null ? new ItemStack(Material.AIR) : customItem.getItemStack();
     }
 
+    @Nullable
     public static CustomItem getCustomItem(@NotNull ItemStack item) {
         return CUSTOM_ITEMS.get(ItemUtils.getTag(item, ItemUtils.ITEM_TAG));
     }
@@ -209,16 +211,25 @@ public class ItemManager {
                 case "_STATS_":
                     if (item.isStatsHidden()) {
                         lore.add(lang.getCaption("item.hide"));
+                        lastIsSeparator = false;
                     } else {
                         for (ItemStat stat : item.getStats()) {
                             lore.add(String.format(lang.getCaption("stat." + stat.getType().name().toLowerCase()), stat.getStringValue()));
+                            lastIsSeparator = false;
                         }
-                        lastIsSeparator = false;
                     }
                     break;
                 default:
                     lore.add(StringUtils.coloredLine(loreElement));
             }
+        }
+
+        if (lastIsSeparator) {
+            lore.remove(lore.size() - 1);
+        }
+
+        if (lore.get(0).equals(LORE_SEPARATOR)) {
+            lore.remove(0);
         }
 
         return lore;

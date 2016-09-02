@@ -1,18 +1,29 @@
 items:
-  all-stats:
-    texture: DIAMOND_HOE:23
-    name: "Ring with all stats"
+  assassin-gloves:
+    texture: DIAMOND_HOE:24
+    name: "Assassin gloves"
     lore:
-    - "&e&oThis is ring of my grandfather..."
-    - "&e&oIt has something unusual"
-    rarity: UNCOMMON
-    level: 4
-    drop: false
+    - "&e&oFaster than the wind..."
+    rarity: RARE
     unbreakable: true
-    hide-stats: false
+    level: 4
     classes:
-    - Mage
-    - Cleric
+    - Assassin
+    stats:
+    - DAMAGE +5-10
+    - BOW_DAMAGE +2
+    - HAND_DAMAGE +3
+    - CRIT_CHANCE +2%
+    - SPEED +30%
+    - JUMP +4
+  ring-of-gods:
+    texture: DIAMOND_HOE:23
+    name: "Ring of Gods"
+    lore:
+    - "&e&oWith this ring the Gods"
+    - "&e&orule the world!"
+    rarity: LEGENDARY
+    drop: false
     abilities:
       permissions:
       - essentials.gamemode
@@ -26,13 +37,23 @@ items:
         command: "weather %WORLD% sun"
         lore: "Clear weather"
         message: "Sunshine!"
+  mysterious-amulet:
+    texture: DIAMOND_HOE:25
+    name: "Mysterious amulet"
+    lore:
+    - "&e&oNobody knows how it works..."
+    rarity: UNCOMMON
+    hide-stats: true
     stats:
-    - DAMAGE +5-10
-    - BOW_DAMAGE +2
-    - HAND_DAMAGE +3
-    - CRIT_CHANCE +2%
     - CRIT_DAMAGE +30-40%
     - HEALTH +5
     - ARMOR +50%
-    - SPEED +30%
-    - JUMP +4
+  artifact-of-knowledge:
+    texture: DIAMOND_HOE:26
+    name: "Artifact of Knowledge"
+    lore:
+    - "&e&oWow, how many new recipes!"
+    rarity: MYTHICAL
+    abilities:
+      permissions:
+      - rpginventory.craft.journeyman

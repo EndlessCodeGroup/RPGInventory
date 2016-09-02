@@ -25,8 +25,7 @@ public class HandSwitchListener implements Listener {
         Player player = event.getPlayer();
 
         Slot offHandSlot = SlotManager.getSlotManager().getShieldSlot();
-        Slot mainHandSlot = SlotManager.getSlotManager().getSlot(
-                player.getInventory().getHeldItemSlot(), InventoryType.SlotType.QUICKBAR);
+        Slot mainHandSlot = SlotManager.getSlotManager().getSlot(player.getInventory().getHeldItemSlot(), InventoryType.SlotType.QUICKBAR);
         ItemStack newOffHandItem = event.getOffHandItem();
         ItemStack newMainHandItem = event.getMainHandItem();
 
@@ -40,11 +39,6 @@ public class HandSwitchListener implements Listener {
                 event.setCancelled(true);
                 return;
             }
-        }
-
-        if (InventoryManager.isInventoryOpenItem(newOffHandItem)) {
-            event.setCancelled(true);
-            return;
         }
 
         if (mainHandSlot != null) {

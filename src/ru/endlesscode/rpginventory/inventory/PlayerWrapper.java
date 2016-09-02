@@ -36,8 +36,6 @@ import java.util.Map;
  * All rights reserved 2014 - 2016 © «EndlessCode Group»
  */
 public class PlayerWrapper implements InventoryHolder {
-    private final static float BASE_SPEED = 0.2f;
-
     private final OfflinePlayer player;
     private final Inventory inventory;
     private final Map<String, Integer> buyedSlots = new HashMap<>();

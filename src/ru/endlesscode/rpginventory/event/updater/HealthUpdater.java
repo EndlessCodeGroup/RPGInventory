@@ -157,7 +157,7 @@ public class HealthUpdater extends BukkitRunnable {
         this.state = State.WAITING;
 
         // Update info slots
-        InventoryManager.syncInfoSlots(player, InventoryManager.get(player).getInventory());
+        InventoryManager.syncInfoSlots(InventoryManager.get(player));
     }
 
     private void scaleHealth() {

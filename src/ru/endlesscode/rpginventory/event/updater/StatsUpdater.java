@@ -55,7 +55,7 @@ public class StatsUpdater extends BukkitRunnable {
 
         // Update info slots
         if (playerWrapper.isOpened()) {
-            InventoryManager.syncInfoSlots(player, playerWrapper.getInventory());
+            InventoryManager.syncInfoSlots(playerWrapper);
         }
     }
 }

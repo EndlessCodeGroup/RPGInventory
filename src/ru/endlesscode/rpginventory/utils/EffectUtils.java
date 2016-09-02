@@ -1,18 +1,22 @@
 package ru.endlesscode.rpginventory.utils;
 
-import com.comphenix.packetwrapper.included.AbstractPacket;
-import com.comphenix.packetwrapper.included.AbstractPlayServerWorldParticlesPacket;
+import com.comphenix.packetwrapper.included.WrapperPlayServerTitle;
 import com.comphenix.packetwrapper.included.WrapperPlayServerWorldParticles;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.wrappers.EnumWrappers;
+import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
+import ru.endlesscode.rpginventory.RPGInventory;
 
+import javax.annotation.Nullable;
 import java.lang.reflect.InvocationTargetException;
+import java.util.List;
 
 /**
  * Created by OsipXD on 21.09.2015
@@ -35,9 +39,7 @@ public class EffectUtils {
     }
 
     private static void playParticles(Player player, EnumWrappers.Particle particle, int particleNum, Location location, Vector direction) {
-        AbstractPacket packet;
-        AbstractPlayServerWorldParticlesPacket particles;
-        particles = new WrapperPlayServerWorldParticles();
+        WrapperPlayServerWorldParticles particles = new WrapperPlayServerWorldParticles();
         particles.setParticleType(particle);
         particles.setNumberOfParticles(particleNum);
         particles.setX((float) location.getX());
@@ -46,10 +48,9 @@ public class EffectUtils {
         particles.setOffsetX((float) direction.getX());
         particles.setOffsetY((float) direction.getY());
         particles.setOffsetZ((float) direction.getZ());
-        packet = particles;
 
         try {
-            ProtocolLibrary.getProtocolManager().sendServerPacket(player, packet.getHandle());
+            ProtocolLibrary.getProtocolManager().sendServerPacket(player, particles.getHandle());
         } catch (InvocationTargetException e) {
             throw new IllegalStateException("Unable to send packet", e);
         }
@@ -67,5 +68,59 @@ public class EffectUtils {
 
         entity.getWorld().playSound(loc, Sound.ENTITY_ENDERMEN_TELEPORT, 1, (float) (0.6 + Math.random() * 0.4));
         playParticlesToAll(EnumWrappers.Particle.SMOKE_NORMAL, 3, loc);
+    }
+
+    public static void sendTitle(final Player player, int delay, String title, final List<String> subtitles, @Nullable final Runnable callback) {
+        if (delay < 2) {
+            delay = 2;
+        }
+
+        final WrapperPlayServerTitle titlePacket = new WrapperPlayServerTitle();
+        int time = (subtitles.size() == 0 ? delay : delay * subtitles.size()) - 1;
+        try {
+            WrapperPlayServerTitle resetPacket = new WrapperPlayServerTitle();
+            resetPacket.setAction(EnumWrappers.TitleAction.RESET);
+            ProtocolLibrary.getProtocolManager().sendServerPacket(player, resetPacket.getHandle());
+
+            WrapperPlayServerTitle timesPacket = new WrapperPlayServerTitle();
+            timesPacket.setAction(EnumWrappers.TitleAction.TIMES);
+            timesPacket.setFadeIn(10);
+            timesPacket.setFadeOut(10);
+            timesPacket.setStay(20 * time);
+            ProtocolLibrary.getProtocolManager().sendServerPacket(player, timesPacket.getHandle());
+
+            title = StringUtils.coloredLine(StringUtils.applyPlaceHolders(title, player));
+            titlePacket.setAction(EnumWrappers.TitleAction.TITLE);
+            titlePacket.setTitle(WrappedChatComponent.fromChatMessage(StringUtils.coloredLine(title))[0]);
+            ProtocolLibrary.getProtocolManager().sendServerPacket(player, titlePacket.getHandle());
+        } catch (InvocationTargetException e) {
+            throw new IllegalStateException("Unable to send packet", e);
+        }
+
+        new BukkitRunnable() {
+            int line = 0;
+
+            @Override
+            public void run() {
+                try {
+                    if (line == subtitles.size()) {
+                        this.cancel();
+                        if (callback != null) {
+                            callback.run();
+                        }
+                        return;
+                    }
+
+                    String subtitle = StringUtils.coloredLine(StringUtils.applyPlaceHolders(subtitles.get(line), player));
+                    titlePacket.setAction(EnumWrappers.TitleAction.SUBTITLE);
+                    titlePacket.setTitle(WrappedChatComponent.fromChatMessage(subtitle)[0]);
+                    ProtocolLibrary.getProtocolManager().sendServerPacket(player, titlePacket.getHandle());
+                } catch (InvocationTargetException e) {
+                    throw new IllegalStateException("Unable to send packet", e);
+                }
+
+                line++;
+            }
+        }.runTaskTimer(RPGInventory.getInstance(), 0, 20 * delay);
     }
 }

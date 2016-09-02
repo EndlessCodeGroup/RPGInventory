@@ -14,8 +14,8 @@ import org.jetbrains.annotations.Nullable;
 import ru.endlesscode.rpginventory.event.listener.*;
 import ru.endlesscode.rpginventory.inventory.InventoryLocker;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
-import ru.endlesscode.rpginventory.inventory.ResourcePackManager;
 import ru.endlesscode.rpginventory.inventory.backpack.BackpackManager;
+import ru.endlesscode.rpginventory.inventory.craft.CraftManager;
 import ru.endlesscode.rpginventory.inventory.mypet.MyPetManager;
 import ru.endlesscode.rpginventory.inventory.slot.SlotManager;
 import ru.endlesscode.rpginventory.item.ItemManager;
@@ -111,26 +111,25 @@ public class RPGInventory extends JavaPlugin {
         // Registering of listeners
         PluginManager pm = this.getServer().getPluginManager();
         pm.registerEvents(new ArmorEquipListener(), this);
+        pm.registerEvents(new HandSwitchListener(), this);
         pm.registerEvents(new InventoryListener(), this);
         pm.registerEvents(new BackpackListener(), this);
         pm.registerEvents(new LockerListener(), this);
+        pm.registerEvents(new PlayerListener(), this);
         pm.registerEvents(new WorldListener(), this);
         pm.registerEvents(new ItemListener(), this);
 
-        if (VersionHandler.is1_9()) {
-            pm.registerEvents(new HandSwitchListener(), this);
-            if (SlotManager.getSlotManager().getElytraSlot() != null) {
-                pm.registerEvents(new ElytraListener(), this);
-            }
+        if (SlotManager.getSlotManager().getElytraSlot() != null) {
+            pm.registerEvents(new ElytraListener(), this);
         }
 
         ProtocolLibrary.getProtocolManager().addPacketListener(new ResourcePackListener(this));
 
         // Initialization
-        ResourcePackManager.init();
         InventoryManager.init();
         InventoryLocker.init();
         BackpackManager.init();
+        CraftManager.init();
         ItemManager.init();
         SlotManager.init();
 
@@ -199,7 +198,6 @@ public class RPGInventory extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        ResourcePackManager.save();
         this.savePlayers();
     }
 

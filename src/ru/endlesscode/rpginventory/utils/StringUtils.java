@@ -42,31 +42,29 @@ public class StringUtils {
     }
 
     public static String applyPlaceHolders(String line, Player player) {
-        PlayerWrapper playerWrapper = InventoryManager.get(player);
-        if (playerWrapper == null) {
-            return "[Not allowed here]";
-        }
-
         // Player
         line = line.replaceAll("%WORLD%", player.getWorld().getName());
         line = line.replaceAll("%PLAYER%", player.getName());
         line = line.replaceAll("%HP%", Utils.round(player.getHealth(), 1) + "");
         line = line.replaceAll("%MAX_HP%", player.getMaxHealth() + "");
 
-        // Health Updater
-        HealthUpdater hu = playerWrapper.getHealthUpdater();
-        line = line.replaceAll("%PLUGIN_HP%", hu.getModifiedHealth() + "");
-        line = line.replaceAll("%OTHER_HP%", hu.getOtherPluginsBonus() + hu.getAttributesBonus() + "");
+        PlayerWrapper playerWrapper = InventoryManager.get(player);
+        if (playerWrapper != null) {
+            // Health Updater
+            HealthUpdater hu = playerWrapper.getHealthUpdater();
+            line = line.replaceAll("%PLUGIN_HP%", hu.getModifiedHealth() + "");
+            line = line.replaceAll("%OTHER_HP%", hu.getOtherPluginsBonus() + hu.getAttributesBonus() + "");
 
-        // Modifiers
-        line = line.replaceAll("%DAMAGE%", ItemManager.getModifier(player, ItemStat.StatType.DAMAGE).toString());
-        line = line.replaceAll("%BOW_DAMAGE%", ItemManager.getModifier(player, ItemStat.StatType.BOW_DAMAGE).toString());
-        line = line.replaceAll("%HAND_DAMAGE%", ItemManager.getModifier(player, ItemStat.StatType.HAND_DAMAGE).toString());
-        line = line.replaceAll("%CRIT_DAMAGE%", ItemManager.getModifier(player, ItemStat.StatType.CRIT_DAMAGE).toString());
-        line = line.replaceAll("%CRIT_CHANCE%", ItemManager.getModifier(player, ItemStat.StatType.CRIT_CHANCE).toString());
-        line = line.replaceAll("%ARMOR%", ItemManager.getModifier(player, ItemStat.StatType.ARMOR).toString());
-        line = line.replaceAll("%SPEED%", ItemManager.getModifier(player, ItemStat.StatType.SPEED).toString());
-        line = line.replaceAll("%JUMP%", ItemManager.getModifier(player, ItemStat.StatType.JUMP).toString());
+            // Modifiers
+            line = line.replaceAll("%DAMAGE%", ItemManager.getModifier(player, ItemStat.StatType.DAMAGE).toString());
+            line = line.replaceAll("%BOW_DAMAGE%", ItemManager.getModifier(player, ItemStat.StatType.BOW_DAMAGE).toString());
+            line = line.replaceAll("%HAND_DAMAGE%", ItemManager.getModifier(player, ItemStat.StatType.HAND_DAMAGE).toString());
+            line = line.replaceAll("%CRIT_DAMAGE%", ItemManager.getModifier(player, ItemStat.StatType.CRIT_DAMAGE).toString());
+            line = line.replaceAll("%CRIT_CHANCE%", ItemManager.getModifier(player, ItemStat.StatType.CRIT_CHANCE).toString());
+            line = line.replaceAll("%ARMOR%", ItemManager.getModifier(player, ItemStat.StatType.ARMOR).toString());
+            line = line.replaceAll("%SPEED%", ItemManager.getModifier(player, ItemStat.StatType.SPEED).toString());
+            line = line.replaceAll("%JUMP%", ItemManager.getModifier(player, ItemStat.StatType.JUMP).toString());
+        }
 
         return line;
     }

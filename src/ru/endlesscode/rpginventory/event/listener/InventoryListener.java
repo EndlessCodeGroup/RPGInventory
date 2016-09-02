@@ -1,9 +1,6 @@
 package ru.endlesscode.rpginventory.event.listener;
 
-import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
-import org.bukkit.Material;
-import org.bukkit.Sound;
+import org.bukkit.*;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -19,9 +16,10 @@ import org.bukkit.scheduler.BukkitRunnable;
 import ru.endlesscode.rpginventory.RPGInventory;
 import ru.endlesscode.rpginventory.api.InventoryAPI;
 import ru.endlesscode.rpginventory.event.PetUnequipEvent;
-import ru.endlesscode.rpginventory.event.PlayerInventoryLoadEvent;
-import ru.endlesscode.rpginventory.event.PlayerInventoryUnloadEvent;
-import ru.endlesscode.rpginventory.inventory.*;
+import ru.endlesscode.rpginventory.inventory.ActionType;
+import ru.endlesscode.rpginventory.inventory.InventoryLocker;
+import ru.endlesscode.rpginventory.inventory.InventoryManager;
+import ru.endlesscode.rpginventory.inventory.PlayerWrapper;
 import ru.endlesscode.rpginventory.inventory.backpack.BackpackManager;
 import ru.endlesscode.rpginventory.inventory.mypet.MyPetManager;
 import ru.endlesscode.rpginventory.inventory.slot.ActionSlot;
@@ -30,10 +28,10 @@ import ru.endlesscode.rpginventory.inventory.slot.SlotManager;
 import ru.endlesscode.rpginventory.item.CustomItem;
 import ru.endlesscode.rpginventory.item.ItemManager;
 import ru.endlesscode.rpginventory.misc.Config;
-import ru.endlesscode.rpginventory.nms.VersionHandler;
 import ru.endlesscode.rpginventory.pet.PetManager;
 import ru.endlesscode.rpginventory.pet.PetType;
 import ru.endlesscode.rpginventory.utils.InventoryUtils;
+import ru.endlesscode.rpginventory.utils.ItemUtils;
 import ru.endlesscode.rpginventory.utils.PlayerUtils;
 
 /**
@@ -42,19 +40,19 @@ import ru.endlesscode.rpginventory.utils.PlayerUtils;
  * All rights reserved 2014 - 2016 © «EndlessCode Group»
  */
 public class InventoryListener implements Listener {
-    @EventHandler(priority = EventPriority.LOW)
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerJoin(final PlayerJoinEvent event) {
         final Player player = event.getPlayer();
-        InventoryManager.loadPlayerInventory(player);
 
-        if (RPGInventory.getPermissions().has(player, "rpginventory.admin")) {
-            RPGInventory.getInstance().checkUpdates(player);
+        if (InventoryManager.isAllowedWorld(player.getWorld())) {
+            InventoryManager.initPlayer(player, false);
         }
     }
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
+        ResourcePackListener.removePlayer(player);
         InventoryManager.unloadPlayerInventory(player);
     }
 
@@ -143,7 +141,7 @@ public class InventoryListener implements Listener {
             return;
         }
 
-        if (inventory.getItemInMainHand() == item) {
+        if (ItemUtils.isEmpty(inventory.getItemInMainHand()) || item.equals(inventory.getItemInMainHand())) {
             final Slot slot = InventoryManager.getQuickSlot(slotId);
             if (slot != null) {
                 new BukkitRunnable() {
@@ -151,16 +149,6 @@ public class InventoryListener implements Listener {
                     public void run() {
                         InventoryUtils.heldFreeSlot(player, slotId, InventoryUtils.SearchType.NEXT);
                         inventory.setItem(slotId, slot.getCup());
-                    }
-                }.runTaskLater(RPGInventory.getInstance(), 1);
-            }
-        } else if (inventory.getItemInOffHand() == item) {
-            final Slot slot = SlotManager.getSlotManager().getShieldSlot();
-            if (slot != null) {
-                new BukkitRunnable() {
-                    @Override
-                    public void run() {
-                        inventory.setItemInOffHand(slot.getCup());
                     }
                 }.runTaskLater(RPGInventory.getInstance(), 1);
             }
@@ -238,11 +226,9 @@ public class InventoryListener implements Listener {
         final int rawSlot = event.getRawSlot();
         InventoryType.SlotType slotType = InventoryUtils.getSlotType(event.getSlotType(), rawSlot);
 
-        //======= FIXING BUG of 1.9 ==========
-        if (VersionHandler.is1_9() && rawSlot > event.getView().getTopInventory().getSize() && event.getSlot() < 9) {
+        if (rawSlot > event.getView().getTopInventory().getSize() && event.getSlot() < 9) {
             slotType = InventoryType.SlotType.QUICKBAR;
         }
-        //=================================
 
         final Slot slot = SlotManager.getSlotManager().getSlot(event.getSlot(), slotType);
         final Inventory inventory = event.getInventory();
@@ -317,6 +303,11 @@ public class InventoryListener implements Listener {
             if (slot.getSlotType() == Slot.SlotType.ACTIVE || slot.getSlotType() == Slot.SlotType.PASSIVE
                     || slot.getSlotType() == Slot.SlotType.SHIELD || slot.getSlotType() == Slot.SlotType.ELYTRA) {
                 event.setCancelled(!InventoryManager.validateUpdate(player, actionType, slot, cursor));
+
+                if ((slot.getSlotType() == Slot.SlotType.SHIELD || slot.getSlotType() == Slot.SlotType.ELYTRA) &&
+                        actionType == ActionType.DROP) {
+                    event.setCancelled(true);
+                }
             } else if (slot.getSlotType() == Slot.SlotType.PET) {
                 event.setCancelled(!InventoryManager.validatePet(player, action, currentItem, cursor));
             } else if (slot.getSlotType() == Slot.SlotType.MYPET) {
@@ -331,7 +322,6 @@ public class InventoryListener implements Listener {
 
             if (!event.isCancelled()) {
                 BukkitRunnable cupPlacer = new BukkitRunnable() {
-                    @SuppressWarnings("deprecation")
                     @Override
                     public void run() {
                         inventory.setItem(rawSlot, slot.getCup());
@@ -416,13 +406,11 @@ public class InventoryListener implements Listener {
                 player.setItemOnCursor(new ItemStack(Material.AIR));
             }
 
-            //noinspection deprecation
             player.updateInventory();
         }
 
         if (actionType == ActionType.DROP) {
             new BukkitRunnable() {
-                @SuppressWarnings("deprecation")
                 @Override
                 public void run() {
                     inventory.setItem(rawSlot, slot.getCup());
@@ -445,14 +433,10 @@ public class InventoryListener implements Listener {
 
         if (InventoryAPI.isRPGInventory(inventory)) {
             PlayerWrapper playerWrapper = (PlayerWrapper) inventory.getHolder();
-            if (player != playerWrapper.getPlayer()) {
-                player = (HumanEntity) playerWrapper.getPlayer();
-            }
-
-            InventoryManager.syncQuickSlots(player, inventory);
-            InventoryManager.syncInfoSlots(player, inventory);
-            InventoryManager.syncShieldSlot(player, inventory);
-            InventoryManager.syncArmor(player, inventory);
+            InventoryManager.syncQuickSlots(playerWrapper);
+            InventoryManager.syncInfoSlots(playerWrapper);
+            InventoryManager.syncShieldSlot(playerWrapper);
+            InventoryManager.syncArmor(playerWrapper);
         }
     }
 
@@ -468,27 +452,6 @@ public class InventoryListener implements Listener {
         }
     }
 
-    @EventHandler
-    public void onInventoryLoad(PlayerInventoryLoadEvent.Pre event) {
-        final Player player = event.getPlayer();
-
-        if (!ResourcePackManager.isLoadedResourcePack(player)) {
-            new BukkitRunnable() {
-                @Override
-                public void run() {
-                    player.setResourcePack(Config.getConfig().getString("resource-pack.url"));
-                }
-            }.runTaskLater(RPGInventory.getInstance(), 20);
-            event.setCancelled(true);
-        }
-    }
-
-    @EventHandler
-    public void onUnloadInventory(PlayerInventoryUnloadEvent.Post event) {
-        Player player = event.getPlayer();
-        ResourcePackManager.removePlayer(player);
-    }
-
     @EventHandler(priority = EventPriority.LOWEST)
     public void onWorldChanged(PlayerChangedWorldEvent event) {
         InventoryManager.unloadPlayerInventory(event.getPlayer());
@@ -496,6 +459,9 @@ public class InventoryListener implements Listener {
 
     @EventHandler
     public void postWorldChanged(PlayerChangedWorldEvent event) {
-        InventoryManager.loadPlayerInventory(event.getPlayer());
+        Player player = event.getPlayer();
+        if (InventoryManager.isAllowedWorld(player.getWorld())) {
+            InventoryManager.initPlayer(player, InventoryManager.isAllowedWorld(event.getFrom()));
+        }
     }
 }
