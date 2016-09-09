@@ -1,4 +1,4 @@
-package ru.endlesscode.rpginventory.inventory.mypet;
+package ru.endlesscode.rpginventory.pet.mypet;
 
 import com.google.common.base.Optional;
 import de.Keyle.MyPet.MyPetApi;
@@ -8,6 +8,7 @@ import de.Keyle.MyPet.api.entity.StoredMyPet;
 import de.Keyle.MyPet.api.event.MyPetCallEvent;
 import de.Keyle.MyPet.api.event.MyPetCreateEvent;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
+import de.Keyle.MyPet.api.repository.PlayerManager;
 import de.Keyle.MyPet.api.repository.RepositoryCallback;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -15,7 +16,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -25,6 +28,7 @@ import org.jetbrains.annotations.Nullable;
 import ru.endlesscode.rpginventory.RPGInventory;
 import ru.endlesscode.rpginventory.event.PetEquipEvent;
 import ru.endlesscode.rpginventory.event.PetUnequipEvent;
+import ru.endlesscode.rpginventory.inventory.ActionType;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
 import ru.endlesscode.rpginventory.inventory.slot.Slot;
 import ru.endlesscode.rpginventory.inventory.slot.SlotManager;
@@ -41,11 +45,14 @@ import java.util.UUID;
 public class MyPetManager implements Listener {
     private static final String MYPET_TAG = "mypet.uuid";
 
-    public static boolean validatePet(Player player, @Nullable ItemStack currentItem, @NotNull ItemStack cursor) {
-        return isMyPetItem(cursor) && swapMyPets(player, isMyPetItem(currentItem), cursor);
+    public static boolean validatePet(Player player, InventoryAction action, @Nullable ItemStack currentItem, @NotNull ItemStack cursor) {
+        ActionType actionType = ActionType.getTypeOfAction(action);
+
+        return !(!ItemUtils.isEmpty(currentItem) && (actionType == ActionType.GET || action == InventoryAction.SWAP_WITH_CURSOR || actionType == ActionType.DROP))
+                || swapMyPets(player, isMyPetItem(currentItem), cursor);
     }
 
-    private static Slot getMyPetSlot() {
+    public static Slot getMyPetSlot() {
         for (Slot slot : SlotManager.getSlotManager().getSlots()) {
             if (slot.getSlotType() == Slot.SlotType.MYPET) {
                 return slot;
@@ -63,6 +70,10 @@ public class MyPetManager implements Listener {
             deactivateMyPet(player);
         }
 
+        if (!isMyPetItem(newPet)) {
+            return true;
+        }
+
         PetEquipEvent event = new PetEquipEvent(player, newPet);
         Bukkit.getPluginManager().callEvent(event);
 
@@ -72,7 +83,6 @@ public class MyPetManager implements Listener {
 
         final UUID petUUID = UUID.fromString(ItemUtils.getTag(newPet, MYPET_TAG));
         new BukkitRunnable() {
-
             @Override
             public void run() {
                 activateMyPet(player, petUUID);
@@ -99,7 +109,6 @@ public class MyPetManager implements Listener {
         }
 
         final WorldGroup wg = WorldGroup.getGroupByWorld(player.getWorld().getName());
-
         MyPetApi.getRepository().getMyPet(petUUID, new RepositoryCallback<StoredMyPet>() {
             @Override
             public void callback(StoredMyPet storedMyPet) {
@@ -119,6 +128,7 @@ public class MyPetManager implements Listener {
                 if (savePet) {
                     MyPetApi.getRepository().updateMyPet(storedMyPet, null);
                 }
+
                 MyPetApi.getRepository().updateMyPetPlayer(user, null);
             }
         });
@@ -140,37 +150,64 @@ public class MyPetManager implements Listener {
     }
 
     public static void init() {
-        Slot petSlot = getMyPetSlot();
+        for (MyPetPlayer mpPlayer : MyPetApi.getPlayerManager().getMyPetPlayers()) {
+            syncPlayer(mpPlayer);
+        }
+    }
 
-        for (MyPetPlayer p : MyPetApi.getPlayerManager().getMyPetPlayers()) {
-            if (p.isOnline() && p.hasMyPet()) {
-                Player player = p.getPlayer();
-                if (!InventoryManager.playerIsLoaded(player)) {
+    private static void syncPlayer(MyPetPlayer mpPlayer) {
+        Slot petSlot = getMyPetSlot();
+        if (mpPlayer.isOnline() && mpPlayer.hasMyPet()) {
+            Player player = mpPlayer.getPlayer();
+
+            if (!InventoryManager.playerIsLoaded(player)) {
+                return;
+            }
+
+            Inventory inventory = InventoryManager.get(player).getInventory();
+            ItemStack currentPet = inventory.getItem(petSlot.getSlotId());
+            if (isMyPetItem(currentPet)) {
+                MyPet pet = mpPlayer.getMyPet();
+                UUID petUUID = UUID.fromString(ItemUtils.getTag(currentPet, MYPET_TAG));
+                if (petUUID.equals(pet.getUUID())) {
                     return;
                 }
-                Inventory inventory = InventoryManager.get(player).getInventory();
-                ItemStack currentPet = inventory.getItem(petSlot.getSlotId());
-                if (isMyPetItem(currentPet)) {
-                    MyPet pet = p.getMyPet();
-                    UUID petUUID = UUID.fromString(ItemUtils.getTag(currentPet, MYPET_TAG));
-                    if (petUUID.equals(pet.getUUID())) {
-                        continue;
-                    }
-                }
-                MyPetApi.getMyPetManager().deactivateMyPet(p, false);
+            } else {
+                inventory.setItem(petSlot.getSlotId(), petSlot.getCup());
             }
+
+            MyPetApi.getMyPetManager().deactivateMyPet(mpPlayer, false);
         }
     }
 
     @EventHandler
-    public void onMyPetLeash(MyPetCreateEvent event) {
+    public void onPlayerJoin(PlayerJoinEvent event) {
+        final Player player = event.getPlayer();
+
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                PlayerManager playerManager = MyPetApi.getPlayerManager();
+                if (playerManager.isMyPetPlayer(player)) {
+                    syncPlayer(playerManager.getMyPetPlayer(player));
+                }
+            }
+        }.runTaskLater(RPGInventory.getInstance(), 2);
+    }
+
+    @EventHandler
+    public void onMyPetCreate(MyPetCreateEvent event) {
+        Player player = event.getOwner().getPlayer();
+        if (!InventoryManager.playerIsLoaded(player)) {
+            return;
+        }
+
         ItemStack petItem = new ItemStack(Material.MONSTER_EGG);
         ItemMeta meta = petItem.getItemMeta();
         meta.setDisplayName("MyPet Egg: " + event.getMyPet().getPetName());
         petItem.setItemMeta(meta);
         petItem = ItemUtils.setTag(petItem, MYPET_TAG, event.getMyPet().getUUID().toString());
 
-        Player player = event.getOwner().getPlayer();
         Inventory inventory = InventoryManager.get(player).getInventory();
         Slot petSlot = getMyPetSlot();
 
@@ -186,6 +223,10 @@ public class MyPetManager implements Listener {
     @EventHandler
     public void onMyPetCall(MyPetCallEvent event) {
         Player player = event.getOwner().getPlayer();
+        if (!InventoryManager.playerIsLoaded(player)) {
+            return;
+        }
+
         Inventory inventory = InventoryManager.get(player).getInventory();
         Slot petSlot = getMyPetSlot();
 

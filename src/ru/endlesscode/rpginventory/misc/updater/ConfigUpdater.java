@@ -122,14 +122,19 @@ public class ConfigUpdater {
                 // Added join-messages
                 config.set("join-messages.enabled", true);
                 config.set("join-messages.delay", 3);
-                config.set("join-messages.default.title", "&l&4It is important!");
+                config.set("join-messages.default.title", "&l&2Welcome to server!");
                 config.set("join-messages.default.text", Arrays.asList("&6Glad to see you, &3%PLAYER%", "&6This server using &9RPGInventory"));
-                config.set("join-messages.rp-info.title", "&l&2Welcome to server!");
+                config.set("join-messages.rp-info.title", "&l&4It is important!");
                 config.set("join-messages.rp-info.text", Arrays.asList(
                         "&6You should &callow &6resource pack to play on this server",
                         "&6This will allow you fully immerse in the RPG atmosphere",
                         "&6But if you declined downloading of RP you can fix it...",
                         "&6Select the server in list, click &e'Edit' &6 and set &e'Resource-Pack: Accept'"));
+            case 200:
+                if ("&l&2Welcome to server!".equals(config.get("join-messages.rp-info.title"))) {
+                    config.set("join-messages.rp-info.title", "&l&4It is important!");
+                    config.set("join-messages.default.title", "&l&2Welcome to server!");
+                }
         }
     }
 }
