@@ -214,7 +214,6 @@ public class PetListener implements Listener {
                 }
             }
         } else if (event.getDamager().getType() == EntityType.PLAYER) {
-            @SuppressWarnings("ConstantConditions")
             Player player = (Player) event.getDamager();
             if (!InventoryManager.playerIsLoaded(player)) {
                 return;

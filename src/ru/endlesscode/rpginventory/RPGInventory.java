@@ -16,7 +16,7 @@ import ru.endlesscode.rpginventory.inventory.InventoryLocker;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
 import ru.endlesscode.rpginventory.inventory.backpack.BackpackManager;
 import ru.endlesscode.rpginventory.inventory.craft.CraftManager;
-import ru.endlesscode.rpginventory.inventory.mypet.MyPetManager;
+import ru.endlesscode.rpginventory.pet.mypet.MyPetManager;
 import ru.endlesscode.rpginventory.inventory.slot.SlotManager;
 import ru.endlesscode.rpginventory.item.ItemManager;
 import ru.endlesscode.rpginventory.misc.Config;
@@ -150,10 +150,15 @@ public class RPGInventory extends JavaPlugin {
             this.getLogger().warning("Your resource pack hash incorrect!");
         }
 
+        // Hook MyPet
         if (Bukkit.getPluginManager().isPluginEnabled("MyPet")) {
-            pm.registerEvents(new MyPetManager(), this);
-            MyPetManager.init();
-            this.getLogger().info("MyPet hooked!");
+            if (MyPetManager.getMyPetSlot() == null) {
+                this.getLogger().warning("MyPet found, but slot for MyPet not configured!");
+            } else {
+                pm.registerEvents(new MyPetManager(), this);
+                MyPetManager.init();
+                this.getLogger().info("MyPet hooked!");
+            }
         }
 
         this.loadPlayers();

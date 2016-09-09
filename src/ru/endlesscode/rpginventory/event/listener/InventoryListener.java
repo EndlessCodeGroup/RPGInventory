@@ -21,7 +21,7 @@ import ru.endlesscode.rpginventory.inventory.InventoryLocker;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
 import ru.endlesscode.rpginventory.inventory.PlayerWrapper;
 import ru.endlesscode.rpginventory.inventory.backpack.BackpackManager;
-import ru.endlesscode.rpginventory.inventory.mypet.MyPetManager;
+import ru.endlesscode.rpginventory.pet.mypet.MyPetManager;
 import ru.endlesscode.rpginventory.inventory.slot.ActionSlot;
 import ru.endlesscode.rpginventory.inventory.slot.Slot;
 import ru.endlesscode.rpginventory.inventory.slot.SlotManager;
@@ -311,7 +311,7 @@ public class InventoryListener implements Listener {
             } else if (slot.getSlotType() == Slot.SlotType.PET) {
                 event.setCancelled(!InventoryManager.validatePet(player, action, currentItem, cursor));
             } else if (slot.getSlotType() == Slot.SlotType.MYPET) {
-                event.setCancelled(!MyPetManager.validatePet(player, currentItem, cursor));
+                event.setCancelled(!MyPetManager.validatePet(player, action, currentItem, cursor));
             } else if (slot.getSlotType() == Slot.SlotType.BACKPACK) {
                 if (event.getClick() == ClickType.RIGHT && BackpackManager.open(player, currentItem)) {
                     event.setCancelled(true);
