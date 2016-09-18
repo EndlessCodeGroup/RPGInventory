@@ -1,0 +1,64 @@
+firststart: "\n
+&3============================== RPGInventory ================================\n
+&eRPGInventory&c pluginini kullanmadan önce, değiştirilmiş kaynak paketini\n
+ve değiştirilmiş eşyaları konacak bölmeleri yapmalısın.!\n
+Bundan sonra config.yml den enabled ayarını true yap!\n
+&3============================================================================"
+
+title: "RPG Envanteri"
+
+locked.name: "&c&lKilitli Bölme"
+locked.lore: "&6&oÖnce bir önceki bölmeyi alman gerek"
+
+buyable.name: "&a&lMevcut Bölmeler"
+buyable.lore: "&6&oBunu alabilmek için, bunlara sahip olmalısın:"
+buyable.money: "&6&o• %s Altın"
+buyable.level: "&6&o• %d Seviye"
+
+error.fall: "&cUçarken bunu yapamazsın"
+error.money: "&6&lBunu alabilmek için %s altına ihtiyacin var"
+error.level: "&6&lBunu alabilmek için %d seviyeye ihtiyacın var"
+error.buyable: "&6&lBu slotu alabilmek için %d altına ihtiyacın olacak! 10 saniye içinde tekrar tıklarsan satın almayı onaylarsın."
+error.previous: "&6&lİlk olarak önceki sekmeyi açman gerek!"
+error.rp.denied: "&cKaynak paketi yüklemeyi devreye sokman gerek!"
+error.rp.force: "&cKaynak paketini devre dışı bırakamazsın!"
+error.item.level: "&c%s &6Seviye lazım!"
+error.item.class: "&6Gereken Irk: &c%s"
+error.mount.owner: "&6Bineğin sahibi %s"
+error.fixhp: "&6Can düzeltmeye ihtiyacı yok!"
+
+message.buyed: "&a&lBu bölmeyi başarıyla aldın!"
+message.fixhp: "&6Canın düzeltildi, lütfen sunucuya tekrar bağlan!"
+
+pet.name: "%s &f[%s]"
+pet.health: "&cCan: &7%d"
+pet.damage: "&cHasar: &7%d"
+pet.speed: "&cHız: &7%.2f blok/saniye"
+pet.revival.yes: "&bBekleme Süresi: &7%ds"
+pet.revival.no: "&bCanlandırma Yok!"
+pet.cooldown: " &a&l&o(%ds)"
+pet.food.value: "&aYenileme: %d Can"
+pet.role.companion: "Yoldaş"
+pet.role.mount: "Binek"
+
+item.level: "&f%d Seviye gerektirir!"
+item.class: "&b%s &fIrkına özel!"
+item.nodrop: "&7Ölünce eşya düşmez!"
+item.left-click: "&aSol Tıkla - %s"
+item.right-click: "&aSağ Tıkla - %s"
+item.hide: "&7&oEşya istatistikleri gizlendi"
+item.unbreakable: "&7Kırılmaz eşya"
+
+stat.message.no_bonus: "Bonus yok"
+stat.damage: "&cHasar: &7%s"
+stat.bow_damage: "&cHasar: (Vurus): &7%s"
+stat.hand_damage: "&cHasar: (El): &7%s"
+stat.health: "&2Can: &7%s"
+stat.armor: "&3Zırh: &7%s"
+stat.crit_chance: "&6Kritik şansı: &7%s"
+stat.crit_damage: "&6Kritik hasarı: &7%s"
+stat.speed: "&9Hız: &7%s"
+stat.jump: "&9Zıplama: &7%s"
+
+backpack.desc: "&8&oBelirtilen bölmeye koyup &fSağ tuşa &8tikla!"
+backpack.size: "&aBoyut: &7%d"

@@ -53,8 +53,15 @@ public class SlotManager {
         }
     }
 
-    public static void init() {
-        slotManager = new SlotManager();
+    public static boolean init() {
+        try {
+            slotManager = new SlotManager();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+
+        return true;
     }
 
     public static SlotManager getSlotManager() {
@@ -206,6 +213,17 @@ public class SlotManager {
     public Slot getShieldSlot() {
         for (Slot slot : this.slots) {
             if (slot.getSlotType() == Slot.SlotType.SHIELD) {
+                return slot;
+            }
+        }
+
+        return null;
+    }
+
+    @Nullable
+    public Slot getBackpackSlot() {
+        for (Slot slot : this.slots) {
+            if (slot.getSlotType() == Slot.SlotType.BACKPACK) {
                 return slot;
             }
         }

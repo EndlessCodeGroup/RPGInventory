@@ -9,6 +9,8 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ru.endlesscode.rpginventory.RPGInventory;
+import ru.endlesscode.rpginventory.event.listener.BackpackListener;
+import ru.endlesscode.rpginventory.inventory.slot.SlotManager;
 import ru.endlesscode.rpginventory.utils.ItemUtils;
 
 import java.io.File;
@@ -24,23 +26,44 @@ public class BackpackManager {
     private static final HashMap<String, BackpackType> BACKPACK_TYPES = new HashMap<>();
     private static final HashMap<UUID, Backpack> BACKPACKS = new HashMap<>();
 
-    public static void init() {
-        File petsFile = new File(RPGInventory.getInstance().getDataFolder(), "backpacks.yml");
-        if (!petsFile.exists()) {
-            RPGInventory.getInstance().saveResource("backpacks.yml", false);
+    public static boolean init(RPGInventory instance) {
+        if (!isEnabled()) {
+            return false;
         }
 
-        FileConfiguration petsConfig = YamlConfiguration.loadConfiguration(petsFile);
+        try {
+            File petsFile = new File(RPGInventory.getInstance().getDataFolder(), "backpacks.yml");
+            if (!petsFile.exists()) {
+                RPGInventory.getInstance().saveResource("backpacks.yml", false);
+            }
 
-        BACKPACK_TYPES.clear();
-        for (String key : petsConfig.getConfigurationSection("backpacks").getKeys(false)) {
-            BackpackType backpackType = new BackpackType(petsConfig.getConfigurationSection("backpacks." + key));
-            BACKPACK_TYPES.put(key, backpackType);
+            FileConfiguration petsConfig = YamlConfiguration.loadConfiguration(petsFile);
+
+            BACKPACK_TYPES.clear();
+            for (String key : petsConfig.getConfigurationSection("backpacks").getKeys(false)) {
+                BackpackType backpackType = new BackpackType(petsConfig.getConfigurationSection("backpacks." + key));
+                BACKPACK_TYPES.put(key, backpackType);
+            }
+
+            BackpackManager.loadBackpacks();
+            RPGInventory.getPluginLogger().info(BACKPACK_TYPES.size() + " backpack type(s) has been loaded");
+            RPGInventory.getPluginLogger().info(BACKPACKS.size() + " backpack(s) has been loaded");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
         }
 
-        BackpackManager.loadBackpacks();
-        RPGInventory.getPluginLogger().info(BACKPACK_TYPES.size() + " backpack type(s) has been loaded");
-        RPGInventory.getPluginLogger().info(BACKPACKS.size() + " backpack(s) has been loaded");
+        if (BACKPACK_TYPES.size() == 0) {
+            return false;
+        }
+
+        // Register events
+        instance.getServer().getPluginManager().registerEvents(new BackpackListener(), instance);
+        return true;
+    }
+
+    public static boolean isEnabled() {
+        return SlotManager.getSlotManager().getBackpackSlot() != null;
     }
 
     public static List<String> getBackpackList() {

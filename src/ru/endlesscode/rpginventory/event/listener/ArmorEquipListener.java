@@ -51,7 +51,7 @@ public class ArmorEquipListener implements Listener {
                 return;
             }
 
-            event.setCancelled(!InventoryManager.validateArmor(InventoryAction.PLACE_ONE, armorSlot, item));
+            event.setCancelled(!InventoryManager.validateArmor(player, InventoryAction.PLACE_ONE, armorSlot, item));
 
             new BukkitRunnable() {
                 @Override
@@ -102,7 +102,7 @@ public class ArmorEquipListener implements Listener {
                 return;
             }
 
-            event.setCancelled(!InventoryManager.validateArmor(event.getAction(), armorSlot, item));
+            event.setCancelled(!InventoryManager.validateArmor(player, event.getAction(), armorSlot, item));
         } else if (event.getAction() == InventoryAction.HOTBAR_SWAP) {
             // Prevent method when player press number
             if (event.getInventory().getType() == InventoryType.CRAFTING) {
@@ -122,7 +122,7 @@ public class ArmorEquipListener implements Listener {
 
             Slot armorSlot = SlotManager.getSlotManager().getSlot(armorType.name());
             if (armorSlot != null && InventoryUtils.playerNeedArmor(player, armorType)) {
-                event.setCancelled(!InventoryManager.validateArmor(InventoryAction.PLACE_ONE, armorSlot, item));
+                event.setCancelled(!InventoryManager.validateArmor(player, InventoryAction.PLACE_ONE, armorSlot, item));
             }
         }
     }
@@ -156,7 +156,7 @@ public class ArmorEquipListener implements Listener {
                             }
 
                             Slot armorSlot = SlotManager.getSlotManager().getSlot(type.name());
-                            event.setCancelled(armorSlot != null && !InventoryManager.validateArmor(InventoryAction.PLACE_ONE, armorSlot, event.getItem()));
+                            event.setCancelled(armorSlot != null && !InventoryManager.validateArmor(player, InventoryAction.PLACE_ONE, armorSlot, event.getItem()));
                             return;
                         }
                     }

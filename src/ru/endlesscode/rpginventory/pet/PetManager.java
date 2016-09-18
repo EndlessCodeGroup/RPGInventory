@@ -19,6 +19,7 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ru.endlesscode.rpginventory.RPGInventory;
+import ru.endlesscode.rpginventory.event.listener.PetListener;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
 import ru.endlesscode.rpginventory.inventory.PlayerWrapper;
 import ru.endlesscode.rpginventory.inventory.slot.SlotManager;
@@ -38,12 +39,54 @@ import java.util.Map;
  * All rights reserved 2014 - 2016 © «EndlessCode Group»
  */
 public class PetManager {
-    @SuppressWarnings("ConstantConditions")
-    private static final int SLOT_PET = SlotManager.getSlotManager().getPetSlot() != null ? SlotManager.getSlotManager().getPetSlot().getSlotId() : -1;
+    private static int SLOT_PET;
     private static final Map<String, PetType> PETS = new HashMap<>();
     private static final Map<String, PetFood> PET_FOOD = new HashMap<>();
 
     private PetManager() {
+    }
+
+    public static boolean init(RPGInventory instance) {
+        //noinspection ConstantConditions
+        SLOT_PET = SlotManager.getSlotManager().getPetSlot() != null ? SlotManager.getSlotManager().getPetSlot().getSlotId() : -1;
+
+        if (!isEnabled()) {
+            return false;
+        }
+
+        try {
+            File petsFile = new File(RPGInventory.getInstance().getDataFolder(), "pets.yml");
+            if (!petsFile.exists()) {
+                RPGInventory.getInstance().saveResource("pets.yml", false);
+            }
+
+            FileConfiguration petsConfig = YamlConfiguration.loadConfiguration(petsFile);
+
+            PetManager.PETS.clear();
+            for (String key : petsConfig.getConfigurationSection("pets").getKeys(false)) {
+                PetType petType = new PetType(petsConfig.getConfigurationSection("pets." + key));
+                PetManager.PETS.put(key, petType);
+            }
+            RPGInventory.getPluginLogger().info(PetManager.PETS.size() + " pet(s) has been loaded");
+
+            PetManager.PET_FOOD.clear();
+            for (String key : petsConfig.getConfigurationSection("food").getKeys(false)) {
+                PetFood pet = new PetFood(petsConfig.getConfigurationSection("food." + key));
+                PetManager.PET_FOOD.put(key, pet);
+            }
+            RPGInventory.getPluginLogger().info(PetManager.PET_FOOD.size() + " food(s) has been loaded");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+
+        if (PETS.size() == 0 && PET_FOOD.size() == 0) {
+            return false;
+        }
+
+        // Register events
+        instance.getServer().getPluginManager().registerEvents(new PetListener(), instance);
+        return true;
     }
 
     public static void initPlayer(@NotNull Player player) {
@@ -65,29 +108,6 @@ public class PetManager {
 
     public static int getPetSlotId() {
         return SLOT_PET;
-    }
-
-    public static void init() {
-        File petsFile = new File(RPGInventory.getInstance().getDataFolder(), "pets.yml");
-        if (!petsFile.exists()) {
-            RPGInventory.getInstance().saveResource("pets.yml", false);
-        }
-
-        FileConfiguration petsConfig = YamlConfiguration.loadConfiguration(petsFile);
-
-        PetManager.PETS.clear();
-        for (String key : petsConfig.getConfigurationSection("pets").getKeys(false)) {
-            PetType petType = new PetType(petsConfig.getConfigurationSection("pets." + key));
-            PetManager.PETS.put(key, petType);
-        }
-        RPGInventory.getPluginLogger().info(PetManager.PETS.size() + " pet(s) has been loaded");
-
-        PetManager.PET_FOOD.clear();
-        for (String key : petsConfig.getConfigurationSection("food").getKeys(false)) {
-            PetFood pet = new PetFood(petsConfig.getConfigurationSection("food." + key));
-            PetManager.PET_FOOD.put(key, pet);
-        }
-        RPGInventory.getPluginLogger().info(PetManager.PET_FOOD.size() + " food(s) has been loaded");
     }
 
     @NotNull

@@ -1,6 +1,9 @@
 package ru.endlesscode.rpginventory.event.listener;
 
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
+import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -16,12 +19,12 @@ import org.bukkit.scheduler.BukkitRunnable;
 import ru.endlesscode.rpginventory.RPGInventory;
 import ru.endlesscode.rpginventory.api.InventoryAPI;
 import ru.endlesscode.rpginventory.event.PetUnequipEvent;
+import ru.endlesscode.rpginventory.event.PlayerInventoryLoadEvent;
 import ru.endlesscode.rpginventory.inventory.ActionType;
 import ru.endlesscode.rpginventory.inventory.InventoryLocker;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
 import ru.endlesscode.rpginventory.inventory.PlayerWrapper;
 import ru.endlesscode.rpginventory.inventory.backpack.BackpackManager;
-import ru.endlesscode.rpginventory.pet.mypet.MyPetManager;
 import ru.endlesscode.rpginventory.inventory.slot.ActionSlot;
 import ru.endlesscode.rpginventory.inventory.slot.Slot;
 import ru.endlesscode.rpginventory.inventory.slot.SlotManager;
@@ -30,6 +33,7 @@ import ru.endlesscode.rpginventory.item.ItemManager;
 import ru.endlesscode.rpginventory.misc.Config;
 import ru.endlesscode.rpginventory.pet.PetManager;
 import ru.endlesscode.rpginventory.pet.PetType;
+import ru.endlesscode.rpginventory.pet.mypet.MyPetManager;
 import ru.endlesscode.rpginventory.utils.InventoryUtils;
 import ru.endlesscode.rpginventory.utils.ItemUtils;
 import ru.endlesscode.rpginventory.utils.PlayerUtils;
@@ -92,6 +96,22 @@ public class InventoryListener implements Listener {
         }
 
         PetManager.despawnPet(player);
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onLoadInventory(PlayerInventoryLoadEvent.Post event) {
+        Player player = event.getPlayer();
+        ItemManager.updateStats(player);
+
+        // Sync armor
+        player.getInventory().setArmorContents(ItemUtils.syncItems(player.getInventory().getArmorContents()));
+
+        // Sync inventory
+        player.getInventory().setContents(ItemUtils.syncItems(player.getInventory().getContents()));
+
+        // Sync RPG Inventory
+        Inventory inventory = InventoryManager.get(player).getInventory();
+        inventory.setContents(ItemUtils.syncItems(inventory.getContents()));
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
@@ -387,7 +407,7 @@ public class InventoryListener implements Listener {
         InventoryAction action = event.getAction();
         ActionType actionType = ActionType.getTypeOfAction(action);
 
-        if (InventoryManager.validateArmor(action, slot, cursor)) {
+        if (InventoryManager.validateArmor(player, action, slot, cursor)) {
             // Event of equip armor
             InventoryClickEvent fakeEvent = new InventoryClickEvent((playerWrapper.getInventoryView()),
                     InventoryType.SlotType.ARMOR, InventoryUtils.getArmorSlotId(slot), event.getClick(), action);
@@ -454,14 +474,21 @@ public class InventoryListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onWorldChanged(PlayerChangedWorldEvent event) {
-        InventoryManager.unloadPlayerInventory(event.getPlayer());
-    }
-
-    @EventHandler
-    public void postWorldChanged(PlayerChangedWorldEvent event) {
         Player player = event.getPlayer();
-        if (InventoryManager.isAllowedWorld(player.getWorld())) {
-            InventoryManager.initPlayer(player, InventoryManager.isAllowedWorld(event.getFrom()));
+        if (!InventoryManager.playerIsLoaded(player)) {
+            if (InventoryManager.isAllowedWorld(player.getWorld())) {
+                InventoryManager.initPlayer(player, InventoryManager.isAllowedWorld(event.getFrom()));
+            }
+
+            return;
+        }
+
+        if (!InventoryManager.isAllowedWorld(player.getWorld())) {
+            InventoryManager.unloadPlayerInventory(player);
+        } else {
+            if (InventoryManager.get(player).hasPet()) {
+                PetManager.respawnPet(player);
+            }
         }
     }
 }

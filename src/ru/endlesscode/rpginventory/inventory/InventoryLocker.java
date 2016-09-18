@@ -9,6 +9,7 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ru.endlesscode.rpginventory.RPGInventory;
+import ru.endlesscode.rpginventory.event.listener.LockerListener;
 import ru.endlesscode.rpginventory.misc.Config;
 import ru.endlesscode.rpginventory.misc.FileLanguage;
 import ru.endlesscode.rpginventory.utils.ItemUtils;
@@ -30,28 +31,37 @@ public class InventoryLocker {
     private InventoryLocker() {
     }
 
-    public static void init() {
+    public static boolean init(RPGInventory instance) {
         if (!isEnabled()) {
-            return;
+            return false;
         }
 
-        // Setup locked slot
-        InventoryLocker.lockedSlot = ItemUtils.getTexturedItem(Config.getConfig().getString("slots.locked"));
-        ItemMeta meta = InventoryLocker.lockedSlot.getItemMeta();
-        meta.setDisplayName(RPGInventory.getLanguage().getCaption("locked.name"));
-        meta.setLore(Collections.singletonList(RPGInventory.getLanguage().getCaption("locked.lore")));
+        try {
+            // Setup locked slot
+            InventoryLocker.lockedSlot = ItemUtils.getTexturedItem(Config.getConfig().getString("slots.locked"));
+            ItemMeta meta = InventoryLocker.lockedSlot.getItemMeta();
+            meta.setDisplayName(RPGInventory.getLanguage().getCaption("locked.name"));
+            meta.setLore(Collections.singletonList(RPGInventory.getLanguage().getCaption("locked.lore")));
 
-        InventoryLocker.lockedSlot.setItemMeta(meta);
-        lockedSlot = addId(lockedSlot);
+            InventoryLocker.lockedSlot.setItemMeta(meta);
+            lockedSlot = addId(lockedSlot);
 
-        // Setup buyable slot
-        InventoryLocker.buyableSlot = ItemUtils.getTexturedItem(Config.getConfig().getString("slots.buyable"));
-        meta = InventoryLocker.buyableSlot.getItemMeta();
-        meta.setDisplayName(RPGInventory.getLanguage().getCaption("buyable.name"));
-        meta.setLore(Collections.singletonList(RPGInventory.getLanguage().getCaption("buyable.lore")));
+            // Setup buyable slot
+            InventoryLocker.buyableSlot = ItemUtils.getTexturedItem(Config.getConfig().getString("slots.buyable"));
+            meta = InventoryLocker.buyableSlot.getItemMeta();
+            meta.setDisplayName(RPGInventory.getLanguage().getCaption("buyable.name"));
+            meta.setLore(Collections.singletonList(RPGInventory.getLanguage().getCaption("buyable.lore")));
 
-        InventoryLocker.buyableSlot.setItemMeta(meta);
-        buyableSlot = addId(buyableSlot);
+            InventoryLocker.buyableSlot.setItemMeta(meta);
+            buyableSlot = addId(buyableSlot);
+        } catch (Exception e) {
+
+            e.printStackTrace();
+            return false;
+        }
+
+        instance.getServer().getPluginManager().registerEvents(new LockerListener(), instance);
+        return true;
     }
 
     private static boolean isEnabled() {
