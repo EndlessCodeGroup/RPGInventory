@@ -24,21 +24,27 @@ public class CraftManager {
 
     private CraftManager() {}
 
-    public static void init() {
+    public static boolean init(RPGInventory instance) {
         MemorySection config = (MemorySection) Config.getConfig().get("craft");
         if (!config.getBoolean("enabled") || !config.contains("extensions")) {
-            return;
+            return false;
         }
 
-        capItem = ItemUtils.getTexturedItem(config.getString("extendable"));
+        try {
+            capItem = ItemUtils.getTexturedItem(config.getString("extendable"));
 
-        Set<String> extensionNames = config.getConfigurationSection("extensions").getKeys(false);
-        for (String extensionName : extensionNames) {
-            EXTENSIONS.add(new CraftExtension(extensionName, config.getConfigurationSection("extensions." + extensionName)));
+            Set<String> extensionNames = config.getConfigurationSection("extensions").getKeys(false);
+            for (String extensionName : extensionNames) {
+                EXTENSIONS.add(new CraftExtension(extensionName, config.getConfigurationSection("extensions." + extensionName)));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
         }
 
         // Register listeners
-        ProtocolLibrary.getProtocolManager().addPacketListener(new CraftListener(RPGInventory.getInstance()));
+        ProtocolLibrary.getProtocolManager().addPacketListener(new CraftListener(instance));
+        return true;
     }
 
     public static List<CraftExtension> getExtensions(Player player) {

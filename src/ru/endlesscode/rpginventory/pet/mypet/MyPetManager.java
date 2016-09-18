@@ -45,6 +45,23 @@ import java.util.UUID;
 public class MyPetManager implements Listener {
     private static final String MYPET_TAG = "mypet.uuid";
 
+    public static boolean init(RPGInventory instance) {
+        if (Bukkit.getPluginManager().isPluginEnabled("MyPet")) {
+            if (MyPetManager.getMyPetSlot() == null) {
+                instance.getLogger().warning("MyPet found, but slot for MyPet not configured!");
+            }
+
+            return false;
+        }
+
+        for (MyPetPlayer mpPlayer : MyPetApi.getPlayerManager().getMyPetPlayers()) {
+            syncPlayer(mpPlayer);
+        }
+
+        instance.getServer().getPluginManager().registerEvents(new MyPetManager(), instance);
+        return true;
+    }
+
     public static boolean validatePet(Player player, InventoryAction action, @Nullable ItemStack currentItem, @NotNull ItemStack cursor) {
         ActionType actionType = ActionType.getTypeOfAction(action);
 
@@ -147,12 +164,6 @@ public class MyPetManager implements Listener {
             MyPetApi.getRepository().updateMyPetPlayer(user, null);
         }
 
-    }
-
-    public static void init() {
-        for (MyPetPlayer mpPlayer : MyPetApi.getPlayerManager().getMyPetPlayers()) {
-            syncPlayer(mpPlayer);
-        }
     }
 
     private static void syncPlayer(MyPetPlayer mpPlayer) {

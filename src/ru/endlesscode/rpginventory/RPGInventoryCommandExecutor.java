@@ -103,12 +103,6 @@ class RPGInventoryCommandExecutor implements CommandExecutor {
             sender.sendMessage(StringUtils.coloredLine("&6rpginv open &7- open inventory"));
         }
 
-        if (RPGInventory.getPermissions().has(sender, "rpginventory.textures.others")) {
-            sender.sendMessage(StringUtils.coloredLine("&6rpginv textures (&eplayer&6) [&eenable&6|&edisable&6] &7- use textures or not"));
-        } else if (RPGInventory.getPermissions().has(sender, "rpginventory.textures")) {
-            sender.sendMessage(StringUtils.coloredLine("&6rpginv textures [&eenable&6|&edisable&6] &7- use textures or not"));
-        }
-
         if (RPGInventory.getPermissions().has(sender, "rpginventory.fixhp.others")) {
             sender.sendMessage(StringUtils.coloredLine("&6rpginv fixhp (&eplayer&6) &7- fix incorrect hp"));
         } else if (RPGInventory.getPermissions().has(sender, "rpginventory.fixhp")) {

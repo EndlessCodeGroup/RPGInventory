@@ -9,6 +9,7 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import ru.endlesscode.rpginventory.RPGInventory;
 import ru.endlesscode.rpginventory.api.InventoryAPI;
+import ru.endlesscode.rpginventory.event.listener.ItemListener;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
 import ru.endlesscode.rpginventory.misc.Config;
 import ru.endlesscode.rpginventory.misc.FileLanguage;
@@ -34,20 +35,33 @@ public class ItemManager {
     private ItemManager() {
     }
 
-    public static void init() {
-        File itemsFile = new File(RPGInventory.getInstance().getDataFolder(), "items.yml");
-        if (!itemsFile.exists()) {
-            RPGInventory.getInstance().saveResource("items.yml", false);
+    public static boolean init(RPGInventory instance) {
+        try {
+            File itemsFile = new File(RPGInventory.getInstance().getDataFolder(), "items.yml");
+            if (!itemsFile.exists()) {
+                RPGInventory.getInstance().saveResource("items.yml", false);
+            }
+
+            FileConfiguration itemsConfig = YamlConfiguration.loadConfiguration(itemsFile);
+
+            CUSTOM_ITEMS.clear();
+            for (String key : itemsConfig.getConfigurationSection("items").getKeys(false)) {
+                CustomItem customItem = new CustomItem(key, itemsConfig.getConfigurationSection("items." + key));
+                CUSTOM_ITEMS.put(key, customItem);
+            }
+
+            RPGInventory.getPluginLogger().info(CUSTOM_ITEMS.size() + " item(s) has been loaded");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
         }
 
-        FileConfiguration itemsConfig = YamlConfiguration.loadConfiguration(itemsFile);
-
-        CUSTOM_ITEMS.clear();
-        for (String key : itemsConfig.getConfigurationSection("items").getKeys(false)) {
-            CustomItem customItem = new CustomItem(key, itemsConfig.getConfigurationSection("items." + key));
-            CUSTOM_ITEMS.put(key, customItem);
+        if (CUSTOM_ITEMS.size() == 0) {
+            return false;
         }
-        RPGInventory.getPluginLogger().info(CUSTOM_ITEMS.size() + " item(s) has been loaded");
+
+        instance.getServer().getPluginManager().registerEvents(new ItemListener(), instance);
+        return true;
     }
 
     public static Modifier getModifier(@NotNull Player player, ItemStat.StatType statType) {

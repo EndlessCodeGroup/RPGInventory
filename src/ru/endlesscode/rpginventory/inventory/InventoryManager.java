@@ -20,6 +20,7 @@ import ru.endlesscode.rpginventory.event.PetEquipEvent;
 import ru.endlesscode.rpginventory.event.PetUnequipEvent;
 import ru.endlesscode.rpginventory.event.PlayerInventoryLoadEvent;
 import ru.endlesscode.rpginventory.event.PlayerInventoryUnloadEvent;
+import ru.endlesscode.rpginventory.event.listener.InventoryListener;
 import ru.endlesscode.rpginventory.inventory.slot.Slot;
 import ru.endlesscode.rpginventory.inventory.slot.SlotManager;
 import ru.endlesscode.rpginventory.item.ItemManager;
@@ -50,18 +51,27 @@ public class InventoryManager {
     private InventoryManager() {
     }
 
-    public static void init() {
-        // Setup alternate view
-        fillSlot = ItemUtils.getTexturedItem(Config.getConfig().getString("resource-pack.fill"));
-        ItemMeta meta = fillSlot.getItemMeta();
-        meta.setDisplayName(" ");
-        fillSlot.setItemMeta(meta);
+    public static boolean init(RPGInventory instance) {
+        try {
+            // Setup alternate view
+            fillSlot = ItemUtils.getTexturedItem(Config.getConfig().getString("resource-pack.fill"));
+            ItemMeta meta = fillSlot.getItemMeta();
+            meta.setDisplayName(" ");
+            fillSlot.setItemMeta(meta);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+
+        // Register events
+        instance.getServer().getPluginManager().registerEvents(new InventoryListener(), instance);
+        return true;
     }
 
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public static boolean validateUpdate(Player player, ActionType actionType, @NotNull Slot slot, ItemStack item) {
         return actionType == ActionType.GET || actionType == ActionType.DROP
-                || actionType == ActionType.SET && ItemManager.allowedForPlayer(player, item, true) && slot.isValidItem(item);
+                || actionType == ActionType.SET && slot.isValidItem(item) && ItemManager.allowedForPlayer(player, item, true);
     }
 
     public static ItemStack getFillSlot() {
@@ -99,10 +109,10 @@ public class InventoryManager {
         return false;
     }
 
-    public static boolean validateArmor(InventoryAction action, @NotNull Slot slot, ItemStack cursor) {
+    public static boolean validateArmor(Player player, InventoryAction action, @NotNull Slot slot, ItemStack item) {
         ActionType actionType = ActionType.getTypeOfAction(action);
-
-        return actionType != ActionType.OTHER && (actionType != ActionType.SET || slot.isValidItem(cursor));
+        return actionType != ActionType.OTHER && (actionType != ActionType.SET || slot.isValidItem(item))
+                && ItemManager.allowedForPlayer(player, item, true);
     }
 
     public static void updateShieldSlot(@NotNull Player player, @NotNull Inventory inventory, @NotNull Slot slot, int slotId,

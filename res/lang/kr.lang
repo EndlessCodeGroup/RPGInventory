@@ -5,7 +5,7 @@ and configure items that can be put in the inventory slots. After that,\n
 set value in the config &eenabled: true\n
 &3============================================================================"
 
-title: "RPG Inventory"
+title: "&l인벤토리"
 
 locked.name: "&c&l잠긴 슬릇"
 locked.lore: "&6&o이 슬릇부터 해제해야 합니다"
@@ -20,7 +20,7 @@ error.money: "&6&l%s 만큼의 돈이 더 필요합니다"
 error.level: "&6&l%d 만큼의 레벨이 더 필요합니다"
 error.buyable: "&6&l당신이 이 슬릇을 구입할려면 %d 만큼의 골드가 필요합니다. 구입 확인을 위해 10 초 이내로 다시 클릭해주시길 바랍니다."
 error.previous: "&6&l이전 슬릇의 잠금을 해제해야 합니다"
-error.rp.denied: "&c리소스 팩의 다운로드 권한이 필요합니다!"
+error.rp.denied: "&c리소스 팩이 필요합니다!"
 error.rp.force: "&c리소스 팩이 비활성화 되었습니다."
 error.item.level: "&6그것은 &c%s &6레벨이 필요합니다"
 error.item.class: "&6그것은 클래스가 필요합니다 &c%s"

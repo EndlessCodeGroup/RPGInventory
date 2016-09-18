@@ -3,7 +3,6 @@ package ru.endlesscode.rpginventory;
 import com.comphenix.protocol.ProtocolLibrary;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
@@ -16,7 +15,6 @@ import ru.endlesscode.rpginventory.inventory.InventoryLocker;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
 import ru.endlesscode.rpginventory.inventory.backpack.BackpackManager;
 import ru.endlesscode.rpginventory.inventory.craft.CraftManager;
-import ru.endlesscode.rpginventory.pet.mypet.MyPetManager;
 import ru.endlesscode.rpginventory.inventory.slot.SlotManager;
 import ru.endlesscode.rpginventory.item.ItemManager;
 import ru.endlesscode.rpginventory.misc.Config;
@@ -26,6 +24,7 @@ import ru.endlesscode.rpginventory.misc.updater.ConfigUpdater;
 import ru.endlesscode.rpginventory.misc.updater.Updater;
 import ru.endlesscode.rpginventory.nms.VersionHandler;
 import ru.endlesscode.rpginventory.pet.PetManager;
+import ru.endlesscode.rpginventory.pet.mypet.MyPetManager;
 import ru.endlesscode.rpginventory.utils.PlayerUtils;
 import ru.endlesscode.rpginventory.utils.StringUtils;
 
@@ -89,77 +88,35 @@ public class RPGInventory extends JavaPlugin {
         this.updateConfig();
         language = new FileLanguage(this);
 
-        // Check flag `enabled`
-        if (!Config.getConfig().getBoolean("enabled")) {
-            this.onFirstStart();
-            this.getLogger().warning("Plugin is not enabled in config!");
-            this.setEnabled(false);
-            return;
-        }
-
-        if (!VersionHandler.checkVersion()) {
-            this.getLogger().warning("This version of RPG Inventory is not compatible with your version of Bukkit!");
+        if (!this.checkRequirements()) {
             this.getPluginLoader().disablePlugin(this);
             return;
         }
 
-        if (!this.checkDependencies()) {
-            this.getPluginLoader().disablePlugin(this);
-            return;
+        // Load modules
+        this.getLogger().info(CraftManager.init(this) ? "Craft extensions is enabled." : "Craft extensions isn't loaded.");
+        this.getLogger().info(InventoryLocker.init(this) ? "Inventory lock system is enabled." : "Inventory lock system isn't loaded.");
+        this.getLogger().info(ItemManager.init(this) ? "Item system is enabled." : "Item system isn't loaded.");
+        this.getLogger().info(PetManager.init(this) ? "Pet system is enabled." : "Pet system isn't loaded.");
+        this.getLogger().info(BackpackManager.init(this) ? "Backpack system is enabled." : "Backpack system isn't loaded.");
+
+        // Hook MyPet
+        if (MyPetManager.init(this)) {
+            this.getLogger().info("MyPet hooked!");
         }
 
-        // Registering of listeners
+        // Registering other listeners
         PluginManager pm = this.getServer().getPluginManager();
         pm.registerEvents(new ArmorEquipListener(), this);
         pm.registerEvents(new HandSwitchListener(), this);
-        pm.registerEvents(new InventoryListener(), this);
-        pm.registerEvents(new BackpackListener(), this);
-        pm.registerEvents(new LockerListener(), this);
         pm.registerEvents(new PlayerListener(), this);
         pm.registerEvents(new WorldListener(), this);
-        pm.registerEvents(new ItemListener(), this);
 
         if (SlotManager.getSlotManager().getElytraSlot() != null) {
             pm.registerEvents(new ElytraListener(), this);
         }
 
         ProtocolLibrary.getProtocolManager().addPacketListener(new ResourcePackListener(this));
-
-        // Initialization
-        InventoryManager.init();
-        InventoryLocker.init();
-        BackpackManager.init();
-        CraftManager.init();
-        ItemManager.init();
-        SlotManager.init();
-
-        // Enabling pets
-        if (PetManager.isEnabled()) {
-            pm.registerEvents(new PetListener(), this);
-            PetManager.init();
-        }
-
-        // Check resource-pack settings
-        if (Config.getConfig().getString("resource-pack.url").equals("PUT_YOUR_URL_HERE")) {
-            this.getLogger().warning("Set resource-pack's url in config or set resource-pack.mode to DISABLED!");
-            this.getPluginLoader().disablePlugin(this);
-            return;
-        }
-
-        if (Config.getConfig().getString("resource-pack.hash").equals("PUT_YOUR_HASH_HERE")) {
-            this.getLogger().warning("Your resource pack hash incorrect!");
-        }
-
-        // Hook MyPet
-        if (Bukkit.getPluginManager().isPluginEnabled("MyPet")) {
-            if (MyPetManager.getMyPetSlot() == null) {
-                this.getLogger().warning("MyPet found, but slot for MyPet not configured!");
-            } else {
-                pm.registerEvents(new MyPetManager(), this);
-                MyPetManager.init();
-                this.getLogger().info("MyPet hooked!");
-            }
-        }
 
         this.loadPlayers();
         this.startMetrics();
@@ -170,7 +127,34 @@ public class RPGInventory extends JavaPlugin {
         this.checkUpdates(null);
     }
 
-    private boolean checkDependencies() {
+    private boolean checkRequirements() {
+        // Check if plugin is enabled
+        if (!Config.getConfig().getBoolean("enabled")) {
+            this.onFirstStart();
+            this.getLogger().warning("Plugin is not enabled in config!");
+            this.setEnabled(false);
+            return false;
+        }
+
+        // Check version compatibility
+        if (!VersionHandler.checkVersion()) {
+            this.getLogger().warning("This version of RPG Inventory is not compatible with your version of Bukkit!");
+            this.getPluginLoader().disablePlugin(this);
+            return false;
+        }
+
+        // Check resource-pack settings
+        if (Config.getConfig().getString("resource-pack.url").equals("PUT_YOUR_URL_HERE")) {
+            this.getLogger().warning("Set resource-pack's url in config or set resource-pack.mode to DISABLED!");
+            this.getPluginLoader().disablePlugin(this);
+            return false;
+        }
+
+        if (Config.getConfig().getString("resource-pack.hash").equals("PUT_YOUR_HASH_HERE")) {
+            this.getLogger().warning("Your resource pack hash incorrect!");
+        }
+
+        // Check dependencies
         if (this.setupPermissions()) {
             this.getLogger().info("Permissions hooked: " + perms.getName());
         } else {
@@ -198,7 +182,7 @@ public class RPGInventory extends JavaPlugin {
             return false;
         }
 
-        return true;
+        return InventoryManager.init(this) && SlotManager.init();
     }
 
     @Override
