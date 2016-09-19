@@ -1,0 +1,64 @@
+firststart: "\n
+&3============================== RPGInventory ================================\n
+&cAntes de usar &eRPGInventory&c, añade el pack de recursos a tu servidor\n
+y configura los items que pueden colocarse en los espacios del inventario. Luego,\n
+modifica el valor de la configuración a &eenabled: true\n
+&3============================================================================"
+
+title: "RPG Inventory"
+
+locked.name: "&c&lEspacio bloqueado"
+locked.lore: "&6&oDebes desbloquear el espacio anterior"
+
+buyable.name: "&a&lEspacio disponible"
+buyable.lore: "&6&oPara obtener este espacio debes:"
+buyable.money: "&6&o• tener %s monedas"
+buyable.level: "&6&o• tener %d niveles de experiencia"
+
+error.fall: "&cNo puedes hacer esto mientras vuelas"
+error.money: "&6&lAún necesitas %s monedas"
+error.level: "&6&lAún necesitas %d niveles de experiencia"
+error.buyable: "&6&lNecesitas %d monedas para comprar este espacio. Haz click nuevamente en los próximos 10 segundos para confirmar."
+error.previous: "&6&lDesbloquea el espacio previo"
+error.rp.denied: "&cDebes habilitar la descarga del pack de recursos!"
+error.rp.force: "&cNo se permite deshabilitar el pack de recursos."
+error.item.level: "&6Nivel &c%s &6requerido"
+error.item.class: "&6Clase &c%s &6requerida"
+error.mount.owner: "&6La montura pertenece a %s"
+error.fixhp: "&6No es necesario arreglar tu cantidad de vida"
+
+message.buyed: "&a&lYa haz comprado el espacio"
+message.fixhp: "&6Tu cantidad de vida ha sido arreglada, por favor reingrese al servidor"
+
+pet.name: "%s &f[%s]"
+pet.health: "&cVida: &7%d"
+pet.damage: "&cDaño: &7%d"
+pet.speed: "&cVelocidad: &7%.2f bloques/segundo"
+pet.revival.yes: "&bTiempo de espera: &7%ds"
+pet.revival.no: "&bNo resucitará"
+pet.cooldown: " &a&l&o(%ds)"
+pet.food.value: "&aRestaura: %d de vida"
+pet.role.companion: "Acompañante"
+pet.role.mount: "Montura"
+
+item.level: "&fRequiere nivel %d"
+item.class: "&fExclusivo para &b%s"
+item.nodrop: "&7No se dropea en la muete"
+item.left-click: "&aClick Izquierdo - %s"
+item.right-click: "&aClick Derecho - %s"
+item.hide: "&7&oEstadísticas del item ocultas"
+item.unbreakable: "&7Item irrompible"
+
+stat.message.no_bonus: "Sin bonus"
+stat.damage: "&cDaño: &7%s"
+stat.bow_damage: "&cDaño (flecha): &7%s"
+stat.hand_damage: "&cDaño (mano): &7%s"
+stat.health: "&2Vida: &7%s"
+stat.armor: "&3Armadura: &7%s"
+stat.crit_chance: "&6Chance de golpe crítico: &7%s"
+stat.crit_damage: "&6Daño de golpe crítico: &7%s"
+stat.speed: "&9Velocidad: &7%s"
+stat.jump: "&9Salto: &7%s"
+
+backpack.desc: "&8&oColócala en el espacio indicado y haz &fClick Derecho"
+backpack.size: "&aTamaño: &7%d"

@@ -46,11 +46,8 @@ public class MyPetManager implements Listener {
     private static final String MYPET_TAG = "mypet.uuid";
 
     public static boolean init(RPGInventory instance) {
-        if (Bukkit.getPluginManager().isPluginEnabled("MyPet")) {
-            if (MyPetManager.getMyPetSlot() == null) {
-                instance.getLogger().warning("MyPet found, but slot for MyPet not configured!");
-            }
-
+        if (MyPetManager.getMyPetSlot() == null) {
+            instance.getLogger().warning("MyPet found, but slot for MyPet not configured!");
             return false;
         }
 
@@ -69,7 +66,8 @@ public class MyPetManager implements Listener {
                 || swapMyPets(player, isMyPetItem(currentItem), cursor);
     }
 
-    public static Slot getMyPetSlot() {
+    @Nullable
+    private static Slot getMyPetSlot() {
         for (Slot slot : SlotManager.getSlotManager().getSlots()) {
             if (slot.getSlotType() == Slot.SlotType.MYPET) {
                 return slot;

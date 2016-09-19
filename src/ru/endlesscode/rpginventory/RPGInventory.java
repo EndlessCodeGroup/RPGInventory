@@ -3,6 +3,7 @@ package ru.endlesscode.rpginventory;
 import com.comphenix.protocol.ProtocolLibrary;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
@@ -101,7 +102,7 @@ public class RPGInventory extends JavaPlugin {
         this.getLogger().info(BackpackManager.init(this) ? "Backpack system is enabled." : "Backpack system isn't loaded.");
 
         // Hook MyPet
-        if (MyPetManager.init(this)) {
+        if (Bukkit.getPluginManager().isPluginEnabled("MyPet") && MyPetManager.init(this)) {
             this.getLogger().info("MyPet hooked!");
         }
 
