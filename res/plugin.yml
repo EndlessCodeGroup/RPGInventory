@@ -26,7 +26,7 @@ permissions:
     description: Gives access to all user commands
     default: true
     children:
-      rpginventory.textures: true
+      rpginventory.fixhp: true
       rpginventory.open: true
   rpginventory.container:
     description: Allows you to open containers
