@@ -93,11 +93,11 @@ public class InventoryLocker {
         FileLanguage lang = RPGInventory.getLanguage();
 
         if (Config.getConfig().getBoolean("slots.money.enabled")) {
-            lore.add(String.format(lang.getCaption("buyable.money"), StringUtils.roundDouble(Config.getConfig().getDouble("slots.money.cost.line" + line))));
+            lore.add(lang.getCaption("buyable.money", StringUtils.doubleToString(Config.getConfig().getDouble("slots.money.cost.line" + line))));
         }
 
         if (Config.getConfig().getBoolean("slots.level.enabled")) {
-            lore.add(String.format(lang.getCaption("buyable.level"), Config.getConfig().getInt("slots.level.required.line" + line)));
+            lore.add(lang.getCaption("buyable.level", Config.getConfig().getInt("slots.level.required.line" + line)));
         }
         im.setLore(lore);
         slot.setItemMeta(im);
@@ -169,7 +169,7 @@ public class InventoryLocker {
             int requirement = Config.getConfig().getInt("slots.level.required.line" + line);
 
             if (!PlayerUtils.checkLevel(player, requirement)) {
-                player.sendMessage(String.format(RPGInventory.getLanguage().getCaption("error.level"), requirement));
+                PlayerUtils.sendMessage(player, RPGInventory.getLanguage().getCaption("error.level", requirement));
                 return false;
             }
         }

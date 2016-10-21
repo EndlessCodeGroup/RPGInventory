@@ -29,6 +29,7 @@ error.fixhp: "&6No es necesario arreglar tu cantidad de vida"
 
 message.buyed: "&a&lYa haz comprado el espacio"
 message.fixhp: "&6Tu cantidad de vida ha sido arreglada, por favor reingrese al servidor"
+message.perms: "&cYou don't have permission to use this command"
 
 pet.name: "%s &f[%s]"
 pet.health: "&cVida: &7%d"
@@ -62,3 +63,4 @@ stat.jump: "&9Salto: &7%s"
 
 backpack.desc: "&8&oColócala en el espacio indicado y haz &fClick Derecho"
 backpack.size: "&aTamaño: &7%d"
+backpack.limit: "&cYou can't have more than %d backpack!"

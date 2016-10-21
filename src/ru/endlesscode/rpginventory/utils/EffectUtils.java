@@ -89,7 +89,7 @@ public class EffectUtils {
             timesPacket.setStay(20 * time);
             ProtocolLibrary.getProtocolManager().sendServerPacket(player, timesPacket.getHandle());
 
-            title = StringUtils.coloredLine(StringUtils.applyPlaceHolders(title, player));
+            title = StringUtils.coloredLine(StringUtils.setPlaceholders(player, title));
             titlePacket.setAction(EnumWrappers.TitleAction.TITLE);
             titlePacket.setTitle(WrappedChatComponent.fromChatMessage(StringUtils.coloredLine(title))[0]);
             ProtocolLibrary.getProtocolManager().sendServerPacket(player, titlePacket.getHandle());
@@ -111,7 +111,7 @@ public class EffectUtils {
                         return;
                     }
 
-                    String subtitle = StringUtils.coloredLine(StringUtils.applyPlaceHolders(subtitles.get(line), player));
+                    String subtitle = StringUtils.coloredLine(StringUtils.setPlaceholders(player, subtitles.get(line)));
                     titlePacket.setAction(EnumWrappers.TitleAction.SUBTITLE);
                     titlePacket.setTitle(WrappedChatComponent.fromChatMessage(subtitle)[0]);
                     ProtocolLibrary.getProtocolManager().sendServerPacket(player, titlePacket.getHandle());

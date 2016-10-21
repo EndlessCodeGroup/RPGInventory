@@ -30,10 +30,10 @@ public class ItemStat {
     }
 
     String getStringValue() {
-        String value = this.operationType.getOperation() + StringUtils.roundDouble(this.minValue);
+        String value = this.operationType.getOperation() + StringUtils.doubleToString(this.minValue);
 
         if (this.maxValue != -1) {
-            value += "-" + StringUtils.roundDouble(this.maxValue);
+            value += "-" + StringUtils.doubleToString(this.maxValue);
         }
 
         if (this.percentage) {

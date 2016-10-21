@@ -145,7 +145,7 @@ public class ItemManager {
 
         if (!PlayerUtils.checkLevel(player, classedItem.getLevel())) {
             if (notifyPlayer) {
-                player.sendMessage(String.format(RPGInventory.getLanguage().getCaption("error.item.level"), classedItem.getLevel()));
+                PlayerUtils.sendMessage(player, RPGInventory.getLanguage().getCaption("error.item.level", classedItem.getLevel()));
             }
 
             return false;
@@ -156,7 +156,7 @@ public class ItemManager {
         }
 
         if (notifyPlayer) {
-            player.sendMessage(String.format(RPGInventory.getLanguage().getCaption("error.item.class"), classedItem.getClassesString()));
+            PlayerUtils.sendMessage(player, RPGInventory.getLanguage().getCaption("error.item.class", classedItem.getClassesString()));
         }
 
         return false;
@@ -196,13 +196,13 @@ public class ItemManager {
                     break;
                 case "_LEVEL_":
                     if (item.getLevel() != -1) {
-                        lore.add(String.format(lang.getCaption("item.level"), item.getLevel()));
+                        lore.add(lang.getCaption("item.level", item.getLevel()));
                         lastIsSeparator = false;
                     }
                     break;
                 case "_CLASS_":
                     if (item.getClasses() != null) {
-                        lore.add(String.format(lang.getCaption("item.class"), item.getClassesString()));
+                        lore.add(lang.getCaption("item.class", item.getClassesString()));
                         lastIsSeparator = false;
                     }
                     break;
@@ -214,11 +214,11 @@ public class ItemManager {
                     break;
                 case "_SKILLS_":
                     if (item.hasLeftClickCaption()) {
-                        lore.add(String.format(lang.getCaption("item.left-click"), item.getLeftClickCaption()));
+                        lore.add(lang.getCaption("item.left-click", item.getLeftClickCaption()));
                         lastIsSeparator = false;
                     }
                     if (item.hasRightClickCaption()) {
-                        lore.add(String.format(lang.getCaption("item.right-click"), item.getRightClickCaption()));
+                        lore.add(lang.getCaption("item.right-click", item.getRightClickCaption()));
                         lastIsSeparator = false;
                     }
                     break;
@@ -228,7 +228,7 @@ public class ItemManager {
                         lastIsSeparator = false;
                     } else {
                         for (ItemStat stat : item.getStats()) {
-                            lore.add(String.format(lang.getCaption("stat." + stat.getType().name().toLowerCase()), stat.getStringValue()));
+                            lore.add(lang.getCaption("stat." + stat.getType().name().toLowerCase(), stat.getStringValue()));
                             lastIsSeparator = false;
                         }
                     }

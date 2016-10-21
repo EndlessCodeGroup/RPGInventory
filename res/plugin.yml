@@ -1,11 +1,22 @@
 name: RPGInventory
-version: 2.0.3
+version: 2.0.4
 description: Change inventory how you need
 author: OsipXD
 
 main: ru.endlesscode.rpginventory.RPGInventory
-depend: [ProtocolLib, Vault, LibsDisguises]
-softdepend: [BattleLevels, Skills, Heroes, RacesAndClasses, SkillAPI, MyPet, RPGPlayerLeveling]
+depend:
+  - ProtocolLib
+  - Vault
+  - LibsDisguises
+softdepend:
+  - BattleLevels
+  - Skills
+  - Heroes
+  - RacesAndClasses
+  - SkillAPI
+  - MyPet
+  - RPGPlayerLeveling
+  - PlaceholderAPI
 
 commands:
   rpginventory:
@@ -40,10 +51,13 @@ permissions:
     children:
       rpginventory.open: true
   rpginventory.keep.items:
-    description: Player with this permission will not lose items on dead
+    description: Player with this permission will not lose any items on dead
     default: op
   rpginventory.keep.armor:
     description: Player with this permission will not lose armor on dead
+    default: op
+  rpginventory.keep.rpginv:
+    description: Player with this permission will not lose items from RPGInventory on dead
     default: op
   rpginventory.fixhp:
     description: Allows you to fix corrupted hp

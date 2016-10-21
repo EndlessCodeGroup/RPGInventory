@@ -14,6 +14,7 @@ import ru.endlesscode.rpginventory.RPGInventory;
 import ru.endlesscode.rpginventory.inventory.InventoryLocker;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
 import ru.endlesscode.rpginventory.utils.ItemUtils;
+import ru.endlesscode.rpginventory.utils.PlayerUtils;
 
 import java.util.List;
 
@@ -64,13 +65,13 @@ public class LockerListener implements Listener {
                     event.setCancelled(true);
                 }
             } else {
-                player.sendMessage(RPGInventory.getLanguage().getCaption("error.previous"));
+                PlayerUtils.sendMessage(player, RPGInventory.getLanguage().getCaption("error.previous"));
                 event.setCancelled(true);
             }
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerDeath(PlayerDeathEvent event) {
         if (!InventoryManager.playerIsLoaded(event.getEntity())) {
             return;

@@ -3,6 +3,7 @@ package ru.endlesscode.rpginventory.inventory.slot;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import ru.endlesscode.rpginventory.inventory.InventoryManager;
 
 /**
  * Created by OsipXD on 06.09.2015
@@ -27,7 +28,7 @@ public class ActionSlot extends Slot {
         }
 
         if (this.actionType == ActionType.WORKBENCH) {
-            player.openWorkbench(null, true);
+            InventoryManager.get(player).openWorkbench();
         } else if (this.actionType == ActionType.ENDERCHEST) {
             player.openInventory(player.getEnderChest());
         } else if (this.actionType == ActionType.COMMAND && command != null) {

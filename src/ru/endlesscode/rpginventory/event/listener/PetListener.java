@@ -1,9 +1,6 @@
 package ru.endlesscode.rpginventory.event.listener;
 
-import org.bukkit.GameMode;
-import org.bukkit.Material;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.Sound;
+import org.bukkit.*;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -14,7 +11,6 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityPortalEnterEvent;
 import org.bukkit.event.entity.EntityTargetLivingEntityEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
-import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
@@ -36,9 +32,7 @@ import ru.endlesscode.rpginventory.pet.PetManager;
 import ru.endlesscode.rpginventory.pet.PetType;
 import ru.endlesscode.rpginventory.utils.EntityUtils;
 import ru.endlesscode.rpginventory.utils.ItemUtils;
-import ru.endlesscode.rpginventory.utils.StringUtils;
-
-import java.util.List;
+import ru.endlesscode.rpginventory.utils.PlayerUtils;
 
 /**
  * Created by OsipXD on 18.09.2015
@@ -48,33 +42,31 @@ import java.util.List;
 public class PetListener implements Listener {
     @EventHandler
     public void onItemUse(PlayerInteractEvent event) {
-        if (event.getItem() != null) {
-            Player player = event.getPlayer();
+        Player player = event.getPlayer();
 
-            if (!InventoryManager.playerIsLoaded(player)) {
-                return;
+        if (event.isCancelled() || !event.hasItem() || !InventoryManager.playerIsLoaded(player)) {
+            return;
+        }
+
+        Inventory inventory = InventoryManager.get(player).getInventory();
+        ItemStack petItem = event.getItem();
+
+        if (player.getGameMode() == GameMode.CREATIVE && PetManager.isPetItem(petItem)) {
+            petItem = PetManager.toPetItem(petItem);
+            player.getEquipment().setItemInMainHand(petItem);
+        }
+
+        if (PetType.isPetItem(petItem)
+                && (event.getAction() == Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.RIGHT_CLICK_AIR)) {
+            Slot petSlot = SlotManager.getSlotManager().getPetSlot();
+            if (petSlot != null && petSlot.isCup(inventory.getItem(PetManager.getPetSlotId()))
+                    && ItemManager.allowedForPlayer(player, petItem, false)) {
+                inventory.setItem(PetManager.getPetSlotId(), event.getItem());
+                PetManager.spawnPet(player, petItem);
+                player.getEquipment().setItemInMainHand(null);
             }
 
-            Inventory inventory = InventoryManager.get(player).getInventory();
-            ItemStack petItem = event.getItem();
-
-            if (player.getGameMode() == GameMode.CREATIVE && PetManager.isPetItem(petItem)) {
-                petItem = PetManager.toPetItem(petItem);
-                player.getEquipment().setItemInMainHand(petItem);
-            }
-
-            if (PetType.isPetItem(petItem)
-                    && (event.getAction() == Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.RIGHT_CLICK_AIR)) {
-                Slot petSlot = SlotManager.getSlotManager().getPetSlot();
-                if (petSlot != null && petSlot.isCup(inventory.getItem(PetManager.getPetSlotId()))
-                        && ItemManager.allowedForPlayer(player, petItem, false)) {
-                    inventory.setItem(PetManager.getPetSlotId(), event.getItem());
-                    PetManager.spawnPet(player, petItem);
-                    player.getEquipment().setItemInMainHand(null);
-                }
-
-                event.setCancelled(true);
-            }
+            event.setCancelled(true);
         }
     }
 
@@ -189,7 +181,21 @@ public class PetListener implements Listener {
 
     @EventHandler
     public void onAttack(EntityDamageByEntityEvent event) {
-        if (!InventoryManager.isAllowedWorld(event.getEntity().getWorld())) {
+        if (event.isCancelled() || !InventoryManager.isAllowedWorld(event.getEntity().getWorld())) {
+            return;
+        }
+
+        Player player = null;
+        if (event.getDamager().getType() == EntityType.PLAYER) {
+            player = (Player) event.getDamager();
+        } else if (event.getDamager().getType() == EntityType.ARROW) {
+            Arrow arrow = (Arrow) event.getDamager();
+            if (arrow.getShooter() instanceof Player) {
+                player = (Player) arrow.getShooter();
+            }
+        }
+
+        if (player != null && !InventoryManager.playerIsLoaded(player)) {
             return;
         }
 
@@ -201,41 +207,19 @@ public class PetListener implements Listener {
                 event.setDamage(petType.getDamage());
             }
         } else if (event.getEntity() instanceof LivingEntity && (petEntity = (LivingEntity) event.getEntity()) instanceof Tameable
-                && !Config.getConfig().getBoolean("attack.own-pet")) {
+                && !Config.getConfig().getBoolean("attack.own-pet") && player != null) {
             Tameable ownedEntity = (Tameable) petEntity;
-            if (event.getDamager().getType() == EntityType.PLAYER && ownedEntity.isTamed()
-                    && ownedEntity.getOwner().getName().equals(event.getDamager().getName())) {
+            if (ownedEntity.isTamed() && ownedEntity.getOwner().getUniqueId().equals(event.getDamager().getUniqueId())) {
                 event.setCancelled(true);
-            } else if (event.getDamager().getType() == EntityType.ARROW) {
-                Arrow arrow = (Arrow) event.getDamager();
-                if (arrow.getShooter() instanceof Player && ownedEntity.isTamed()
-                        && ownedEntity.getOwner().getUniqueId().equals(((Player) arrow.getShooter()).getUniqueId())) {
-                    event.setCancelled(true);
-                }
             }
-        } else if (event.getDamager().getType() == EntityType.PLAYER) {
-            Player player = (Player) event.getDamager();
-            if (!InventoryManager.playerIsLoaded(player)) {
-                return;
-            }
+        } else if (player != null) {
+            PlayerWrapper wrapper = InventoryManager.get(player);
+            LivingEntity pet = wrapper.getPet();
 
-            if (SlotManager.getSlotManager().getSlot(player.getInventory().getHeldItemSlot(), InventoryType.SlotType.QUICKBAR) == null) {
-                List<Slot> activeSlots = SlotManager.getSlotManager().getActiveSlots();
-                if (activeSlots.size() == 0) {
-                    return;
-                }
-
-                if (Config.getConfig().getBoolean("attack.force-weapon")) {
-                    for (Slot activeSlot : activeSlots) {
-                        if (!InventoryManager.isQuickEmptySlot(player.getInventory().getItem(activeSlot.getQuickSlot()))) {
-                            player.getInventory().setHeldItemSlot(activeSlot.getQuickSlot());
-                            break;
-                        }
-                    }
-                }
-
-                if (Config.getConfig().getBoolean("attack.require-weapon")) {
-                    event.setCancelled(true);
+            if (pet != null && pet.getType() == EntityType.WOLF && player != ((Wolf) pet).getTarget()) {
+                Location target = player.getLocation();
+                if (target.distance(pet.getLocation()) > 20) {
+                    PetManager.respawnPet(player);
                 }
             }
         }
@@ -254,7 +238,7 @@ public class PetListener implements Listener {
 
         Horse vehicle = (Horse) event.getVehicle();
         if (PetManager.getPetFromEntity(vehicle) != null && player != vehicle.getOwner()) {
-            player.sendMessage(String.format(StringUtils.coloredLine(RPGInventory.getLanguage().getCaption("error.mount.owner")), vehicle.getOwner().getName()));
+            PlayerUtils.sendMessage(player, RPGInventory.getLanguage().getCaption("error.mount.owner", vehicle.getOwner().getName()));
             event.setCancelled(true);
         }
     }
@@ -301,7 +285,7 @@ public class PetListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerMove(PlayerMoveEvent event) {
         Player player = event.getPlayer();
-        if (!InventoryManager.playerIsLoaded(player)) {
+        if (event.isCancelled() || !InventoryManager.playerIsLoaded(player)) {
             return;
         }
 

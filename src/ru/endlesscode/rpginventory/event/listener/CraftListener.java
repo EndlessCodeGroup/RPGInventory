@@ -8,14 +8,15 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.scheduler.BukkitRunnable;
-import ru.endlesscode.rpginventory.RPGInventory;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
 import ru.endlesscode.rpginventory.inventory.craft.CraftExtension;
 import ru.endlesscode.rpginventory.inventory.craft.CraftManager;
+import ru.endlesscode.rpginventory.misc.Config;
+import ru.endlesscode.rpginventory.utils.PlayerUtils;
 
 import java.util.List;
 
@@ -34,7 +35,9 @@ public class CraftListener extends PacketAdapter implements Listener {
     @Override
     public void onPacketSending(PacketEvent event) {
         Player player = event.getPlayer();
-        if (!InventoryManager.playerIsLoaded(player)) {
+        //noinspection ConstantConditions
+        if (event.isCancelled() || !InventoryManager.playerIsLoaded(player)
+                || !InventoryManager.get(player).isPocketCraft() && !Config.getConfig().getBoolean("craft.workbench", true)) {
             return;
         }
 
@@ -56,7 +59,10 @@ public class CraftListener extends PacketAdapter implements Listener {
     @EventHandler(priority = EventPriority.HIGH)
     public void onInventoryClick(InventoryClickEvent event) {
         final Player player = (Player) event.getWhoClicked();
-        if (!InventoryManager.playerIsLoaded(player) || event.getInventory().getType() != InventoryType.WORKBENCH) {
+        //noinspection ConstantConditions
+        if (event.isCancelled() || !InventoryManager.playerIsLoaded(player)
+                || event.getInventory().getType() != InventoryType.WORKBENCH
+                || !InventoryManager.get(player).isPocketCraft() && !Config.getConfig().getBoolean("craft.workbench", true)) {
             return;
         }
 
@@ -65,17 +71,23 @@ public class CraftListener extends PacketAdapter implements Listener {
             for (int slot : extension.getSlots()) {
                 if (slot == event.getRawSlot()) {
                     event.setCancelled(true);
-
-                    new BukkitRunnable() {
-                        @Override
-                        public void run() {
-                            player.updateInventory();
-                        }
-                    }.runTaskLater(RPGInventory.getInstance(), 1);
-
+                    PlayerUtils.updateInventory(player);
                     return;
                 }
             }
+        }
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onWorkbenchClosed(InventoryCloseEvent event) {
+        Player player = (Player) event.getPlayer();
+        if (!InventoryManager.playerIsLoaded(player)) {
+            return;
+        }
+
+        if (event.getInventory().getType() == InventoryType.WORKBENCH) {
+            //noinspection ConstantConditions
+            InventoryManager.get(player).onWorkbenchClosed();
         }
     }
 }

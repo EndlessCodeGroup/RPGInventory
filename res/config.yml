@@ -67,6 +67,9 @@ backpacks:
   # Comment it out or set 0 for infinity backpacks (NOT RECOMMENDED)
   expiration-time: 30
 
+  # Permitted number of backpacks in player inventory (0 - for unlimited)
+  limit: 1
+
 containers:
   # Disallow to open containers
   block: false
@@ -111,14 +114,12 @@ health:
 
 # Join messages
 join-messages:
-  # Enable join messages
-  enabled: true
-
   # Delay in seconds for every message
   delay: 3
 
   # Default message on every join
   default:
+    enabled: true
     title: "&l&2Welcome to server!"
     text:
     - "&6Glad to see you, &3%PLAYER%"
@@ -126,6 +127,7 @@ join-messages:
 
   # Message on first join and if player declined resource-pack
   rp-info:
+    enabled: true
     title: "&l&4It is important!"
     text:
     - "&6You should &callow &6resource pack to play on this server"
@@ -200,6 +202,9 @@ slots:
 craft:
   # Enable craft extensions
   enabled: true
+
+  # Enable for workbench
+  workbench: true
 
   # Texture of extendable slots
   extendable: DIAMOND_HOE:0

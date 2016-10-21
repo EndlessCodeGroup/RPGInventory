@@ -215,21 +215,21 @@ public class PetType extends ClassedItem {
 
         // Add class and level requirements
         if (this.getLevel() != -1) {
-            lore.add(String.format(lang.getCaption("item.level"), this.getLevel()));
+            lore.add(lang.getCaption("item.level", this.getLevel()));
         }
 
         if (this.getClasses() != null) {
-            lore.add(String.format(lang.getCaption("item.class"), this.getClassesString()));
+            lore.add(lang.getCaption("item.class", this.getClassesString()));
         }
 
         lore.addAll(this.lore);
 
-        lore.add(String.format(lang.getCaption("pet.health"), (int) (this.health)));
+        lore.add(lang.getCaption("pet.health", (int) (this.health)));
         if (this.role == Role.COMPANION && (this.attackMobs || this.attackPlayers)) {
-            lore.add(String.format(lang.getCaption("pet.damage"), (int) (this.damage)));
+            lore.add(lang.getCaption("pet.damage", (int) (this.damage)));
         }
-        lore.add(String.format(lang.getCaption("pet.speed"), Utils.round(this.speed, 2)));
-        lore.add(String.format(lang.getCaption("pet.revival." + (this.revival ? "yes" : "no")), this.cooldown));
+        lore.add(lang.getCaption("pet.speed", Utils.round(this.speed, 2)));
+        lore.add(lang.getCaption("pet.revival." + (this.revival ? "yes" : "no"), this.cooldown));
 
         meta.setLore(lore);
         spawnItem.setItemMeta(meta);

@@ -59,7 +59,7 @@ public class PetFood extends TexturedItem {
         FileLanguage lang = RPGInventory.getLanguage();
         List<String> lore = new ArrayList<>();
         lore.addAll(this.lore);
-        lore.add(String.format(lang.getCaption("pet.food.value"), (int) (this.value)));
+        lore.add(lang.getCaption("pet.food.value", (int) (this.value)));
         meta.setLore(lore);
         spawnItem.setItemMeta(meta);
 

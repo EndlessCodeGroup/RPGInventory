@@ -1,6 +1,6 @@
 firststart: "\n
 &3============================== RPGInventory ================================\n
-&cBefore using &eRPGInventory&c, add changed textures to your server resource-pack\n
+&cBefore using &eRPGInventory&c, add changed textures to the resource-pack\n
 and configure items that can be put in the inventory slots. After that,\n
 set value in the config &eenabled: true\n
 &3============================================================================"
@@ -29,6 +29,7 @@ error.fixhp: "&6Fixing HP not needed"
 
 message.buyed: "&a&lUspesne jsi zakoupil slot"
 message.fixhp: "&6Your HP was fixed, please login to server again."
+message.perms: "&cYou don't have permission to use this command"
 
 pet.name: "%s &f[%s]"
 pet.health: "&cZivoty: &7%d"
@@ -62,3 +63,4 @@ stat.jump: "&9Skoky: &7%s"
 
 backpack.desc: "&8&oPrendej ho do spravneho slotu v RPG inventari"
 backpack.size: "&aKapacita: &7%d"
+backpack.limit: "&cYou can't have more than %d backpack!"

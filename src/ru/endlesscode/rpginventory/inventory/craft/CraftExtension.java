@@ -48,11 +48,6 @@ public class CraftExtension {
         }
     }
 
-    @Nullable
-    public List<CraftExtension> getIncludes() {
-        return includes;
-    }
-
     public ItemStack getCapItem() {
         return capItem;
     }
@@ -65,11 +60,11 @@ public class CraftExtension {
         return slots;
     }
 
-    public boolean isUnlockedForPlayer(Player player) {
+    boolean isUnlockedForPlayer(Player player) {
         return RPGInventory.getPermissions().has(player, "rpginventory.craft." + this.name);
     }
 
-    public void registerExtension(List<CraftExtension> extensions) {
+    void registerExtension(List<CraftExtension> extensions) {
         extensions.remove(this);
 
         if (this.includes == null) {

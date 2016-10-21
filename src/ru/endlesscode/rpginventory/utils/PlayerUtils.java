@@ -10,7 +10,10 @@ import me.baks.rpl.api.API;
 import me.leothepro555.skills.Skills;
 import me.robin.battlelevels.api.BattleLevelsAPI;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 import ru.endlesscode.rpginventory.RPGInventory;
+import ru.endlesscode.rpginventory.inventory.InventoryManager;
+import ru.endlesscode.rpginventory.inventory.PlayerWrapper;
 
 import java.util.List;
 
@@ -83,11 +86,34 @@ public class PlayerUtils {
     public static boolean checkMoney(Player player, double cost) {
         double balance = (RPGInventory.economyConnected() ? RPGInventory.getEconomy().getBalance(player) : 0);
         if (balance < cost) {
-            player.sendMessage(String.format(RPGInventory.getLanguage().getCaption("error.money"), StringUtils.roundDouble(cost - balance)));
+            PlayerUtils.sendMessage(player, RPGInventory.getLanguage().getCaption("error.money", StringUtils.doubleToString(cost - balance)));
             return false;
         }
 
         return true;
+    }
+
+    public static void updateInventory(final Player player) {
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                player.updateInventory();
+            }
+        }.runTaskLater(RPGInventory.getInstance(), 1);
+    }
+
+    public static void sendMessage(Player player, String message) {
+        if (InventoryManager.playerIsLoaded(player)) {
+            PlayerWrapper wrapper = InventoryManager.get(player);
+
+            if (wrapper.getLastMessage().equals(message)) {
+                return;
+            }
+
+            wrapper.setLastMessage(message);
+        }
+
+        player.sendMessage(message);
     }
 
     public enum LevelSystem {

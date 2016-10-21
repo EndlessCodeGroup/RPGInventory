@@ -47,7 +47,7 @@ public class BackpackType extends TexturedItem {
         List<String> lore = new ArrayList<>();
         lore.addAll(Arrays.asList(lang.getCaption("backpack.desc").split("\n")));
         lore.addAll(this.lore);
-        lore.add(String.format(lang.getCaption("backpack.size"), this.size));
+        lore.add(lang.getCaption("backpack.size", this.size));
 
         meta.setLore(lore);
         spawnItem.setItemMeta(meta);

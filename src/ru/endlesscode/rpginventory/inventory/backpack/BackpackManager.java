@@ -4,13 +4,16 @@ import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ru.endlesscode.rpginventory.RPGInventory;
 import ru.endlesscode.rpginventory.event.listener.BackpackListener;
+import ru.endlesscode.rpginventory.inventory.InventoryManager;
 import ru.endlesscode.rpginventory.inventory.slot.SlotManager;
+import ru.endlesscode.rpginventory.misc.Config;
 import ru.endlesscode.rpginventory.utils.ItemUtils;
 
 import java.io.File;
@@ -23,6 +26,8 @@ import java.util.*;
  * All rights reserved 2014 - 2016 © «EndlessCode Group»
  */
 public class BackpackManager {
+    private static int BACKPACK_LIMIT;
+
     private static final HashMap<String, BackpackType> BACKPACK_TYPES = new HashMap<>();
     private static final HashMap<UUID, Backpack> BACKPACKS = new HashMap<>();
 
@@ -57,12 +62,14 @@ public class BackpackManager {
             return false;
         }
 
+        BACKPACK_LIMIT = Config.getConfig().getInt("backpacks.limit", 0);
+
         // Register events
         instance.getServer().getPluginManager().registerEvents(new BackpackListener(), instance);
         return true;
     }
 
-    public static boolean isEnabled() {
+    private static boolean isEnabled() {
         return SlotManager.getSlotManager().getBackpackSlot() != null;
     }
 
@@ -154,5 +161,33 @@ public class BackpackManager {
     @Contract("null -> false")
     public static boolean isBackpack(ItemStack item) {
         return !ItemUtils.isEmpty(item) && ItemUtils.hasTag(item, ItemUtils.BACKPACK_TAG);
+    }
+
+    public static boolean playerCanTakeBackpack(Player player) {
+        if (BACKPACK_LIMIT == 0) {
+            return true;
+        }
+
+        // Check vanilla inventory
+        Inventory inventory = player.getInventory();
+
+        int count = 0;
+        for (ItemStack item : inventory.getContents()) {
+            if (isBackpack(item)) {
+                count++;
+            }
+        }
+
+        // Check RPGInventory slots
+        inventory = InventoryManager.get(player).getInventory();
+        if (BackpackManager.isBackpack(inventory.getItem(SlotManager.getSlotManager().getBackpackSlot().getSlotId()))) {
+            count++;
+        }
+
+        return count < BACKPACK_LIMIT;
+    }
+
+    public static int getLimit() {
+        return BACKPACK_LIMIT;
     }
 }

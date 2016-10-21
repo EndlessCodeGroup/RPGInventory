@@ -153,7 +153,7 @@ public class SlotManager {
     public List<Slot> getPassiveSlots() {
         List<Slot> passiveSlots = new ArrayList<>();
         for (Slot slot : this.slots) {
-            if (slot.getSlotType() == Slot.SlotType.PASSIVE || slot.getSlotType() == Slot.SlotType.BACKPACK) {
+            if (slot.getSlotType() == Slot.SlotType.PASSIVE || slot.getSlotType() == Slot.SlotType.BACKPACK || slot.getSlotType() == Slot.SlotType.ELYTRA) {
                 passiveSlots.add(slot);
             }
         }
