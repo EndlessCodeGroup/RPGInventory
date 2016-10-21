@@ -135,6 +135,19 @@ public class ConfigUpdater {
                     config.set("join-messages.rp-info.title", "&l&4It is important!");
                     config.set("join-messages.default.title", "&l&2Welcome to server!");
                 }
+            case 201:
+            case 202:
+            case 203:
+                // Fixing join messages disabling
+                config.set("join-messages.enabled", null);
+                config.set("join-messages.rp-info.enabled", true);
+                config.set("join-messages.default.enabled", true);
+
+                // Added backpacks limit
+                config.set("backpacks.limit", 1);
+
+                // Added ability to disable extension for workbench
+                config.set("craft.workbench", true);
         }
     }
 }

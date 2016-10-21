@@ -4,6 +4,7 @@ import org.bukkit.Location;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockDispenseEvent;
@@ -13,7 +14,6 @@ import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.scheduler.BukkitRunnable;
 import ru.endlesscode.rpginventory.RPGInventory;
 import ru.endlesscode.rpginventory.api.InventoryAPI;
 import ru.endlesscode.rpginventory.inventory.ActionType;
@@ -23,6 +23,7 @@ import ru.endlesscode.rpginventory.inventory.slot.Slot;
 import ru.endlesscode.rpginventory.inventory.slot.SlotManager;
 import ru.endlesscode.rpginventory.utils.InventoryUtils;
 import ru.endlesscode.rpginventory.utils.ItemUtils;
+import ru.endlesscode.rpginventory.utils.PlayerUtils;
 
 /**
  * Created by OsipXD on 08.04.2016
@@ -30,10 +31,10 @@ import ru.endlesscode.rpginventory.utils.ItemUtils;
  * All rights reserved 2014 - 2016 © «EndlessCode Group»
  */
 public class ArmorEquipListener implements Listener {
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onQuickEquip(PlayerInteractEvent event) {
         final Player player = event.getPlayer();
-        if (!InventoryManager.playerIsLoaded(player)
+        if (event.isCancelled() || !InventoryManager.playerIsLoaded(player)
                 || event.getAction() != Action.RIGHT_CLICK_AIR && event.getAction() != Action.RIGHT_CLICK_BLOCK
                 || event.getAction() == Action.RIGHT_CLICK_BLOCK && !event.getClickedBlock().getState().getClass().getSimpleName().contains("BlockState")) {
             return;
@@ -53,12 +54,7 @@ public class ArmorEquipListener implements Listener {
 
             event.setCancelled(!InventoryManager.validateArmor(player, InventoryAction.PLACE_ONE, armorSlot, item));
 
-            new BukkitRunnable() {
-                @Override
-                public void run() {
-                    player.updateInventory();
-                }
-            }.runTaskLater(RPGInventory.getInstance(), 1);
+            PlayerUtils.updateInventory(player);
         }
     }
 
@@ -88,7 +84,7 @@ public class ArmorEquipListener implements Listener {
         }
 
         if (InventoryManager.get(player).isFlying()) {
-            player.sendMessage(RPGInventory.getLanguage().getCaption("error.fall"));
+            PlayerUtils.sendMessage(player, RPGInventory.getLanguage().getCaption("error.fall"));
             event.setCancelled(true);
             return;
         }

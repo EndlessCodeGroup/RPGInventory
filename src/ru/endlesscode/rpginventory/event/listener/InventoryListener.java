@@ -56,7 +56,7 @@ public class InventoryListener implements Listener {
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
-        ResourcePackListener.removePlayer(player);
+        PlayerLoader.removePlayer(player);
         InventoryManager.unloadPlayerInventory(player);
     }
 
@@ -68,15 +68,15 @@ public class InventoryListener implements Listener {
             return;
         }
 
-        if (!event.getKeepInventory()) {
+        if (!event.getKeepInventory() && !RPGInventory.getPermissions().has(player, "rpginventory.keep.rpginv")) {
             Inventory inventory = InventoryManager.get(player).getInventory();
-            boolean dropForPlayer = !RPGInventory.getPermissions().has(player, "rpginventory.keep.all");
 
             int petSlotId = PetManager.getPetSlotId();
             if (PetManager.isEnabled() && inventory.getItem(petSlotId) != null) {
                 Slot petSlot = SlotManager.getSlotManager().getPetSlot();
                 ItemStack petItem = inventory.getItem(petSlotId);
-                if (petSlot != null && petSlot.isDrop() && dropForPlayer && !petSlot.isCup(petItem)) {
+
+                if (petSlot != null && petSlot.isDrop() && !petSlot.isCup(petItem)) {
                     event.getDrops().add(PetType.clone(petItem));
                     RPGInventory.getInstance().getServer().getPluginManager().callEvent(new PetUnequipEvent(player));
                     inventory.setItem(petSlotId, petSlot.getCup());
@@ -86,7 +86,8 @@ public class InventoryListener implements Listener {
             for (Slot slot : SlotManager.getSlotManager().getPassiveSlots()) {
                 for (int slotId : slot.getSlotIds()) {
                     ItemStack item = inventory.getItem(slotId);
-                    if (dropForPlayer && !slot.isQuick() && !slot.isCup(item) && slot.isDrop()
+
+                    if (!slot.isQuick() && !slot.isCup(item) && slot.isDrop()
                             && (!CustomItem.isCustomItem(item) || ItemManager.getCustomItem(item).isDrop())) {
                         event.getDrops().add(inventory.getItem(slotId));
                         inventory.setItem(slotId, slot.getCup());
@@ -179,7 +180,7 @@ public class InventoryListener implements Listener {
     public void onPickupToQuickSlot(PlayerPickupItemEvent event) {
         Player player = event.getPlayer();
 
-        if (!InventoryManager.playerIsLoaded(player)) {
+        if (event.isCancelled() || !InventoryManager.playerIsLoaded(player) || !ItemManager.allowedForPlayer(player, event.getItem().getItemStack(), false)) {
             return;
         }
 
@@ -239,12 +240,16 @@ public class InventoryListener implements Listener {
     public void onInventoryClick(final InventoryClickEvent event) {
         final Player player = (Player) event.getWhoClicked();
 
-        if (!InventoryManager.playerIsLoaded(player)) {
+        if (!InventoryManager.playerIsLoaded(player) || event.isCancelled()) {
             return;
         }
 
         final int rawSlot = event.getRawSlot();
         InventoryType.SlotType slotType = InventoryUtils.getSlotType(event.getSlotType(), rawSlot);
+
+        if (slotType == InventoryType.SlotType.OUTSIDE) {
+            return;
+        }
 
         if (rawSlot > event.getView().getTopInventory().getSize() && event.getSlot() < 9) {
             slotType = InventoryType.SlotType.QUICKBAR;
@@ -287,7 +292,7 @@ public class InventoryListener implements Listener {
                 return;
             }
 
-            if (rawSlot == -999 || rawSlot >= 54 && slotType != InventoryType.SlotType.QUICKBAR || slot == null) {
+            if (rawSlot >= 54 && slotType != InventoryType.SlotType.QUICKBAR || slot == null) {
                 return;
             }
 
@@ -297,7 +302,7 @@ public class InventoryListener implements Listener {
 
                 // Check flying
                 if (playerWrapper.isFlying()) {
-                    player.sendMessage(RPGInventory.getLanguage().getCaption("error.fall"));
+                    PlayerUtils.sendMessage(player, RPGInventory.getLanguage().getCaption("error.fall"));
                     event.setCancelled(true);
                     return;
                 }
@@ -383,7 +388,7 @@ public class InventoryListener implements Listener {
             }
 
             if (!PlayerUtils.checkLevel(player, slot.getRequiredLevel())) {
-                player.sendMessage(String.format(RPGInventory.getLanguage().getCaption("error.level"), slot.getRequiredLevel()));
+                PlayerUtils.sendMessage(player, RPGInventory.getLanguage().getCaption("error.level", slot.getRequiredLevel()));
                 return false;
             }
 

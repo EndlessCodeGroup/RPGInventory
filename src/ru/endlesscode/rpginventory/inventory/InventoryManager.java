@@ -10,6 +10,8 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -275,7 +277,7 @@ public class InventoryManager {
 
             for (int i = 0; i < lore.size(); i++) {
                 String line = lore.get(i);
-                lore.set(i, StringUtils.applyPlaceHolders(line, player));
+                lore.set(i, StringUtils.setPlaceholders(player, line));
             }
 
             meta.setLore(lore);
@@ -576,9 +578,9 @@ public class InventoryManager {
     public static boolean buySlot(Player player, PlayerWrapper playerWrapper, Slot slot) {
         double cost = slot.getCost();
 
-        if (!playerWrapper.isPreparedToBuy()) {
-            player.sendMessage(String.format(RPGInventory.getLanguage().getCaption("error.buyable"), slot.getCost()));
-            playerWrapper.prepareToBuy();
+        if (!playerWrapper.isPreparedToBuy(slot)) {
+            PlayerUtils.sendMessage(player, RPGInventory.getLanguage().getCaption("error.buyable", slot.getCost()));
+            playerWrapper.prepareToBuy(slot);
             return false;
         }
 
@@ -587,29 +589,38 @@ public class InventoryManager {
         }
 
         playerWrapper.setBuyedSlots(slot.getName());
-        player.sendMessage(RPGInventory.getLanguage().getCaption("message.buyed"));
+        PlayerUtils.sendMessage(player, RPGInventory.getLanguage().getCaption("message.buyed"));
 
         return true;
     }
 
     public static void initPlayer(final Player player, boolean skipJoinMessage) {
+        player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 60, 1));
+
         if (InventoryManager.isNewPlayer(player)) {
-            Runnable callback = new Runnable() {
-                @Override
-                public void run() {
-                    InventoryManager.sendResourcePack(player);
-                }
-            };
-            EffectUtils.sendTitle(player,
-                    Config.getConfig().getInt("join-messages.delay"),
-                    Config.getConfig().getString("join-messages.rp-info.title"),
-                    Config.getConfig().getStringList("join-messages.rp-info.text"), callback);
-        } else {
-            if (!skipJoinMessage) {
+            if (Config.getConfig().getBoolean("join-messages.rp-info.enabled", true)) {
+                Runnable callback = new Runnable() {
+                    @Override
+                    public void run() {
+                        InventoryManager.sendResourcePack(player);
+                    }
+                };
+
                 EffectUtils.sendTitle(player,
                         Config.getConfig().getInt("join-messages.delay"),
-                        Config.getConfig().getString("join-messages.default.title"),
-                        Config.getConfig().getStringList("join-messages.default.text"), null);
+                        Config.getConfig().getString("join-messages.rp-info.title"),
+                        Config.getConfig().getStringList("join-messages.rp-info.text"), callback);
+            } else {
+                InventoryManager.sendResourcePack(player);
+            }
+        } else {
+            if (Config.getConfig().getBoolean("join-messages.default.enabled", true)) {
+                if (!skipJoinMessage) {
+                    EffectUtils.sendTitle(player,
+                            Config.getConfig().getInt("join-messages.delay"),
+                            Config.getConfig().getString("join-messages.default.title"),
+                            Config.getConfig().getStringList("join-messages.default.text"), null);
+                }
             }
 
             InventoryManager.sendResourcePack(player);

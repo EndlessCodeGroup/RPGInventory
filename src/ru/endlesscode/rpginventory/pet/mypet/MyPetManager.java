@@ -33,6 +33,7 @@ import ru.endlesscode.rpginventory.inventory.InventoryManager;
 import ru.endlesscode.rpginventory.inventory.slot.Slot;
 import ru.endlesscode.rpginventory.inventory.slot.SlotManager;
 import ru.endlesscode.rpginventory.utils.ItemUtils;
+import ru.endlesscode.rpginventory.utils.PlayerUtils;
 
 import java.util.UUID;
 
@@ -128,7 +129,7 @@ public class MyPetManager implements Listener {
             @Override
             public void callback(StoredMyPet storedMyPet) {
                 if (!storedMyPet.getWorldGroup().equals(wg.getName())) {
-                    player.sendMessage("This pet doesn't belong into this world.");
+                    PlayerUtils.sendMessage(player, "This pet doesn't belong into this world.");
                     return;
                 }
 

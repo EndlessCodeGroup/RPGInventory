@@ -4,6 +4,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import ru.endlesscode.rpginventory.utils.CommandUtils;
+import ru.endlesscode.rpginventory.utils.PlayerUtils;
 import ru.endlesscode.rpginventory.utils.StringUtils;
 
 /**
@@ -27,7 +28,7 @@ class ItemAction {
     void doAction(Player player) {
         CommandUtils.sendCommand(player, command, asOp);
         if (message != null) {
-            player.sendMessage(StringUtils.coloredLine(message));
+            PlayerUtils.sendMessage(player, StringUtils.coloredLine(message));
         }
     }
 

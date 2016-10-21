@@ -46,6 +46,7 @@ public class RPGInventory extends JavaPlugin {
 
     private static PlayerUtils.LevelSystem levelSystem;
     private static PlayerUtils.ClassSystem classSystem;
+    private static boolean pApiHooked;
 
     public static RPGInventory getInstance() {
         return instance;
@@ -73,6 +74,11 @@ public class RPGInventory extends JavaPlugin {
         return economy != null;
     }
 
+    @Contract(pure = true)
+    public static boolean placeholderApiHooked() {
+        return pApiHooked;
+    }
+
     public static PlayerUtils.LevelSystem getLevelSystem() {
         return levelSystem;
     }
@@ -92,6 +98,15 @@ public class RPGInventory extends JavaPlugin {
         if (!this.checkRequirements()) {
             this.getPluginLoader().disablePlugin(this);
             return;
+        }
+
+        // Hook Placeholder API
+        if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+            new StringUtils.Placeholders().hook();
+            pApiHooked = true;
+            this.getLogger().info("Placeholder API hooked!");
+        } else {
+            pApiHooked = false;
         }
 
         // Load modules
@@ -117,7 +132,7 @@ public class RPGInventory extends JavaPlugin {
             pm.registerEvents(new ElytraListener(), this);
         }
 
-        ProtocolLibrary.getProtocolManager().addPacketListener(new ResourcePackListener(this));
+        ProtocolLibrary.getProtocolManager().addPacketListener(new PlayerLoader(this));
 
         this.loadPlayers();
         this.startMetrics();
@@ -146,7 +161,7 @@ public class RPGInventory extends JavaPlugin {
 
         // Check resource-pack settings
         if (Config.getConfig().getString("resource-pack.url").equals("PUT_YOUR_URL_HERE")) {
-            this.getLogger().warning("Set resource-pack's url in config or set resource-pack.mode to DISABLED!");
+            this.getLogger().warning("Set resource-pack's url in config!");
             this.getPluginLoader().disablePlugin(this);
             return false;
         }
@@ -270,7 +285,7 @@ public class RPGInventory extends JavaPlugin {
                         if (player == null) {
                             StringUtils.coloredConsole(line);
                         } else {
-                            player.sendMessage(line);
+                            PlayerUtils.sendMessage(player, line);
                         }
                     }
                 }

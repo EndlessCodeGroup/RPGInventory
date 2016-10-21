@@ -1,6 +1,7 @@
 package ru.endlesscode.rpginventory.event.listener;
 
 import com.comphenix.protocol.wrappers.EnumWrappers;
+import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.EntityType;
@@ -11,8 +12,10 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
@@ -20,12 +23,18 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 import ru.endlesscode.rpginventory.RPGInventory;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
+import ru.endlesscode.rpginventory.inventory.slot.Slot;
+import ru.endlesscode.rpginventory.inventory.slot.SlotManager;
 import ru.endlesscode.rpginventory.item.CustomItem;
 import ru.endlesscode.rpginventory.item.ItemManager;
 import ru.endlesscode.rpginventory.item.ItemStat;
 import ru.endlesscode.rpginventory.item.Modifier;
+import ru.endlesscode.rpginventory.misc.Config;
 import ru.endlesscode.rpginventory.utils.EffectUtils;
 import ru.endlesscode.rpginventory.utils.ItemUtils;
+import ru.endlesscode.rpginventory.utils.PlayerUtils;
+
+import java.util.List;
 
 /**
  * Created by OsipXD on 19.09.2015
@@ -74,6 +83,29 @@ public class ItemListener implements Listener {
         if (!ItemManager.allowedForPlayer(damager, itemInHand, true)) {
             event.setCancelled(true);
             return;
+        }
+
+        // Checking battle system restrictions
+        boolean forceWeapon = Config.getConfig().getBoolean("attack.force-weapon");
+        boolean requireWeapon = Config.getConfig().getBoolean("attack.require-weapon");
+        if ((forceWeapon || requireWeapon)
+                && SlotManager.getSlotManager().getSlot(damager.getInventory().getHeldItemSlot(), InventoryType.SlotType.QUICKBAR) == null) {
+            List<Slot> activeSlots = SlotManager.getSlotManager().getActiveSlots();
+            if (activeSlots.size() != 0) {
+                if (forceWeapon) {
+                    for (Slot activeSlot : activeSlots) {
+                        if (!InventoryManager.isQuickEmptySlot(damager.getInventory().getItem(activeSlot.getQuickSlot()))) {
+                            damager.getInventory().setHeldItemSlot(activeSlot.getQuickSlot());
+                            break;
+                        }
+                    }
+                }
+
+                if (requireWeapon) {
+                    event.setCancelled(true);
+                    return;
+                }
+            }
         }
 
         double damage = (CustomItem.isCustomItem(itemInHand) ? 1 : event.getDamage(EntityDamageEvent.DamageModifier.BASE))
@@ -135,16 +167,34 @@ public class ItemListener implements Listener {
         }
     }
 
+    @EventHandler
+    public void onBowShooting(EntityShootBowEvent event) {
+        if (event.isCancelled() || event.getEntityType() != EntityType.PLAYER) {
+            return;
+        }
+
+        Player player = (Player) event.getEntity();
+        if (!InventoryManager.playerIsLoaded(player)) {
+            return;
+        }
+
+        if (!ItemManager.allowedForPlayer(player, event.getBow(), true)) {
+            event.setCancelled(true);
+            PlayerUtils.updateInventory(player);
+        }
+    }
+
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onItemUse(PlayerInteractEvent event) {
         Player player = event.getPlayer();
 
-        if (!InventoryManager.playerIsLoaded(player) || !event.hasItem()) {
+        if (event.isCancelled() || !InventoryManager.playerIsLoaded(player) || !event.hasItem()) {
             return;
         }
 
         if (!ItemManager.allowedForPlayer(player, event.getItem(), true)) {
             event.setCancelled(true);
+            PlayerUtils.updateInventory(player);
             return;
         }
 
@@ -157,7 +207,9 @@ public class ItemListener implements Listener {
                 customItem.onLeftClick(player);
             }
 
-            event.setCancelled(true);
+            if (event.getItem().getType() != Material.BOW) {
+                event.setCancelled(true);
+            }
         }
 
         ItemManager.updateStats(player);

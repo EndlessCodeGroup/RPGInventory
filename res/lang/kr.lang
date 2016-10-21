@@ -1,6 +1,6 @@
 ﻿firststart: "\n
 &3============================== RPGInventory ================================\n
-&cBefore using &eRPGInventory&c, add changed textures to your server resource-pack\n
+&cBefore using &eRPGInventory&c, add changed textures to resource-pack\n
 and configure items that can be put in the inventory slots. After that,\n
 set value in the config &eenabled: true\n
 &3============================================================================"
@@ -29,6 +29,7 @@ error.fixhp: "&6체력 고정이 필요하지 않습니다"
 
 message.buyed: "&a&l성공적으로 슬릇을 구입했습니다"
 message.fixhp: "&6체력이 고정되었습니다 다시 로그인 해주세요"
+message.perms: "&cYou don't have permission to use this command"
 
 pet.name: "%s &f[%s]"
 pet.health: "&c체력: &7%d"
@@ -62,3 +63,4 @@ stat.jump: "&9도약: &7%s"
 
 backpack.desc: "&8&o추가 슬릇을 사용할려면 클릭하세요 &f우클릭"
 backpack.size: "&a크기: &7%d"
+backpack.limit: "&cYou can't have more than %d backpack!"

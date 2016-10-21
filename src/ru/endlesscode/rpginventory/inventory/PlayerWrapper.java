@@ -43,14 +43,19 @@ public class PlayerWrapper implements InventoryHolder {
     private final HealthUpdater healthUpdater;
 
     private InventoryView inventoryView;
+    private Slot slotPreparedToBuy = null;
     private long timeWhenPreparedToBuy = 0;
-    private Backpack backpack;
+    private Backpack backpack = null;
     private LivingEntity pet;
 
     private ItemStack savedChestplate = null;
     private boolean falling = false;
     private boolean flying = false;
     private int fallTime = 0;
+
+    private String lastMessage = "";
+    private long lastMessageTime = 0;
+    private boolean pocketCraft = false;
 
     public PlayerWrapper(OfflinePlayer player) {
         this.player = player;
@@ -91,7 +96,8 @@ public class PlayerWrapper implements InventoryHolder {
         player.openInventory(this.inventory);
     }
 
-    void prepareToBuy() {
+    void prepareToBuy(Slot slot) {
+        this.slotPreparedToBuy = slot;
         this.timeWhenPreparedToBuy = System.currentTimeMillis();
     }
 
@@ -123,13 +129,15 @@ public class PlayerWrapper implements InventoryHolder {
         return this.buyedSlots.containsKey(slotType);
     }
 
-    boolean isPreparedToBuy() {
-        if (this.timeWhenPreparedToBuy == 0 || System.currentTimeMillis() - this.timeWhenPreparedToBuy > 10 * 1000) {
+    boolean isPreparedToBuy(Slot slot) {
+        if (this.timeWhenPreparedToBuy == 0 || this.slotPreparedToBuy != slot
+                || System.currentTimeMillis() - this.timeWhenPreparedToBuy > 10 * 1000) {
             return false;
-        } else {
-            this.timeWhenPreparedToBuy = 0;
-            return true;
         }
+
+        this.timeWhenPreparedToBuy = 0;
+        this.slotPreparedToBuy = null;
+        return true;
     }
 
     public void addPermissions(List<String> permissions) {
@@ -305,4 +313,29 @@ public class PlayerWrapper implements InventoryHolder {
         }
     }
 
+    public void setLastMessage(String lastMessage) {
+        this.lastMessage = lastMessage;
+        this.lastMessageTime = System.currentTimeMillis();
+    }
+
+    public String getLastMessage() {
+        if (System.currentTimeMillis() - this.lastMessageTime > 5 * 1000) {
+            lastMessage = "";
+        }
+
+        return lastMessage;
+    }
+
+    public void openWorkbench() {
+        player.getPlayer().openWorkbench(null, true);
+        this.pocketCraft = true;
+    }
+
+    public void onWorkbenchClosed() {
+        this.pocketCraft = false;
+    }
+
+    public boolean isPocketCraft() {
+        return this.pocketCraft;
+    }
 }

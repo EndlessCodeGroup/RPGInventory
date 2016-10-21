@@ -23,7 +23,7 @@ public enum ActionType {
 
         if (action == InventoryAction.MOVE_TO_OTHER_INVENTORY || action == InventoryAction.PICKUP_ALL
                 || action == InventoryAction.PICKUP_ONE || action == InventoryAction.PICKUP_SOME
-                || action == InventoryAction.PICKUP_HALF) {
+                || action == InventoryAction.PICKUP_HALF || action == InventoryAction.COLLECT_TO_CURSOR) {
             return GET;
         }
 

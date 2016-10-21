@@ -95,11 +95,15 @@ public class FileLanguage {
         }
     }
 
-    public String getCaption(String name) {
+    public String getCaption(String name, Object... args) {
         String caption = this.lang.getString(name);
         if (caption == null) {
             this.plugin.getLogger().warning("Missing caption: " + name);
             caption = "&c[missing caption]";
+        }
+        
+        if (args.length > 0) {
+            caption = String.format(caption, args);
         }
 
         return StringUtils.coloredLine(caption);

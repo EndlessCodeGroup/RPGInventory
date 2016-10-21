@@ -1,9 +1,12 @@
 package ru.endlesscode.rpginventory.utils;
 
+import me.clip.placeholderapi.PlaceholderAPI;
+import me.clip.placeholderapi.external.EZPlaceholderHook;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import ru.endlesscode.rpginventory.RPGInventory;
 import ru.endlesscode.rpginventory.event.updater.HealthUpdater;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
 import ru.endlesscode.rpginventory.inventory.PlayerWrapper;
@@ -33,7 +36,7 @@ public class StringUtils {
         return coloredLines;
     }
 
-    public static String roundDouble(double value) {
+    public static String doubleToString(double value) {
         return value == (long) value ? String.format("%d", (long) value) : String.format("%s", value);
     }
 
@@ -41,7 +44,12 @@ public class StringUtils {
         Bukkit.getServer().getConsoleSender().sendMessage(message);
     }
 
-    public static String applyPlaceHolders(String line, Player player) {
+    public static String setPlaceholders(Player player, String line) {
+        // Using Placeholder API
+        if (RPGInventory.placeholderApiHooked()) {
+            return PlaceholderAPI.setPlaceholders(player, line);
+        }
+
         // Player
         line = line.replaceAll("%WORLD%", player.getWorld().getName());
         line = line.replaceAll("%PLAYER%", player.getName());
@@ -67,5 +75,49 @@ public class StringUtils {
         }
 
         return line;
+    }
+
+    public static class Placeholders extends EZPlaceholderHook {
+        public Placeholders() {
+            super(RPGInventory.getInstance(), "rpginv");
+        }
+
+        @Override
+        public String onPlaceholderRequest(Player player, String identifier) {
+            if (player == null) {
+                return "";
+            }
+
+            PlayerWrapper playerWrapper = InventoryManager.get(player);
+            if (playerWrapper == null) {
+                return "";
+            }
+
+            HealthUpdater hu = playerWrapper.getHealthUpdater();
+            switch (identifier) {
+                case "health":
+                    return hu.getModifiedHealth() + "";
+                case "health_other_plugins":
+                    return hu.getOtherPluginsBonus() + hu.getAttributesBonus() + "";
+                case "damage_bonus":
+                    return ItemManager.getModifier(player, ItemStat.StatType.DAMAGE).toString();
+                case "bow_damage_bonus":
+                    return ItemManager.getModifier(player, ItemStat.StatType.BOW_DAMAGE).toString();
+                case "hand_damage_bonus":
+                    return ItemManager.getModifier(player, ItemStat.StatType.HAND_DAMAGE).toString();
+                case "crit_damage_bonus":
+                    return ItemManager.getModifier(player, ItemStat.StatType.CRIT_DAMAGE).toString();
+                case "crit_chance":
+                    return ItemManager.getModifier(player, ItemStat.StatType.CRIT_CHANCE).toString();
+                case "armor_bonus":
+                    return ItemManager.getModifier(player, ItemStat.StatType.ARMOR).toString();
+                case "speed_bonus":
+                    return ItemManager.getModifier(player, ItemStat.StatType.SPEED).toString();
+                case "jump_bonus":
+                    return ItemManager.getModifier(player, ItemStat.StatType.JUMP).toString();
+            }
+
+            return "";
+        }
     }
 }

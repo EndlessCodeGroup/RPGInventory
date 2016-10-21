@@ -4,6 +4,7 @@ import com.comphenix.protocol.ProtocolLibrary;
 import org.bukkit.configuration.MemorySection;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.Nullable;
 import ru.endlesscode.rpginventory.RPGInventory;
 import ru.endlesscode.rpginventory.event.listener.CraftListener;
 import ru.endlesscode.rpginventory.misc.Config;
@@ -62,6 +63,7 @@ public class CraftManager {
         return capItem;
     }
 
+    @Nullable
     static CraftExtension getByName(String childName) {
         for (CraftExtension extension : EXTENSIONS) {
             if (extension.getName().equals(childName)) {

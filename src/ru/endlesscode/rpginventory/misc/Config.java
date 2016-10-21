@@ -9,6 +9,7 @@ import ru.endlesscode.rpginventory.RPGInventory;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 
 /**
  * Created by OsipXD on 22.08.2015.
@@ -25,7 +26,7 @@ public class Config {
             plugin.saveDefaultConfig();
 
             try {
-                Files.copy(configFile.toPath(), new File(plugin.getDataFolder(), "config-example.yml").toPath());
+                Files.copy(configFile.toPath(), new File(plugin.getDataFolder(), "config-example.yml").toPath(), StandardCopyOption.REPLACE_EXISTING);
             } catch (IOException e) {
                 e.printStackTrace();
             }

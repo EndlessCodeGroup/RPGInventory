@@ -29,6 +29,7 @@ error.fixhp: "&6Popravljanje HP nije potrebno"
 
 message.buyed: "&a&lUspesno ste kupili slot"
 message.fixhp: "&6Vas HP je popravljen, molimo vas da se re logujete"
+message.perms: "&cYou don't have permission to use this command"
 
 pet.name: "&6%s &7[&b%s&7]"
 pet.health: "&cZivoti: &7%d"
@@ -62,3 +63,4 @@ stat.jump: "&9Jump: &7%s"
 
 backpack.desc: "&8&oPut it in specified slot and click &fRMB"
 backpack.size: "&aSize: &7%d"
+backpack.limit: "&cYou can't have more than %d backpack!"
