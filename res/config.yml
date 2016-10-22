@@ -207,7 +207,7 @@ craft:
   workbench: true
 
   # Texture of extendable slots
-  extendable: DIAMOND_HOE:0
+  extendable: DIAMOND_HOE:27
 
   # List of extensions
   extensions:
