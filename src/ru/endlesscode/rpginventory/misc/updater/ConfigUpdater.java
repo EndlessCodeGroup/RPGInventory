@@ -148,6 +148,9 @@ public class ConfigUpdater {
 
                 // Added ability to disable extension for workbench
                 config.set("craft.workbench", true);
+                if ("DIAMOND_HOE:0".equals(config.get("craft.extendable"))) {
+                    config.set("craft.extendable", "DIAMOND_HOE:27");
+                }
         }
     }
 }
