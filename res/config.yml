@@ -87,7 +87,7 @@ containers:
 # Resource-pack options
 resource-pack:
   # URL of your RP
-  # Example: https://dl.dropboxusercontent.com/u/105899524/RPGInventory/RPs/Default_en.zip
+  # Example: https://dl.dropboxusercontent.com/u/105899524/RPGInventory/RPs/Default.zip
   url: PUT_YOUR_URL_HERE
 
   # Hash (works as identifier of RP)

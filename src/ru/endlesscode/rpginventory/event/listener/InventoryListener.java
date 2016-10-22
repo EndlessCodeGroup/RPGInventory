@@ -274,10 +274,10 @@ public class InventoryListener implements Listener {
             }
 
             switch (event.getSlotType()) {
-                case RESULT:
+                case CRAFTING:
                     InventoryManager.get(player).openInventory(true);
                 case ARMOR:
-                case CRAFTING:
+                case RESULT:
                     event.setCancelled(true);
                     return;
             }
