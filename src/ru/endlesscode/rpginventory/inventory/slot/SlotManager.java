@@ -173,7 +173,7 @@ public class SlotManager {
     }
 
     public List<Slot> getArmorSlots() {
-        List<Slot> armorSlots = new ArrayList<>();
+        List<Slot> armorSlots = new ArrayList<>(4);
         for (Slot slot : this.slots) {
             if (slot.getSlotType() == Slot.SlotType.ARMOR) {
                 armorSlots.add(slot);

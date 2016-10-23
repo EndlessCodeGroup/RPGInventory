@@ -9,7 +9,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.*;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.Inventory;
@@ -18,7 +17,6 @@ import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.scheduler.BukkitRunnable;
 import ru.endlesscode.rpginventory.RPGInventory;
 import ru.endlesscode.rpginventory.api.InventoryAPI;
-import ru.endlesscode.rpginventory.event.PetUnequipEvent;
 import ru.endlesscode.rpginventory.event.PlayerInventoryLoadEvent;
 import ru.endlesscode.rpginventory.inventory.ActionType;
 import ru.endlesscode.rpginventory.inventory.InventoryLocker;
@@ -28,11 +26,9 @@ import ru.endlesscode.rpginventory.inventory.backpack.BackpackManager;
 import ru.endlesscode.rpginventory.inventory.slot.ActionSlot;
 import ru.endlesscode.rpginventory.inventory.slot.Slot;
 import ru.endlesscode.rpginventory.inventory.slot.SlotManager;
-import ru.endlesscode.rpginventory.item.CustomItem;
 import ru.endlesscode.rpginventory.item.ItemManager;
 import ru.endlesscode.rpginventory.misc.Config;
 import ru.endlesscode.rpginventory.pet.PetManager;
-import ru.endlesscode.rpginventory.pet.PetType;
 import ru.endlesscode.rpginventory.pet.mypet.MyPetManager;
 import ru.endlesscode.rpginventory.utils.InventoryUtils;
 import ru.endlesscode.rpginventory.utils.ItemUtils;
@@ -58,45 +54,6 @@ public class InventoryListener implements Listener {
         Player player = event.getPlayer();
         PlayerLoader.removePlayer(player);
         InventoryManager.unloadPlayerInventory(player);
-    }
-
-    @EventHandler(priority = EventPriority.LOWEST)
-    public void onPlayerDeath(PlayerDeathEvent event) {
-        Player player = event.getEntity();
-
-        if (!InventoryManager.playerIsLoaded(player)) {
-            return;
-        }
-
-        if (!event.getKeepInventory() && !RPGInventory.getPermissions().has(player, "rpginventory.keep.rpginv")) {
-            Inventory inventory = InventoryManager.get(player).getInventory();
-
-            int petSlotId = PetManager.getPetSlotId();
-            if (PetManager.isEnabled() && inventory.getItem(petSlotId) != null) {
-                Slot petSlot = SlotManager.getSlotManager().getPetSlot();
-                ItemStack petItem = inventory.getItem(petSlotId);
-
-                if (petSlot != null && petSlot.isDrop() && !petSlot.isCup(petItem)) {
-                    event.getDrops().add(PetType.clone(petItem));
-                    RPGInventory.getInstance().getServer().getPluginManager().callEvent(new PetUnequipEvent(player));
-                    inventory.setItem(petSlotId, petSlot.getCup());
-                }
-            }
-
-            for (Slot slot : SlotManager.getSlotManager().getPassiveSlots()) {
-                for (int slotId : slot.getSlotIds()) {
-                    ItemStack item = inventory.getItem(slotId);
-
-                    if (!slot.isQuick() && !slot.isCup(item) && slot.isDrop()
-                            && (!CustomItem.isCustomItem(item) || ItemManager.getCustomItem(item).isDrop())) {
-                        event.getDrops().add(inventory.getItem(slotId));
-                        inventory.setItem(slotId, slot.getCup());
-                    }
-                }
-            }
-        }
-
-        PetManager.despawnPet(player);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)

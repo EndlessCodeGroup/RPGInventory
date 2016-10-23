@@ -33,7 +33,7 @@ public class BackpackListener implements Listener {
     @SuppressWarnings("deprecation")
     @EventHandler(priority = EventPriority.LOWEST)
     public void onUseBackpack(PlayerInteractEvent event) {
-        if (event.isCancelled() || !event.hasItem() || !ItemUtils.hasTag(event.getItem().clone(), ItemUtils.BACKPACK_TAG)) {
+        if (!event.hasItem() || !ItemUtils.hasTag(event.getItem().clone(), ItemUtils.BACKPACK_TAG)) {
             return;
         }
 
