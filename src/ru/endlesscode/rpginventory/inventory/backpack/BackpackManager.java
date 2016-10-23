@@ -12,6 +12,7 @@ import org.jetbrains.annotations.Nullable;
 import ru.endlesscode.rpginventory.RPGInventory;
 import ru.endlesscode.rpginventory.event.listener.BackpackListener;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
+import ru.endlesscode.rpginventory.inventory.slot.Slot;
 import ru.endlesscode.rpginventory.inventory.slot.SlotManager;
 import ru.endlesscode.rpginventory.misc.Config;
 import ru.endlesscode.rpginventory.utils.ItemUtils;
@@ -26,10 +27,9 @@ import java.util.*;
  * All rights reserved 2014 - 2016 © «EndlessCode Group»
  */
 public class BackpackManager {
-    private static int BACKPACK_LIMIT;
-
     private static final HashMap<String, BackpackType> BACKPACK_TYPES = new HashMap<>();
     private static final HashMap<UUID, Backpack> BACKPACKS = new HashMap<>();
+    private static int BACKPACK_LIMIT;
 
     public static boolean init(RPGInventory instance) {
         if (!isEnabled()) {
@@ -180,7 +180,8 @@ public class BackpackManager {
 
         // Check RPGInventory slots
         inventory = InventoryManager.get(player).getInventory();
-        if (BackpackManager.isBackpack(inventory.getItem(SlotManager.getSlotManager().getBackpackSlot().getSlotId()))) {
+        Slot backpackSlot = SlotManager.getSlotManager().getBackpackSlot();
+        if (BackpackManager.isBackpack(inventory.getItem(backpackSlot.getSlotId())) && !backpackSlot.isQuick()) {
             count++;
         }
 

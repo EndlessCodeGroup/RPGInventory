@@ -107,8 +107,9 @@ public class PlayerListener implements Listener {
         }
 
         InventorySaver.save(player, event.getDrops(),
-                RPGInventory.getPermissions().has(player, "rpginventory.keep.items"),
-                RPGInventory.getPermissions().has(player, "rpginventory.keep.armor"));
+                RPGInventory.getPermissions().has(player, "rpginventory.keep.items") || event.getKeepInventory(),
+                RPGInventory.getPermissions().has(player, "rpginventory.keep.armor") || event.getKeepInventory(),
+                RPGInventory.getPermissions().has(player, "rpginventory.keep.rpginv") || event.getKeepInventory());
     }
 
     @EventHandler(priority = EventPriority.LOW)

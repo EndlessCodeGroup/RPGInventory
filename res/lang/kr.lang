@@ -1,6 +1,6 @@
 ﻿firststart: "\n
 &3============================== RPGInventory ================================\n
-&cBefore using &eRPGInventory&c, add changed textures to resource-pack\n
+&cBefore using &eRPGInventory&c, add changed textures to your server resource-pack\n
 and configure items that can be put in the inventory slots. After that,\n
 set value in the config &eenabled: true\n
 &3============================================================================"
@@ -8,12 +8,12 @@ set value in the config &eenabled: true\n
 title: "&l인벤토리"
 
 locked.name: "&c&l잠긴 슬릇"
-locked.lore: "&6&o이 슬릇부터 해제해야 합니다"
+locked.lore: "&6&o이전 슬릇부터 해제해야 합니다"
 
-buyable.name: "&a&l사용 가능한 슬릇"
+buyable.name: "&a&l구매 가능한 슬릇"
 buyable.lore: "&6&o슬릇을 구입할려면 다음의 조건:"
-buyable.money: "&6&o• %s 만큼의 화폐가 필요하다"
-buyable.level: "&6&o• %d 만큼의 레벨이 필요하다"
+buyable.money: "&6• %s 만큼의 화폐가 필요합니다"
+buyable.level: "&6• %d 만큼의 레벨이 필요합니다"
 
 error.fall: "&c공중에서 사용할 수 없습니다"
 error.money: "&6&l%s 만큼의 돈이 더 필요합니다"
@@ -29,7 +29,7 @@ error.fixhp: "&6체력 고정이 필요하지 않습니다"
 
 message.buyed: "&a&l성공적으로 슬릇을 구입했습니다"
 message.fixhp: "&6체력이 고정되었습니다 다시 로그인 해주세요"
-message.perms: "&cYou don't have permission to use this command"
+message.perms: "&c권한이 없습니다"
 
 pet.name: "%s &f[%s]"
 pet.health: "&c체력: &7%d"
@@ -63,4 +63,4 @@ stat.jump: "&9도약: &7%s"
 
 backpack.desc: "&8&o추가 슬릇을 사용할려면 클릭하세요 &f우클릭"
 backpack.size: "&a크기: &7%d"
-backpack.limit: "&cYou can't have more than %d backpack!"
+backpack.limit: "&c소유 가능한 한도를 초과하였습니다"
