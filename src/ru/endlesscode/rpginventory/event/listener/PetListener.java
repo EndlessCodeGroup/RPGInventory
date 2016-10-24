@@ -41,7 +41,7 @@ public class PetListener implements Listener {
     public void onItemUse(PlayerInteractEvent event) {
         Player player = event.getPlayer();
 
-        if (event.isCancelled() || !event.hasItem() || !InventoryManager.playerIsLoaded(player)) {
+        if (!event.hasItem() || !InventoryManager.playerIsLoaded(player)) {
             return;
         }
 
@@ -67,7 +67,7 @@ public class PetListener implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerDeath(PlayerDeathEvent event) {
         Player player = event.getEntity();
 

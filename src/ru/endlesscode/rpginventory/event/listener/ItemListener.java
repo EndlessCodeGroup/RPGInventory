@@ -12,7 +12,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.inventory.InventoryType;
@@ -167,28 +166,11 @@ public class ItemListener implements Listener {
         }
     }
 
-    @EventHandler
-    public void onBowShooting(EntityShootBowEvent event) {
-        if (event.isCancelled() || event.getEntityType() != EntityType.PLAYER) {
-            return;
-        }
-
-        Player player = (Player) event.getEntity();
-        if (!InventoryManager.playerIsLoaded(player)) {
-            return;
-        }
-
-        if (!ItemManager.allowedForPlayer(player, event.getBow(), true)) {
-            event.setCancelled(true);
-            PlayerUtils.updateInventory(player);
-        }
-    }
-
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onItemUse(PlayerInteractEvent event) {
         Player player = event.getPlayer();
 
-        if (event.isCancelled() || !InventoryManager.playerIsLoaded(player) || !event.hasItem()) {
+        if (!InventoryManager.playerIsLoaded(player) || !event.hasItem()) {
             return;
         }
 

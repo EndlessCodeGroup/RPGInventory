@@ -1,5 +1,7 @@
 package ru.endlesscode.rpginventory.event.listener;
 
+import org.bukkit.Material;
+import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -21,8 +23,7 @@ public class ElytraListener implements Listener {
         }
 
         PlayerWrapper playerWrapper = InventoryManager.get(player);
-        //noinspection deprecation
-        if (!player.isOnGround()) {
+        if (player.getLocation().getBlock().getRelative(BlockFace.DOWN).getType() == Material.AIR) {
             if (!playerWrapper.isFalling() && event.getFrom().getY() > event.getTo().getY()) {
                 playerWrapper.setFalling(true);
             } else if (playerWrapper.isFalling()) {
