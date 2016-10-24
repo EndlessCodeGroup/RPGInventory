@@ -60,33 +60,38 @@ public class InventorySaver {
         }
         ARMORS.put(player.getUniqueId(), armorList.toArray(new ItemStack[armorList.size()]));
 
-        ItemStack[] contents = player.getInventory().getContents();
+        ItemStack[] contents = player.getInventory().getStorageContents();
         for (int i = 0; i < contents.length; i++) {
             ItemStack item = contents[i];
-            if (item != null && !drops.contains(item)) {
+            if (!ItemUtils.isEmpty(item) && !drops.contains(item)) {
                 contents[i] = null;
             }
         }
 
-        // Save quick slots
-        for (Slot slot : SlotManager.getSlotManager().getQuickSlots()) {
-            ItemStack quickItem = player.getInventory().getItem(slot.getQuickSlot());
-            if (!ItemUtils.isEmpty(quickItem) && (saveRpgInv || !slot.isDrop()) && !slot.isCup(quickItem)) {
-                drops.remove(quickItem);
-            } else {
-                contents[slot.getQuickSlot()] = null;
-            }
-        }
-
         // Saving RPG inventory
+        List<ItemStack> additionalDrops = new ArrayList<>();
         if (!saveRpgInv) {
+            // Save quick slots
+            for (Slot slot : SlotManager.getSlotManager().getQuickSlots()) {
+                ItemStack quickItem = player.getInventory().getItem(slot.getQuickSlot());
+
+                if (!ItemUtils.isEmpty(quickItem) && !slot.isCup(quickItem)) {
+                    if (slot.isDrop()) {
+                        additionalDrops.add(quickItem);
+                        contents[slot.getQuickSlot()] = null;
+                    }
+
+                    drops.remove(quickItem);
+                }
+            }
+
             int petSlotId = PetManager.getPetSlotId();
             if (PetManager.isEnabled() && inventory.getItem(petSlotId) != null) {
                 Slot petSlot = SlotManager.getSlotManager().getPetSlot();
                 ItemStack petItem = inventory.getItem(petSlotId);
 
-                if (petSlot != null && petSlot.isDrop() && !petSlot.isCup(petItem)) {
-                    drops.add(PetType.clone(petItem));
+                if (petSlot != null && !petSlot.isCup(petItem) && petSlot.isDrop()) {
+                    additionalDrops.add(PetType.clone(petItem));
                     RPGInventory.getInstance().getServer().getPluginManager().callEvent(new PetUnequipEvent(player));
                     inventory.setItem(petSlotId, petSlot.getCup());
                 }
@@ -98,20 +103,10 @@ public class InventorySaver {
 
                     if (!slot.isQuick() && !slot.isCup(item) && slot.isDrop()
                             && (!CustomItem.isCustomItem(item) || ItemManager.getCustomItem(item).isDrop())) {
-                        drops.add(inventory.getItem(slotId));
+                        additionalDrops.add(inventory.getItem(slotId));
                         inventory.setItem(slotId, slot.getCup());
                     }
                 }
-            }
-        }
-
-        // Saving shield
-        Slot shieldSlot = SlotManager.getSlotManager().getShieldSlot();
-        if (shieldSlot != null && (saveItems || !shieldSlot.isDrop())) {
-            ItemStack itemInOffHand = player.getEquipment().getItemInOffHand();
-            if (!ItemUtils.isEmpty(itemInOffHand)) {
-                EXTRA.put(player.getUniqueId(), itemInOffHand);
-                drops.remove(itemInOffHand);
             }
         }
 
@@ -129,6 +124,19 @@ public class InventorySaver {
             }
         }
         INVENTORIES.put(player.getUniqueId(), contents);
+
+        // Saving shield
+        Slot shieldSlot = SlotManager.getSlotManager().getShieldSlot();
+        if (shieldSlot != null && (saveItems || !shieldSlot.isDrop())) {
+            ItemStack itemInOffHand = player.getEquipment().getItemInOffHand();
+            if (!ItemUtils.isEmpty(itemInOffHand)) {
+                EXTRA.put(player.getUniqueId(), itemInOffHand);
+                drops.remove(itemInOffHand);
+            }
+        }
+
+        // Add drop
+        drops.addAll(additionalDrops);
     }
 
     public static void restore(Player player) {
@@ -140,7 +148,16 @@ public class InventorySaver {
 
         // Restoring inventory
         if (INVENTORIES.containsKey(player.getUniqueId())) {
-            player.getInventory().setStorageContents(INVENTORIES.get(player.getUniqueId()));
+            Inventory inventory = player.getInventory();
+            ItemStack[] contents = INVENTORIES.get(player.getUniqueId());
+            for (int i = 0; i < contents.length; i++) {
+                ItemStack item = contents[i];
+
+                if (!ItemUtils.isEmpty(item)) {
+                    inventory.setItem(i, item);
+                }
+            }
+
             INVENTORIES.remove(player.getUniqueId());
         }
 
