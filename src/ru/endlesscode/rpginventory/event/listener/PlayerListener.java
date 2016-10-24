@@ -92,7 +92,7 @@ public class PlayerListener implements Listener {
     public void onPlayerInteractWhenNotLoaded(PlayerInteractEvent event) {
         Player player = event.getPlayer();
 
-        if (!event.isCancelled() && InventoryManager.isAllowedWorld(player.getWorld()) && !InventoryManager.playerIsLoaded(player)) {
+        if (InventoryManager.isAllowedWorld(player.getWorld()) && !InventoryManager.playerIsLoaded(player)) {
             PlayerUtils.sendMessage(player, RPGInventory.getLanguage().getCaption("error.rp.denied"));
             event.setCancelled(true);
         }

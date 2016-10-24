@@ -85,6 +85,7 @@ public class InventorySaver {
                 }
             }
 
+            // Save pet
             int petSlotId = PetManager.getPetSlotId();
             if (PetManager.isEnabled() && inventory.getItem(petSlotId) != null) {
                 Slot petSlot = SlotManager.getSlotManager().getPetSlot();
