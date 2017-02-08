@@ -43,12 +43,12 @@ public class CraftListener extends PacketAdapter implements Listener {
 
         WrapperPlayServerWindowItems packet = new WrapperPlayServerWindowItems(event.getPacket());
         if (player.getOpenInventory().getType() == InventoryType.WORKBENCH) {
-            ItemStack[] contents = packet.getSlotData();
+            List<ItemStack> contents = packet.getSlotData();
 
             List<CraftExtension> extensions = CraftManager.getExtensions(player);
             for (CraftExtension extension : extensions) {
                 for (int slot : extension.getSlots()) {
-                    contents[slot] = extension.getCapItem();
+                    contents.set(slot, extension.getCapItem());
                 }
             }
 

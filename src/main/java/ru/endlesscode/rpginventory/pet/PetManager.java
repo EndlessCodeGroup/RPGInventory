@@ -150,7 +150,6 @@ public class PetManager {
 
         switch (petType.getRole()) {
             case MOUNT:
-                ((Horse) pet).setCarryingChest(false);
                 HorseInventory horseInv = ((Horse) pet).getInventory();
                 horseInv.setSaddle(new ItemStack(Material.SADDLE));
             case COMPANION:

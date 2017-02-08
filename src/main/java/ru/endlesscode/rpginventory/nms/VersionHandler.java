@@ -10,15 +10,20 @@ import org.bukkit.Bukkit;
 public class VersionHandler {
     // 1.9.x
     public static boolean is1_9() {
-        return Bukkit.getVersion().contains("1.9");
+        return Bukkit.getBukkitVersion().contains("1.9");
     }
 
     // 1.10.x
-    private static boolean is1_10() {
-        return Bukkit.getVersion().contains("1.10");
+    public static boolean is1_10() {
+        return Bukkit.getBukkitVersion().contains("1.10");
+    }
+
+    // 1.11.x
+    private static boolean is1_11() {
+        return Bukkit.getBukkitVersion().contains("1.11");
     }
 
     public static boolean checkVersion() {
-        return is1_9() || is1_10();
+        return is1_9() || is1_10() || is1_11();
     }
 }
