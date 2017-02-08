@@ -145,7 +145,6 @@ public class PetType extends ClassedItem {
                     }
                 case DONKEY:
                 case SKELETON_HORSE:
-                case UNDEAD_HORSE:
                 case MULE:
                     horseWatcher = ((HorseWatcher) disguise.getWatcher());
                     horseWatcher.setTamed(true);

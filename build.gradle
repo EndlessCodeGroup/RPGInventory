@@ -1,10 +1,9 @@
-group 'ru.endlesscode'
+group 'ru.endlesscode.rpginventory'
 version '2.0.7-SNAPSHOT'
 
 apply plugin: 'java'
 
-sourceCompatibility = 1.7
-targetCompatibility = 1.7
+sourceCompatibility = targetCompatibility = 1.7
 
 repositories {
     mavenCentral()

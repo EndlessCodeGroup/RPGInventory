@@ -3,6 +3,10 @@ package com.comphenix.packetwrapper.included;
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketContainer;
 import org.bukkit.inventory.ItemStack;
+import ru.endlesscode.rpginventory.nms.VersionHandler;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * PacketWrapper - ProtocolLib wrappers for Minecraft packets
@@ -62,8 +66,12 @@ public class WrapperPlayServerWindowItems extends AbstractPacket {
      *
      * @return The current Slot data
      */
-    public ItemStack[] getSlotData() {
-        return handle.getItemArrayModifier().read(0);
+    public List<ItemStack> getSlotData() {
+        if (VersionHandler.is1_9() || VersionHandler.is1_10()) {
+            return Arrays.asList(handle.getItemArrayModifier().read(0));
+        }
+
+        return handle.getItemListModifier().read(0);
     }
 
     /**
@@ -71,8 +79,12 @@ public class WrapperPlayServerWindowItems extends AbstractPacket {
      *
      * @param value - new value.
      */
-    public void setSlotData(ItemStack[] value) {
-        handle.getItemArrayModifier().write(0, value);
+    public void setSlotData(List<ItemStack> value) {
+        if (VersionHandler.is1_9() || VersionHandler.is1_10()) {
+            handle.getItemArrayModifier().write(0, value.toArray(new ItemStack[value.size()]));
+        } else {
+            handle.getItemListModifier().write(0, value);
+        }
     }
 
 }

@@ -154,9 +154,7 @@ public class RPGInventory extends JavaPlugin {
 
         // Check version compatibility
         if (!VersionHandler.checkVersion()) {
-            this.getLogger().warning("This version of RPG Inventory is not compatible with your version of Bukkit!");
-            this.getPluginLoader().disablePlugin(this);
-            return false;
+            this.getLogger().warning("[RPGInventory] This version of RPG Inventory is not tested with \"" + Bukkit.getBukkitVersion() + "\"!");
         }
 
         // Check resource-pack settings
