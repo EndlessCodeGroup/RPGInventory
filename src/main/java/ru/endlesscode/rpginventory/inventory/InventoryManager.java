@@ -55,8 +55,7 @@ public class InventoryManager {
 
     public static boolean init(RPGInventory instance) {
         try {
-            // Setup alternate view
-            fillSlot = ItemUtils.getTexturedItem(Config.getConfig().getString("resource-pack.fill"));
+            fillSlot = ItemUtils.getTexturedItem(Config.getConfig().getString("fill"));
             ItemMeta meta = fillSlot.getItemMeta();
             meta.setDisplayName(" ");
             fillSlot.setItemMeta(meta);
@@ -595,9 +594,12 @@ public class InventoryManager {
     }
 
     public static void initPlayer(final Player player, boolean skipJoinMessage) {
-        player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 60, 1));
+        boolean rpEnabled = Config.getConfig().getBoolean("resource-pack.enabled", true);
+        if (rpEnabled) {
+            player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 60, 1));
+        }
 
-        if (InventoryManager.isNewPlayer(player)) {
+        if (InventoryManager.isNewPlayer(player) && rpEnabled) {
             if (Config.getConfig().getBoolean("join-messages.rp-info.enabled", true)) {
                 Runnable callback = new Runnable() {
                     @Override
@@ -623,7 +625,11 @@ public class InventoryManager {
                 }
             }
 
-            InventoryManager.sendResourcePack(player);
+            if (rpEnabled) {
+                InventoryManager.sendResourcePack(player);
+            } else {
+                InventoryManager.loadPlayerInventory(player);
+            }
         }
 
         if (RPGInventory.getPermissions().has(player, "rpginventory.admin")) {

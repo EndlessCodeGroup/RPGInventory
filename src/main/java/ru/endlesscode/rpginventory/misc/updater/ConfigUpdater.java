@@ -151,6 +151,13 @@ public class ConfigUpdater {
                 if ("DIAMOND_HOE:0".equals(config.get("craft.extendable"))) {
                     config.set("craft.extendable", "DIAMOND_HOE:27");
                 }
+            case 204:
+            case 205:
+            case 206:
+            case 207:
+                config.set("fill", config.get("resource-pack.fill"));
+                config.set("resource-pack.fill", null);
+                config.set("resource-pack.enabled", true);
         }
     }
 }

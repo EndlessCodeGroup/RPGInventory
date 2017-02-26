@@ -35,6 +35,9 @@ level-system: EXP
 # Can be: PERMISSIONS (like a rpginventory.class.{class_name}), SKILLAPI, HEROES, RAC
 class-system: PERMISSIONS
 
+# Texture to fill unavailable slots
+fill: DIAMOND_HOE:1
+
 
 ###############################
 #           Items             #
@@ -86,15 +89,14 @@ containers:
 
 # Resource-pack options
 resource-pack:
+  enabled: true
+
   # URL of your RP
   # Example: https://dl.dropboxusercontent.com/u/105899524/RPGInventory/RPs/Default.zip
   url: PUT_YOUR_URL_HERE
 
   # Hash (works as identifier of RP)
   hash: PUT_YOUR_HASH_HERE
-
-  # Texture to fill unavailable slots
-  fill: DIAMOND_HOE:1
 
 # Health settings
 health:
