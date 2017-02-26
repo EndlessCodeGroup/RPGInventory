@@ -8,7 +8,7 @@ sourceCompatibility = targetCompatibility = 1.7
 
 configurations {
     provided
-    provided.extendsFrom(compile)
+    compile.extendsFrom(provided)
 }
 
 idea.module {
