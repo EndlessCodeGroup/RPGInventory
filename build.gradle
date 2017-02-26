@@ -6,49 +6,68 @@ apply plugin: 'idea'
 
 sourceCompatibility = targetCompatibility = 1.7
 
+configurations {
+    provided
+    provided.extendsFrom(compile)
+}
+
+idea.module {
+    scopes.PROVIDED.plus += [configurations.provided]
+}
+
 repositories {
+    flatDir {
+        dirs 'libs'
+    }
+
     mavenCentral()
 
     maven {
-        name = "dmulloy2-repo"
-        url = "http://repo.dmulloy2.net/content/groups/public/"
+        name "dmulloy2-repo"
+        url "http://repo.dmulloy2.net/content/groups/public/"
     }
 
     maven {
-        name = "md5-public"
-        url = "http://repo.md-5.net/content/groups/public"
+        name "md5-public"
+        url "http://repo.md-5.net/content/groups/public"
     }
 
     maven {
-        name = "vault-repo"
-        url = "http://nexus.hc.to/content/repositories/pub_releases"
+        name "vault-repo"
+        url "http://nexus.hc.to/content/repositories/pub_releases"
     }
 
     maven {
-        name = "spigot-repo"
-        url = "https://hub.spigotmc.org/nexus/content/repositories/snapshots/"
+        name "spigot-repo"
+        url "https://hub.spigotmc.org/nexus/content/repositories/snapshots/"
     }
 
     maven {
-        name = "placeholderapi"
-        url = "http://repo.extendedclip.com/content/repositories/placeholderapi/"
+        name "placeholderapi"
+        url "http://repo.extendedclip.com/content/repositories/placeholderapi/"
     }
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: '*.jar')
-    compile (group: 'LibsDisguises', name: 'LibsDisguises', version: '9.2.4') {
+    provided (group: 'LibsDisguises', name: 'LibsDisguises', version: '9.2.4') {
         exclude group: 'com.comphenix.protocol'
         exclude group: 'org.spigotmc'
     }
-    compile (group: 'net.milkbowl.vault', name: 'VaultAPI', version: '1.6') {
+    provided (group: 'net.milkbowl.vault', name: 'VaultAPI', version: '1.6') {
         exclude group: 'org.bukkit'
     }
-    compile (group: 'org.bukkit', name: 'bukkit', version: '1.11.2-R0.1-SNAPSHOT') {
+    provided (group: 'org.bukkit', name: 'bukkit', version: '1.11.2-R0.1-SNAPSHOT') {
         exclude group: 'junit'
     }
-    compile group: 'com.comphenix.protocol', name: 'ProtocolLib-API', version: '4.2.0'
-    compile group: 'org.jetbrains', name: 'annotations', version: '15.0'
-    compile group: 'me.clip', name: 'placeholderapi', version: '2.6.0'
+    provided group: 'com.comphenix.protocol', name: 'ProtocolLib-API', version: '4.2.0'
+    provided group: 'org.jetbrains', name: 'annotations', version: '15.0'
+    provided group: 'me.clip', name: 'placeholderapi', version: '2.6.0'
+    provided name: 'BattleLevelsAPI'
+    provided name: 'Heroes-1.5.5.7'
+    provided name: 'MyPet-2.2.2'
+    provided name: 'RacesAndClasses-1.2.0'
+    provided name: 'RPGPlayerLeveling-3.3.1'
+    provided name: 'SkillAPI-3.90'
+    provided name: 'Skills'
     testCompile group: 'junit', name: 'junit', version: '4.11'
 }
