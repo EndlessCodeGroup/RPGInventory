@@ -258,7 +258,7 @@ public class PetType extends ClassedItem {
     }
 
     public double getSpeed() {
-        double speed = this.speed * Attributes.ONE_BPS;
+        double speed = this.speed*Attributes.ONE_BPS;
 
         if (this.role == Role.MOUNT) {
             speed /= Attributes.GALLOP_MULTIPLIER;

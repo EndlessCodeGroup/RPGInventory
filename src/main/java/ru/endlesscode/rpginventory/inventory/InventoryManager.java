@@ -336,15 +336,15 @@ public class InventoryManager {
             currentItem = null;
         } else if (action == InventoryAction.PICKUP_HALF) {
             ItemStack item = currentItem.clone();
-            if (currentItem.getAmount() % 2 == 0) {
-                item.setAmount(item.getAmount() / 2);
+            if (currentItem.getAmount()%2 == 0) {
+                item.setAmount(item.getAmount()/2);
                 currentItem = item.clone();
                 cursorItem = item.clone();
             } else {
                 currentItem = item.clone();
-                currentItem.setAmount(item.getAmount() / 2);
+                currentItem.setAmount(item.getAmount()/2);
                 cursorItem = item.clone();
-                cursorItem.setAmount(item.getAmount() / 2 + 1);
+                cursorItem.setAmount(item.getAmount()/2 + 1);
             }
         } else if (action == InventoryAction.MOVE_TO_OTHER_INVENTORY) {
             player.getInventory().addItem(currentItem);

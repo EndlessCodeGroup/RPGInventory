@@ -39,9 +39,9 @@ import java.util.Map;
  * All rights reserved 2014 - 2016 © «EndlessCode Group»
  */
 public class PetManager {
-    private static int SLOT_PET;
     private static final Map<String, PetType> PETS = new HashMap<>();
     private static final Map<String, PetFood> PET_FOOD = new HashMap<>();
+    private static int SLOT_PET;
 
     private PetManager() {
     }
@@ -275,7 +275,7 @@ public class PetManager {
         if (cooldown == 0) {
             nbt.remove("pet.cooldown");
         } else {
-            nbt.put("pet.cooldown", System.currentTimeMillis() + (cooldown * 1000));
+            nbt.put("pet.cooldown", System.currentTimeMillis() + (cooldown*1000));
         }
 
         NbtFactory.setItemTag(item, nbt);
@@ -288,7 +288,7 @@ public class PetManager {
             return 0;
         }
 
-        int cooldown = (int) ((nbt.getLong("pet.cooldown") - System.currentTimeMillis()) / 1000);
+        int cooldown = (int) ((nbt.getLong("pet.cooldown") - System.currentTimeMillis())/1000);
         if (cooldown < 0) {
             cooldown = 0;
         }

@@ -25,7 +25,7 @@ import ru.endlesscode.rpginventory.utils.PlayerUtils;
  */
 public class PlayerListener implements Listener {
     @EventHandler
-    public void onCommand(PlayerCommandPreprocessEvent event){
+    public void onCommand(PlayerCommandPreprocessEvent event) {
         Player player = event.getPlayer();
         if (InventoryManager.isAllowedWorld(player.getWorld()) && !InventoryManager.playerIsLoaded(player)) {
             PlayerUtils.sendMessage(player, RPGInventory.getLanguage().getCaption("error.rp.denied"));

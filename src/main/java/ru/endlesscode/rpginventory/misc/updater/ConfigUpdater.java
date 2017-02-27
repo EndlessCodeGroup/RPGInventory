@@ -15,7 +15,7 @@ import java.util.Collections;
 public class ConfigUpdater {
     public static void update(double configVersion) {
         FileConfiguration config = Config.getConfig();
-        int version = (int) (configVersion * 10);
+        int version = (int) (configVersion*10);
 
         switch (version) {
             case 91:

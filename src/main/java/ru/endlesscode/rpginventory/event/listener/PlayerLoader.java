@@ -31,6 +31,22 @@ public class PlayerLoader extends PacketAdapter implements Listener {
         super(plugin, WrapperPlayClientResourcePackStatus.TYPE, WrapperPlayServerResourcePackSend.TYPE);
     }
 
+    static void setDamageForPlayer(Player player, double damage) {
+        if (loadList.containsKey(player.getUniqueId())) {
+            loadList.get(player.getUniqueId()).setDamage(damage);
+        }
+    }
+
+    static boolean isPreparedPlayer(Player player) {
+        return loadList.containsKey(player.getUniqueId()) && loadList.get(player.getUniqueId()).isPrepared();
+    }
+
+    static void removePlayer(Player player) {
+        if (loadList.containsKey(player.getUniqueId())) {
+            loadList.remove(player.getUniqueId());
+        }
+    }
+
     @Override
     public void onPacketSending(PacketEvent event) {
         WrapperPlayServerResourcePackSend packet = new WrapperPlayServerResourcePackSend(event.getPacket());
@@ -87,22 +103,6 @@ public class PlayerLoader extends PacketAdapter implements Listener {
                     }
                 }.runTaskLater(this.plugin, 20);
                 loadList.remove(player.getUniqueId());
-        }
-    }
-
-    static void setDamageForPlayer(Player player, double damage) {
-        if (loadList.containsKey(player.getUniqueId())) {
-            loadList.get(player.getUniqueId()).setDamage(damage);
-        }
-    }
-
-    static boolean isPreparedPlayer(Player player) {
-        return loadList.containsKey(player.getUniqueId()) && loadList.get(player.getUniqueId()).isPrepared();
-    }
-
-    static void removePlayer(Player player) {
-        if (loadList.containsKey(player.getUniqueId())) {
-            loadList.remove(player.getUniqueId());
         }
     }
 

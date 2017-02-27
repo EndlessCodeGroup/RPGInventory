@@ -49,7 +49,7 @@ public class ItemListener implements Listener {
         try {
             if (event.getEntityType() == EntityType.PLAYER) {
                 Modifier armorModifier = ItemManager.getModifier((Player) event.getEntity(), ItemStat.StatType.ARMOR);
-                double armor = (event.getDamage(EntityDamageEvent.DamageModifier.ARMOR) - armorModifier.getBonus()) * armorModifier.getMultiplier();
+                double armor = (event.getDamage(EntityDamageEvent.DamageModifier.ARMOR) - armorModifier.getBonus())*armorModifier.getMultiplier();
                 if (armor > 0.0D) {
                     armor = 0.0D;
                 }
@@ -108,12 +108,12 @@ public class ItemListener implements Listener {
         }
 
         double damage = (CustomItem.isCustomItem(itemInHand) ? 1 : event.getDamage(EntityDamageEvent.DamageModifier.BASE))
-                + damageModifier.getBonus() * damageModifier.getMultiplier();
+                + damageModifier.getBonus()*damageModifier.getMultiplier();
         double critChance = ItemManager.getModifier(damager, ItemStat.StatType.CRIT_CHANCE).getMultiplier() - 1.0;
         if (Math.random() <= critChance) {
             damage *= ItemManager.getModifier(damager, ItemStat.StatType.CRIT_DAMAGE).getMultiplier();
             damager.getWorld().playSound(event.getEntity().getLocation(), Sound.ENTITY_PLAYER_ATTACK_CRIT,
-                    1, (float) (0.5 + Math.random() * 0.4));
+                    1, (float) (0.5 + Math.random()*0.4));
             EffectUtils.playParticlesToAll(EnumWrappers.Particle.CRIT, 10, event.getEntity().getLocation());
         }
 
@@ -137,11 +137,11 @@ public class ItemListener implements Listener {
 
         // === START: Magic constants ===
         if (velocity.getY() == 0.41999998688697815D) {
-            double jump = (1.5 + Math.sqrt(jumpModifier.getBonus())) * jumpModifier.getMultiplier();
+            double jump = (1.5 + Math.sqrt(jumpModifier.getBonus()))*jumpModifier.getMultiplier();
             Vector moveDirection = event.getTo().toVector().subtract(event.getFrom().toVector());
-            velocity.setX(moveDirection.getX() * jump * player.getWalkSpeed());
-            velocity.setY(velocity.getY() * jump / 1.5);
-            velocity.setZ(moveDirection.getZ() * jump * player.getWalkSpeed());
+            velocity.setX(moveDirection.getX()*jump*player.getWalkSpeed());
+            velocity.setY(velocity.getY()*jump/1.5);
+            velocity.setZ(moveDirection.getZ()*jump*player.getWalkSpeed());
             player.setVelocity(velocity);
         }
         // === END: Magic constants ===
@@ -157,7 +157,7 @@ public class ItemListener implements Listener {
             }
 
             Modifier jumpModifier = ItemManager.getModifier(player, ItemStat.StatType.JUMP);
-            double height = (1.5D + jumpModifier.getBonus()) * jumpModifier.getMultiplier() * 1.5;
+            double height = (1.5D + jumpModifier.getBonus())*jumpModifier.getMultiplier()*1.5;
             event.setDamage(event.getDamage() - height);
 
             if (event.getDamage() <= 0.0D) {

@@ -18,7 +18,7 @@ public class InventoryUtils {
     public static void heldFreeSlot(@NotNull Player player, int start, SearchType type) {
         if (type == SearchType.NEXT) {
             for (int i = start + 1; i < start + 9; i++) {
-                int index = i % 9;
+                int index = i%9;
                 if (!InventoryManager.isQuickEmptySlot(player.getInventory().getItem(index))) {
                     player.getInventory().setHeldItemSlot(index);
                     return;
@@ -26,7 +26,7 @@ public class InventoryUtils {
             }
         } else {
             for (int i = start - 1; i > start - 9; i--) {
-                int index = (i + 9) % 9;
+                int index = (i + 9)%9;
                 if (!InventoryManager.isQuickEmptySlot(player.getInventory().getItem(index))) {
                     player.getInventory().setHeldItemSlot(index);
                     return;
@@ -37,7 +37,7 @@ public class InventoryUtils {
 
     @Contract(pure = true)
     public static int getQuickSlot(int slotId) {
-        return slotId % 9;
+        return slotId%9;
     }
 
     public static boolean playerNeedArmor(Player player, ArmorType armorType) {

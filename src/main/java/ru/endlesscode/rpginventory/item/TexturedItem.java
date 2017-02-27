@@ -17,7 +17,7 @@ public class TexturedItem {
 
         if (data.length == 2) {
             try {
-                return  Short.parseShort(data[1]);
+                return Short.parseShort(data[1]);
             } catch (NumberFormatException e) {
                 return -1;
             }

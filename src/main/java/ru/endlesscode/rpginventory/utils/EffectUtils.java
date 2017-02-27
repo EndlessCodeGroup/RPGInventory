@@ -59,14 +59,14 @@ public class EffectUtils {
     public static void playSpawnEffect(@NotNull Entity entity) {
         Location loc = entity.getLocation();
 
-        entity.getWorld().playSound(loc, Sound.ENTITY_ENDERMEN_TELEPORT, 1, (float) (1.2 + Math.random() * 0.4));
+        entity.getWorld().playSound(loc, Sound.ENTITY_ENDERMEN_TELEPORT, 1, (float) (1.2 + Math.random()*0.4));
         playParticlesToAll(EnumWrappers.Particle.EXPLOSION_LARGE, 3, loc);
     }
 
     public static void playDespawnEffect(@NotNull Entity entity) {
         Location loc = entity.getLocation();
 
-        entity.getWorld().playSound(loc, Sound.ENTITY_ENDERMEN_TELEPORT, 1, (float) (0.6 + Math.random() * 0.4));
+        entity.getWorld().playSound(loc, Sound.ENTITY_ENDERMEN_TELEPORT, 1, (float) (0.6 + Math.random()*0.4));
         playParticlesToAll(EnumWrappers.Particle.SMOKE_NORMAL, 3, loc);
     }
 
@@ -76,7 +76,7 @@ public class EffectUtils {
         }
 
         final WrapperPlayServerTitle titlePacket = new WrapperPlayServerTitle();
-        int time = (subtitles.size() == 0 ? delay : delay * subtitles.size()) - 1;
+        int time = (subtitles.size() == 0 ? delay : delay*subtitles.size()) - 1;
         try {
             WrapperPlayServerTitle resetPacket = new WrapperPlayServerTitle();
             resetPacket.setAction(EnumWrappers.TitleAction.RESET);
@@ -86,7 +86,7 @@ public class EffectUtils {
             timesPacket.setAction(EnumWrappers.TitleAction.TIMES);
             timesPacket.setFadeIn(10);
             timesPacket.setFadeOut(10);
-            timesPacket.setStay(20 * time);
+            timesPacket.setStay(20*time);
             ProtocolLibrary.getProtocolManager().sendServerPacket(player, timesPacket.getHandle());
 
             title = StringUtils.coloredLine(StringUtils.setPlaceholders(player, title));
@@ -121,6 +121,6 @@ public class EffectUtils {
 
                 line++;
             }
-        }.runTaskTimer(RPGInventory.getInstance(), 0, 20 * delay);
+        }.runTaskTimer(RPGInventory.getInstance(), 0, 20*delay);
     }
 }

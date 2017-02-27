@@ -30,7 +30,7 @@ public class EntityUtils {
         }
 
         PetType petType = PetManager.getPetFromEntity((Tameable) entity);
-        double speedModifier = petType == null ? 1.0 : 0.4 / petType.getSpeed();
+        double speedModifier = petType == null ? 1.0 : 0.4/petType.getSpeed();
 
         Class<?> entityInsentientClass = MinecraftReflection.getMinecraftClass("EntityInsentient");
         Class<?> navigationAbstractClass = MinecraftReflection.getMinecraftClass("NavigationAbstract");

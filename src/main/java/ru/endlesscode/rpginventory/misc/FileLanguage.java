@@ -101,7 +101,7 @@ public class FileLanguage {
             this.plugin.getLogger().warning("Missing caption: " + name);
             caption = "&c[missing caption]";
         }
-        
+
         if (args.length > 0) {
             caption = String.format(caption, args);
         }

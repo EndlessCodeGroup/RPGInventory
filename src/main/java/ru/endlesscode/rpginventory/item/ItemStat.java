@@ -59,7 +59,7 @@ public class ItemStat {
         double value = this.minValue;
 
         if (maxValue != -1) {
-            value += (this.maxValue - this.minValue) * Math.random();
+            value += (this.maxValue - this.minValue)*Math.random();
         }
 
         return value;

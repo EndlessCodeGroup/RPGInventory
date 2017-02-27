@@ -340,8 +340,8 @@ public class Updater {
             while ((count = in.read(data, 0, Updater.BYTE_SIZE)) != -1) {
                 downloaded += count;
                 dos.write(data, 0, count);
-                final int percent = (int) ((downloaded * 100) / fileLength);
-                if (this.announce && ((percent % 10) == 0)) {
+                final int percent = (int) ((downloaded*100)/fileLength);
+                if (this.announce && ((percent%10) == 0)) {
                     this.plugin.getLogger().info("Downloading update: " + percent + "% of " + fileLength + " bytes.");
                 }
             }

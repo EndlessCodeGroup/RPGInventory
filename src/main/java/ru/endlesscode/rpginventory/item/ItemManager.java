@@ -96,12 +96,12 @@ public class ItemManager {
             }
 
             if (stat.isPercentage()) {
-                minMultiplier += stat.getOperationType() == ItemStat.OperationType.MINUS ? -stat.getMinValue() / 100 : stat.getMinValue() / 100;
+                minMultiplier += stat.getOperationType() == ItemStat.OperationType.MINUS ? -stat.getMinValue()/100 : stat.getMinValue()/100;
 
                 if (stat.isRanged()) {
-                    maxMultiplier += stat.getOperationType() == ItemStat.OperationType.MINUS ? -stat.getMaxValue() / 100 : stat.getMaxValue() / 100;
+                    maxMultiplier += stat.getOperationType() == ItemStat.OperationType.MINUS ? -stat.getMaxValue()/100 : stat.getMaxValue()/100;
                 } else {
-                    maxMultiplier += stat.getOperationType() == ItemStat.OperationType.MINUS ? -stat.getMinValue() / 100 : stat.getMinValue() / 100;
+                    maxMultiplier += stat.getOperationType() == ItemStat.OperationType.MINUS ? -stat.getMinValue()/100 : stat.getMinValue()/100;
                 }
             } else {
                 minBonus += stat.getOperationType() == ItemStat.OperationType.MINUS ? -stat.getMinValue() : stat.getMinValue();

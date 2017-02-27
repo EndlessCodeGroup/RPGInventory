@@ -96,7 +96,7 @@ public class InventoryListener implements Listener {
         if (slot != null && slot.isCup(player.getInventory().getItem(slotId))) {
             event.setCancelled(true);
             InventoryUtils.heldFreeSlot(player, slotId,
-                    (event.getPreviousSlot() + 1) % 9 == slotId ? InventoryUtils.SearchType.NEXT : InventoryUtils.SearchType.PREV);
+                    (event.getPreviousSlot() + 1)%9 == slotId ? InventoryUtils.SearchType.NEXT : InventoryUtils.SearchType.PREV);
         }
     }
 

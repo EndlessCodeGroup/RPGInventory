@@ -35,7 +35,7 @@ public class LocationUtils {
         for (int x = playerLoc.getBlockX() - radius; x < playerLoc.getBlockX() + radius; x++) {
             for (int y = playerLoc.getBlockY() - radius; y < playerLoc.getBlockY() + radius; y++) {
                 for (int z = playerLoc.getBlockZ() - radius; z < playerLoc.getBlockZ() + radius; z++) {
-                    Location loc = new Location(player.getWorld(), x, y, z, (float) (-180 + Math.random() * 360), 0.0F);
+                    Location loc = new Location(player.getWorld(), x, y, z, (float) (-180 + Math.random()*360), 0.0F);
                     if (loc.getBlock().isEmpty()) {
                         Location underLoc = new Location(player.getWorld(), x, y - 1, z);
                         if (!underLoc.getBlock().isEmpty() && !underLoc.getBlock().isLiquid()) {

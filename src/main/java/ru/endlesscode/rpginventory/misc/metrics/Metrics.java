@@ -179,9 +179,11 @@ public class Metrics {
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
-            if (gzos != null) try {
-                gzos.close();
-            } catch (IOException ignore) {
+            if (gzos != null) {
+                try {
+                    gzos.close();
+                } catch (IOException ignore) {
+                }
             }
         }
 
@@ -366,7 +368,7 @@ public class Metrics {
                         }
                     }
                 }
-            }, 0, PING_INTERVAL * 1200);
+            }, 0, PING_INTERVAL*1200);
 
             return true;
         }

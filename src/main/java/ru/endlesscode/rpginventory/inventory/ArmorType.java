@@ -60,22 +60,6 @@ public enum ArmorType {
     }
 
     @Nullable
-    public ItemStack getItem(Player player) {
-        switch (this) {
-            case HELMET:
-                return player.getEquipment().getHelmet();
-            case CHESTPLATE:
-                return player.getEquipment().getChestplate();
-            case LEGGINGS:
-                return player.getEquipment().getLeggings();
-            case BOOTS:
-                return player.getEquipment().getBoots();
-            default:
-                return null;
-        }
-    }
-
-    @Nullable
     public static Slot getArmorSlotById(int id) {
         switch (id) {
             case 5:
@@ -86,6 +70,22 @@ public enum ArmorType {
                 return SlotManager.getSlotManager().getSlot("leggings");
             case 8:
                 return SlotManager.getSlotManager().getSlot("boots");
+            default:
+                return null;
+        }
+    }
+
+    @Nullable
+    public ItemStack getItem(Player player) {
+        switch (this) {
+            case HELMET:
+                return player.getEquipment().getHelmet();
+            case CHESTPLATE:
+                return player.getEquipment().getChestplate();
+            case LEGGINGS:
+                return player.getEquipment().getLeggings();
+            case BOOTS:
+                return player.getEquipment().getBoots();
             default:
                 return null;
         }
