@@ -28,7 +28,7 @@ import java.util.zip.ZipFile;
 
 /**
  * Check for updates on EndlessCode for RPGInventory.
- * <p>
+ *
  * <b>VERY, VERY IMPORTANT</b>: Because there are no standards for adding auto-update toggles in your plugin's config, this system provides NO CHECK WITH YOUR CONFIG to make sure the user has allowed auto-updating.
  * <br>
  * It is a <b>BUKKIT POLICY</b> that you include a boolean value in your config that prevents the auto-updater from running <b>AT ALL</b>.
@@ -526,7 +526,7 @@ public class Updater {
 
     /**
      * <b>If you wish to run mathematical versioning checks, edit this method.</b>
-     * <p>
+     *
      * With default behavior, Updater will NOT verify that a remote version available on BukkitDev
      * which is not this version is indeed an "update".
      * If a version is present on BukkitDev that is not the version that is currently running,
@@ -534,7 +534,7 @@ public class Updater {
      * This is because there is no standard versioning scheme, and creating a calculation that can
      * determine whether a new update is actually an update is sometimes extremely complicated.
      * </p>
-     * <p>
+     *
      * Updater will call this method from {@link #versionCheck()} before deciding whether
      * the remote version is actually an update.
      * If you have a specific versioning scheme with which a mathematical determination can
@@ -542,7 +542,7 @@ public class Updater {
      * revise this method, using the local and remote version parameters, to execute the
      * appropriate check.
      * </p>
-     * <p>
+     *
      * Returning a value of <b>false</b> will tell the update process that this is NOT a new version.
      * Without revision, this method will always consider a remote version at all different from
      * that of the local version a new update.
