@@ -1,5 +1,5 @@
 language: java
+sudo: false
 
-addons:
-    code_climate:
-        repo_token: 9a03699c37542637473121f8428c976c1b49a5a1f10dff14fefee1c28382e8ef
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
