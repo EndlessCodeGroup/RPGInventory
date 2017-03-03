@@ -1,11 +1,4 @@
-package com.comphenix.packetwrapper.included;
-
-import com.comphenix.protocol.PacketType;
-import com.comphenix.protocol.events.PacketContainer;
-import com.comphenix.protocol.wrappers.EnumWrappers.TitleAction;
-import com.comphenix.protocol.wrappers.WrappedChatComponent;
-
-/**
+/*
  * PacketWrapper - ProtocolLib wrappers for Minecraft packets
  * Copyright (C) dmulloy2 <http://dmulloy2.net>
  * Copyright (C) Kristian S. Strangeland
@@ -23,6 +16,13 @@ import com.comphenix.protocol.wrappers.WrappedChatComponent;
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
+package com.comphenix.packetwrapper.included;
+
+import com.comphenix.protocol.PacketType;
+import com.comphenix.protocol.events.PacketContainer;
+import com.comphenix.protocol.wrappers.EnumWrappers.TitleAction;
+import com.comphenix.protocol.wrappers.WrappedChatComponent;
 
 @SuppressWarnings("ALL")
 public class WrapperPlayServerTitle extends AbstractPacket {

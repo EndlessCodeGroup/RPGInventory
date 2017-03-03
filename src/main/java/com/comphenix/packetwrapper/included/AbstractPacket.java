@@ -1,14 +1,4 @@
-package com.comphenix.packetwrapper.included;
-
-import com.comphenix.protocol.PacketType;
-import com.comphenix.protocol.ProtocolLibrary;
-import com.comphenix.protocol.events.PacketContainer;
-import com.google.common.base.Objects;
-import org.bukkit.entity.Player;
-
-import java.lang.reflect.InvocationTargetException;
-
-/**
+/*
  * PacketWrapper - ProtocolLib wrappers for Minecraft packets
  * Copyright (C) dmulloy2 <http://dmulloy2.net>
  * Copyright (C) Kristian S. Strangeland
@@ -26,6 +16,16 @@ import java.lang.reflect.InvocationTargetException;
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
+package com.comphenix.packetwrapper.included;
+
+import com.comphenix.protocol.PacketType;
+import com.comphenix.protocol.ProtocolLibrary;
+import com.comphenix.protocol.events.PacketContainer;
+import com.google.common.base.Objects;
+import org.bukkit.entity.Player;
+
+import java.lang.reflect.InvocationTargetException;
 
 @SuppressWarnings("ALL")
 public abstract class AbstractPacket {
