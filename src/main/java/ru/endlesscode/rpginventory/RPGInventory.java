@@ -158,14 +158,16 @@ public class RPGInventory extends JavaPlugin {
         }
 
         // Check resource-pack settings
-        if (Config.getConfig().getString("resource-pack.url").equals("PUT_YOUR_URL_HERE")) {
-            this.getLogger().warning("Set resource-pack's url in config!");
-            this.getPluginLoader().disablePlugin(this);
-            return false;
-        }
+        if (Config.getConfig().getBoolean("resource-pack.enabled", true)) {
+            if (Config.getConfig().getString("resource-pack.url").equals("PUT_YOUR_URL_HERE")) {
+                this.getLogger().warning("Set resource-pack's url in config!");
+                this.getPluginLoader().disablePlugin(this);
+                return false;
+            }
 
-        if (Config.getConfig().getString("resource-pack.hash").equals("PUT_YOUR_HASH_HERE")) {
-            this.getLogger().warning("Your resource pack hash incorrect!");
+            if (Config.getConfig().getString("resource-pack.hash").equals("PUT_YOUR_HASH_HERE")) {
+                this.getLogger().warning("Your resource pack hash incorrect!");
+            }
         }
 
         // Check dependencies
