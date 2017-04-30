@@ -1,15 +1,19 @@
-group 'ru.endlesscode.rpginventory'
-version '2.0.8-SNAPSHOT'
+plugins {
+    id 'ru.endlesscode.bukkitgradle' version '0.5.8'
+    id 'jacoco'
+}
 
-apply plugin: 'java'
-apply plugin: 'idea'
-apply plugin: 'jacoco'
-
-sourceCompatibility = targetCompatibility = 1.7
+group = 'ru.endlesscode'
+version = pluginVersion
+description = pluginDesc
 
 configurations {
     provided
     compile.extendsFrom(provided)
+}
+
+bukkit {
+    meta.authors = ["OsipXD", "EndlessCode Group"]
 }
 
 idea.module {
@@ -21,31 +25,24 @@ repositories {
         dirs 'libs'
     }
 
-    mavenCentral()
-
     maven {
-        name "dmulloy2-repo"
-        url "http://repo.dmulloy2.net/content/groups/public/"
+        name 'dmulloy2-repo'
+        url 'http://repo.dmulloy2.net/content/groups/public/'
     }
 
     maven {
-        name "md5-public"
-        url "http://repo.md-5.net/content/groups/public"
+        name 'md5-public'
+        url 'http://repo.md-5.net/content/groups/public'
     }
 
     maven {
-        name "vault-repo"
-        url "http://nexus.hc.to/content/repositories/pub_releases"
+        name 'vault-repo'
+        url 'http://nexus.hc.to/content/repositories/pub_releases'
     }
 
     maven {
-        name "spigot-repo"
-        url "https://hub.spigotmc.org/nexus/content/repositories/snapshots/"
-    }
-
-    maven {
-        name "placeholderapi"
-        url "http://repo.extendedclip.com/content/repositories/placeholderapi/"
+        name 'placeholderapi'
+        url 'http://repo.extendedclip.com/content/repositories/placeholderapi/'
     }
 }
 
@@ -57,10 +54,7 @@ dependencies {
     provided (group: 'net.milkbowl.vault', name: 'VaultAPI', version: '1.6') {
         exclude group: 'org.bukkit'
     }
-    provided (group: 'org.bukkit', name: 'bukkit', version: '1.11.2-R0.1-SNAPSHOT') {
-        exclude group: 'junit'
-    }
-    provided group: 'com.comphenix.protocol', name: 'ProtocolLib-API', version: '4.2.0'
+    provided group: 'com.comphenix.protocol', name: 'ProtocolLib-API', version: '4.2.1'
     provided group: 'org.jetbrains', name: 'annotations', version: '15.0'
     provided group: 'me.clip', name: 'placeholderapi', version: '2.6.0'
     provided name: 'BattleLevelsAPI'
@@ -70,7 +64,7 @@ dependencies {
     provided name: 'RPGPlayerLeveling-3.3.1'
     provided name: 'SkillAPI-3.90'
     provided name: 'Skills'
-    testCompile group: 'junit', name: 'junit', version: '4.11'
+    testCompile group: 'junit', name: 'junit', version: '4.12'
 }
 
 jacocoTestReport {

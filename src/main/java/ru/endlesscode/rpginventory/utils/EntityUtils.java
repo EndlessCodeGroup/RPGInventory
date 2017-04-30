@@ -28,6 +28,7 @@ import ru.endlesscode.rpginventory.pet.PetManager;
 import ru.endlesscode.rpginventory.pet.PetType;
 
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 /**
  * Created by OsipXD on 02.12.2015
@@ -54,7 +55,8 @@ public class EntityUtils {
         Class<?> navigationAbstractClass = MinecraftReflection.getMinecraftClass("NavigationAbstract");
 
         try {
-            Object insentient = entityInsentientClass.cast(MinecraftReflection.getCraftEntityClass().getDeclaredMethod("getHandle").invoke(entity));
+            Method getHandle = MinecraftReflection.getCraftEntityClass().getDeclaredMethod("getHandle");
+            Object insentient = entityInsentientClass.cast(getHandle.invoke(entity));
             Object navigation = entityInsentientClass.getDeclaredMethod("getNavigation").invoke(insentient);
             navigationAbstractClass.getDeclaredMethod("a", double.class, double.class, double.class, double.class)
                     .invoke(navigation, target.getX(), target.getY(), target.getZ(), speedModifier);
