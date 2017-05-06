@@ -1,6 +1,6 @@
 /*
  * This file is part of RPGInventory.
- * Copyright (C) 2015-2017 Osip Fatkullin
+ * Copyright (C) 2015-2017 osipf
  *
  * RPGInventory is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,9 +23,16 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import ru.endlesscode.rpginventory.api.InventoryAPI;
 import ru.endlesscode.rpginventory.inventory.ArmorType;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
 import ru.endlesscode.rpginventory.inventory.slot.Slot;
+import ru.endlesscode.rpginventory.item.CustomItem;
+import ru.endlesscode.rpginventory.item.ItemManager;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class InventoryUtils {
     public static void heldFreeSlot(@NotNull Player player, int start, SearchType type) {
@@ -78,6 +85,23 @@ public class InventoryUtils {
         }
 
         return slotType;
+    }
+
+    public static List<ItemStack> collectEffectiveItems(Player player, boolean notifyPlayer) {
+        List<ItemStack> items = new ArrayList<>(InventoryAPI.getPassiveItems(player));
+        Collections.addAll(items, player.getInventory().getArmorContents());
+
+        ItemStack itemInHand = player.getEquipment().getItemInMainHand();
+        if (CustomItem.isCustomItem(itemInHand) && ItemManager.allowedForPlayer(player, itemInHand, notifyPlayer)) {
+            items.add(itemInHand);
+        }
+
+        itemInHand = player.getEquipment().getItemInOffHand();
+        if (CustomItem.isCustomItem(itemInHand) && ItemManager.allowedForPlayer(player, itemInHand, notifyPlayer)) {
+            items.add(itemInHand);
+        }
+
+        return items;
     }
 
     public enum SearchType {

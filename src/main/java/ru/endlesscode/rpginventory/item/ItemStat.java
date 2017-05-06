@@ -1,6 +1,6 @@
 /*
  * This file is part of RPGInventory.
- * Copyright (C) 2015-2017 Osip Fatkullin
+ * Copyright (C) 2015-2017 osipf
  *
  * RPGInventory is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -66,10 +66,10 @@ public class ItemStat {
     }
 
     public double getMaxValue() {
-        return maxValue;
+        return isRanged() ? this.maxValue : this.minValue;
     }
 
-    public boolean isRanged() {
+    private boolean isRanged() {
         return this.maxValue != -1;
     }
 

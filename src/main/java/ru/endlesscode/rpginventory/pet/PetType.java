@@ -1,6 +1,6 @@
 /*
  * This file is part of RPGInventory.
- * Copyright (C) 2015-2017 Osip Fatkullin
+ * Copyright (C) 2015-2017 osipf
  *
  * RPGInventory is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -219,7 +219,6 @@ public class PetType extends ClassedItem {
     }
 
     private void createSpawnItem(String id) {
-        // Set texture
         ItemStack spawnItem = ItemUtils.getTexturedItem(this.texture);
 
         // Set lore and display itemName

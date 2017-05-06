@@ -1,6 +1,6 @@
 /*
  * This file is part of RPGInventory.
- * Copyright (C) 2015-2017 Osip Fatkullin
+ * Copyright (C) 2015-2017 osipf
  *
  * RPGInventory is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,19 +26,22 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ru.endlesscode.rpginventory.RPGInventory;
-import ru.endlesscode.rpginventory.api.InventoryAPI;
 import ru.endlesscode.rpginventory.event.listener.ItemListener;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
 import ru.endlesscode.rpginventory.misc.Config;
 import ru.endlesscode.rpginventory.misc.FileLanguage;
 import ru.endlesscode.rpginventory.pet.PetManager;
 import ru.endlesscode.rpginventory.pet.PetType;
+import ru.endlesscode.rpginventory.utils.InventoryUtils;
 import ru.endlesscode.rpginventory.utils.ItemUtils;
 import ru.endlesscode.rpginventory.utils.PlayerUtils;
 import ru.endlesscode.rpginventory.utils.StringUtils;
 
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by OsipXD on 18.09.2015
@@ -87,25 +90,12 @@ public class ItemManager {
     }
 
     private static Modifier getModifier(@NotNull Player player, ItemStat.StatType statType, boolean notifyPlayer) {
+        List<ItemStack> effectiveItems = InventoryUtils.collectEffectiveItems(player, notifyPlayer);
         double minBonus = 0;
         double maxBonus = 0;
         float minMultiplier = 1;
         float maxMultiplier = 1;
-
-        List<ItemStack> items = new ArrayList<>(InventoryAPI.getPassiveItems(player));
-        Collections.addAll(items, player.getInventory().getArmorContents());
-
-        ItemStack itemInHand = player.getEquipment().getItemInMainHand();
-        if (CustomItem.isCustomItem(itemInHand) && ItemManager.allowedForPlayer(player, itemInHand, notifyPlayer)) {
-            items.add(itemInHand);
-        }
-
-        itemInHand = player.getEquipment().getItemInOffHand();
-        if (CustomItem.isCustomItem(itemInHand) && ItemManager.allowedForPlayer(player, itemInHand, notifyPlayer)) {
-            items.add(itemInHand);
-        }
-
-        for (ItemStack item : items) {
+        for (ItemStack item : effectiveItems) {
             CustomItem customItem;
             ItemStat stat;
             if (!CustomItem.isCustomItem(item) || (customItem = ItemManager.getCustomItem(item)) == null
@@ -113,22 +103,13 @@ public class ItemManager {
                 continue;
             }
 
+            int sign = stat.getOperationType() == ItemStat.OperationType.MINUS ? -1 : 1;
             if (stat.isPercentage()) {
-                minMultiplier += stat.getOperationType() == ItemStat.OperationType.MINUS ? -stat.getMinValue()/100 : stat.getMinValue()/100;
-
-                if (stat.isRanged()) {
-                    maxMultiplier += stat.getOperationType() == ItemStat.OperationType.MINUS ? -stat.getMaxValue()/100 : stat.getMaxValue()/100;
-                } else {
-                    maxMultiplier += stat.getOperationType() == ItemStat.OperationType.MINUS ? -stat.getMinValue()/100 : stat.getMinValue()/100;
-                }
+                minMultiplier += sign * stat.getMinValue()/100;
+                maxMultiplier += sign * stat.getMaxValue()/100;
             } else {
-                minBonus += stat.getOperationType() == ItemStat.OperationType.MINUS ? -stat.getMinValue() : stat.getMinValue();
-
-                if (stat.isRanged()) {
-                    maxBonus += stat.getOperationType() == ItemStat.OperationType.MINUS ? -stat.getMaxValue() : stat.getMaxValue();
-                } else {
-                    maxBonus += stat.getOperationType() == ItemStat.OperationType.MINUS ? -stat.getMinValue() : stat.getMinValue();
-                }
+                minBonus += sign * stat.getMinValue();
+                maxBonus += sign * stat.getMaxValue();
             }
         }
 
