@@ -614,12 +614,7 @@ public class InventoryManager {
 
         if (InventoryManager.isNewPlayer(player) && rpEnabled) {
             if (Config.getConfig().getBoolean("join-messages.rp-info.enabled", true)) {
-                Runnable callback = new Runnable() {
-                    @Override
-                    public void run() {
-                        InventoryManager.sendResourcePack(player);
-                    }
-                };
+                Runnable callback = () -> InventoryManager.sendResourcePack(player);
 
                 EffectUtils.sendTitle(player,
                         Config.getConfig().getInt("join-messages.delay"),

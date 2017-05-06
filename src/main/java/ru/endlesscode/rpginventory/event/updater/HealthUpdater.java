@@ -52,6 +52,7 @@ public class HealthUpdater extends BukkitRunnable {
     private double newHealth = 0;
 
     public HealthUpdater(Player player) {
+        // TODO: This system needs rework. Use Attributes instead of deprecated methods.
         this.player = player;
         this.state = State.WAITING;
     }

@@ -50,15 +50,15 @@ public class ClassedItem extends TexturedItem {
     }
 
     protected String getClassesString() {
-        String classesString = "";
+        StringBuilder classesString = new StringBuilder();
         for (String theClass : this.classes) {
-            if (!classesString.isEmpty()) {
-                classesString += ", ";
+            if (classesString.length() > 0) {
+                classesString.append(", ");
             }
 
-            classesString += theClass;
+            classesString.append(theClass);
         }
 
-        return classesString;
+        return classesString.toString();
     }
 }
