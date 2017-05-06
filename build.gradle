@@ -19,7 +19,7 @@ repositories {
 
     maven {
         name 'dmulloy2-repo'
-        url 'http://repo.dmulloy2.net/nexus/repository/releases/'
+        url 'http://repo.dmulloy2.net/nexus/repository/public/'
     }
 
     maven {
