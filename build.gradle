@@ -1,5 +1,6 @@
 plugins {
-    id 'ru.endlesscode.bukkitgradle' version '0.5.8'
+    id 'ru.endlesscode.bukkitgradle' version '0.6.7'
+    id 'nebula.provided-base' version '3.1.0'
     id 'jacoco'
 }
 
@@ -7,17 +8,8 @@ group = 'ru.endlesscode'
 version = pluginVersion
 description = pluginDesc
 
-configurations {
-    provided
-    compile.extendsFrom(provided)
-}
-
 bukkit {
     meta.authors = ["OsipXD", "EndlessCode Group"]
-}
-
-idea.module {
-    scopes.PROVIDED.plus += [configurations.provided]
 }
 
 repositories {
@@ -27,17 +19,17 @@ repositories {
 
     maven {
         name 'dmulloy2-repo'
-        url 'http://repo.dmulloy2.net/content/groups/public/'
+        url 'http://repo.dmulloy2.net/nexus/repository/releases/'
     }
 
     maven {
         name 'md5-public'
-        url 'http://repo.md-5.net/content/groups/public'
+        url 'http://repo.md-5.net/content/groups/public/'
     }
 
     maven {
         name 'vault-repo'
-        url 'http://nexus.hc.to/content/repositories/pub_releases'
+        url 'http://nexus.hc.to/content/repositories/pub_releases/'
     }
 
     maven {
@@ -57,13 +49,13 @@ dependencies {
     provided group: 'com.comphenix.protocol', name: 'ProtocolLib-API', version: '4.2.1'
     provided group: 'org.jetbrains', name: 'annotations', version: '15.0'
     provided group: 'me.clip', name: 'placeholderapi', version: '2.6.0'
-    provided name: 'BattleLevelsAPI'
-    provided name: 'Heroes-1.5.5.7'
-    provided name: 'MyPet-2.2.2'
-    provided name: 'RacesAndClasses-1.2.0'
-    provided name: 'RPGPlayerLeveling-3.3.1'
-    provided name: 'SkillAPI-3.90'
-    provided name: 'Skills'
+    provided group: 'me.robin', name: 'BattleLevelsAPI', version: '6.9.1'
+    provided group: 'com.herocraftonline', name: 'Heroes', version: '1.5.5.7'
+    provided group: 'de.keyle', name: 'MyPet', version: '2.2.2'
+    provided group: 'org.tobiyas', name: 'RacesAndClasses', version: '1.2.0'
+    provided group: 'me.baks', name: 'RPGPlayerLeveling', version: '3.3.1'
+    provided group: 'com.sucy' ,name: 'SkillAPI', version: '3.90'
+    provided group: 'me.leothepro555', name: 'Skills'
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }
 
