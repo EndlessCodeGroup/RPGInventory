@@ -84,8 +84,9 @@ public class ArmorEquipListener implements Listener {
         }
 
         if (event.getRawSlots().size() == 1) {
-            int rawSlot = (int) event.getRawSlots().toArray()[0];
-            event.setCancelled(event.getInventory().getType() == InventoryType.CRAFTING && rawSlot >= 5 && rawSlot <= 8);
+            int slot = (int) event.getRawSlots().toArray()[0];
+
+            event.setCancelled(slot >= 5 && slot <= 8 && event.getInventory().getType() == InventoryType.CRAFTING);
         }
     }
 
@@ -112,7 +113,7 @@ public class ArmorEquipListener implements Listener {
             ItemStack item = event.getCursor();
             Slot armorSlot = ArmorType.getArmorSlotById(event.getRawSlot());
 
-            if (ItemUtils.isEmpty(item) || armorSlot == null) {
+            if (armorSlot == null || ItemUtils.isEmpty(item)) {
                 return;
             }
 
@@ -145,32 +146,36 @@ public class ArmorEquipListener implements Listener {
     public void onDispenseEquip(BlockDispenseEvent event) {
         ArmorType type = ArmorType.matchType(event.getItem());
         if (type != null) {
-            Location loc = event.getBlock().getLocation();
-            for (Player player : loc.getWorld().getPlayers()) {
-                if (loc.getBlockY() - player.getLocation().getBlockY() >= -1 && loc.getBlockY() - player.getLocation().getBlockY() <= 1) {
-                    if (player.getInventory().getHelmet() == null && type == ArmorType.HELMET
-                            || player.getInventory().getChestplate() == null && type == ArmorType.CHESTPLATE
-                            || player.getInventory().getLeggings() == null && type == ArmorType.LEGGINGS
-                            || player.getInventory().getBoots() == null && type == ArmorType.BOOTS) {
+            Location blockLoc = event.getBlock().getLocation();
+            for (Player player : blockLoc.getWorld().getPlayers()) {
+                Location playerLoc = player.getLocation();
+                if (blockLoc.getBlockY() - playerLoc.getBlockY() >= -1
+                        && blockLoc.getBlockY() - playerLoc.getBlockY() <= 1) {
+                    if (type == ArmorType.HELMET && player.getInventory().getHelmet() == null
+                            || type == ArmorType.CHESTPLATE && player.getInventory().getChestplate() == null
+                            || type == ArmorType.LEGGINGS && player.getInventory().getLeggings() == null
+                            || type == ArmorType.BOOTS && player.getInventory().getBoots() == null) {
                         org.bukkit.block.Dispenser dispenser = (org.bukkit.block.Dispenser) event.getBlock().getState();
                         org.bukkit.material.Dispenser dis = (org.bukkit.material.Dispenser) dispenser.getData();
                         BlockFace directionFacing = dis.getFacing();
                         // Someone told me not to do big if checks because it's hard to read, look at me doing it -_-
-                        if (directionFacing == BlockFace.EAST && player.getLocation().getBlockX() != loc.getBlockX()
-                                && player.getLocation().getX() <= loc.getX() + 2.3 && player.getLocation().getX() >= loc.getX()
-                                || directionFacing == BlockFace.WEST && player.getLocation().getX() >= loc.getX() - 1.3
-                                && player.getLocation().getX() <= loc.getX()
+                        if (directionFacing == BlockFace.EAST && playerLoc.getBlockX() != blockLoc.getBlockX()
+                                && playerLoc.getX() <= blockLoc.getX() + 2.3 && playerLoc.getX() >= blockLoc.getX()
+                                || directionFacing == BlockFace.WEST && playerLoc.getX() >= blockLoc.getX() - 1.3
+                                && playerLoc.getX() <= blockLoc.getX()
                                 || directionFacing == BlockFace.SOUTH
-                                && player.getLocation().getBlockZ() != loc.getBlockZ()
-                                && player.getLocation().getZ() <= loc.getZ() + 2.3 && player.getLocation().getZ() >= loc.getZ()
-                                || directionFacing == BlockFace.NORTH && player.getLocation().getZ() >= loc.getZ() - 1.3
-                                && player.getLocation().getZ() <= loc.getZ()) {
+                                && playerLoc.getBlockZ() != blockLoc.getBlockZ()
+                                && playerLoc.getZ() <= blockLoc.getZ() + 2.3 && playerLoc.getZ() >= blockLoc.getZ()
+                                || directionFacing == BlockFace.NORTH && playerLoc.getZ() >= blockLoc.getZ() - 1.3
+                                && playerLoc.getZ() <= blockLoc.getZ()) {
                             if (!InventoryManager.playerIsLoaded(player)) {
                                 return;
                             }
 
                             Slot armorSlot = SlotManager.getSlotManager().getSlot(type.name());
-                            event.setCancelled(armorSlot != null && !InventoryManager.validateArmor(player, InventoryAction.PLACE_ONE, armorSlot, event.getItem()));
+                            event.setCancelled(armorSlot != null
+                                    && !InventoryManager.validateArmor(
+                                            player, InventoryAction.PLACE_ONE, armorSlot, event.getItem()));
                             return;
                         }
                     }
