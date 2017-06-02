@@ -89,6 +89,10 @@ public class PlayerUtils {
                     playerClass = data.getMainClass().getData().getName();
                 }
                 break;
+            //class check from skills pro
+            case SKILLS:
+                playerClass = Skills.getSkill(player).toString();
+                break;
             case HEROES:
                 playerClass = Heroes.getInstance().getCharacterManager().getHero(player).getHeroClass().getName();
                 break;
@@ -155,7 +159,8 @@ public class PlayerUtils {
     }
 
     public enum ClassSystem {
-        PERMISSIONS("NONE"), SKILLAPI("SkillAPI"), HEROES("Heroes"), RAC("RacesAndClasses");
+        //check skills pro class system
+        PERMISSIONS("NONE"), SKILLAPI("SkillAPI"), SKILLS("Skills"), HEROES("Heroes"), RAC("RacesAndClasses");
 
         private final String pluginName;
 
