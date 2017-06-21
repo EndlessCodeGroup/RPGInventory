@@ -22,16 +22,11 @@ import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.jetbrains.annotations.Nullable;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 import ru.endlesscode.rpginventory.RPGInventory;
-import sun.misc.BASE64Decoder;
 
-import javax.crypto.Cipher;
-import javax.crypto.spec.IvParameterSpec;
-import javax.crypto.spec.SecretKeySpec;
 import java.io.*;
 import java.math.BigInteger;
 import java.net.MalformedURLException;
@@ -81,7 +76,7 @@ public class Updater {
     // Remote description
     private static final String DESCRIPTION_VALUE = "description";
     // Path to GET
-    private static final String QUERY = "/updates/update.php";
+    private static final String QUERY = "/updates/versions.json";
     // Slugs will be appended to this to get to the project's RSS feed
     private static final String HOST = "http://rpginventory.endlesscode.ru";
     // User-agent when querying Curse
@@ -219,22 +214,6 @@ public class Updater {
         } catch (final MalformedURLException e) {
             runUpdater();
         }
-    }
-
-    @Nullable
-    public static String decrypt(String strToEncrypt, String key, String iv) {
-        try {
-            Cipher cipher = Cipher.getInstance("AES/CBC/NoPadding");
-            SecretKeySpec keySpec = new SecretKeySpec(key.getBytes(), "AES");
-            IvParameterSpec ivSpec = new IvParameterSpec(iv.getBytes());
-            cipher.init(Cipher.DECRYPT_MODE, keySpec, ivSpec);
-            byte[] outText = cipher.doFinal(new BASE64Decoder().decodeBuffer(strToEncrypt));
-            return new String(outText).trim();
-        } catch (Exception e) {
-            System.out.println("Error while decrypting: " + e.toString());
-        }
-
-        return null;
     }
 
     /**
@@ -603,12 +582,7 @@ public class Updater {
             conn.setDoOutput(true);
 
             BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-            String rawResponse = reader.readLine();
-
-            // Decrypt
-            String key = "FD257C442CB15548";
-            String iv = "C2C19FA1B3123A9B";
-            String response = decrypt(rawResponse, key, iv);
+            String response = reader.readLine();
 
             if (response == null) {
                 RPGInventory.getPluginLogger().warning("Cannot take data from update server!");
