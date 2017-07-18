@@ -9,7 +9,13 @@ version = pluginVersion
 description = pluginDesc
 
 bukkit {
+    version = '1.11.2'
     meta.authors = ["OsipXD", "EndlessCode Group"]
+
+    run {
+        eula = true
+        dir = '../DevServer/'
+    }
 }
 
 repositories {
