@@ -16,5 +16,21 @@
  *  along with RPGInventory.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-rootProject.name = 'RPGInventory'
+package ru.endlesscode.rpginventory;
 
+import org.bukkit.plugin.java.JavaPlugin;
+
+/**
+ * This class is entry point to plugin
+ */
+public class RPGInventory extends JavaPlugin {
+    @Override
+    public void onEnable() {
+
+    }
+
+    @Override
+    public void onDisable() {
+
+    }
+}
