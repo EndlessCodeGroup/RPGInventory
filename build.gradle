@@ -45,14 +45,6 @@ repositories {
 }
 
 dependencies {
-    provided (group: 'LibsDisguises', name: 'LibsDisguises', version: '9.2.4') {
-        exclude group: 'com.comphenix.protocol'
-        exclude group: 'org.spigotmc'
-    }
-    provided (group: 'net.milkbowl.vault', name: 'VaultAPI', version: '1.6') {
-        exclude group: 'org.bukkit'
-    }
-    provided group: 'com.comphenix.protocol', name: 'ProtocolLib-API', version: '4.2.1'
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }
 
