@@ -1,0 +1,66 @@
+plugins {
+    id 'ru.endlesscode.bukkitgradle' version '0.6.7'
+    id 'nebula.provided-base' version '3.1.0'
+    id 'jacoco'
+}
+
+group = 'ru.endlesscode'
+version = pluginVersion
+description = pluginDesc
+
+bukkit {
+    version = '1.11.2'
+    meta.authors = ["OsipXD", "EndlessCode Group"]
+
+    run {
+        eula = true
+        dir = '../DevServer/'
+    }
+}
+
+repositories {
+    flatDir {
+        dirs 'libs'
+    }
+
+    maven {
+        name 'dmulloy2-repo'
+        url 'http://repo.dmulloy2.net/nexus/repository/public/'
+    }
+
+    maven {
+        name 'md5-public'
+        url 'http://repo.md-5.net/content/groups/public/'
+    }
+
+    maven {
+        name 'vault-repo'
+        url 'http://nexus.hc.to/content/repositories/pub_releases/'
+    }
+
+    maven {
+        name 'placeholderapi'
+        url 'http://repo.extendedclip.com/content/repositories/placeholderapi/'
+    }
+}
+
+dependencies {
+    provided (group: 'LibsDisguises', name: 'LibsDisguises', version: '9.2.4') {
+        exclude group: 'com.comphenix.protocol'
+        exclude group: 'org.spigotmc'
+    }
+    provided (group: 'net.milkbowl.vault', name: 'VaultAPI', version: '1.6') {
+        exclude group: 'org.bukkit'
+    }
+    provided group: 'com.comphenix.protocol', name: 'ProtocolLib-API', version: '4.2.1'
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
+
+jacocoTestReport {
+    reports {
+        xml.enabled true
+        html.enabled true
+    }
+}
+
+check.dependsOn jacocoTestReport
