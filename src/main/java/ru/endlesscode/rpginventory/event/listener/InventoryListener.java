@@ -175,7 +175,7 @@ public class InventoryListener implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onInventoryDrag(InventoryDragEvent event) {
         Player player = (Player) event.getWhoClicked();
 
@@ -197,7 +197,8 @@ public class InventoryListener implements Listener {
                     return;
                 }
 
-                if (rawSlotId >= 1 && rawSlotId <= 8) {
+                // Shield slot is QUICKBAR and has rawId - 45 o.O
+                if (rawSlotId >= 1 && rawSlotId <= 8 || rawSlotId == 45) {
                     event.setCancelled(true);
                     return;
                 }
@@ -251,6 +252,11 @@ public class InventoryListener implements Listener {
             switch (event.getSlotType()) {
                 case CRAFTING:
                     InventoryManager.get(player).openInventory(true);
+                case QUICKBAR:
+                    // Shield slot is QUICKBAR and has rawId - 45 o.O
+                    if (rawSlot != 45) {
+                        break;
+                    }
                 case ARMOR:
                 case RESULT:
                     event.setCancelled(true);

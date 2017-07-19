@@ -80,7 +80,7 @@ public class InventoryUtils {
 
     @Contract(pure = true)
     public static InventoryType.SlotType getSlotType(InventoryType.SlotType slotType, int rawSlot) {
-        if (slotType == InventoryType.SlotType.QUICKBAR || rawSlot > 80) {
+        if (rawSlot > 80) {
             return InventoryType.SlotType.QUICKBAR;
         }
 

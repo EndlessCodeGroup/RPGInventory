@@ -76,7 +76,7 @@ public class ArmorEquipListener implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onDragEquip(InventoryDragEvent event) {
         Player player = (Player) event.getWhoClicked();
         if (!InventoryManager.playerIsLoaded(player) || InventoryAPI.isRPGInventory(event.getInventory())) {
