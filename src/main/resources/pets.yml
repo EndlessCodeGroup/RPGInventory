@@ -1,12 +1,11 @@
 pets:
-  kitty:
-    name: "&7&lKitty"
-    item-name: "&7&lKitty's Summoning Stone"
+  puppy:
+    name: "&7&lPuppy"
+    item-name: "&7&lPuppy's Summoning Stone"
     lore:
-    - "&e&oMeow! Meow! Meow!"
+    - "&e&oWoof! Woof! Woof!"
     item: MONSTER_EGG:Ghast
     type: COMPANION
-    skin: OCELOT
     health: 20
     damage: 3
     speed: 3.5
@@ -16,7 +15,7 @@ pets:
     cooldown: 60
     features:
     - "BABY: TRUE"
-    - "TYPE: BLACK_CAT"
+    - "COLLAR: BLACK"
   rare-wolf:
     name: "&9&lWolf"
     item-name: "&9&lWolf's Summoning Stone"
@@ -61,13 +60,11 @@ pets:
     - "&e&oRide like the wind!"
     item: MONSTER_EGG:Zombie
     type: MOUNT
-    skin: HORSE
     health: 100
     speed: 10
     revival: true
     cooldown: 30
     features:
-    - "SADDLE: TRUE"
     - "CHEST: FALSE"
     - "ARMOR: IRON_BARDING"
     - "COLOR: DARK_BROWN"
@@ -81,6 +78,4 @@ food:
     item: BONE
     eaters:
     - WOLF
-    - OCELOT
-    - ZOMBIE
     value: 5
