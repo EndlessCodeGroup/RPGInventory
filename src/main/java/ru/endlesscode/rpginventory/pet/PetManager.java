@@ -20,8 +20,7 @@ package ru.endlesscode.rpginventory.pet;
 
 import com.comphenix.protocol.wrappers.nbt.NbtCompound;
 import com.comphenix.protocol.wrappers.nbt.NbtFactory;
-import me.libraryaddict.disguise.DisguiseAPI;
-import me.libraryaddict.disguise.disguisetypes.Disguise;
+import org.bukkit.DyeColor;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.attribute.Attribute;
@@ -165,16 +164,40 @@ public class PetManager {
         Animals pet = (Animals) player.getWorld().spawnEntity(LocationUtils.getLocationNearPlayer(player, 3),
                 EntityType.valueOf(petType.getRole().getDefaultSkin()));
         EffectUtils.playSpawnEffect(pet);
+        Map<String, String> features = petType.getFeatures();
 
         switch (petType.getRole()) {
             case MOUNT:
-                HorseInventory horseInv = ((Horse) pet).getInventory();
+                Horse horsePet = (Horse) pet;
+                HorseInventory horseInv = horsePet.getInventory();
                 horseInv.setSaddle(new ItemStack(Material.SADDLE));
+
+                if (features.containsKey("CHEST") && features.get("CHEST").equals("TRUE")) {
+                    horsePet.setCarryingChest(true);
+                }
+
+                if (features.containsKey("ARMOR")) {
+                    horseInv.setArmor(new ItemStack(Material.valueOf(features.get("ARMOR"))));
+                }
+
+                if (features.containsKey("COLOR")) {
+                    horsePet.setColor(Horse.Color.valueOf(features.get("COLOR")));
+                }
+
+                if (features.containsKey("STYLE")) {
+                    horsePet.setStyle(Horse.Style.valueOf(features.get("STYLE")));
+                }
+
+                break;
             case COMPANION:
-                ((Tameable) pet).setTamed(true);
-                ((Tameable) pet).setOwner(player);
+                Wolf wolfPet = (Wolf) pet;
+                if (features.containsKey("COLLAR")) {
+                    wolfPet.setCollarColor(DyeColor.valueOf(features.get("COLLAR")));
+                }
         }
 
+        ((Tameable) pet).setTamed(true);
+        ((Tameable) pet).setOwner(player);
         pet.setBreed(false);
         if (petType.isAdult()) {
             pet.setAdult();
@@ -193,12 +216,6 @@ public class PetManager {
         speedAttribute.setBaseValue(petType.getSpeed());
 
         InventoryManager.get(player).setPet(pet);
-
-        // Pet skin
-        Disguise disguise = petType.getDisguise();
-        disguise.getWatcher().setCustomName(pet.getCustomName());
-        disguise.getWatcher().setCustomNameVisible(true);
-        DisguiseAPI.disguiseEntity(pet, disguise);
     }
 
     public static void despawnPet(@NotNull OfflinePlayer player) {
@@ -219,11 +236,6 @@ public class PetManager {
         if (petItem != null) {
             PetManager.saveHealth(petItem, pet.getHealth());
             inventory.setItem(SLOT_PET, petItem);
-        }
-
-        // Pet skin
-        if (DisguiseAPI.isDisguised(pet)) {
-            DisguiseAPI.undisguiseToAll(pet);
         }
 
         EffectUtils.playDespawnEffect(pet);

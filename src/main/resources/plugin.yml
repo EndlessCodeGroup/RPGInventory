@@ -1,7 +1,6 @@
 depend:
   - ProtocolLib
   - Vault
-  - LibsDisguises
 softdepend:
   - BattleLevels
   - Skills

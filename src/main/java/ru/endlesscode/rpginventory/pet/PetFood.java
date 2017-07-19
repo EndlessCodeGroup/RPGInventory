@@ -94,6 +94,6 @@ public class PetFood extends TexturedItem {
 
     public boolean canBeEaten(LivingEntity pet) {
         PetType petType = PetManager.getPetFromEntity((Tameable) pet);
-        return petType != null && this.eaters.contains(petType.getSkin().toString());
+        return petType != null && this.eaters.contains(petType.getRole().getDefaultSkin());
     }
 }

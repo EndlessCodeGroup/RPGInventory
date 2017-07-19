@@ -18,12 +18,7 @@
 
 package ru.endlesscode.rpginventory.pet;
 
-import me.libraryaddict.disguise.disguisetypes.*;
-import me.libraryaddict.disguise.disguisetypes.watchers.*;
-import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.entity.Horse;
-import org.bukkit.entity.Ocelot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.Contract;
@@ -66,9 +61,8 @@ public class PetType extends ClassedItem {
     private final boolean attackPlayers;
     private final boolean revival;
     private final int cooldown;
-    private DisguiseType skin;
-    private Disguise disguise;
     private ItemStack spawnItem;
+    private Map<String, String> features;
 
     PetType(@NotNull ConfigurationSection config) {
         super(config, config.getString("item"));
@@ -89,7 +83,7 @@ public class PetType extends ClassedItem {
         this.cooldown = this.revival ? config.getInt("cooldown") : 0;
 
         this.createSpawnItem(config.getName());
-        this.createDisguise(config);
+        this.storeFeatures(config.getStringList("features"));
     }
 
     @Contract("null -> false")
@@ -113,10 +107,9 @@ public class PetType extends ClassedItem {
         return newItem;
     }
 
-    private void createDisguise(ConfigurationSection config) {
+    private void storeFeatures(List<String> featureList) {
         // Load features
         Map<String, String> features;
-        List<String> featureList = config.getStringList("features");
         if (featureList != null && featureList.size() > 0) {
             features = new HashMap<>(featureList.size());
             for (String feature : featureList) {
@@ -127,95 +120,7 @@ public class PetType extends ClassedItem {
             features = null;
         }
 
-        // Build disguise
-        this.skin = DisguiseType.valueOf(config.getString("skin", this.role.getDefaultSkin()));
-
-        Disguise disguise;
-        if (features != null) {
-            if (this.skin == DisguiseType.PLAYER) {
-                disguise = new PlayerDisguise(this.name);
-            } else {
-                disguise = new MobDisguise(this.skin, !(features.containsKey("BABY") && features.get("BABY").equals("TRUE")));
-            }
-
-            switch (this.skin) {
-                case PIG:
-                    if (features.containsKey("SADDLE") && features.get("SADDLE").equals("TRUE")) {
-                        ((PigWatcher) disguise.getWatcher()).setSaddled(true);
-                    }
-                    break;
-                case HORSE:
-                    HorseWatcher horseWatcher = ((HorseWatcher) disguise.getWatcher());
-                    if (features.containsKey("CHEST") && features.get("CHEST").equals("TRUE")) {
-                        horseWatcher.setCarryingChest(true);
-                    }
-
-                    if (features.containsKey("ARMOR")) {
-                        horseWatcher.setHorseArmor(new ItemStack(Material.valueOf(features.get("ARMOR"))));
-                    }
-
-                    if (features.containsKey("COLOR")) {
-                        horseWatcher.setColor(Horse.Color.valueOf(features.get("COLOR")));
-                    }
-
-                    if (features.containsKey("STYLE")) {
-                        horseWatcher.setStyle(Horse.Style.valueOf(features.get("STYLE")));
-                    }
-                case DONKEY:
-                case SKELETON_HORSE:
-                case MULE:
-                    horseWatcher = ((HorseWatcher) disguise.getWatcher());
-                    horseWatcher.setTamed(true);
-                    if (features.containsKey("SADDLE") && features.get("SADDLE").equals("TRUE")) {
-                        horseWatcher.setSaddled(true);
-                    }
-                    break;
-                case WOLF:
-                    if (features.containsKey("COLLAR")) {
-                        ((WolfWatcher) disguise.getWatcher()).setCollarColor(AnimalColor.valueOf(features.get("COLLAR")));
-                    }
-                    break;
-                case ENDERMAN:
-                    if (features.containsKey("ITEM")) {
-                        disguise.getWatcher().setItemInMainHand(new ItemStack(Material.valueOf(features.get("ITEM"))));
-                    }
-                    break;
-                case OCELOT:
-                    if (features.containsKey("TYPE")) {
-                        ((OcelotWatcher) disguise.getWatcher()).setType(Ocelot.Type.valueOf(features.get("TYPE")));
-                    }
-                    break;
-                case PLAYER:
-                    if (features.containsKey("SKIN")) {
-                        ((PlayerWatcher) disguise.getWatcher()).setSkin(features.get("SKIN"));
-                    }
-
-                    if (features.containsKey("ITEM")) {
-                        disguise.getWatcher().setItemInMainHand(new ItemStack(Material.valueOf(features.get("ITEM"))));
-                    }
-                    break;
-                case RABBIT:
-                    if (features.containsKey("TYPE")) {
-                        ((RabbitWatcher) disguise.getWatcher()).setType(RabbitType.valueOf(features.get("TYPE")));
-                    }
-                    break;
-                case SHEEP:
-                    SheepWatcher sheepWatcher = ((SheepWatcher) disguise.getWatcher());
-                    if (features.containsKey("SHEARED")) {
-                        sheepWatcher.setSheared(true);
-                    }
-
-                    if (features.containsKey("COLOR")) {
-                        sheepWatcher.setColor(AnimalColor.valueOf(features.get("COLOR")));
-                    }
-                    break;
-            }
-        } else {
-            disguise = new MobDisguise(this.skin, true);
-        }
-
-        disguise.setReplaceSounds(true);
-        this.disguise = disguise;
+        this.features = features;
     }
 
     private void createSpawnItem(String id) {
@@ -301,19 +206,15 @@ public class PetType extends ClassedItem {
     }
 
     boolean isAdult() {
-        return disguise.getType() == DisguiseType.PLAYER || ((MobDisguise) disguise).isAdult();
+        return !features.containsKey("BABY") || features.get("BABY").equals("FALSE");
     }
 
     public Role getRole() {
         return role;
     }
 
-    DisguiseType getSkin() {
-        return this.skin;
-    }
-
-    Disguise getDisguise() {
-        return this.disguise.clone();
+    public Map<String, String> getFeatures() {
+        return features;
     }
 
     public enum Role {
