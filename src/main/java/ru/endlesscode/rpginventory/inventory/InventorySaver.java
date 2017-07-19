@@ -45,10 +45,11 @@ public class InventorySaver {
     private static final Map<UUID, ItemStack> EXTRA = new HashMap<>();
 
     public static void save(Player player, List<ItemStack> drops, boolean saveItems, boolean saveArmor, boolean saveRpgInv) {
-        Inventory inventory = InventoryManager.get(player).getInventory();
-        InventoryManager.syncArmor(InventoryManager.get(player));
-        InventoryManager.syncQuickSlots(InventoryManager.get(player));
-        InventoryManager.syncShieldSlot(InventoryManager.get(player));
+        PlayerWrapper playerWrapper = InventoryManager.get(player);
+        Inventory inventory = playerWrapper.getInventory();
+        InventoryManager.syncArmor(playerWrapper);
+        InventoryManager.syncQuickSlots(playerWrapper);
+        InventoryManager.syncShieldSlot(playerWrapper);
 
         // Save armor
         List<ItemStack> armorList = new ArrayList<>(4);
@@ -60,11 +61,13 @@ public class InventorySaver {
                 drops.remove(armor);
             } else {
                 boolean drop = true;
-                for (Slot slot : new ArrayList<>(armorSlots)) {
-                    if (armor.getType() == (inventory.getItem(slot.getSlotId())).getType()) {
-                        drop = slot.isDrop();
-                        armorSlots.remove(slot);
-                        break;
+                if (armor != null) {
+                    for (Slot slot : new ArrayList<>(armorSlots)) {
+                        if (armor.getType() == (inventory.getItem(slot.getSlotId())).getType()) {
+                            drop = slot.isDrop();
+                            armorSlots.remove(slot);
+                            break;
+                        }
                     }
                 }
 
@@ -131,7 +134,7 @@ public class InventorySaver {
 
         // Saving inventory
         for (ItemStack drop : new ArrayList<>(drops)) {
-            if (saveItems || !CustomItem.isCustomItem(drop) || !ItemManager.getCustomItem(drop).isDrop()) {
+            if (saveItems || CustomItem.isCustomItem(drop) && !ItemManager.getCustomItem(drop).isDrop()) {
                 drops.remove(drop);
             } else {
                 for (int i = 9; i < contents.length; i++) {
