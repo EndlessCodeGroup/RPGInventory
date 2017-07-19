@@ -119,7 +119,7 @@ public class ItemUtils {
                 NbtCompound nbt = NbtFactory.asCompound(NbtFactory.fromItemTag(item));
                 nbt.put("EntityTag", NbtFactory.ofCompound("temp").put("id", textures[1]));
             } else {
-                item.setDurability(Byte.parseByte(textures[1]));
+                item.setDurability(Short.parseShort(textures[1]));
 
                 if (isItemHasDurability(item)) {
                     item = setTag(item, UNBREAKABLE_TAG, "1");
