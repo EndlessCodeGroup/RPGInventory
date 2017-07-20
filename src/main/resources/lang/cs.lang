@@ -1,66 +1,67 @@
-firststart: "\n
-&3============================== RPGInventory ================================\n
-&cBefore using &eRPGInventory&c, add changed textures to the resource-pack\n
-and configure items that can be put in the inventory slots. After that,\n
-set value in the config &eenabled: true\n
-&3============================================================================"
+#version: 2.0 | Do not remove this line!
+firststart: \n\
+§3============================== RPGInventory ================================\n\
+§cBefore using §eRPGInventory§c, add changed textures to the resource-pack\n\
+and configure items that can be put in the inventory slots. After that,\n\
+set value in the config §eenabled: true\n\
+§3============================================================================
 
-title: "RPG Inventar"
+title: RPG Inventar
 
-locked.name: "&c&lZamceny slot"
-locked.lore: "&6&oNejdrive musis odemknout predchozi slot"
+locked.name: §c§lZamceny slot
+locked.lore: §6§oNejdrive musis odemknout predchozi slot
 
-buyable.name: "&a&lDostupny slot"
-buyable.lore: "&6&oAby si odemkl slot musis:"
-buyable.money: "&6&o• mit %s goldu"
-buyable.level: "&6&o• byt %d lvl"
+buyable.name: §a§lDostupny slot
+buyable.lore: §6§oAby si odemkl slot musis:
+buyable.money: §6§o• mit {0} goldu
+buyable.level: §6§o• byt {0} lvl
 
-error.fall: "&cYou can't do it while you are flying"
-error.money: "&6&lAby si mohl odemknout slot jeste potrebujes %s gold"
-error.level: "&6&lAby si mohl odemknout slot potrebujes %d lvlu"
-error.buyable: "&6&lOdemknuti tohoto slotu te bude stat %d gold. Klikni na to znova do 10 vterin aby si potvrdil odemceni."
-error.previous: "&6&lNejdrive odemkni predchozi sloty"
-error.rp.denied: "&cMusis povolit stazeni resource-packu!"
-error.rp.force: "&cVypnuti resource-packu neni povoleno!"
-error.item.level: "&6Vyzaduje &c%s &6level"
-error.item.class: "&6Vyzaduje tridu &c%s"
-error.mount.owner: "&6Zvire patri %"
-error.fixhp: "&6Fixing HP not needed"
+error.fall: §cYou can't do it while you are flying
+error.money: §6§lAby si mohl odemknout slot jeste potrebujes {0} gold
+error.level: §6§lAby si mohl odemknout slot potrebujes {0} lvlu
+error.buyable: §6§lOdemknuti tohoto slotu te bude stat {0} gold. Klikni na to znova do 10 vterin aby si potvrdil odemceni.
+error.previous: §6§lNejdrive odemkni predchozi sloty
+error.rp.denied: §cMusis povolit stazeni resource-packu!
+error.rp.force: §cVypnuti resource-packu neni povoleno!
+error.item.level: §6Vyzaduje §c{0} §6level
+error.item.class: §6Vyzaduje tridu §c{0}
+error.mount.owner: §6Zvire patri %
+error.fixhp: §6Fixing HP not needed
 
-message.buyed: "&a&lUspesne jsi zakoupil slot"
-message.fixhp: "&6Your HP was fixed, please login to server again."
-message.perms: "&cYou don't have permission to use this command"
+message.buyed: §a§lUspesne jsi zakoupil slot
+message.fixhp: §6Your HP was fixed, please login to server again.
+message.perms: §cYou don't have permission to use this command
 
-pet.name: "%s &f[%s]"
-pet.health: "&cZivoty: &7%d"
-pet.damage: "&cUtok: &7%d"
-pet.speed: "&cRychlost: &7%.2f block/s"
-pet.revival.yes: "&bOzivovaci doba: &7%ds"
-pet.revival.no: "&bNeozivuje se"
-pet.cooldown: " &a&l&o(%ds)"
-pet.food.value: "&aObnovi: %d Zivota"
-pet.role.companion: "Spolecnik"
-pet.role.mount: "Jezdec"
+pet.name: {0} §f[{1}]
+pet.health: §cZivoty: §7{0}
+pet.damage: §cUtok: §7{0}
+pet.speed: §cRychlost: §7{0} block/s
+pet.revival.yes: §bOzivovaci doba: §7{0}s
+pet.revival.no: §bNeozivuje se
+pet.cooldown:  §a§l§o({0}s)
+pet.food.value: §aObnovi: {0} Zivota
+pet.role.companion: Spolecnik
+pet.role.mount: Jezdec
 
-item.level: "&fVyzaduje %d level"
-item.class: "&fJen pro &b%s"
-item.nodrop: "&7Nevypadne pri smrti"
-item.left-click: "&aLMB - %s"
-item.right-click: "&aRMB - %s"
-item.hide: "&7&oItem stats are hidden"
-item.unbreakable: "&7Unbreakable item"
+item.level: §fVyzaduje {0} level
+item.class: §fJen pro §b{0}
+item.nodrop: §7Nevypadne pri smrti
+item.left-click: §aLMB - {0}
+item.right-click: §aRMB - {0}
+item.hide: §7§oItem stats are hidden
+item.unbreakable: §7Unbreakable item
 
-stat.message.no_bonus: "No bonus"
-stat.damage: "&cUtok: &7%s"
-stat.bow_damage: "&cUtok (na dalku): &7%s"
-stat.hand_damage: "&cUtok (na blizko): &7%s"
-stat.health: "&2Zivoty: &7%s"
-stat.armor: "&3Brneni: &7%s"
-stat.crit_chance: "&6Sance na kriticky utok: &7%s"
-stat.crit_damage: "&6Poskozeni kritickym utokem: &7%s"
-stat.speed: "&9Rychlost: &7%s"
-stat.jump: "&9Skoky: &7%s"
+stat.message.no_bonus: No bonus
+stat.damage: §cUtok: §7{0}
+stat.bow_damage: §cUtok (na dalku): §7{0}
+stat.hand_damage: §cUtok (na blizko): §7{0}
+stat.health: §2Zivoty: §7{0}
+stat.armor: §3Brneni: §7{0}
+stat.crit_chance: §6Sance na kriticky utok: §7{0}
+stat.crit_damage: §6Poskozeni kritickym utokem: §7{0}
+stat.speed: §9Rychlost: §7{0}
+stat.jump: §9Skoky: §7{0}
 
-backpack.desc: "&8&oPrendej ho do spravneho slotu v RPG inventari"
-backpack.size: "&aKapacita: &7%d"
-backpack.limit: "&cYou can't have more than %d backpack!"
+backpack.desc: §8§oPrendej ho do spravneho slotu v RPG inventari
+backpack.size: §aKapacita: §7{0}
+backpack.limit: §cYou can't have more than {0} backpack!

@@ -1,66 +1,67 @@
-firststart: "\n
-&3============================== RPGInventory ================================\n
-&cAntes de usar &eRPGInventory&c, adicione um pacote de recursos\n
-e configure os items que podem ser colocados em cada espaço do inventario.\n
-Depois modifique valor o da configuracão a &eenabled: true\n
-&3============================================================================"
+#version: 2.0 | Do not remove this line!
+firststart: \n\
+§3============================== RPGInventory ================================\n\
+§cAntes de usar §eRPGInventory§c, adicione um pacote de recursos\n\
+e configure os items que podem ser colocados em cada espaço do inventario.\n\
+Depois modifique valor o da configuracão a §eenabled: true\n\
+§3============================================================================
 
-title: "RPG Inventory"
+title: RPG Inventory
 
-locked.name: "&c&lEspaço bloqueado"
-locked.lore: "&6&oDeve desbloquear o espaço anterior"
+locked.name: §c§lEspaço bloqueado
+locked.lore: §6§oDeve desbloquear o espaço anterior
 
-buyable.name: "&a&lEspaço disponivel"
-buyable.lore: "&6&oPara obter este espaco deve:"
-buyable.money: "&6&o• ter %s moedas"
-buyable.level: "&6&o• ter %d nivel(s) de experiencia"
+buyable.name: §a§lEspaço disponivel
+buyable.lore: §6§oPara obter este espaco deve:
+buyable.money: §6§o• ter {0} moedas
+buyable.level: §6§o• ter {0} nivel(s) de experiencia
 
-error.fall: "&cNão pode fazer isso enquanto esta voando!!"
-error.money: "&6&lAinda precisa de %s moedas"
-error.level: "&6&lAinda precisa de %d niveis"
-error.buyable: "&6&lPrecisa de  %d moedas para comprar esse espaço. Faça um click novamente nos proximos 10seg para confirmar."
-error.previous: "&6&lDesbloqueie o espaço previo"
-error.rp.denied: "&cDeve habilitar o download do pacote de recursos!"
-error.rp.force: "&cNão é permitido desabilitar o pacote de recursos."
-error.item.level: "&6Nivel &c%s &6requerido"
-error.item.class: "&6Classe &c%s &6requerida"
-error.mount.owner: "&6A moldura pertence a %s"
-error.fixhp: "&6Não há necessidade de corrigir a sua quantidade de vida!!"
+error.fall: §cNão pode fazer isso enquanto esta voando!!
+error.money: §6§lAinda precisa de {0} moedas
+error.level: §6§lAinda precisa de {0} niveis
+error.buyable: §6§lPrecisa de  {0} moedas para comprar esse espaço. Faça um click novamente nos proximos 10seg para confirmar.
+error.previous: §6§lDesbloqueie o espaço previo
+error.rp.denied: §cDeve habilitar o download do pacote de recursos!
+error.rp.force: §cNão é permitido desabilitar o pacote de recursos.
+error.item.level: §6Nivel §c{0} §6requerido
+error.item.class: §6Classe §c{0} §6requerida
+error.mount.owner: §6A moldura pertence a {0}
+error.fixhp: §6Não há necessidade de corrigir a sua quantidade de vida!!
 
-message.buyed: "&a&Você já comprou o espaço"
-message.fixhp: "&6A sua quantidade de vida foi corrigida, por favor, re-entrar no servidor"
-message.perms: "&cYou don't have permission to use this command"
+message.buyed: §a&Você já comprou o espaço
+message.fixhp: §6A sua quantidade de vida foi corrigida, por favor, re-entrar no servidor
+message.perms: §cYou don't have permission to use this command
 
-pet.name: "%s &f[%s]"
-pet.health: "&cVida: &7%d"
-pet.damage: "&cDano: &7%d"
-pet.speed: "&cVelocidade: &7%.2f blocos/segundo"
-pet.revival.yes: "&bTempo de espera: &7%ds"
-pet.revival.no: "&bNão resucitará"
-pet.cooldown: " &a&l&o(%ds)"
-pet.food.value: "&aRestaurou: %d de vida"
-pet.role.companion: "Acompanhante"
-pet.role.mount: "Monte"
+pet.name: {0} §f[{1}]
+pet.health: §cVida: §7{0}
+pet.damage: §cDano: §7{0}
+pet.speed: §cVelocidade: §7{0} blocos/segundo
+pet.revival.yes: §bTempo de espera: §7{0}s
+pet.revival.no: §bNão resucitará
+pet.cooldown:  §a§l§o({0}s)
+pet.food.value: §aRestaurou: {0} de vida
+pet.role.companion: Acompanhante
+pet.role.mount: Monte
 
-item.level: "&fRequer nivel %d"
-item.class: "&fExclusivo para &b%s"
-item.nodrop: "&7Não se dropa ena morte."
-item.left-click: "&aClick esquerdo - %s"
-item.right-click: "&aClick direito - %s"
-item.hide: "&7&oEstadísticas do item ocultas"
-item.unbreakable: "&7Item inquebravel"
+item.level: §fRequer nivel {0}
+item.class: §fExclusivo para §b{0}
+item.nodrop: §7Não se dropa ena morte.
+item.left-click: §aClick esquerdo - {0}
+item.right-click: §aClick direito - {0}
+item.hide: §7§oEstadísticas do item ocultas
+item.unbreakable: §7Item inquebravel
 
-stat.message.no_bonus: "Sem bonus"
-stat.damage: "&cDano: &7%s"
-stat.bow_damage: "&cDano (flecha): &7%s"
-stat.hand_damage: "&cDano (mão): &7%s"
-stat.health: "&2Vida: &7%s"
-stat.armor: "&3Armadura: &7%s"
-stat.crit_chance: "&6Chance de golpe crítico: &7%s"
-stat.crit_damage: "&6Dano de golpe crítico: &7%s"
-stat.speed: "&9Velocidade: &7%s"
-stat.jump: "&9Pulo: &7%s"
+stat.message.no_bonus: Sem bonus
+stat.damage: §cDano: §7{0}
+stat.bow_damage: §cDano (flecha): §7{0}
+stat.hand_damage: §cDano (mão): §7{0}
+stat.health: §2Vida: §7{0}
+stat.armor: §3Armadura: §7{0}
+stat.crit_chance: §6Chance de golpe crítico: §7{0}
+stat.crit_damage: §6Dano de golpe crítico: §7{0}
+stat.speed: §9Velocidade: §7{0}
+stat.jump: §9Pulo: §7{0}
 
-backpack.desc: "&8&oColoque-o no espaço fornecido e clique &fClique com o botão direito"
-backpack.size: "&aTamanho: &7%d"
-backpack.limit: "&cYou can't have more than %d backpack!"
+backpack.desc: §8§oColoque-o no espaço fornecido e clique §fClique com o botão direito
+backpack.size: §aTamanho: §7{0}
+backpack.limit: §cYou can't have more than {0} backpack!
