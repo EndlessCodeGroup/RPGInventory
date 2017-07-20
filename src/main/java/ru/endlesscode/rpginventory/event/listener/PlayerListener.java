@@ -80,11 +80,11 @@ public class PlayerListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.LOW)
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
     public void onPlayerMoveWhenNotLoaded(PlayerMoveEvent event) {
         Player player = event.getPlayer();
 
-        if (event.isCancelled() || InventoryManager.playerIsLoaded(player)) {
+        if (!InventoryManager.isAllowedWorld(player.getWorld()) || InventoryManager.playerIsLoaded(player)) {
             return;
         }
 
