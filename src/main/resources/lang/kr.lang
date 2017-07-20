@@ -1,67 +1,67 @@
 #version: 2.0 | Do not remove this line!
 firststart: \n\
-§3============================== RPGInventory ================================\n\
-§cBefore using §eRPGInventory§c, add changed textures to your server resource-pack\n\
+&3============================== RPGInventory ================================\n\
+&cBefore using &eRPGInventory&c, add changed textures to your server resource-pack\n\
 and configure items that can be put in the inventory slots. After that,\n\
-set value in the config §eenabled: true\n\
-§3============================================================================
+set value in the config &eenabled: true\n\
+&3============================================================================
 
-title: §l인벤토리
+title: &l인벤토리
 
-locked.name: §c§l잠긴 슬릇
-locked.lore: §6§o이전 슬릇부터 해제해야 합니다
+locked.name: &c&l잠긴 슬릇
+locked.lore: &6&o이전 슬릇부터 해제해야 합니다
 
-buyable.name: §a§l구매 가능한 슬릇
-buyable.lore: §6§o슬릇을 구입할려면 다음의 조건:
-buyable.money: §6• {0} 만큼의 화폐가 필요합니다
-buyable.level: §6• {0} 만큼의 레벨이 필요합니다
+buyable.name: &a&l구매 가능한 슬릇
+buyable.lore: &6&o슬릇을 구입할려면 다음의 조건:
+buyable.money: &6• {0} 만큼의 화폐가 필요합니다
+buyable.level: &6• {0} 만큼의 레벨이 필요합니다
 
-error.fall: §c공중에서 사용할 수 없습니다
-error.money: §6§l{0} 만큼의 돈이 더 필요합니다
-error.level: §6§l{0} 만큼의 레벨이 더 필요합니다
-error.buyable: §6§l당신이 이 슬릇을 구입할려면 {0} 만큼의 골드가 필요합니다. 구입 확인을 위해 10 초 이내로 다시 클릭해주시길 바랍니다.
-error.previous: §6§l이전 슬릇의 잠금을 해제해야 합니다
-error.rp.denied: §c리소스 팩이 필요합니다!
-error.rp.force: §c리소스 팩이 비활성화 되었습니다.
-error.item.level: §6그것은 §c{0} §6레벨이 필요합니다
-error.item.class: §6그것은 클래스가 필요합니다 §c{0}
-error.mount.owner: §6주인에게 귀속되어 있습니다 {0}
-error.fixhp: §6체력 고정이 필요하지 않습니다
+error.fall: &c공중에서 사용할 수 없습니다
+error.money: &6&l{0} 만큼의 돈이 더 필요합니다
+error.level: &6&l{0} 만큼의 레벨이 더 필요합니다
+error.buyable: &6&l당신이 이 슬릇을 구입할려면 {0} 만큼의 골드가 필요합니다. 구입 확인을 위해 10 초 이내로 다시 클릭해주시길 바랍니다.
+error.previous: &6&l이전 슬릇의 잠금을 해제해야 합니다
+error.rp.denied: &c리소스 팩이 필요합니다!
+error.rp.force: &c리소스 팩이 비활성화 되었습니다.
+error.item.level: &6그것은 &c{0} &6레벨이 필요합니다
+error.item.class: &6그것은 클래스가 필요합니다 &c{0}
+error.mount.owner: &6주인에게 귀속되어 있습니다 {0}
+error.fixhp: &6체력 고정이 필요하지 않습니다
 
-message.buyed: §a§l성공적으로 슬릇을 구입했습니다
-message.fixhp: §6체력이 고정되었습니다 다시 로그인 해주세요
-message.perms: §c권한이 없습니다
+message.buyed: &a&l성공적으로 슬릇을 구입했습니다
+message.fixhp: &6체력이 고정되었습니다 다시 로그인 해주세요
+message.perms: &c권한이 없습니다
 
-pet.name: {0} §f[{1}]
-pet.health: §c체력: §7{0}
-pet.damage: §c데미지: §7{0}
-pet.speed: §c스피드: §7{0} block/s
-pet.revival.yes: §b쿨타임: §7{0}s
-pet.revival.no: §b부활하지 않습니다
-pet.cooldown:  §a§l§o({0}s)
-pet.food.value: §a회복: {0} HP
+pet.name: {0} &f[{1}]
+pet.health: &c체력: &7{0}
+pet.damage: &c데미지: &7{0}
+pet.speed: &c스피드: &7{0} block/s
+pet.revival.yes: &b쿨타임: &7{0}s
+pet.revival.no: &b부활하지 않습니다
+pet.cooldown:  &a&l&o({0}s)
+pet.food.value: &a회복: {0} HP
 pet.role.companion: 도우미
 pet.role.mount: 탑승
 
-item.level: §f{0} 레벨이 필요합니다
-item.class: §f그것은 §b{0} 클래스만 사용이 가능합니다
-item.nodrop: §7죽을 때 떨어트리지 않습니다
-item.left-click: §a왼 클릭 - {0}
-item.right-click: §a우 클릭 - {0}
-item.hide: §7알 수 없음
-item.unbreakable: §7내구성
+item.level: &f{0} 레벨이 필요합니다
+item.class: &f그것은 &b{0} 클래스만 사용이 가능합니다
+item.nodrop: &7죽을 때 떨어트리지 않습니다
+item.left-click: &a왼 클릭 - {0}
+item.right-click: &a우 클릭 - {0}
+item.hide: &7알 수 없음
+item.unbreakable: &7내구성
 
 stat.message.no_bonus: 없음
-stat.damage: §c데미지: §7{0}
-stat.bow_damage: §c데미지 (활): §7{0}
-stat.hand_damage: §c데미지 (손): §7{0}
-stat.health: §2체력: §7{0}
-stat.armor: §3피해 감소: §7{0}
-stat.crit_chance: §6크리티컬 확률: §7{0}
-stat.crit_damage: §6크리티컬 데미지: §7{0}
-stat.speed: §9스피드: §7{0}
-stat.jump: §9도약: §7{0}
+stat.damage: &c데미지: &7{0}
+stat.bow_damage: &c데미지 (활): &7{0}
+stat.hand_damage: &c데미지 (손): &7{0}
+stat.health: &2체력: &7{0}
+stat.armor: &3피해 감소: &7{0}
+stat.crit_chance: &6크리티컬 확률: &7{0}
+stat.crit_damage: &6크리티컬 데미지: &7{0}
+stat.speed: &9스피드: &7{0}
+stat.jump: &9도약: &7{0}
 
-backpack.desc: §8§o추가 슬릇을 사용할려면 클릭하세요 §f우클릭
-backpack.size: §a크기: §7{0}
-backpack.limit: §c소유 가능한 한도를 초과하였습니다
+backpack.desc: &8&o추가 슬릇을 사용할려면 클릭하세요 &f우클릭
+backpack.size: &a크기: &7{0}
+backpack.limit: &c소유 가능한 한도를 초과하였습니다

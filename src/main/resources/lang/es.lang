@@ -1,67 +1,67 @@
 #version: 2.0 | Do not remove this line!
 firststart: \n\
-§3============================== RPGInventory ================================\n\
-§cAntes de usar §eRPGInventory§c, añade el pack de recursos a tu servidor\n\
+&3============================== RPGInventory ================================\n\
+&cAntes de usar &eRPGInventory&c, añade el pack de recursos a tu servidor\n\
 y configura los items que pueden colocarse en los espacios del inventario. Luego,\n\
-modifica el valor de la configuración a §eenabled: true\n\
-§3============================================================================
+modifica el valor de la configuración a &eenabled: true\n\
+&3============================================================================
 
 title: RPG Inventory
 
-locked.name: §c§lEspacio bloqueado
-locked.lore: §6§oDebes desbloquear el espacio anterior
+locked.name: &c&lEspacio bloqueado
+locked.lore: &6&oDebes desbloquear el espacio anterior
 
-buyable.name: §a§lEspacio disponible
-buyable.lore: §6§oPara obtener este espacio debes:
-buyable.money: §6§o• tener {0} monedas
-buyable.level: §6§o• tener {0} niveles de experiencia
+buyable.name: &a&lEspacio disponible
+buyable.lore: &6&oPara obtener este espacio debes:
+buyable.money: &6&o• tener {0} monedas
+buyable.level: &6&o• tener {0} niveles de experiencia
 
-error.fall: §cNo puedes hacer esto mientras vuelas
-error.money: §6§lAún necesitas {0} monedas
-error.level: §6§lAún necesitas {0} niveles de experiencia
-error.buyable: §6§lNecesitas {0} monedas para comprar este espacio. Haz click nuevamente en los próximos 10 segundos para confirmar.
-error.previous: §6§lDesbloquea el espacio previo
-error.rp.denied: §cDebes habilitar la descarga del pack de recursos!
-error.rp.force: §cNo se permite deshabilitar el pack de recursos.
-error.item.level: §6Nivel §c{0} §6requerido
-error.item.class: §6Clase §c{0} §6requerida
-error.mount.owner: §6La montura pertenece a {0}
-error.fixhp: §6No es necesario arreglar tu cantidad de vida
+error.fall: &cNo puedes hacer esto mientras vuelas
+error.money: &6&lAún necesitas {0} monedas
+error.level: &6&lAún necesitas {0} niveles de experiencia
+error.buyable: &6&lNecesitas {0} monedas para comprar este espacio. Haz click nuevamente en los próximos 10 segundos para confirmar.
+error.previous: &6&lDesbloquea el espacio previo
+error.rp.denied: &cDebes habilitar la descarga del pack de recursos!
+error.rp.force: &cNo se permite deshabilitar el pack de recursos.
+error.item.level: &6Nivel &c{0} &6requerido
+error.item.class: &6Clase &c{0} &6requerida
+error.mount.owner: &6La montura pertenece a {0}
+error.fixhp: &6No es necesario arreglar tu cantidad de vida
 
-message.buyed: §a§lYa haz comprado el espacio
-message.fixhp: §6Tu cantidad de vida ha sido arreglada, por favor reingrese al servidor
-message.perms: §cYou don't have permission to use this command
+message.buyed: &a&lYa haz comprado el espacio
+message.fixhp: &6Tu cantidad de vida ha sido arreglada, por favor reingrese al servidor
+message.perms: &cYou don't have permission to use this command
 
-pet.name: {0} §f[{1}]
-pet.health: §cVida: §7{0}
-pet.damage: §cDaño: §7{0}
-pet.speed: §cVelocidad: §7{0} bloques/segundo
-pet.revival.yes: §bTiempo de espera: §7{0}s
-pet.revival.no: §bNo resucitará
-pet.cooldown:  §a§l§o({0}s)
-pet.food.value: §aRestaura: {0} de vida
+pet.name: {0} &f[{1}]
+pet.health: &cVida: &7{0}
+pet.damage: &cDaño: &7{0}
+pet.speed: &cVelocidad: &7{0} bloques/segundo
+pet.revival.yes: &bTiempo de espera: &7{0}s
+pet.revival.no: &bNo resucitará
+pet.cooldown:  &a&l&o({0}s)
+pet.food.value: &aRestaura: {0} de vida
 pet.role.companion: Acompañante
 pet.role.mount: Montura
 
-item.level: §fRequiere nivel {0}
-item.class: §fExclusivo para §b{0}
-item.nodrop: §7No se dropea en la muete
-item.left-click: §aClick Izquierdo - {0}
-item.right-click: §aClick Derecho - {0}
-item.hide: §7§oEstadísticas del item ocultas
-item.unbreakable: §7Item irrompible
+item.level: &fRequiere nivel {0}
+item.class: &fExclusivo para &b{0}
+item.nodrop: &7No se dropea en la muete
+item.left-click: &aClick Izquierdo - {0}
+item.right-click: &aClick Derecho - {0}
+item.hide: &7&oEstadísticas del item ocultas
+item.unbreakable: &7Item irrompible
 
 stat.message.no_bonus: Sin bonus
-stat.damage: §cDaño: §7{0}
-stat.bow_damage: §cDaño (flecha): §7{0}
-stat.hand_damage: §cDaño (mano): §7{0}
-stat.health: §2Vida: §7{0}
-stat.armor: §3Armadura: §7{0}
-stat.crit_chance: §6Chance de golpe crítico: §7{0}
-stat.crit_damage: §6Daño de golpe crítico: §7{0}
-stat.speed: §9Velocidad: §7{0}
-stat.jump: §9Salto: §7{0}
+stat.damage: &cDaño: &7{0}
+stat.bow_damage: &cDaño (flecha): &7{0}
+stat.hand_damage: &cDaño (mano): &7{0}
+stat.health: &2Vida: &7{0}
+stat.armor: &3Armadura: &7{0}
+stat.crit_chance: &6Chance de golpe crítico: &7{0}
+stat.crit_damage: &6Daño de golpe crítico: &7{0}
+stat.speed: &9Velocidad: &7{0}
+stat.jump: &9Salto: &7{0}
 
-backpack.desc: §8§oColócala en el espacio indicado y haz §fClick Derecho
-backpack.size: §aTamaño: §7{0}
-backpack.limit: §cYou can't have more than {0} backpack!
+backpack.desc: &8&oColócala en el espacio indicado y haz &fClick Derecho
+backpack.size: &aTamaño: &7{0}
+backpack.limit: &cYou can't have more than {0} backpack!

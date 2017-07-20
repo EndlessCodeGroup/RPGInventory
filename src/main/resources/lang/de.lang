@@ -1,67 +1,67 @@
 #version: 2.0 | Do not remove this line!
 firststart: \n\
-§3============================== RPGInventory ================================\n\
-§cBefore using §eRPGInventory§c, add changed textures to the resource-pack\n\
+&3============================== RPGInventory ================================\n\
+&cBefore using &eRPGInventory&c, add changed textures to the resource-pack\n\
 and configure items that can be put in the inventory slots. After that,\n\
-set value in the config §eenabled: true\n\
-§3============================================================================
+set value in the config &eenabled: true\n\
+&3============================================================================
 
 title: RPG Inventory
 
-locked.name: §c§lGesperrter Slot
-locked.lore: §6§oSchalte zuerst vorherige Slots frei
+locked.name: &c&lGesperrter Slot
+locked.lore: &6&oSchalte zuerst vorherige Slots frei
 
-buyable.name: §a§lSlot freischaltbar
-buyable.lore: §6§oVorraussetzungen für diesen Slot:
-buyable.money: §6§o• {0} Gold
-buyable.level: §6§o• Level {0}
+buyable.name: &a&lSlot freischaltbar
+buyable.lore: &6&oVorraussetzungen für diesen Slot:
+buyable.money: &6&o• {0} Gold
+buyable.level: &6&o• Level {0}
 
-error.fall: §cDu kannst das nicht tun während du fliegst.
-error.money: §6§lUm weitere Slots freizuschalten benötigst du noch {0} Gold
-error.level: §6§lUm weitere Slots freizuschalten must du Level {0} erreicht haben.
-error.buyable: §6§lUm diesen Slot freizuschalten benötigst du {0} Gold. Klicke zum Bestätigen innerhalb von 10 Sekunden erneut.
-error.previous: §6§lDu musst zuerst die vorherigen Slots freischalten.
-error.rp.denied: §cDu musst dem Download des Resource-Packs zustimmen!
-error.rp.force: §cDu darfst das Resource-Pack nicht deaktivieren.
-error.item.level: §6Benötigtes §c{0} §6Level
-error.item.class: §6Benötigte Klasse §c{0}
-error.mount.owner: §6Dieses Reittier gehört: {0}
-error.fixhp: §6Fixen der LP nicht nötig.
+error.fall: &cDu kannst das nicht tun während du fliegst.
+error.money: &6&lUm weitere Slots freizuschalten benötigst du noch {0} Gold
+error.level: &6&lUm weitere Slots freizuschalten must du Level {0} erreicht haben.
+error.buyable: &6&lUm diesen Slot freizuschalten benötigst du {0} Gold. Klicke zum Bestätigen innerhalb von 10 Sekunden erneut.
+error.previous: &6&lDu musst zuerst die vorherigen Slots freischalten.
+error.rp.denied: &cDu musst dem Download des Resource-Packs zustimmen!
+error.rp.force: &cDu darfst das Resource-Pack nicht deaktivieren.
+error.item.level: &6Benötigtes &c{0} &6Level
+error.item.class: &6Benötigte Klasse &c{0}
+error.mount.owner: &6Dieses Reittier gehört: {0}
+error.fixhp: &6Fixen der LP nicht nötig.
 
-message.buyed: §a§lDu hast den Slot erfolgreich freigeschaltet
-message.fixhp: §6Deine LP wurden gefixt. Bitte logge dich erneut auf dem Server ein.
-message.perms: §cYou don't have permission to use this command
+message.buyed: &a&lDu hast den Slot erfolgreich freigeschaltet
+message.fixhp: &6Deine LP wurden gefixt. Bitte logge dich erneut auf dem Server ein.
+message.perms: &cYou don't have permission to use this command
 
-pet.name: {0} §f[{1}]
-pet.health: §cLeben: §7{0}
-pet.damage: §cSChaden: §7{0}
-pet.speed: §cGeschwindigkeit: §7{0} block/s
-pet.revival.yes: §bAbklingzeit: §7{0}s
-pet.revival.no: §bWird nicht wiederbelebt
-pet.cooldown:  §a§l§o({0}s)
-pet.food.value: §aStellt {0} LP wieder her
+pet.name: {0} &f[{1}]
+pet.health: &cLeben: &7{0}
+pet.damage: &cSChaden: &7{0}
+pet.speed: &cGeschwindigkeit: &7{0} block/s
+pet.revival.yes: &bAbklingzeit: &7{0}s
+pet.revival.no: &bWird nicht wiederbelebt
+pet.cooldown:  &a&l&o({0}s)
+pet.food.value: &aStellt {0} LP wieder her
 pet.role.companion: Begleiter
 pet.role.mount: Reittier
 
-item.level: §fBenötigt {0} Level
-item.class: §fNur für §b{0}
-item.nodrop: §7Dropt nicht beim Tod
-item.left-click: §aLMB - {0}
-item.right-click: §aRMB - {0}
-item.hide: §7§oGegenstandstwerte nicht sichtbar
-item.unbreakable: §7Unzerstörbarer Gegenstand
+item.level: &fBenötigt {0} Level
+item.class: &fNur für &b{0}
+item.nodrop: &7Dropt nicht beim Tod
+item.left-click: &aLMB - {0}
+item.right-click: &aRMB - {0}
+item.hide: &7&oGegenstandstwerte nicht sichtbar
+item.unbreakable: &7Unzerstörbarer Gegenstand
 
 stat.message.no_bonus: Kein Bonus
-stat.damage: §cSchaden: §7{0}
-stat.bow_damage: §cSchaden (Bogen): §7{0}
-stat.hand_damage: §cSchaden (Hand): §7{0}
-stat.health: §2Leben: §7{0}
-stat.armor: §3Rüstung: §7{0}
-stat.crit_chance: §6Krit. Chance: §7{0}
-stat.crit_damage: §6Krit. Damage: §7{0}
-stat.speed: §9Geschwindigkeit: §7{0}
-stat.jump: §9Sprung: §7{0}
+stat.damage: &cSchaden: &7{0}
+stat.bow_damage: &cSchaden (Bogen): &7{0}
+stat.hand_damage: &cSchaden (Hand): &7{0}
+stat.health: &2Leben: &7{0}
+stat.armor: &3Rüstung: &7{0}
+stat.crit_chance: &6Krit. Chance: &7{0}
+stat.crit_damage: &6Krit. Damage: &7{0}
+stat.speed: &9Geschwindigkeit: &7{0}
+stat.jump: &9Sprung: &7{0}
 
-backpack.desc: §8§oPlatzieren in den dafür vorgesehenen Slot und drücke §fRMB
-backpack.size: §aGröße: §7{0}
-backpack.limit: §cYou can't have more than {0} backpack!
+backpack.desc: &8&oPlatzieren in den dafür vorgesehenen Slot und drücke &fRMB
+backpack.size: &aGröße: &7{0}
+backpack.limit: &cYou can't have more than {0} backpack!
