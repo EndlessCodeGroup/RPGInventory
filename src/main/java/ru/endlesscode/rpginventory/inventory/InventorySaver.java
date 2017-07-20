@@ -110,12 +110,17 @@ public class InventorySaver {
             int petSlotId = PetManager.getPetSlotId();
             if (PetManager.isEnabled() && inventory.getItem(petSlotId) != null) {
                 Slot petSlot = SlotManager.getSlotManager().getPetSlot();
-                ItemStack petItem = inventory.getItem(petSlotId);
+                ItemStack currentPetItem = inventory.getItem(petSlotId);
 
-                if (petSlot != null && !petSlot.isCup(petItem) && petSlot.isDrop()) {
-                    additionalDrops.add(PetType.clone(petItem));
-                    RPGInventory.getInstance().getServer().getPluginManager().callEvent(new PetUnequipEvent(player));
-                    inventory.setItem(petSlotId, petSlot.getCup());
+                if (petSlot != null && !petSlot.isCup(currentPetItem)) {
+                    ItemStack petItem = PetType.clone(currentPetItem);
+                    if (petSlot.isDrop()) {
+                        additionalDrops.add(petItem);
+                        RPGInventory.getInstance().getServer().getPluginManager().callEvent(new PetUnequipEvent(player));
+                        inventory.setItem(petSlotId, petSlot.getCup());
+                    } else {
+                        inventory.setItem(petSlotId, petItem);
+                    }
                 }
             }
 
