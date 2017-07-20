@@ -82,7 +82,7 @@ public class PlayerLoader extends PacketAdapter implements Listener {
             public void run() {
                 loadData.setPrepared();
             }
-        }.runTaskLater(RPGInventory.getInstance(), 40);
+        }.runTaskLater(RPGInventory.getInstance(), Config.getConfig().getInt("resource-pack.delay") * 20);
     }
 
     @Override

@@ -91,6 +91,10 @@ containers:
 resource-pack:
   enabled: true
 
+  # Delay between player join and request of texture downloading (in seconds)
+  # NOTE: Don't change it if you don't know what you doing
+  delay: 2
+
   # URL of your RP
   # Example: https://dl.dropboxusercontent.com/u/105899524/RPGInventory/RPs/Default.zip
   url: PUT_YOUR_URL_HERE

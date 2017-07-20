@@ -176,6 +176,8 @@ public class ConfigUpdater {
                 config.set("fill", config.get("resource-pack.fill"));
                 config.set("resource-pack.fill", null);
                 config.set("resource-pack.enabled", true);
+            case 208:
+                config.set("resource-pack.delay", 2);
         }
     }
 }
