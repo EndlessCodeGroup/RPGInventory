@@ -137,7 +137,7 @@ public class RPGInventory extends JavaPlugin {
         // Registering other listeners
         PluginManager pm = this.getServer().getPluginManager();
         pm.registerEvents(new ArmorEquipListener(), this);
-        pm.registerEvents(new HandSwitchListener(), this);
+        pm.registerEvents(new HandSwapListener(), this);
         pm.registerEvents(new PlayerListener(), this);
         pm.registerEvents(new WorldListener(), this);
 
