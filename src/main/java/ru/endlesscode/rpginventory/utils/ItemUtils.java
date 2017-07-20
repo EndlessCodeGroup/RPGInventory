@@ -212,11 +212,11 @@ public class ItemUtils {
             }
             textureDurability = petType.getTextureDurability();
 
-            int cooldown = PetManager.getCooldown(item);
+            long deathTime = PetManager.getDeathTime(item);
             double health = PetManager.getHealth(item, petType.getHealth());
 
             item = petType.getSpawnItem();
-            PetManager.setCooldown(item, cooldown);
+            PetManager.saveDeathTime(item, deathTime);
             PetManager.saveHealth(item, health);
         } else if (PetFood.isFoodItem(item)) {
             PetFood food = PetManager.getFoodFromItem(item);

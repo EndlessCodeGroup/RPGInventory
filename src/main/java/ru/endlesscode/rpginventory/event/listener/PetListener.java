@@ -162,7 +162,7 @@ public class PetListener implements Listener {
             PetType petType = PetManager.getPetFromItem(petItem);
 
             if (petType != null && petType.isRevival()) {
-                PetManager.setCooldown(petItem, petType.getCooldown());
+                PetManager.saveDeathTime(petItem);
                 PetManager.saveHealth(petItem, 0);
                 inventory.setItem(PetManager.getPetSlotId(), petItem);
                 PetManager.startCooldownTimer(player.getPlayer(), petItem);

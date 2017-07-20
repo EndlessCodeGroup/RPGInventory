@@ -67,11 +67,10 @@ class CooldownTimer extends BukkitRunnable {
                     + RPGInventory.getLanguage().getCaption("pet.cooldown", cooldown));
             item.setItemMeta(im);
             PetManager.addGlow(item);
-            PetManager.setCooldown(item, cooldown);
             ItemUtils.setTag(item, ItemUtils.PET_TAG, ItemUtils.getTag(this.petItem, ItemUtils.PET_TAG));
             inventory.setItem(PetManager.getPetSlotId(), item);
         } else {
-            PetManager.setCooldown(this.petItem, 0);
+            PetManager.saveDeathTime(this.petItem, 0);
             PetManager.spawnPet(this.player, this.petItem);
             inventory.setItem(PetManager.getPetSlotId(), this.petItem);
             this.cancel();

@@ -60,6 +60,8 @@ public class PetManager {
     private static final Map<String, PetFood> PET_FOOD = new HashMap<>();
     private static int SLOT_PET;
 
+    private static final String DEATH_TIME_TAG = "pet.deathTime";
+
     private PetManager() {
     }
 
@@ -155,7 +157,7 @@ public class PetManager {
             return;
         }
 
-        if (PetManager.getCooldown(petItem) > 0) {
+        if (PetManager.getDeathTime(petItem) > 0) {
             PetManager.startCooldownTimer(player, petItem);
             return;
         }
@@ -299,31 +301,46 @@ public class PetManager {
         compound.put(NbtFactory.ofList("ench"));
     }
 
-    public static void setCooldown(@NotNull ItemStack item, int cooldown) {
+    public static void saveDeathTime(@NotNull ItemStack item) {
+        saveDeathTime(item, System.currentTimeMillis());
+    }
+
+    public static void saveDeathTime(@NotNull ItemStack item, long deathTime) {
         NbtCompound nbt = NbtFactory.asCompound(NbtFactory.fromItemTag(item));
 
-        if (cooldown == 0) {
-            nbt.remove("pet.cooldown");
+        if (deathTime == 0) {
+            nbt.remove(DEATH_TIME_TAG);
         } else {
-            nbt.put("pet.cooldown", System.currentTimeMillis() + (cooldown*1000));
+            nbt.put(DEATH_TIME_TAG, deathTime);
         }
 
         NbtFactory.setItemTag(item, nbt);
     }
 
-    public static int getCooldown(@NotNull ItemStack item) {
+    public static long getDeathTime(@NotNull ItemStack item) {
         NbtCompound nbt = NbtFactory.asCompound(NbtFactory.fromItemTag(item.clone()));
 
-        if (!nbt.containsKey("pet.cooldown")) {
+        if (!nbt.containsKey(DEATH_TIME_TAG)) {
             return 0;
         }
 
-        int cooldown = (int) ((nbt.getLong("pet.cooldown") - System.currentTimeMillis())/1000);
-        if (cooldown < 0) {
-            cooldown = 0;
+        return nbt.getLong(DEATH_TIME_TAG);
+    }
+
+    public static int getCooldown(@NotNull ItemStack item) {
+        long deathTime = getDeathTime(item);
+        if (deathTime == 0) {
+            return 0;
         }
 
-        return cooldown;
+        int secondsSinceDeath = (int) ((System.currentTimeMillis() - deathTime)/1000);
+        int petCooldown = getPetFromItem(item).getCooldown();
+        int itemCooldown = petCooldown - secondsSinceDeath;
+        if (itemCooldown < 0 || itemCooldown > petCooldown) {
+            itemCooldown = 0;
+        }
+
+        return itemCooldown;
     }
 
     public static void saveHealth(@NotNull ItemStack item, double health) {

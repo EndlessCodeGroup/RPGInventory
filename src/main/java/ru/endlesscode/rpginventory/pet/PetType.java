@@ -101,7 +101,7 @@ public class PetType extends ClassedItem {
         }
 
         ItemStack newItem = petType.getSpawnItem();
-        PetManager.setCooldown(newItem, PetManager.getCooldown(oldItem));
+        PetManager.saveDeathTime(newItem, PetManager.getDeathTime(oldItem));
         PetManager.saveHealth(newItem, PetManager.getHealth(oldItem, petType.getHealth()));
 
         return newItem;
