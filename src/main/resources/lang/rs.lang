@@ -1,66 +1,67 @@
-firststart: "\n
-&3============================== RPGInventory ================================\n
-&cPre koriscenja &6RpgInventory &cDodajte promenjene teksture u vas server!\n
-I sredite stvari koje mogu biti stavljene u novi inventory,\n
-posle toga u config napisite stavite true na "enabled:"\n
-&3============================================================================"
+#version: 2.0 | Do not remove this line!
+firststart: \n\
+§3============================== RPGInventory ================================\n\
+§cPre koriscenja §6RpgInventory §cDodajte promenjene teksture u vas server!\n\
+I sredite stvari koje mogu biti stavljene u novi inventory,\n\
+posle toga u config napisite stavite true na enabled:\n\
+§3============================================================================
 
-title: "RPG Inventory"
+title: RPG Inventory
 
-locked.name: "&c&lZakljucan slot"
-locked.lore: "&6&lMoras prvo da otkljucas prethodni slot!"
+locked.name: §c§lZakljucan slot
+locked.lore: §6§lMoras prvo da otkljucas prethodni slot!
 
-buyable.name: "&a&lDostupan slot"
-buyable.lore: "&6&lDa kupis slot moras imati:"
-buyable.money: "&6&l %s para"
-buyable.level: "&6&l %d lvl"
+buyable.name: §a§lDostupan slot
+buyable.lore: §6§lDa kupis slot moras imati:
+buyable.money: §6§l {0} para
+buyable.level: §6§l {0} lvl
 
-error.fall: "&cNe mozes to raditi dok letis!"
-error.money: "&6&lDa kupis ovaj slot moras imati &e%s &6&lpara"
-error.level: "&6&lDa kupis ovaj slot moras imati&e %d &6&llvl"
-error.buyable: "&6&lDa kupis ovaj slot moras imati %d para. Klikni u narednih 10 sekundi da potvrdis!"
-error.previous: "&6&lPrvo odkljucaj prethodni slot!"
-error.rp.denied: "&cMoras dozvoliti skidanje teksture!"
-error.rp.force: "&cIskljlucivanje teksture nije dozvoljeno!"
-error.item.level: "&6Potrebno &c%s &6levela"
-error.item.class: "&6Potrebna klasa &c%s"
-error.mount.owner: "&6Mount je od %s"
-error.fixhp: "&6Popravljanje HP nije potrebno"
+error.fall: §cNe mozes to raditi dok letis!
+error.money: §6§lDa kupis ovaj slot moras imati §e{0} §6§lpara
+error.level: §6§lDa kupis ovaj slot moras imati§e {0} §6§llvl
+error.buyable: §6§lDa kupis ovaj slot moras imati {0} para. Klikni u narednih 10 sekundi da potvrdis!
+error.previous: §6§lPrvo odkljucaj prethodni slot!
+error.rp.denied: §cMoras dozvoliti skidanje teksture!
+error.rp.force: §cIskljlucivanje teksture nije dozvoljeno!
+error.item.level: §6Potrebno §c{0} §6levela
+error.item.class: §6Potrebna klasa §c{0}
+error.mount.owner: §6Mount je od {0}
+error.fixhp: §6Popravljanje HP nije potrebno
 
-message.buyed: "&a&lUspesno ste kupili slot"
-message.fixhp: "&6Vas HP je popravljen, molimo vas da se re logujete"
-message.perms: "&cYou don't have permission to use this command"
+message.buyed: §a§lUspesno ste kupili slot
+message.fixhp: §6Vas HP je popravljen, molimo vas da se re logujete
+message.perms: §cYou don't have permission to use this command
 
-pet.name: "&6%s &7[&b%s&7]"
-pet.health: "&cZivoti: &7%d"
-pet.damage: "&cUdarac: &7%d"
-pet.speed: "&cBrzina: &7%.2f block/s"
-pet.revival.yes: "&bCooldown: &7%ds"
-pet.revival.no: "&bDon't revives"
-pet.cooldown: " &a&l(%ds)"
-pet.food.value: "&aPunjenje: %d HP"
-pet.role.companion: "Pratilac"
-pet.role.mount: "Mount"
+pet.name: §6{0} §7[§b{1}§7]
+pet.health: §cZivoti: §7{0}
+pet.damage: §cUdarac: §7{0}
+pet.speed: §cBrzina: §7{0} block/s
+pet.revival.yes: §bCooldown: §7{0}s
+pet.revival.no: §bDon't revives
+pet.cooldown:  §a§l({0}s)
+pet.food.value: §aPunjenje: {0} HP
+pet.role.companion: Pratilac
+pet.role.mount: Mount
 
-item.level: "&fPotrebno %d level"
-item.class: "&fSamo za &b%s"
-item.nodrop: "&7Ne gubi se na smrti"
-item.left-click: "&aLevi klik - %s"
-item.right-click: "&aDesni klik - %s"
-item.hide: "&7&lStatusi itema su sakriveni"
-item.unbreakable: "&7Neunistivi item"
+item.level: §fPotrebno {0} level
+item.class: §fSamo za §b{0}
+item.nodrop: §7Ne gubi se na smrti
+item.left-click: §aLevi klik - {0}
+item.right-click: §aDesni klik - {0}
+item.hide: §7§lStatusi itema su sakriveni
+item.unbreakable: §7Neunistivi item
 
-stat.message.no_bonus: "No bonus"
-stat.damage: "&cDamage: &7%s"
-stat.bow_damage: "&cDamage (shoot): &7%s"
-stat.hand_damage: "&cDamage (hand): &7%s"
-stat.health: "&2Health: &7%s"
-stat.armor: "&3Armor: &7%s"
-stat.crit_chance: "&6Crit Chance: &7%s"
-stat.crit_damage: "&6Crit Damage: &7%s"
-stat.speed: "&9Speed: &7%s"
-stat.jump: "&9Jump: &7%s"
+stat.message.no_bonus: No bonus
+stat.damage: §cDamage: §7{0}
+stat.bow_damage: §cDamage (shoot): §7{0}
+stat.hand_damage: §cDamage (hand): §7{0}
+stat.health: §2Health: §7{0}
+stat.armor: §3Armor: §7{0}
+stat.crit_chance: §6Crit Chance: §7{0}
+stat.crit_damage: §6Crit Damage: §7{0}
+stat.speed: §9Speed: §7{0}
+stat.jump: §9Jump: §7{0}
 
-backpack.desc: "&8&oPut it in specified slot and click &fRMB"
-backpack.size: "&aSize: &7%d"
-backpack.limit: "&cYou can't have more than %d backpack!"
+backpack.desc: §8§oPut it in specified slot and click §fRMB
+backpack.size: §aSize: §7{0}
+backpack.limit: §cYou can't have more than {0} backpack!

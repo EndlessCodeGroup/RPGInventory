@@ -18,107 +18,153 @@
 
 package ru.endlesscode.rpginventory.misc;
 
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.ChatColor;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
-import ru.endlesscode.rpginventory.RPGInventory;
-import ru.endlesscode.rpginventory.utils.StringUtils;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.net.URL;
-import java.security.CodeSource;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.*;
+import java.text.MessageFormat;
+import java.util.*;
 import java.util.logging.Level;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class FileLanguage {
     @NotNull
     private final Plugin plugin;
-    private final String locale;
-
-    private FileConfiguration lang;
-    private File langFile;
+    private final HashMap<String, MessageFormat> messageCache = new HashMap<>();
+    private final Properties language = new Properties();
+    private final File langFile;
 
     public FileLanguage(@NotNull Plugin plugin) {
         this.plugin = plugin;
-        this.locale = Config.getConfig().getString("language");
-        this.langFile = new File(this.plugin.getDataFolder(), "lang/" + this.locale + ".lang");
+        String locale = Config.getConfig().getString("language");
+        this.langFile = new File(
+                this.plugin.getDataFolder(),
+                String.format("lang/%s.lang", locale)
+        );
         this.saveDefault();
+        this.checkAndUpdateLocaleFile();
         this.load();
     }
 
     private void saveDefault() {
-        for (String loc : this.getSupportedLocales()) {
-            String localeFile = "lang/" + loc + ".lang";
-            if (!new File(this.plugin.getDataFolder(), localeFile).exists()) {
-                this.plugin.saveResource(localeFile, true);
+        if (this.langFile.exists()) {
+            return;
+        }
+
+        String path = "lang/" + this.langFile.getName();
+        try {
+            this.plugin.saveResource(path, true);
+        } catch (Exception ex) {
+            this.plugin.getLogger().log(
+                    Level.WARNING, "Failed to load {0}: {1}; using en.lang",
+                    new Object[]{this.langFile.getName(), ex.getLocalizedMessage()}
+            );
+
+            try (InputStream is = this.plugin.getResource("lang/en.lang")) {
+                Files.copy(is, Paths.get(this.langFile.toURI()), StandardCopyOption.REPLACE_EXISTING);
+            } catch (IOException e) {
+                this.plugin.getLogger().log(
+                        Level.WARNING,
+                        "Failed to write default locale to {0}: {1}; continue without localization.",
+                        new Object[]{this.langFile.getName(), e.getLocalizedMessage()}
+                );
             }
         }
-    }
-
-    private List<String> getSupportedLocales() {
-        List<String> supportedLocales = new ArrayList<>();
-
-        CodeSource src = this.getClass().getProtectionDomain().getCodeSource();
-        if (src == null) {
-            RPGInventory.getPluginLogger().severe("Error while loading language list.");
-            return supportedLocales;
-        }
-
-        URL jar = src.getLocation();
-
-        try (ZipInputStream zip = new ZipInputStream(jar.openStream())) {
-            while (true) {
-                ZipEntry e = zip.getNextEntry();
-                if (e == null) {
-                    break;
-                }
-
-                String name = e.getName();
-                if (name.matches("lang/\\w+.lang")) {
-                    supportedLocales.add(name.replaceAll("lang/|.lang", ""));
-                }
-            }
-        } catch (IOException e) {
-            RPGInventory.getPluginLogger().log(Level.SEVERE, "Error while loading language list.", e);
-        }
-
-        return supportedLocales;
     }
 
     private void load() {
-        if (!this.langFile.exists()) {
-            this.langFile = new File(this.plugin.getDataFolder() + "/lang", "en.lang");
-        }
-
-        this.lang = YamlConfiguration.loadConfiguration(this.langFile);
-
-        try (Reader defaultLangStream = new InputStreamReader(
-                this.plugin.getResource("lang/" + (this.getSupportedLocales().contains(locale) ? locale : "en") + ".lang"), "UTF8")) {
-            YamlConfiguration defaultLang = YamlConfiguration.loadConfiguration(defaultLangStream);
-            this.lang.setDefaults(defaultLang);
+        try (FileInputStream fis = new FileInputStream(this.langFile);
+             InputStreamReader isr = new InputStreamReader(fis, StandardCharsets.UTF_8)) {
+            this.language.load(isr);
         } catch (IOException e) {
-            e.printStackTrace();
+            this.plugin.getLogger().log(
+                    Level.WARNING,
+                    "Failed to load locale file: {0}; continue without localization.",
+                    e.getLocalizedMessage()
+            );
         }
     }
 
+    //Oh crap.
+    private void checkAndUpdateLocaleFile() {
+        final Path path = Paths.get(this.langFile.toURI());
+        List<String> lines;
+        try {
+            lines = Files.readAllLines(path, StandardCharsets.UTF_8);
+        } catch (IOException e) {
+            this.plugin.getLogger().log(Level.WARNING,
+                    "Failed to read locale file: {0}; continue without localization.",
+                    e.getLocalizedMessage()
+            );
+            return;
+        }
+
+        if (lines.get(0).startsWith("#version")) {
+            return;
+        }
+
+        final Pattern pattern = Pattern.compile("%(s|d|.2f)");
+        final LinkedList<String> newLines = new LinkedList<>();
+        newLines.add("#version: 2.0 | Do not remove this line!");
+
+        for (int i1 = 0; i1 < lines.size(); i1++) {
+            String line = lines.get(i1);
+            String newLine = line.replace("\"", "");
+            Matcher m;
+            for (int i = 0; (m = pattern.matcher(newLine)).find(); i++) {
+                newLine = m.replaceFirst("{" + i + "}");
+            }
+
+            if (lines.size() > i1 + 1) {
+                String nextLine = lines.get(i1 + 1);
+                if ("\n ".length() < nextLine.length()
+                        && (!nextLine.contains(":") || nextLine.indexOf(':') > nextLine.indexOf(' '))) {
+                    newLine = newLine + "\\";
+                }
+            }
+
+            newLines.add(ChatColor.translateAlternateColorCodes('&', newLine));
+        }
+
+        try {
+            Files.write(
+                    path, newLines, StandardCharsets.UTF_8,
+                    StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING
+            );
+        } catch (IOException e) {
+            this.plugin.getLogger().log(Level.WARNING,
+                    "Failed to save locale file: {0}; continue without localization.",
+                    e.getLocalizedMessage()
+            );
+        }
+    }
+
+    @Deprecated
     public String getCaption(String name, Object... args) {
-        String caption = this.lang.getString(name);
-        if (caption == null) {
-            this.plugin.getLogger().warning("Missing caption: " + name);
-            caption = "&c[missing caption]";
-        }
+        return this.getMessage(name, args);
+    }
 
-        if (args.length > 0) {
-            caption = String.format(caption, args);
-        }
+    public String getMessage(String key) {
+        return this.getMessage(key, false);
+    }
 
-        return StringUtils.coloredLine(caption);
+    public String getMessage(String key, boolean stripColor) {
+        return this.getMesage(key, stripColor, (Object[]) null);
+    }
+
+    public String getMessage(String key, Object... args) {
+        return this.getMesage(key, false, args);
+    }
+
+    public String getMesage(String key, boolean stripColor, Object... args) {
+        if (!this.messageCache.containsKey(key)) {
+            this.messageCache.put(key, new MessageFormat(this.language.getProperty(key, key)));
+        }
+        String out = this.messageCache.get(key).format(args);
+        return stripColor ? ChatColor.stripColor(out) : out;
     }
 }

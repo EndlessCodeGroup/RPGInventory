@@ -1,65 +1,66 @@
-firststart: "\n
-&3============================== RPGInventory ================================\n
-&cПеред использованием &eRPGInventory&c, добавьте измененные текстуры в ресурспак\n
-и полностью настройте плагин. После этого установите в конфиге значение &eenabled: true\n
-&3============================================================================"
+#version: 2.0 | Do not remove this line!
+firststart: \n\
+§3============================== RPGInventory ================================\n\
+§cПеред использованием §eRPGInventory§c, добавьте измененные текстуры в ресурспак\n\
+и полностью настройте плагин. После этого установите в конфиге значение §eenabled: true\n\
+§3============================================================================
 
-title: "RPG Inventory"
+title: RPG Inventory
 
-locked.name: "&c&lЗаблокированный слот"
-locked.lore: "&6&oСначала разблокируйте предыдущие слоты"
+locked.name: §c§lЗаблокированный слот
+locked.lore: §6§oСначала разблокируйте предыдущие слоты
 
-buyable.name: "&a&lДоступный слот"
-buyable.lore: "&6&oЧтобы приобрести слот, нужно:"
-buyable.money: "&6&o• Иметь %s золота"
-buyable.level: "&6&o• Быть %d уровня"
+buyable.name: §a§lДоступный слот
+buyable.lore: §6§oЧтобы приобрести слот, нужно:
+buyable.money: §6§o• Иметь {0} золота
+buyable.level: §6§o• Быть {0} уровня
 
-error.fall: "&6Нельзя изменять этот слот, пока вы в полёте"
-error.money: "&6&lДля покупки слота не хватает %s золота"
-error.level: "&6&lДля покупки слота нужен %d уровень"
-error.buyable: "&6&lЭтот слот стоит %d золота, чтобы подтвердить его покупку, нажмите на него еще раз в течение 10 секунд"
-error.previous: "&6&lСначала разблокируйте предыдущие слоты"
-error.rp.denied: "&cДля игры на сервере нужно cогласиться на загрузку текстур!"
-error.rp.force: "&cВыключать ресурс-пак не разрешено"
-error.item.level: "&6Требуется &c%s &6уровень"
-error.item.class: "&6Требуется класс &c%s"
-error.mount.owner: "&6Скакун принадлежит %s"
-error.fixhp: "&6Уровень здоровья не нуждается в исправлении"
+error.fall: §6Нельзя изменять этот слот, пока вы в полёте
+error.money: §6§lДля покупки слота не хватает {0} золота
+error.level: §6§lДля покупки слота нужен {0} уровень
+error.buyable: §6§lЭтот слот стоит {0} золота, чтобы подтвердить его покупку, нажмите на него еще раз в течение 10 секунд
+error.previous: §6§lСначала разблокируйте предыдущие слоты
+error.rp.denied: §cДля игры на сервере нужно cогласиться на загрузку текстур!
+error.rp.force: §cВыключать ресурс-пак не разрешено
+error.item.level: §6Требуется §c{0} §6уровень
+error.item.class: §6Требуется класс §c{0}
+error.mount.owner: §6Скакун принадлежит {0}
+error.fixhp: §6Уровень здоровья не нуждается в исправлении
 
-message.buyed: "&a&lВы успешно приобрели слот"
-message.fixhp: "&6Ваш уровень здоровья был исправлен, пожалуйста перезайдите на сервер"
-message.perms: "&cУ вас нет прав на использование этой команды"
+message.buyed: §a§lВы успешно приобрели слот
+message.fixhp: §6Ваш уровень здоровья был исправлен, пожалуйста перезайдите на сервер
+message.perms: §cУ вас нет прав на использование этой команды
 
-pet.name: "%s &f[%s]"
-pet.health: "&cЗдоровье: &7%d"
-pet.damage: "&cУрон: &7%d"
-pet.speed: "&cСкорость: &7%.2f блок./сек"
-pet.revival.yes: "&bВремя возрождения: &7%dс"
-pet.revival.no: "&bНе возрождается"
-pet.cooldown: " &a&l&o(%dс)"
-pet.food.value: "&aВосстанавливает: %d HP"
-pet.role.companion: "Компаньон"
-pet.role.mount: "Ездовое животное"
+pet.name: {0} §f[{1}]
+pet.health: §cЗдоровье: §7{0}
+pet.damage: §cУрон: §7{0}
+pet.speed: §cСкорость: §7{0} блок./сек
+pet.revival.yes: §bВремя возрождения: §7{0}с
+pet.revival.no: §bНе возрождается
+pet.cooldown:  §a§l§o({0}с)
+pet.food.value: §aВосстанавливает: {0} HP
+pet.role.companion: Компаньон
+pet.role.mount: Ездовое животное
 
-item.level: "&fТребуется %d уровень"
-item.class: "&fТолько для &b%s"
-item.nodrop: "&7Не выпадает при смерти"
-item.left-click: "&aЛКМ - %s"
-item.right-click: "&aПКМ - %s"
-item.hide: "&7&oСвойства скрыты"
-item.unbreakable: "&7Не ломается"
+item.level: §fТребуется {0} уровень
+item.class: §fТолько для §b{0}
+item.nodrop: §7Не выпадает при смерти
+item.left-click: §aЛКМ - {0}
+item.right-click: §aПКМ - {0}
+item.hide: §7§oСвойства скрыты
+item.unbreakable: §7Не ломается
 
-stat.message.no_bonus: "Нет бонуса"
-stat.damage: "&cУрон: &7%s"
-stat.bow_damage: "&cУрон (выстрел): &7%s"
-stat.hand_damage: "&cУрон (рука): &7%s"
-stat.health: "&2Здоровье: &7%s"
-stat.armor: "&3Броня: &7%s"
-stat.crit_chance: "&6Шанс крит.: &7%s"
-stat.crit_damage: "&6Крит. урон: &7%s"
-stat.speed: "&9Скорость: &7%s"
-stat.jump: "&9Прыжок: &7%s"
+stat.message.no_bonus: Нет бонуса
+stat.damage: §cУрон: §7{0}
+stat.bow_damage: §cУрон (выстрел): §7{0}
+stat.hand_damage: §cУрон (рука): §7{0}
+stat.health: §2Здоровье: §7{0}
+stat.armor: §3Броня: §7{0}
+stat.crit_chance: §6Шанс крит.: §7{0}
+stat.crit_damage: §6Крит. урон: §7{0}
+stat.speed: §9Скорость: §7{0}
+stat.jump: §9Прыжок: §7{0}
 
-backpack.desc: "&8&oПоместите в слот рюкзака и нажмите &fПКМ"
-backpack.size: "&aРазмер: &7%d"
-backpack.limit: "&cУ вас не может быть рюкзаков больше чем %d!"
+backpack.desc: §8§oПоместите в слот рюкзака и нажмите §fПКМ
+backpack.size: §aРазмер: §7{0}
+backpack.limit: §cУ вас не может быть рюкзаков больше чем {0}!
