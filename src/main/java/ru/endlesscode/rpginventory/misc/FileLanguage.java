@@ -127,7 +127,7 @@ public class FileLanguage {
                 }
             }
 
-            newLines.add(ChatColor.translateAlternateColorCodes('&', newLine));
+            newLines.add(newLine);
         }
 
         try {
@@ -162,7 +162,11 @@ public class FileLanguage {
 
     public String getMesage(String key, boolean stripColor, Object... args) {
         if (!this.messageCache.containsKey(key)) {
-            this.messageCache.put(key, new MessageFormat(this.language.getProperty(key, key)));
+            this.messageCache.put(key, new MessageFormat(
+                    ChatColor.translateAlternateColorCodes(
+                            '&', this.language.getProperty(key, key)
+                    )
+            ));
         }
         String out = this.messageCache.get(key).format(args);
         return stripColor ? ChatColor.stripColor(out) : out;
