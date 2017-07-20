@@ -330,8 +330,11 @@ public class InventoryListener implements Listener {
                 BukkitRunnable cupPlacer = new BukkitRunnable() {
                     @Override
                     public void run() {
-                        inventory.setItem(rawSlot, slot.getCup());
-                        player.updateInventory();
+                        ItemStack currentItem = inventory.getItem(rawSlot);
+                        if (currentItem == null || currentItem.getType() == Material.AIR) {
+                            inventory.setItem(rawSlot, slot.getCup());
+                            player.updateInventory();
+                        }
                     }
                 };
 
