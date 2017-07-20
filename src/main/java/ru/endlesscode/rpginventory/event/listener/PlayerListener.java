@@ -51,9 +51,9 @@ public class PlayerListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.LOW)
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
     public void onDamageWhenPlayerNotLoaded(EntityDamageEvent event) {
-        if (event.isCancelled() || event.getEntityType() != EntityType.PLAYER) {
+        if (event.getEntityType() != EntityType.PLAYER) {
             return;
         }
 
@@ -69,9 +69,9 @@ public class PlayerListener implements Listener {
         event.setCancelled(true);
     }
 
-    @EventHandler(priority = EventPriority.LOW)
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
     public void onTargetWhenPlayerNotLoaded(EntityTargetLivingEntityEvent event) {
-        if (event.isCancelled() || event.getTarget() == null || event.getTarget().getType() != EntityType.PLAYER) {
+        if (event.getTarget() == null || event.getTarget().getType() != EntityType.PLAYER) {
             return;
         }
 

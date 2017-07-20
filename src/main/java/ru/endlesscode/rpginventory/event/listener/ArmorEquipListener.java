@@ -49,12 +49,12 @@ import ru.endlesscode.rpginventory.utils.PlayerUtils;
  * All rights reserved 2014 - 2016 © «EndlessCode Group»
  */
 public class ArmorEquipListener implements Listener {
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
     public void onQuickEquip(PlayerInteractEvent event) {
         final Player player = event.getPlayer();
-        if (event.isCancelled() || !InventoryManager.playerIsLoaded(player)
-                || event.getAction() != Action.RIGHT_CLICK_AIR && event.getAction() != Action.RIGHT_CLICK_BLOCK
-                || event.getAction() == Action.RIGHT_CLICK_BLOCK && !event.getClickedBlock().getState().getClass().getSimpleName().contains("BlockState")) {
+        if (!InventoryManager.playerIsLoaded(player) || event.getAction() != Action.RIGHT_CLICK_AIR &&
+                event.getAction() != Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.RIGHT_CLICK_BLOCK &&
+                !event.getClickedBlock().getState().getClass().getSimpleName().contains("BlockState")) {
             return;
         }
 

@@ -205,9 +205,9 @@ public class PetListener implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onAttack(EntityDamageByEntityEvent event) {
-        if (event.isCancelled() || !InventoryManager.isAllowedWorld(event.getEntity().getWorld())) {
+        if (!InventoryManager.isAllowedWorld(event.getEntity().getWorld())) {
             return;
         }
 
@@ -308,10 +308,10 @@ public class PetListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.MONITOR)
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onPlayerMove(PlayerMoveEvent event) {
         Player player = event.getPlayer();
-        if (event.isCancelled() || !InventoryManager.playerIsLoaded(player)) {
+        if (!InventoryManager.playerIsLoaded(player)) {
             return;
         }
 

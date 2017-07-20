@@ -151,11 +151,11 @@ public class InventoryListener implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onPickupToQuickSlot(PlayerPickupItemEvent event) {
         Player player = event.getPlayer();
 
-        if (event.isCancelled() || !InventoryManager.playerIsLoaded(player) || !ItemManager.allowedForPlayer(player, event.getItem().getItemStack(), false)) {
+        if (!InventoryManager.playerIsLoaded(player) || !ItemManager.allowedForPlayer(player, event.getItem().getItemStack(), false)) {
             return;
         }
 
@@ -212,11 +212,11 @@ public class InventoryListener implements Listener {
     }
 
     @SuppressWarnings("deprecation")
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
     public void onInventoryClick(final InventoryClickEvent event) {
         final Player player = (Player) event.getWhoClicked();
 
-        if (!InventoryManager.playerIsLoaded(player) || event.isCancelled()) {
+        if (!InventoryManager.playerIsLoaded(player)) {
             return;
         }
 

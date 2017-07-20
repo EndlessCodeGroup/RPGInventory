@@ -65,12 +65,12 @@ public class BackpackListener implements Listener {
         event.getPlayer().updateInventory();
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
     public void onBackpackClick(final InventoryClickEvent event) {
         final Inventory inventory = event.getInventory();
         final Player player = (Player) event.getWhoClicked();
 
-        if (!InventoryManager.playerIsLoaded(player) || event.isCancelled()) {
+        if (!InventoryManager.playerIsLoaded(player)) {
             return;
         }
 
@@ -118,10 +118,10 @@ public class BackpackListener implements Listener {
         playerWrapper.setBackpack(null);
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onBackpackPickup(PlayerPickupItemEvent event) {
         Player player = event.getPlayer();
-        if (!InventoryManager.playerIsLoaded(player) || event.isCancelled()) {
+        if (!InventoryManager.playerIsLoaded(player)) {
             return;
         }
 

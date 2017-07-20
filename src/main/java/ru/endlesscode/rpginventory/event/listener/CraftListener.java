@@ -74,13 +74,13 @@ public class CraftListener extends PacketAdapter implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGH)
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void onInventoryClick(InventoryClickEvent event) {
         final Player player = (Player) event.getWhoClicked();
         //noinspection ConstantConditions
-        if (event.isCancelled() || !InventoryManager.playerIsLoaded(player)
-                || event.getInventory().getType() != InventoryType.WORKBENCH
-                || !InventoryManager.get(player).isPocketCraft() && !Config.getConfig().getBoolean("craft.workbench", true)) {
+        if (!InventoryManager.playerIsLoaded(player) || event.getInventory().getType() != InventoryType.WORKBENCH
+                || !InventoryManager.get(player).isPocketCraft() &&
+                !Config.getConfig().getBoolean("craft.workbench", true)) {
             return;
         }
 
