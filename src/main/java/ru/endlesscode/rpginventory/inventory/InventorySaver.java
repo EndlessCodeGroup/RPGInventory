@@ -81,11 +81,11 @@ public class InventorySaver {
         }
         ARMORS.put(player.getUniqueId(), armorList.toArray(new ItemStack[armorList.size()]));
 
-        ItemStack[] contents = player.getInventory().getStorageContents();
-        for (int i = 0; i < contents.length; i++) {
-            ItemStack item = contents[i];
+        List<ItemStack> contents = Arrays.asList(player.getInventory().getStorageContents());
+        for (int i = 0; i < contents.size(); i++) {
+            ItemStack item = contents.get(i);
             if (!ItemUtils.isEmpty(item) && !drops.contains(item)) {
-                contents[i] = null;
+                contents.set(i, null);
             }
         }
 
@@ -99,7 +99,7 @@ public class InventorySaver {
                 if (!ItemUtils.isEmpty(quickItem) && !slot.isCup(quickItem)) {
                     if (slot.isDrop()) {
                         additionalDrops.add(quickItem);
-                        contents[slot.getQuickSlot()] = null;
+                        contents.set(slot.getQuickSlot(), null);
                     }
 
                     drops.remove(quickItem);
@@ -137,15 +137,10 @@ public class InventorySaver {
             if (saveItems || CustomItem.isCustomItem(drop) && !ItemManager.getCustomItem(drop).isDrop()) {
                 drops.remove(drop);
             } else {
-                for (int i = 9; i < contents.length; i++) {
-                    if (drop == contents[i]) {
-                        contents[i] = null;
-                        break;
-                    }
-                }
+                contents.replaceAll(itemStack -> drop.equals(itemStack) ? null : itemStack);
             }
         }
-        INVENTORIES.put(player.getUniqueId(), contents);
+        INVENTORIES.put(player.getUniqueId(), contents.toArray(new ItemStack[contents.size()]));
 
         // Saving shield
         Slot shieldSlot = SlotManager.getSlotManager().getShieldSlot();
