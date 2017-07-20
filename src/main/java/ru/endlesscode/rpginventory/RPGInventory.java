@@ -276,7 +276,7 @@ public class RPGInventory extends JavaPlugin {
     }
 
     public void checkUpdates(@Nullable final Player player) {
-        if (!Config.getConfig().getBoolean("auto-update")) {
+        if (!Config.getConfig().getBoolean("check-update")) {
             return;
         }
 

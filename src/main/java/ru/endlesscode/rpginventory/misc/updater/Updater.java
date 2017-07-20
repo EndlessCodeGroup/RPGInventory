@@ -575,53 +575,54 @@ public class Updater {
      */
     private boolean read() {
         try {
-            final URLConnection conn = this.url.openConnection();
-            conn.setConnectTimeout(5000);
-
-            conn.addRequestProperty("User-Agent", Updater.USER_AGENT);
-            conn.setDoOutput(true);
-
-            BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-            String response = reader.readLine();
-
-            if (response == null) {
-                RPGInventory.getPluginLogger().warning("Cannot take data from update server!");
-            }
-
-            JSONArray array = (JSONArray) JSONValue.parse(response);
-            JSONObject latestUpdate = null;
-            for (int i = array.size() - 1; i >= 0; i--) {
-                JSONObject update = (JSONObject) array.get(i);
-                String[] versions = ((String) update.get(Updater.VERSION_VALUE)).split(", ");
-
-                for (String version : versions) {
-                    if (Bukkit.getBukkitVersion().startsWith(version)) {
-                        latestUpdate = update;
-                        break;
-                    }
-                }
-            }
-
-            if (latestUpdate == null) {
-                this.result = UpdateResult.NO_UPDATE;
-                return false;
-            }
-
-            this.versionName = (String) latestUpdate.get(Updater.TITLE_VALUE);
-            this.versionType = (String) latestUpdate.get(Updater.TYPE_VALUE);
-            this.infoLink = (String) latestUpdate.get(Updater.LINK_VALUE);
-            this.description = (String) latestUpdate.get(Updater.DESCRIPTION_VALUE);
-//            this.downloadLink = (String) latestUpdate.get(Updater.DOWNLOAD_VALUE);
-//            this.hashSum = (String) latestUpdate.get(Updater.HASH_VALUE);
-
-            return true;
-        } catch (final IOException e) {
-            this.plugin.getLogger().severe("The updater could not contact rpginventory.endlesscode.ru for updating.");
-            this.plugin.getLogger().severe("The site experiencing temporary downtime.");
+            return tryToRead();
+        } catch (final IOException | NullPointerException  e) {
+            RPGInventory.getPluginLogger().severe("The updater could not contact " + HOST + " for check updates.");
+            RPGInventory.getPluginLogger().severe("The site experiencing temporary downtime.");
             this.result = UpdateResult.FAIL_DBO;
-            this.plugin.getLogger().severe(e.toString());
             return false;
         }
+    }
+
+    private boolean tryToRead() throws IOException {
+        final URLConnection conn = this.url.openConnection();
+        conn.setConnectTimeout(5000);
+
+        conn.addRequestProperty("User-Agent", Updater.USER_AGENT);
+        conn.setDoOutput(true);
+
+        BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+        String response = "";
+        String line;
+        while ((line = reader.readLine()) != null) {
+            response += line.trim();
+        }
+
+        JSONArray array = (JSONArray) JSONValue.parse(response);
+        JSONObject latestUpdate = null;
+        for (int i = array.size() - 1; i >= 0; i--) {
+            JSONObject update = (JSONObject) array.get(i);
+            String[] versions = ((String) update.get(Updater.VERSION_VALUE)).split(", ");
+
+            for (String version : versions) {
+                if (Bukkit.getBukkitVersion().startsWith(version)) {
+                    latestUpdate = update;
+                    break;
+                }
+            }
+        }
+
+        if (latestUpdate == null) {
+            this.result = UpdateResult.NO_UPDATE;
+            return false;
+        }
+
+        this.versionName = (String) latestUpdate.get(Updater.TITLE_VALUE);
+        this.versionType = (String) latestUpdate.get(Updater.TYPE_VALUE);
+        this.infoLink = (String) latestUpdate.get(Updater.LINK_VALUE);
+        this.description = (String) latestUpdate.get(Updater.DESCRIPTION_VALUE);
+
+        return true;
     }
 
     /**

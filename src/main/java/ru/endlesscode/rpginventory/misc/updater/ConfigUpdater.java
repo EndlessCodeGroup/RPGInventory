@@ -178,6 +178,8 @@ public class ConfigUpdater {
                 config.set("resource-pack.enabled", true);
             case 208:
                 config.set("resource-pack.delay", 2);
+                config.set("check-update", config.getBoolean("auto-update"));
+                config.set("auto-update", null);
         }
     }
 }
