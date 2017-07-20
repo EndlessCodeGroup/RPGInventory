@@ -238,7 +238,8 @@ public class InventoryListener implements Listener {
         ItemStack currentItem = event.getCurrentItem();
         ItemStack cursor = event.getCursor();
 
-        if (action == InventoryAction.HOTBAR_SWAP && SlotManager.getSlotManager().getSlot(event.getHotbarButton(), InventoryType.SlotType.QUICKBAR) != null) {
+        if ((action == InventoryAction.HOTBAR_SWAP || action == InventoryAction.HOTBAR_MOVE_AND_READD)
+                && SlotManager.getSlotManager().getSlot(event.getHotbarButton(), InventoryType.SlotType.QUICKBAR) != null) {
             event.setCancelled(true);
             return;
         }
