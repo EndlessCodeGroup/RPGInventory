@@ -19,13 +19,21 @@
 package ru.endlesscode.rpginventory;
 
 import org.bukkit.plugin.java.JavaPlugin;
+import ru.endlesscode.rpginventory.configuration.ConfigurationProvider;
+
+import java.io.File;
 
 /**
  * This class is entry point to plugin
  */
 public class RPGInventory extends JavaPlugin {
+
+    private ConfigurationProvider configProvider;
+
     @Override
     public void onEnable() {
+        //config.hocon ?
+        this.configProvider = new ConfigurationProvider(new File(this.getDataFolder(), "config.json"));
     }
 
     @Override

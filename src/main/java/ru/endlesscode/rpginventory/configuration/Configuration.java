@@ -18,36 +18,13 @@
 
 package ru.endlesscode.rpginventory.configuration;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.Map;
+import ninja.leaping.configurate.objectmapping.Setting;
 
-public interface Configuration {
+public class Configuration {
 
-    public <T> T get(Class<T> type, String path);
-    public <T> T get(Class<T> type, String path, T defaultValue);
+    @Setting(comment = "This is a test key")
+    private String key = "Ahaha";
 
-    public Object get(String path);
-    public Object get(String path, Object defaultValue);
-
-    public String getString(String path);
-    public String getString(String path, String defaultValue);
-
-    public int getInt(String path);
-    public int getInt(String path, int defaultValue);
-
-    public double getDouble(String path);
-    public double getDouble(String path, double defaultValue);
-
-    public <T> List<T> getList(String path);
-    public <T> List<T> getList(String path, List<T> defaultValue);
-
-    public <K, V> Map<K, V> getMap(String path);
-    public <K, V> Map<K, V> getMap(String path, Map<K, V> defaultValue);
-
-    public void load(String path) throws IOException;
-    public void loadFromString(String input);
-
-    public void save() throws IOException;
-    public void saveToString();
+    @Setting(comment = "Integer implementation")
+    private int integer = -1;
 }

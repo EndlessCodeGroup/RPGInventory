@@ -64,6 +64,9 @@ repositories {
 
 dependencies {
     compileOnly group: 'commons-io', name: 'commons-io', version: '2.5'
+    compileOnly group: 'com.typesafe', name: 'config', version: '1.3.1'
+    compileOnly group: 'ninja.leaping.configurate', name: 'configurate-hocon', version: '3.3'
+    compileOnly group: 'ninja.leaping.configurate', name: 'configurate-core', version: '3.3'
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }
 
