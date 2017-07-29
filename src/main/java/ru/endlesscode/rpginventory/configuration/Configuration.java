@@ -19,12 +19,37 @@
 package ru.endlesscode.rpginventory.configuration;
 
 import ninja.leaping.configurate.objectmapping.Setting;
+import ru.endlesscode.rpginventory.configuration.part.ResourcePackConfiguration;
+import ru.endlesscode.rpginventory.configuration.part.UpdatesConfiguration;
 
+@SuppressWarnings({"FieldCanBeLocal", "unused"})
 public class Configuration {
 
-    @Setting(comment = "This is a test key")
-    private String key = "Ahaha";
+    @Setting(comment = "Make sure that you have correctly configured the \"resourcePack\" section before enabling the plugin.")
+    private boolean enabled = false;
 
-    @Setting(comment = "Integer implementation")
-    private int integer = -1;
+    @Setting(value = "updates")
+    private UpdatesConfiguration updatesConfiguration = new UpdatesConfiguration();
+
+    @Setting(value = "resourcePack")
+    private ResourcePackConfiguration resourcePackConfiguration = new ResourcePackConfiguration();
+
+    @Setting(comment = "Default locale for use")
+    private String locale = "en_us";
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public UpdatesConfiguration getUpdatesConfiguration() {
+        return updatesConfiguration;
+    }
+
+    public ResourcePackConfiguration getResourcePackConfiguration() {
+        return resourcePackConfiguration;
+    }
+
+    public String getLocale() {
+        return locale;
+    }
 }
