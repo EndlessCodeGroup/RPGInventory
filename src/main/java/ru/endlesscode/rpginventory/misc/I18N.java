@@ -32,17 +32,17 @@ import java.util.HashMap;
 import java.util.Properties;
 import java.util.logging.Level;
 
+@SuppressWarnings({"ResultOfMethodCallIgnored", "unused"})
 public class I18N {
 
     private final Properties locale = new Properties();
     private final HashMap<String, MessageFormat> cache = new HashMap<>();
 
     public I18N(RPGInventory instance) {
-        //TODO: reading locale from config
-        this(instance, "null");
+        this(instance, instance.getConfiguration().getLocale());
     }
 
-    public I18N(RPGInventory instance, String locale) {
+    private I18N(RPGInventory instance, String locale) {
         File localeFolder = new File(instance.getDataFolder(), "locales");
         if (!localeFolder.exists()) {
             localeFolder.mkdir();
