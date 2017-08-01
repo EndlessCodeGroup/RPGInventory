@@ -20,12 +20,12 @@ package ru.endlesscode.rpginventory;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
-import ru.endlesscode.rpginventory.configuration.ConfigurationProvider;
 import ru.endlesscode.rpginventory.configuration.Configuration;
+import ru.endlesscode.rpginventory.configuration.ConfigurationProvider;
 import ru.endlesscode.rpginventory.misc.I18N;
 
 /**
- * This class is entry point to plugin
+ * This class is entry point to plugin.
  */
 public class RPGInventory extends JavaPlugin {
 
@@ -34,7 +34,7 @@ public class RPGInventory extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        this.configProvider = new ConfigurationProvider(this);
+        this.configProvider = new ConfigurationProvider(this.getDataFolder(), this.getLogger());
         this.locale = new I18N(this);
     }
 

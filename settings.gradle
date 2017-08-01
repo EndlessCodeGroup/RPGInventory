@@ -1,2 +1,4 @@
-rootProject.name = 'RPGInventory'
+include ':core', ':core:bukkit'
+
+rootProject.name = name
 

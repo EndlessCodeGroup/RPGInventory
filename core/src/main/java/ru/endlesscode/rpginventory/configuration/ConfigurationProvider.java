@@ -23,8 +23,8 @@ import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 import ninja.leaping.configurate.objectmapping.ObjectMapper;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
-import ru.endlesscode.rpginventory.RPGInventory;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -34,20 +34,23 @@ import java.util.logging.Logger;
 public class ConfigurationProvider {
 
     private static final String HEADER = "This is RPGInventory configuration blah-blah-blah enjoy new config blah-blah-blah";
+
     private final Logger log;
     private final HoconConfigurationLoader loader;
     private final ObjectMapper.BoundInstance configMapper;
     private CommentedConfigurationNode root;
     private Configuration configBase;
 
-    public ConfigurationProvider(RPGInventory instance) {
-        this.log = instance.getLogger();
+    public ConfigurationProvider(File configFolder, Logger log) {
+        this.log = log;
+
         try {
-            if (!instance.getDataFolder().exists()) {
+            if (!configFolder.exists()) {
                 //noinspection ResultOfMethodCallIgnored
-                instance.getDataFolder().mkdir();
+                configFolder.mkdir();
             }
-            final Path path = Paths.get(instance.getDataFolder().getAbsolutePath(), "config.conf");
+
+            final Path path = Paths.get(configFolder.getAbsolutePath(), "config.conf");
             this.loader = HoconConfigurationLoader.builder().setPath(path).build();
             this.configMapper = ObjectMapper.forClass(Configuration.class).bindToNew();
             this.reload();
