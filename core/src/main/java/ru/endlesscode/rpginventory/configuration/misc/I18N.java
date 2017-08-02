@@ -16,12 +16,9 @@
  * along with RPGInventory.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package ru.endlesscode.rpginventory.misc;
+package ru.endlesscode.rpginventory.configuration.misc;
 
 import org.apache.commons.io.FileUtils;
-import org.bukkit.ChatColor;
-import ru.endlesscode.rpginventory.RPGInventory;
-import ru.endlesscode.rpginventory.configuration.misc.FilesUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -32,19 +29,16 @@ import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Properties;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @SuppressWarnings({"ResultOfMethodCallIgnored", "unused"})
-public class I18N {
+public abstract class I18N {
 
     private final Properties locale = new Properties();
     private final HashMap<String, MessageFormat> cache = new HashMap<>();
 
-    public I18N(RPGInventory instance) {
-        this(instance, instance.getConfiguration().getLocale());
-    }
-
-    private I18N(RPGInventory instance, String locale) {
-        File localeFolder = new File(instance.getDataFolder(), "locales");
+    protected I18N(File workDir, String locale, Logger logger) {
+        File localeFolder = new File(workDir, "locales");
         if (!localeFolder.exists()) {
             localeFolder.mkdir();
         }
@@ -52,10 +46,10 @@ public class I18N {
 
         if (!localeFile.exists()) {
             //TODO: Catch in main class?
-            try (InputStream is = instance.getResource(String.format("locales/%s.lang", locale))) {
+            try (InputStream is = I18N.class.getResourceAsStream(String.format("/locales/%s.lang", locale))) {
                 FileUtils.copyInputStreamToFile(is, localeFile);
             } catch (IOException ex) {
-                instance.getLogger().log(Level.WARNING, String.format(
+                logger.log(Level.WARNING, String.format(
                         "Failed to copy %s to locales folder",
                         localeFile.getName()
                 ), ex);
@@ -65,7 +59,7 @@ public class I18N {
         try (StringReader sr = new StringReader(FilesUtil.readFileToString(localeFile, StandardCharsets.UTF_8))) {
             this.locale.load(sr);
         } catch (IOException e) {
-            instance.getLogger().log(Level.WARNING, String.format("Failed to load %s", localeFile.getName()), e);
+            logger.log(Level.WARNING, String.format("Failed to load %s", localeFile.getName()), e);
         }
     }
 
@@ -84,12 +78,17 @@ public class I18N {
     public String getMessage(String key, boolean stripColor, Object... args) {
         if (!this.cache.containsKey(key)) {
             MessageFormat mf = new MessageFormat(
-                    ChatColor.translateAlternateColorCodes('&', this.locale.getProperty(key, key))
+                    this.translateCodes(this.locale.getProperty(key, key))
             );
             this.cache.put(key, mf);
         }
 
         String result = this.cache.get(key).format(args);
-        return stripColor ? ChatColor.stripColor(result) : result;
+        return stripColor ? this.stripColor(result) : result;
     }
+
+    protected abstract String stripColor(String message);
+
+    protected abstract String translateCodes(String message);
+
 }

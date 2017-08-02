@@ -22,7 +22,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 import ru.endlesscode.rpginventory.configuration.Configuration;
 import ru.endlesscode.rpginventory.configuration.ConfigurationProvider;
-import ru.endlesscode.rpginventory.misc.I18N;
+import ru.endlesscode.rpginventory.misc.I18NBukkit;
 
 /**
  * This class is entry point to plugin.
@@ -30,19 +30,19 @@ import ru.endlesscode.rpginventory.misc.I18N;
 public class RPGInventory extends JavaPlugin {
 
     private ConfigurationProvider configProvider;
-    private I18N locale;
+    private I18NBukkit locale;
 
     @Override
     public void onEnable() {
         this.configProvider = new ConfigurationProvider(this.getDataFolder(), this.getLogger());
-        this.locale = new I18N(this);
+        this.locale = new I18NBukkit(this);
     }
 
     public Configuration getConfiguration() {
         return configProvider.getConfig();
     }
 
-    public I18N getLocale() {
+    public I18NBukkit getLocale() {
         return locale;
     }
 
