@@ -18,49 +18,60 @@
 
 package ru.endlesscode.rpginventory.configuration.misc;
 
-import org.apache.commons.io.FileUtils;
-
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.StringReader;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Properties;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @SuppressWarnings({"ResultOfMethodCallIgnored", "unused"})
 public abstract class I18N {
 
+    private final Path localeFolder;
+
     private final Properties locale = new Properties();
     private final HashMap<String, MessageFormat> cache = new HashMap<>();
 
-    protected I18N(File workDir, String locale, Logger logger) {
-        File localeFolder = new File(workDir, "locales");
-        if (!localeFolder.exists()) {
-            localeFolder.mkdir();
-        }
-        File localeFile = new File(localeFolder, locale.concat(".lang"));
+    protected I18N(File workDir, String langCode, Logger logger) throws IOException {
+        this(workDir.toPath(), langCode, logger);
+    }
 
-        if (!localeFile.exists()) {
-            //TODO: Catch in main class?
-            try (InputStream is = I18N.class.getResourceAsStream(String.format("/locales/%s.lang", locale))) {
-                FileUtils.copyInputStreamToFile(is, localeFile);
-            } catch (IOException ex) {
-                logger.log(Level.WARNING, String.format(
-                        "Failed to copy %s to locales folder",
-                        localeFile.getName()
-                ), ex);
-            }
+    protected I18N(Path workDir, String langCode, Logger logger) throws IOException {
+        try {
+            this.localeFolder = Files.createDirectories(workDir.resolve("locales"));
+        } catch (IOException e) {
+            throw new IOException("Failed to create locales folder", e);
         }
 
+        load(langCode);
+    }
+
+    public void reload(String langCode) throws IOException {
+        this.cache.clear();
+        load(langCode);
+    }
+
+    private void load(String langCode) throws IOException {
+        Path localeFile = this.prepareLocaleFile(langCode);
         try (StringReader sr = new StringReader(FilesUtil.readFileToString(localeFile, StandardCharsets.UTF_8))) {
             this.locale.load(sr);
         } catch (IOException e) {
-            logger.log(Level.WARNING, String.format("Failed to load %s", localeFile.getName()), e);
+            throw new IOException(String.format("Failed to load %s", localeFile.getFileName()), e);
         }
+    }
+
+    private Path prepareLocaleFile(String langCode) throws IOException {
+        Path localeFile = this.localeFolder.resolve(langCode.concat(".lang"));
+        if (Files.notExists(localeFile)) {
+            FilesUtil.copyResourceToFile(String.format("/locales/%s.lang", langCode), localeFile);
+        }
+
+        return localeFile;
     }
 
     public String getMessage(String key) {

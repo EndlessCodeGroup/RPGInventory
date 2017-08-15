@@ -18,20 +18,31 @@
 
 package ru.endlesscode.rpginventory.configuration.misc;
 
-import org.apache.commons.io.FileUtils;
-
-import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 public class FilesUtil {
 
-    public static String readFileToString(File file, Charset charset) {
+    public static String readFileToString(Path file, Charset charset) {
         try {
-            return FileUtils.readFileToString(file, charset);
+            return new String(Files.readAllBytes(file), charset);
         } catch (IOException e) {
             //TODO: Log exception
             throw new IllegalArgumentException(e);
+        }
+    }
+
+    public static void copyResourceToFile(String resource, Path file) throws IOException {
+        try (InputStream is = FilesUtil.class.getResourceAsStream(resource)) {
+            Files.copy(is, file);
+        } catch (IOException e) {
+            throw new IOException(String.format(
+                    "Failed to copy %s to locales folder",
+                    file.getFileName()
+            ), e);
         }
     }
 }
