@@ -26,8 +26,8 @@ import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -42,20 +42,21 @@ public class ConfigurationProvider {
     private Configuration configBase;
 
     public ConfigurationProvider(File configFolder, Logger log) {
+        this(configFolder.toPath(), log);
+    }
+
+    public ConfigurationProvider(Path configFolder, Logger log) {
         this.log = log;
 
         try {
-            if (!configFolder.exists()) {
-                //noinspection ResultOfMethodCallIgnored
-                configFolder.mkdir();
-            }
+            Files.createDirectory(configFolder);
 
-            final Path path = Paths.get(configFolder.getAbsolutePath(), "config.conf");
+            final Path path = configFolder.resolve("config.conf");
             this.loader = HoconConfigurationLoader.builder().setPath(path).build();
             this.configMapper = ObjectMapper.forClass(Configuration.class).bindToNew();
             this.reload();
             this.save();
-        } catch (ObjectMappingException e) {
+        } catch (ObjectMappingException | IOException e) {
             throw new RuntimeException("Failed to initialize configuration!", e);
         }
     }
