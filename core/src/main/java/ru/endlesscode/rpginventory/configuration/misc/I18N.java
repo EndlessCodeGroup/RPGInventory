@@ -27,7 +27,6 @@ import java.nio.file.Path;
 import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Properties;
-import java.util.logging.Logger;
 
 @SuppressWarnings({"ResultOfMethodCallIgnored", "unused"})
 public abstract class I18N {
@@ -37,11 +36,11 @@ public abstract class I18N {
     private final Properties locale = new Properties();
     private final HashMap<String, MessageFormat> cache = new HashMap<>();
 
-    protected I18N(File workDir, String langCode, Logger logger) throws IOException {
-        this(workDir.toPath(), langCode, logger);
+    protected I18N(File workDir, String langCode) throws IOException {
+        this(workDir.toPath(), langCode);
     }
 
-    protected I18N(Path workDir, String langCode, Logger logger) throws IOException {
+    protected I18N(Path workDir, String langCode) throws IOException {
         try {
             this.localeFolder = Files.createDirectories(workDir.resolve("locales"));
         } catch (IOException e) {

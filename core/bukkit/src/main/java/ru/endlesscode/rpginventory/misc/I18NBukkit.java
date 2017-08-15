@@ -27,7 +27,7 @@ import java.io.IOException;
 public class I18NBukkit extends I18N {
 
     public I18NBukkit(RPGInventory instance) throws IOException {
-        super(instance.getDataFolder(), instance.getConfiguration().getLocale(), instance.getLogger());
+        super(instance.getDataFolder(), instance.getConfiguration().getLocale());
     }
 
     @Override
