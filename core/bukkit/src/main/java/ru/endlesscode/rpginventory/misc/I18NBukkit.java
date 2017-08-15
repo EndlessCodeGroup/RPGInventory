@@ -20,7 +20,6 @@ package ru.endlesscode.rpginventory.misc;
 
 import org.bukkit.ChatColor;
 import ru.endlesscode.rpginventory.RPGInventory;
-import ru.endlesscode.rpginventory.configuration.misc.I18N;
 
 import java.io.IOException;
 
