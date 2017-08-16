@@ -18,6 +18,8 @@
 
 package ru.endlesscode.rpginventory.misc;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
@@ -35,11 +37,11 @@ public abstract class I18N {
     private final Properties locale = new Properties();
     private final HashMap<String, MessageFormat> cache = new HashMap<>();
 
-    protected I18N(File workDir, String langCode) throws IOException {
+    protected I18N(@NotNull File workDir, @NotNull String langCode) throws IOException {
         this(workDir.toPath(), langCode);
     }
 
-    protected I18N(Path workDir, String langCode) throws IOException {
+    protected I18N(@NotNull Path workDir, @NotNull String langCode) throws IOException {
         try {
             this.localeFolder = Files.createDirectories(workDir.resolve("locales"));
         } catch (IOException e) {
@@ -49,7 +51,7 @@ public abstract class I18N {
         load(langCode);
     }
 
-    public void reload(String langCode) throws IOException {
+    public void reload(@NotNull String langCode) throws IOException {
         this.cache.clear();
         load(langCode);
     }
@@ -72,19 +74,19 @@ public abstract class I18N {
         return localeFile;
     }
 
-    public String getMessage(String key) {
+    public String getMessage(@NotNull String key) {
         return this.getMessage(key, false);
     }
 
-    public String getMessage(String key, boolean stripColor) {
+    public String getMessage(@NotNull String key, boolean stripColor) {
         return this.getMessage(key, stripColor, (Object[]) null);
     }
 
-    public String getMessage(String key, Object... args) {
+    public String getMessage(@NotNull String key, Object... args) {
         return this.getMessage(key, false, args);
     }
 
-    public String getMessage(String key, boolean stripColor, Object... args) {
+    public String getMessage(@NotNull String key, boolean stripColor, Object... args) {
         if (!this.cache.containsKey(key)) {
             MessageFormat mf = new MessageFormat(
                     this.translateCodes(this.locale.getProperty(key, key))

@@ -18,6 +18,8 @@
 
 package ru.endlesscode.rpginventory.misc;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
@@ -27,11 +29,11 @@ import java.nio.file.Path;
 
 public class FilesUtil {
 
-    public static String readFileToString(Path file) {
+    public static String readFileToString(@NotNull Path file) {
         return readFileToString(file, StandardCharsets.UTF_8);
     }
 
-    public static String readFileToString(Path file, Charset charset) {
+    public static String readFileToString(@NotNull Path file, Charset charset) {
         try {
             return new String(Files.readAllBytes(file), charset);
         } catch (IOException e) {
@@ -42,7 +44,7 @@ public class FilesUtil {
         }
     }
 
-    public static void copyResourceToFile(String resource, Path file) {
+    public static void copyResourceToFile(@NotNull String resource, @NotNull Path file) {
         String validResourcePath = resource.startsWith("/") ? resource : "/".concat(resource);
 
         try (InputStream is = FilesUtil.class.getResourceAsStream(validResourcePath)) {

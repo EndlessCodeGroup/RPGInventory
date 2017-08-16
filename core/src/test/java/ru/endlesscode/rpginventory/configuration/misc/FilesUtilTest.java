@@ -61,7 +61,10 @@ public class FilesUtilTest {
             );
             assertEquals(expectedMessage, e.getMessage());
             assertThat(e.getCause(), instanceOf(FileAlreadyExistsException.class));
+            return;
         }
+
+        fail();
     }
 
     @Test
@@ -71,7 +74,10 @@ public class FilesUtilTest {
         } catch (IllegalArgumentException e) {
             assertEquals("Resource file \"/notExistingResource\" not exists", e.getMessage());
             assertNull(e.getCause());
+            return;
         }
+
+        fail();
     }
 
     private void copyResourceToFile(String resource, Path targetFile) throws IOException {
@@ -102,7 +108,10 @@ public class FilesUtilTest {
             );
             assertEquals(expectedMessage, e.getMessage());
             assertThat(e.getCause(), instanceOf(NoSuchFileException.class));
+            return;
         }
+
+        fail();
     }
 
     @After
