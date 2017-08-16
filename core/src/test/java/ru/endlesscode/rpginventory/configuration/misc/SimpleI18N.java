@@ -16,29 +16,28 @@
  * along with RPGInventory.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package ru.endlesscode.rpginventory.misc;
+package ru.endlesscode.rpginventory.configuration.misc;
 
-import org.bukkit.ChatColor;
 import org.jetbrains.annotations.NotNull;
-import ru.endlesscode.rpginventory.RPGInventory;
 
+import java.io.File;
 import java.io.IOException;
 
-public class I18NBukkit extends I18N {
+public class SimpleI18N extends I18N {
 
-    public I18NBukkit(RPGInventory instance) throws IOException {
-        super(instance.getDataFolder(), instance.getConfiguration().getLocale());
+    SimpleI18N(@NotNull File workDir) throws IOException {
+        super(workDir, "test");
     }
 
     @NotNull
     @Override
     protected String stripColor(String message) {
-        return ChatColor.stripColor(message);
+        return message;
     }
 
     @NotNull
     @Override
     protected String translateCodes(String message) {
-        return ChatColor.translateAlternateColorCodes('&', message);
+        return message;
     }
 }

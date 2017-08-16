@@ -29,7 +29,7 @@ import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Properties;
 
-@SuppressWarnings({"ResultOfMethodCallIgnored", "unused"})
+@SuppressWarnings({"unused", "WeakerAccess"})
 public abstract class I18N {
 
     private final Path localeFolder;
@@ -52,12 +52,12 @@ public abstract class I18N {
     }
 
     public void reload(@NotNull String langCode) throws IOException {
-        this.cache.clear();
         load(langCode);
+        this.cache.clear();
     }
 
     private void load(String langCode) throws IOException {
-        Path localeFile = this.prepareLocaleFile(langCode);
+        Path localeFile = this.prepareLocaleFile(langCode.toLowerCase());
         try (StringReader sr = new StringReader(FilesUtil.readFileToString(localeFile))) {
             this.locale.load(sr);
         } catch (IOException e) {
@@ -87,6 +87,11 @@ public abstract class I18N {
     }
 
     public String getMessage(@NotNull String key, boolean stripColor, Object... args) {
+        String result = this.getMessageFromCache(key).format(args);
+        return stripColor ? this.stripColor(result) : result;
+    }
+
+    private MessageFormat getMessageFromCache(String key) {
         if (!this.cache.containsKey(key)) {
             MessageFormat mf = new MessageFormat(
                     this.translateCodes(this.locale.getProperty(key, key))
@@ -94,12 +99,13 @@ public abstract class I18N {
             this.cache.put(key, mf);
         }
 
-        String result = this.cache.get(key).format(args);
-        return stripColor ? this.stripColor(result) : result;
+        return this.cache.get(key);
     }
 
+    @NotNull
     protected abstract String stripColor(String message);
 
+    @NotNull
     protected abstract String translateCodes(String message);
 
 }

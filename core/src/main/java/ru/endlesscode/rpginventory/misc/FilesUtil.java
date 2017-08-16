@@ -27,6 +27,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+@SuppressWarnings("WeakerAccess")
 public class FilesUtil {
 
     public static String readFileToString(@NotNull Path file) {

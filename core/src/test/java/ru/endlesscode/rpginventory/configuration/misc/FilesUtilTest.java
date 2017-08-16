@@ -18,26 +18,19 @@
 
 package ru.endlesscode.rpginventory.configuration.misc;
 
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.*;
+import java.nio.file.FileAlreadyExistsException;
+import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
+import java.nio.file.Path;
 
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.*;
 
-public class FilesUtilTest {
-    private Path testDir;
-    private Path tmpDir;
-
-    @Before
-    public void setUp() throws Exception {
-        this.testDir = Files.createDirectories(Paths.get("testFiles"));
-        this.tmpDir = Files.createTempDirectory(testDir, "tmp");
-    }
+public class FilesUtilTest extends FileTestBase {
 
     @Test
     public void copyResourceToFile_existingResourceToNewFileMustBeSuccessful() throws Exception {
@@ -114,13 +107,4 @@ public class FilesUtilTest {
         fail();
     }
 
-    @After
-    public void tearDown() throws Exception {
-        Files.walk(tmpDir).forEach(path -> {
-            try {
-                Files.delete(path);
-            } catch (IOException ignored) { }
-        });
-        Files.deleteIfExists(tmpDir);
-    }
 }

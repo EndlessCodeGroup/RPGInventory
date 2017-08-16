@@ -16,29 +16,37 @@
  * along with RPGInventory.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package ru.endlesscode.rpginventory.misc;
+package ru.endlesscode.rpginventory.configuration.misc;
 
-import org.bukkit.ChatColor;
-import org.jetbrains.annotations.NotNull;
-import ru.endlesscode.rpginventory.RPGInventory;
+import org.junit.After;
+import org.junit.Before;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Comparator;
 
-public class I18NBukkit extends I18N {
+public class FileTestBase {
+    Path testDir;
+    Path tmpDir;
 
-    public I18NBukkit(RPGInventory instance) throws IOException {
-        super(instance.getDataFolder(), instance.getConfiguration().getLocale());
+    @Before
+    public void setUp() throws Exception {
+        this.testDir = Files.createDirectories(Paths.get("testFiles"));
+        this.tmpDir = Files.createTempDirectory(testDir, null);
     }
 
-    @NotNull
-    @Override
-    protected String stripColor(String message) {
-        return ChatColor.stripColor(message);
+    @After
+    public void tearDown() throws Exception {
+        Files.walk(tmpDir)
+                .sorted(Comparator.reverseOrder())
+                .forEach(this::deleteFile);
     }
 
-    @NotNull
-    @Override
-    protected String translateCodes(String message) {
-        return ChatColor.translateAlternateColorCodes('&', message);
+    private void deleteFile(Path path) {
+        try {
+            Files.delete(path);
+        } catch (IOException ignored) { }
     }
 }
