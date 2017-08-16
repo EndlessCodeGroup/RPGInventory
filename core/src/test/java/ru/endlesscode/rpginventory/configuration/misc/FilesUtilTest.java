@@ -24,11 +24,9 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.FileAlreadyExistsException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.nio.file.*;
 
+import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.*;
 
 public class FilesUtilTest {
@@ -53,11 +51,16 @@ public class FilesUtilTest {
 
     @Test
     public void copyResourceToFile_existingResourceToExistingFileMustThrowException() throws Exception {
+        Path target = testDir.resolve("existingFile");
         try {
-            this.copyResourceToFile("/resource", testDir.resolve("existingFile"));
+            this.copyResourceToFile("/resource", target);
         } catch (IllegalArgumentException e) {
-            assertTrue(e.getMessage().startsWith("Failed to copy \"/resource\" to given target: \""));
-            assertTrue(e.getCause() instanceof FileAlreadyExistsException);
+            String expectedMessage = String.format(
+                    "Failed to copy \"/resource\" to given target: \"%s\"",
+                    target.toAbsolutePath().toString()
+            );
+            assertEquals(expectedMessage, e.getMessage());
+            assertThat(e.getCause(), instanceOf(FileAlreadyExistsException.class));
         }
     }
 
@@ -77,6 +80,29 @@ public class FilesUtilTest {
                 new String[]{"This is a test resource file.", "Это тестовый файл ресурсов."},
                 Files.readAllLines(targetFile, StandardCharsets.UTF_8).toArray()
         );
+    }
+
+    @Test
+    public void readFileToString_existingFileMustBeSuccessful() {
+        Path target = testDir.resolve("existingFile");
+        String expected = "Multi-line\nexisting\nfile.\nС русским\nтекстом.";
+
+        assertEquals(expected, FilesUtil.readFileToString(target));
+    }
+
+    @Test
+    public void readFileToString_notExistingFileMustThrowException() {
+        Path target = testDir.resolve("notExistingFile");
+        try {
+            FilesUtil.readFileToString(target);
+        } catch (IllegalArgumentException e) {
+            String expectedMessage = String.format(
+                    "Given file \"%s\" can't be read",
+                    target.toAbsolutePath().toString()
+            );
+            assertEquals(expectedMessage, e.getMessage());
+            assertThat(e.getCause(), instanceOf(NoSuchFileException.class));
+        }
     }
 
     @After

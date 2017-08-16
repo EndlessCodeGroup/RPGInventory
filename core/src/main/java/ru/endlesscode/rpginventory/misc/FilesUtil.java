@@ -35,8 +35,10 @@ public class FilesUtil {
         try {
             return new String(Files.readAllBytes(file), charset);
         } catch (IOException e) {
-            //TODO: Log exception
-            throw new IllegalArgumentException(e);
+            throw new IllegalArgumentException(String.format(
+                    "Given file \"%s\" can't be read",
+                    file.toAbsolutePath().toString()
+            ), e);
         }
     }
 

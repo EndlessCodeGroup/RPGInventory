@@ -21,7 +21,6 @@ package ru.endlesscode.rpginventory.misc;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.MessageFormat;
@@ -57,7 +56,7 @@ public abstract class I18N {
 
     private void load(String langCode) throws IOException {
         Path localeFile = this.prepareLocaleFile(langCode);
-        try (StringReader sr = new StringReader(FilesUtil.readFileToString(localeFile, StandardCharsets.UTF_8))) {
+        try (StringReader sr = new StringReader(FilesUtil.readFileToString(localeFile))) {
             this.locale.load(sr);
         } catch (IOException e) {
             throw new IOException(String.format("Failed to load %s", localeFile.getFileName()), e);
