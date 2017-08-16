@@ -21,10 +21,15 @@ package ru.endlesscode.rpginventory.misc;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class FilesUtil {
+
+    public static String readFileToString(Path file) {
+        return readFileToString(file, StandardCharsets.UTF_8);
+    }
 
     public static String readFileToString(Path file, Charset charset) {
         try {
@@ -35,13 +40,19 @@ public class FilesUtil {
         }
     }
 
-    public static void copyResourceToFile(String resource, Path file) throws IOException {
-        try (InputStream is = FilesUtil.class.getResourceAsStream(resource)) {
+    public static void copyResourceToFile(String resource, Path file) {
+        String validResourcePath = resource.startsWith("/") ? resource : "/".concat(resource);
+
+        try (InputStream is = FilesUtil.class.getResourceAsStream(validResourcePath)) {
+            if (is == null) {
+                throw new IllegalArgumentException(String.format("Resource file \"%s\" not exists", validResourcePath));
+            }
+
             Files.copy(is, file);
         } catch (IOException e) {
-            throw new IOException(String.format(
-                    "Failed to copy %s to locales folder",
-                    file.getFileName()
+            throw new IllegalArgumentException(String.format(
+                    "Failed to copy \"%s\" to given target: \"%s\"",
+                    validResourcePath, file.toAbsolutePath().toString()
             ), e);
         }
     }

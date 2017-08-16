@@ -64,7 +64,7 @@ public abstract class I18N {
         }
     }
 
-    private Path prepareLocaleFile(String langCode) throws IOException {
+    private Path prepareLocaleFile(String langCode) {
         Path localeFile = this.localeFolder.resolve(langCode.concat(".lang"));
         if (Files.notExists(localeFile)) {
             FilesUtil.copyResourceToFile(String.format("/locales/%s.lang", langCode), localeFile);
