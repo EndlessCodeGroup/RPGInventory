@@ -20,12 +20,10 @@ package ru.endlesscode.rpginventory.misc;
 
 import org.junit.Before;
 import org.junit.Test;
+import ru.endlesscode.rpginventory.FileTestBase;
 
-import java.io.IOException;
-import java.nio.file.FileAlreadyExistsException;
-
-import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
@@ -46,9 +44,8 @@ public class I18NTest extends FileTestBase {
     public void constructor_creatingDirectoryWitExistingFileMustThrowException() {
         try {
             new SimpleI18N(testDir.toFile());
-        } catch (IOException e) {
+        } catch (I18NException e) {
             assertEquals("Failed to create locales folder", e.getMessage());
-            assertThat(e.getCause(), instanceOf(FileAlreadyExistsException.class));
             return;
         }
 

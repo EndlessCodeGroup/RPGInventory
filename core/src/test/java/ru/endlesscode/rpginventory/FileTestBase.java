@@ -16,7 +16,7 @@
  * along with RPGInventory.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package ru.endlesscode.rpginventory.misc;
+package ru.endlesscode.rpginventory;
 
 import org.junit.After;
 import org.junit.Before;
@@ -28,8 +28,8 @@ import java.nio.file.Paths;
 import java.util.Comparator;
 
 public class FileTestBase {
-    Path testDir;
-    Path tmpDir;
+    protected Path testDir;
+    protected Path tmpDir;
 
     @Before
     public void setUp() throws Exception {

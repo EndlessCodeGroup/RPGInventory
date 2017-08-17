@@ -22,11 +22,9 @@ import org.bukkit.ChatColor;
 import org.jetbrains.annotations.NotNull;
 import ru.endlesscode.rpginventory.RPGInventory;
 
-import java.io.IOException;
-
 public class I18NBukkit extends I18N {
 
-    public I18NBukkit(RPGInventory instance) throws IOException {
+    public I18NBukkit(RPGInventory instance) {
         super(instance.getDataFolder(), instance.getConfiguration().getLocale());
     }
 

@@ -37,31 +37,31 @@ public abstract class I18N {
     private final Properties locale = new Properties();
     private final HashMap<String, MessageFormat> cache = new HashMap<>();
 
-    protected I18N(@NotNull File workDir, @NotNull String langCode) throws IOException {
+    protected I18N(@NotNull File workDir, @NotNull String langCode) {
         this(workDir.toPath(), langCode);
     }
 
-    protected I18N(@NotNull Path workDir, @NotNull String langCode) throws IOException {
+    protected I18N(@NotNull Path workDir, @NotNull String langCode) {
         try {
             this.localeFolder = Files.createDirectories(workDir.resolve("locales"));
         } catch (IOException e) {
-            throw new IOException("Failed to create locales folder", e);
+            throw new I18NException("Failed to create locales folder", e);
         }
 
         load(langCode);
     }
 
-    public void reload(@NotNull String langCode) throws IOException {
+    public void reload(@NotNull String langCode) {
         load(langCode);
         this.cache.clear();
     }
 
-    private void load(String langCode) throws IOException {
+    private void load(String langCode) {
         Path localeFile = this.prepareLocaleFile(langCode.toLowerCase());
         try (StringReader sr = new StringReader(FilesUtil.readFileToString(localeFile))) {
             this.locale.load(sr);
         } catch (IOException e) {
-            throw new IOException(String.format("Failed to load %s", localeFile.getFileName()), e);
+            throw new I18NException(String.format("Failed to load %s", localeFile.getFileName()), e);
         }
     }
 

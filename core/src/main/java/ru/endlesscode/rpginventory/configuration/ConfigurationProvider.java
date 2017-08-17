@@ -28,26 +28,22 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
+@SuppressWarnings("WeakerAccess")
 public class ConfigurationProvider {
 
     private static final String HEADER = "This is RPGInventory configuration blah-blah-blah enjoy new config blah-blah-blah";
 
-    private final Logger log;
     private final HoconConfigurationLoader loader;
     private final ObjectMapper.BoundInstance configMapper;
     private CommentedConfigurationNode root;
     private Configuration configBase;
 
-    public ConfigurationProvider(File configFolder, Logger log) {
-        this(configFolder.toPath(), log);
+    public ConfigurationProvider(File configFolder) {
+        this(configFolder.toPath());
     }
 
-    public ConfigurationProvider(Path configFolder, Logger log) {
-        this.log = log;
-
+    public ConfigurationProvider(Path configFolder) {
         try {
             Files.createDirectory(configFolder);
 
@@ -57,7 +53,7 @@ public class ConfigurationProvider {
             this.reload();
             this.save();
         } catch (ObjectMappingException | IOException e) {
-            throw new RuntimeException("Failed to initialize configuration!", e);
+            throw new ConfigurationException("Failed to initialize configuration!", e);
         }
     }
 
@@ -70,7 +66,7 @@ public class ConfigurationProvider {
             this.root = this.loader.load(ConfigurationOptions.defaults().setHeader(HEADER));
             this.configBase = (Configuration) this.configMapper.populate(this.root.getNode("RPGInventory"));
         } catch (ObjectMappingException | IOException e) {
-            this.log.log(Level.SEVERE, "Failed to reload configuration!", e);
+            throw new ConfigurationException("Failed to reload configuration!", e);
         }
     }
 
@@ -79,7 +75,7 @@ public class ConfigurationProvider {
             this.configMapper.serialize(this.root.getNode("RPGInventory"));
             this.loader.save(this.root);
         } catch (ObjectMappingException | IOException e) {
-            this.log.log(Level.SEVERE, "Failed to save configuration!", e);
+            throw new ConfigurationException("Failed to save configuration!", e);
         }
     }
 

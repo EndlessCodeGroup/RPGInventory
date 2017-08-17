@@ -19,6 +19,7 @@
 package ru.endlesscode.rpginventory.misc;
 
 import org.junit.Test;
+import ru.endlesscode.rpginventory.FileTestBase;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;

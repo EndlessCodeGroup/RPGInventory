@@ -24,7 +24,7 @@ import ru.endlesscode.rpginventory.configuration.Configuration;
 import ru.endlesscode.rpginventory.configuration.ConfigurationProvider;
 import ru.endlesscode.rpginventory.misc.I18NBukkit;
 
-import java.io.IOException;
+import java.util.function.Consumer;
 import java.util.logging.Level;
 
 /**
@@ -37,24 +37,31 @@ public class RPGInventory extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        this.configProvider = new ConfigurationProvider(this.getDataFolder(), this.getLogger());
-        if (!loadLocale()) {
-            this.disable();
-        }
+        loadParts();
     }
 
-    private boolean loadLocale() {
-        try {
+    private boolean loadParts() {
+        return makeSure(() -> {
+            this.configProvider = new ConfigurationProvider(this.getDataFolder());
             this.locale = new I18NBukkit(this);
-        } catch (IOException e) {
-            this.getLogger().log(Level.SEVERE, "Failed to load localization", e);
+        }, (e) -> {
+            this.getLogger().log(Level.SEVERE, "Error on plugin enable.", e);
+            this.disable();
+        });
+    }
+
+    private boolean makeSure(Runnable action, Consumer<RuntimeException> exceptionConsumer) {
+        try {
+            action.run();
+        } catch (RuntimeException e) {
+            exceptionConsumer.accept(e);
             return false;
         }
 
         return true;
     }
 
-    public void disable() {
+    private void disable() {
         this.getServer().getPluginManager().disablePlugin(this);
     }
 

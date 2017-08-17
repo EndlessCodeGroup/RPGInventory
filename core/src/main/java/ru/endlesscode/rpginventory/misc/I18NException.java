@@ -18,25 +18,23 @@
 
 package ru.endlesscode.rpginventory.misc;
 
-import org.jetbrains.annotations.NotNull;
+@SuppressWarnings({"unused", "WeakerAccess"})
+public class I18NException extends RuntimeException {
 
-import java.io.File;
-
-public class SimpleI18N extends I18N {
-
-    SimpleI18N(@NotNull File workDir) {
-        super(workDir, "test");
+    I18NException() {
+        super();
     }
 
-    @NotNull
-    @Override
-    protected String stripColor(String message) {
-        return message;
+    I18NException(String message) {
+        super(message);
     }
 
-    @NotNull
-    @Override
-    protected String translateCodes(String message) {
-        return message;
+    I18NException(String message, Throwable cause) {
+        super(message, cause);
     }
+
+    I18NException(Throwable cause) {
+        super(cause);
+    }
+
 }

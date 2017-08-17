@@ -16,27 +16,25 @@
  * along with RPGInventory.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package ru.endlesscode.rpginventory.misc;
+package ru.endlesscode.rpginventory.configuration;
 
-import org.jetbrains.annotations.NotNull;
+@SuppressWarnings({"unused", "WeakerAccess"})
+public class ConfigurationException extends RuntimeException {
 
-import java.io.File;
-
-public class SimpleI18N extends I18N {
-
-    SimpleI18N(@NotNull File workDir) {
-        super(workDir, "test");
+    ConfigurationException() {
+        super();
     }
 
-    @NotNull
-    @Override
-    protected String stripColor(String message) {
-        return message;
+    ConfigurationException(String message) {
+        super(message);
     }
 
-    @NotNull
-    @Override
-    protected String translateCodes(String message) {
-        return message;
+    ConfigurationException(String message, Throwable cause) {
+        super(message, cause);
     }
+
+    ConfigurationException(Throwable cause) {
+        super(cause);
+    }
+
 }
