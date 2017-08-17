@@ -29,6 +29,7 @@ import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
+@SuppressWarnings("ConstantConditions")
 public class I18NTest extends FileTestBase {
 
     private I18N i18n;
@@ -64,6 +65,11 @@ public class I18NTest extends FileTestBase {
         i18n.reload("TeSt");
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void reload_withNullLangCodeMustThrowException() throws Exception {
+        i18n.reload(null);
+    }
+
     @Test
     public void getMessage_byKey() throws Exception {
         assertEquals("Something value", i18n.getMessage("key"));
@@ -74,6 +80,17 @@ public class I18NTest extends FileTestBase {
     public void getMessage_byKeyWithStripColor() throws Exception {
         i18n.getMessage("key", true);
         verify(i18n).stripColor(anyString());
+    }
+
+    @Test
+    public void getMessage_notExistingKeyMustReturnKey() {
+        String key = "not.existing.key";
+        assertEquals(key, i18n.getMessage(key));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void getMessage_nullKeyMustThrowException() {
+        i18n.getMessage(null);
     }
 
     @Test

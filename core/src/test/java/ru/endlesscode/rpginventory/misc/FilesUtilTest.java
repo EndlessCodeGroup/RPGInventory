@@ -30,6 +30,7 @@ import java.nio.file.Path;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.*;
 
+@SuppressWarnings("ConstantConditions")
 public class FilesUtilTest extends FileTestBase {
 
     @Test
@@ -73,6 +74,16 @@ public class FilesUtilTest extends FileTestBase {
         fail();
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void copyResourceToFile_withNullResourceMustThrowException() throws Exception {
+        this.copyResourceToFile(null, tmpDir.resolve("null"));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void copyResourceToFile_withNullFileMustThrowException() throws Exception {
+        this.copyResourceToFile("resource", null);
+    }
+
     private void copyResourceToFile(String resource, Path targetFile) throws IOException {
         FilesUtil.copyResourceToFile(resource, targetFile);
         assertArrayEquals(
@@ -107,4 +118,8 @@ public class FilesUtilTest extends FileTestBase {
         fail();
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void readFileToString_nullFileMustThrowException() {
+        FilesUtil.readFileToString(null);
+    }
 }
