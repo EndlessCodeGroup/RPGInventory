@@ -1,6 +1,0 @@
-// Apply shared configuration to subprojects
-ext.base = project
-subprojects {
-    description = base.description
-    apply from: base.file('config/config.gradle')
-}

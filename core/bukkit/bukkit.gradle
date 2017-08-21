@@ -1,0 +1,13 @@
+// Idk how to convert it to Kotlin :(
+bukkit {
+    version = "1.11.2"
+
+    meta {
+        authors = ["OsipXD", "EndlessCode Group"]
+    }
+
+    run {
+        eula = true
+        dir = "../../server/"
+    }
+}
