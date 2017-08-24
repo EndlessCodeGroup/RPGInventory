@@ -37,10 +37,10 @@ repositories {
         url 'http://nexus.hc.to/content/repositories/pub_releases/'
     }
 
-    maven {
-        name 'keyle-repo'
-        url 'https://nexus.keyle.de/content/groups/public/'
-    }
+    //maven {
+    //    name 'keyle-repo'
+    //    url 'https://nexus.keyle.de/content/groups/public/'
+    //}
 
     maven {
         name 'placeholderapi'
