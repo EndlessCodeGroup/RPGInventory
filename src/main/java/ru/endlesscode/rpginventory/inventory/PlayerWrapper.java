@@ -217,6 +217,16 @@ public class PlayerWrapper implements InventoryHolder {
         return player;
     }
 
+    public void onFall() {
+        if (isFalling()) {
+            if (this.fallTime++ == 4) {
+                this.startFlight();
+            }
+        } else if (player.getPlayer().getVelocity().getY() < 0) {
+            this.setFalling(true);
+        }
+    }
+
     private void startFlight() {
         Slot elytraSlot = SlotManager.getSlotManager().getElytraSlot();
         ItemStack itemStack = this.inventory.getItem(elytraSlot.getSlotId());
@@ -228,17 +238,6 @@ public class PlayerWrapper implements InventoryHolder {
 
             this.flying = true;
         }
-    }
-
-    private void stopFlight() {
-        if (savedChestplate != null) {
-            Player player = this.player.getPlayer();
-            Slot elytraSlot = SlotManager.getSlotManager().getElytraSlot();
-            this.inventory.setItem(elytraSlot.getSlotId(), player.getEquipment().getChestplate());
-            player.getEquipment().setChestplate(this.savedChestplate);
-            this.savedChestplate = null;
-        }
-        this.flying = false;
     }
 
     public boolean isFalling() {
@@ -254,10 +253,15 @@ public class PlayerWrapper implements InventoryHolder {
         this.falling = falling;
     }
 
-    public void onFall() {
-        if (this.fallTime++ == 4) {
-            this.startFlight();
+    private void stopFlight() {
+        if (savedChestplate != null) {
+            Player player = this.player.getPlayer();
+            Slot elytraSlot = SlotManager.getSlotManager().getElytraSlot();
+            this.inventory.setItem(elytraSlot.getSlotId(), player.getEquipment().getChestplate());
+            player.getEquipment().setChestplate(this.savedChestplate);
+            this.savedChestplate = null;
         }
+        this.flying = false;
     }
 
     public boolean isFlying() {

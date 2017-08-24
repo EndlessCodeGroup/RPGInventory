@@ -33,6 +33,8 @@ import ru.endlesscode.rpginventory.inventory.PlayerWrapper;
  * All rights reserved 2014 - 2016 © «EndlessCode Group»
  */
 public class ElytraListener implements Listener {
+    private static final double MIN_FLIGHT_SPEED = 0.11;
+
     @EventHandler
     public void onPlayerFall(PlayerMoveEvent event) {
         Player player = event.getPlayer();
@@ -41,14 +43,24 @@ public class ElytraListener implements Listener {
         }
 
         PlayerWrapper playerWrapper = InventoryManager.get(player);
-        if (player.getLocation().getBlock().getRelative(BlockFace.DOWN).getType() == Material.AIR) {
-            if (!playerWrapper.isFalling() && event.getFrom().getY() > event.getTo().getY()) {
-                playerWrapper.setFalling(true);
-            } else if (playerWrapper.isFalling()) {
+        boolean endFalling = false;
+        if (!player.isOnGround()) {
+            if (playerIsOnAir(player)) {
                 playerWrapper.onFall();
+            } else if (player.getVelocity().length() < MIN_FLIGHT_SPEED) {
+                endFalling = true;
             }
         } else if (playerWrapper.isFalling()) {
+            endFalling = true;
+        }
+
+        if (endFalling) {
             playerWrapper.setFalling(false);
         }
+    }
+
+    private boolean playerIsOnAir(Player player) {
+        Material blockUnderPlayer = player.getLocation().getBlock().getRelative(BlockFace.DOWN).getType();
+        return blockUnderPlayer == Material.AIR;
     }
 }
