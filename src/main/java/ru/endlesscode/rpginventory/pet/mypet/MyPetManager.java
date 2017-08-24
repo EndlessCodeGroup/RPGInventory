@@ -25,6 +25,7 @@ import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.StoredMyPet;
 import de.Keyle.MyPet.api.event.MyPetCallEvent;
 import de.Keyle.MyPet.api.event.MyPetCreateEvent;
+import de.Keyle.MyPet.api.event.MyPetRemoveEvent;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.repository.PlayerManager;
 import de.Keyle.MyPet.api.repository.RepositoryCallback;
@@ -36,7 +37,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -46,6 +46,7 @@ import org.jetbrains.annotations.Nullable;
 import ru.endlesscode.rpginventory.RPGInventory;
 import ru.endlesscode.rpginventory.event.PetEquipEvent;
 import ru.endlesscode.rpginventory.event.PetUnequipEvent;
+import ru.endlesscode.rpginventory.event.PlayerInventoryLoadEvent;
 import ru.endlesscode.rpginventory.inventory.ActionType;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
 import ru.endlesscode.rpginventory.inventory.slot.Slot;
@@ -79,18 +80,12 @@ public class MyPetManager implements Listener {
     }
 
     @EventHandler
-    public void onPlayerJoin(PlayerJoinEvent event) {
-        final Player player = event.getPlayer();
-
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                PlayerManager playerManager = MyPetApi.getPlayerManager();
-                if (playerManager.isMyPetPlayer(player)) {
-                    syncPlayer(playerManager.getMyPetPlayer(player));
-                }
-            }
-        }.runTaskLater(RPGInventory.getInstance(), 2);
+    public void onPlayerInventoryLoaded(PlayerInventoryLoadEvent.Post event) {
+        Player player = event.getPlayer();
+        PlayerManager playerManager = MyPetApi.getPlayerManager();
+        if (playerManager.isMyPetPlayer(player)) {
+            syncPlayer(playerManager.getMyPetPlayer(player));
+        }
     }
 
     private static void syncPlayer(MyPetPlayer mpPlayer) {
@@ -118,7 +113,7 @@ public class MyPetManager implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onMyPetCreate(MyPetCreateEvent event) {
         Player player = event.getOwner().getPlayer();
         if (!InventoryManager.playerIsLoaded(player)) {
@@ -127,7 +122,7 @@ public class MyPetManager implements Listener {
 
         ItemStack petItem = new ItemStack(Material.MONSTER_EGG);
         ItemMeta meta = petItem.getItemMeta();
-        meta.setDisplayName("MyPet Egg: " + event.getMyPet().getPetName());
+        meta.setDisplayName(RPGInventory.getLanguage().getMessage("mypet.egg", event.getMyPet().getPetName()));
         petItem.setItemMeta(meta);
         petItem = ItemUtils.setTag(petItem, MYPET_TAG, event.getMyPet().getUUID().toString());
 
@@ -143,7 +138,7 @@ public class MyPetManager implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onMyPetCall(MyPetCallEvent event) {
         Player player = event.getOwner().getPlayer();
         if (!InventoryManager.playerIsLoaded(player)) {
@@ -151,9 +146,7 @@ public class MyPetManager implements Listener {
         }
 
         Inventory inventory = InventoryManager.get(player).getInventory();
-        Slot petSlot = getMyPetSlot();
-
-        ItemStack currentPet = inventory.getItem(petSlot.getSlotId());
+        ItemStack currentPet = inventory.getItem(getMyPetSlot().getSlotId());
         boolean keepPet = true;
 
         if (!isMyPetItem(currentPet)) {
@@ -171,11 +164,23 @@ public class MyPetManager implements Listener {
         }
     }
 
-    public static boolean validatePet(Player player, InventoryAction action, @Nullable ItemStack currentItem, @NotNull ItemStack cursor) {
-        ActionType actionType = ActionType.getTypeOfAction(action);
+    @EventHandler(ignoreCancelled = true)
+    public void onMyPetRemove(MyPetRemoveEvent event) {
+        Player player = event.getOwner().getPlayer();
+        if (!InventoryManager.playerIsLoaded(player)) {
+            return;
+        }
 
-        return !(!ItemUtils.isEmpty(currentItem) && (actionType == ActionType.GET || action == InventoryAction.SWAP_WITH_CURSOR || actionType == ActionType.DROP))
-                || swapMyPets(player, isMyPetItem(currentItem), cursor);
+        Inventory inventory = InventoryManager.get(player).getInventory();
+        Slot petSlot = getMyPetSlot();
+        ItemStack currentPetItem = inventory.getItem(petSlot.getSlotId());
+
+        if (isMyPetItem(currentPetItem)) {
+            UUID petUUID = UUID.fromString(ItemUtils.getTag(currentPetItem, MYPET_TAG));
+            if (petUUID.equals(event.getMyPet().getUUID())) {
+                inventory.setItem(petSlot.getSlotId(), petSlot.getCup());
+            }
+        }
     }
 
     @EventHandler
@@ -219,6 +224,16 @@ public class MyPetManager implements Listener {
         }
 
         return null;
+    }
+
+    public static boolean validatePet(Player player, InventoryAction action, @Nullable ItemStack currentItem, @NotNull ItemStack cursor) {
+        ActionType actionType = ActionType.getTypeOfAction(action);
+        boolean isAllowedAction = actionType == ActionType.GET ||
+                action == InventoryAction.SWAP_WITH_CURSOR ||
+                actionType == ActionType.DROP;
+
+        return !(!ItemUtils.isEmpty(currentItem) && isAllowedAction)
+                || swapMyPets(player, isMyPetItem(currentItem), cursor);
     }
 
     private static boolean swapMyPets(final Player player, boolean hasPet, @NotNull ItemStack newPet) {
@@ -296,8 +311,11 @@ public class MyPetManager implements Listener {
                 String worldName = player.getWorld().getName();
                 user.setMyPetForWorldGroup(WorldGroup.getGroupByWorld(worldName).getName(), storedMyPet.getUUID());
                 Optional<MyPet> pet = MyPetApi.getMyPetManager().activateMyPet(storedMyPet);
-                if (pet.isPresent() && pet.get().wantsToRespawn()) {
-                    pet.get().createEntity();
+                if (pet.isPresent()) {
+                    MyPet myPet = pet.get();
+                    if (myPet.getStatus() != MyPet.PetState.Dead) {
+                        pet.get().setStatus(MyPet.PetState.Here);
+                    }
                 }
 
                 if (savePet) {

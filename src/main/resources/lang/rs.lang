@@ -42,6 +42,7 @@ pet.cooldown:  &a&l({0}s)
 pet.food.value: &aPunjenje: {0} HP
 pet.role.companion: Pratilac
 pet.role.mount: Mount
+mypet.egg: MyPet Egg: {0}
 
 item.level: &fPotrebno {0} level
 item.class: &fSamo za &b{0}

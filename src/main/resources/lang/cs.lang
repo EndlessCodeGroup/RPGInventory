@@ -42,6 +42,7 @@ pet.cooldown:  &a&l&o({0}s)
 pet.food.value: &aObnovi: {0} Zivota
 pet.role.companion: Spolecnik
 pet.role.mount: Jezdec
+mypet.egg: MyPet Egg: {0}
 
 item.level: &fVyzaduje {0} level
 item.class: &fJen pro &b{0}

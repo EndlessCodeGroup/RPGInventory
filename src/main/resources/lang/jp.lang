@@ -42,6 +42,7 @@ pet.cooldown:  &a&l&o({0}s)
 pet.food.value: &a回復: {0} HP
 pet.role.companion: ヘルパー
 pet.role.mount: 搭乗
+mypet.egg: MyPet Egg: {0}
 
 item.level: &f{0}ほどのレベルが必要になります
 item.class: &fそれは&bクラス{0}のみ使用可能です

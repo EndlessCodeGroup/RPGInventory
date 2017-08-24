@@ -26,7 +26,10 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 import java.text.MessageFormat;
-import java.util.*;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -153,14 +156,14 @@ public class FileLanguage {
     }
 
     public String getMessage(String key, boolean stripColor) {
-        return this.getMesage(key, stripColor, (Object[]) null);
+        return this.getMessage(key, stripColor, (Object[]) null);
     }
 
     public String getMessage(String key, Object... args) {
-        return this.getMesage(key, false, args);
+        return this.getMessage(key, false, args);
     }
 
-    public String getMesage(String key, boolean stripColor, Object... args) {
+    public String getMessage(String key, boolean stripColor, Object... args) {
         if (!this.messageCache.containsKey(key)) {
             this.messageCache.put(key, new MessageFormat(
                     ChatColor.translateAlternateColorCodes(

@@ -41,6 +41,7 @@ pet.cooldown:  &a&l&o({0}с)
 pet.food.value: &aВосстанавливает: {0} HP
 pet.role.companion: Компаньон
 pet.role.mount: Ездовое животное
+mypet.egg: Яйцо призыва: {0}
 
 item.level: &fТребуется {0} уровень
 item.class: &fТолько для &b{0}

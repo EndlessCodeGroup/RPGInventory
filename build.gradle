@@ -38,6 +38,11 @@ repositories {
     }
 
     maven {
+        name 'keyle-repo'
+        url 'https://nexus.keyle.de/content/groups/public/'
+    }
+
+    maven {
         name 'placeholderapi'
         url 'http://repo.extendedclip.com/content/repositories/placeholderapi/'
     }
@@ -52,7 +57,7 @@ dependencies {
     compileOnly group: 'me.clip', name: 'placeholderapi', version: '2.6.0'
     compileOnly group: 'me.robin', name: 'BattleLevelsAPI', version: '6.9.1'
     compileOnly group: 'com.herocraftonline', name: 'Heroes', version: '1.5.5.7'
-    compileOnly group: 'de.keyle', name: 'MyPet', version: '2.3.0'
+    compileOnly group: 'de.keyle', name: 'MyPet', version: '2.3.2-SNAPSHOT'
     compileOnly group: 'org.tobiyas', name: 'RacesAndClasses', version: '1.2.0'
     compileOnly group: 'me.baks', name: 'RPGPlayerLeveling', version: '3.3.1'
     compileOnly group: 'com.sucy', name: 'SkillAPI', version: '3.90'

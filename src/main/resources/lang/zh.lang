@@ -42,6 +42,7 @@ pet.cooldown:  &a&l&o({0}s)
 pet.food.value: &a恢复: {0} HP
 pet.role.companion: 同伴
 pet.role.mount: 坐骑
+mypet.egg: MyPet Egg: {0}
 
 item.level: &f需要 {0} 级
 item.class: &f职业限制: &b{0}

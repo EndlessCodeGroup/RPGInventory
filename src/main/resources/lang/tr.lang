@@ -42,6 +42,7 @@ pet.cooldown:  &a&l&o({0}s)
 pet.food.value: &aYenileme: {0} Can
 pet.role.companion: Yoldaş
 pet.role.mount: Binek
+mypet.egg: MyPet Egg: {0}
 
 item.level: &f{0} Seviye gerektirir!
 item.class: &b{0} &fIrkına özel!
