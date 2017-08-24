@@ -47,7 +47,7 @@ dependencies {
     compileOnly (group: 'net.milkbowl.vault', name: 'VaultAPI', version: '1.6') {
         exclude group: 'org.bukkit'
     }
-    compileOnly group: 'com.comphenix.protocol', name: 'ProtocolLib-API', version: '4.2.1'
+    compileOnly group: 'com.comphenix.protocol', name: 'ProtocolLib-API', version: '4.4.0-SNAPSHOT'
     compileOnly group: 'org.jetbrains', name: 'annotations', version: '15.0'
     compileOnly group: 'me.clip', name: 'placeholderapi', version: '2.6.0'
     compileOnly group: 'me.robin', name: 'BattleLevelsAPI', version: '6.9.1'

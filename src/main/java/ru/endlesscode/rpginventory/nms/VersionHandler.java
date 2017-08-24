@@ -26,6 +26,7 @@ import org.bukkit.Bukkit;
  * All rights reserved 2014 - 2016 © «EndlessCode Group»
  */
 public class VersionHandler {
+
     // 1.9.x
     public static boolean is1_9() {
         return Bukkit.getBukkitVersion().contains("1.9");
@@ -41,7 +42,17 @@ public class VersionHandler {
         return Bukkit.getBukkitVersion().contains("1.11");
     }
 
+    // 1.12.x
+    private static boolean is1_12() {
+        return Bukkit.getBukkitVersion().contains("1.12");
+    }
+
     public static boolean checkVersion() {
-        return is1_9() || is1_10() || is1_11();
+        return is1_9() || is1_10() || is1_11() || is1_12();
+
+    }
+
+    public static boolean isUpper1_12() {
+        return !is1_9() && !is1_10() && !is1_11();
     }
 }
