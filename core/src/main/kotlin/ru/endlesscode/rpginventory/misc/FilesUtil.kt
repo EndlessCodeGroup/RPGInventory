@@ -30,7 +30,7 @@ object FilesUtil {
     @JvmOverloads
     fun readFileToString(file: Path, charset: Charset = StandardCharsets.UTF_8): String {
         try {
-            return String(Files.readAllBytes(file), charset)
+            return Files.readAllBytes(file).toString(charset)
         } catch (e: IOException) {
             throw IllegalArgumentException("Given file \"${file.toAbsolutePath()}\" can't be read", e)
         }

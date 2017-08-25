@@ -16,27 +16,29 @@
  * along with RPGInventory.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package ru.endlesscode.rpginventory.misc;
+package ru.endlesscode.rpginventory
 
-import org.jetbrains.annotations.NotNull;
+import org.junit.After
+import org.junit.Before
+import java.nio.file.Files
+import java.nio.file.Path
+import java.nio.file.Paths
+import java.util.*
 
-import java.io.File;
+open class FileTestBase {
+    protected lateinit var testDir: Path
+    protected lateinit var tmpDir: Path
 
-public class SimpleI18N extends I18N {
-
-    SimpleI18N(@NotNull File workDir) {
-        super(workDir, "test");
+    @Before
+    open fun setUp() {
+        this.testDir = Files.createDirectories(Paths.get("testFiles"))
+        this.tmpDir = Files.createTempDirectory(testDir, null)
     }
 
-    @NotNull
-    @Override
-    protected String stripColor(String message) {
-        return message;
-    }
-
-    @NotNull
-    @Override
-    protected String translateCodes(String message) {
-        return message;
+    @After
+    fun tearDown() {
+        Files.walk(tmpDir)
+                .sorted(Comparator.reverseOrder())
+                .forEach { Files.delete(it) }
     }
 }

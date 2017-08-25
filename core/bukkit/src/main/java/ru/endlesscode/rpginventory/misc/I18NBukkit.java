@@ -30,13 +30,13 @@ public class I18NBukkit extends I18N {
 
     @NotNull
     @Override
-    protected String stripColor(String message) {
+    protected String stripColor(@NotNull String message) {
         return ChatColor.stripColor(message);
     }
 
     @NotNull
     @Override
-    protected String translateCodes(String message) {
+    protected String translateCodes(@NotNull String message) {
         return ChatColor.translateAlternateColorCodes('&', message);
     }
 }

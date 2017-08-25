@@ -57,7 +57,6 @@ abstract class I18N protected constructor(workDir: Path, langCode: String) {
         } catch (e: IOException) {
             throw I18NException("Failed to load ${localeFile.fileName}", e)
         }
-
     }
 
     private fun prepareLocaleFile(langCode: String): Path {
@@ -69,9 +68,7 @@ abstract class I18N protected constructor(workDir: Path, langCode: String) {
         return localeFile
     }
 
-    fun getMessage(key: String, vararg args: Any): String {
-        return getMessage(key, false, *args)
-    }
+    fun getMessage(key: String, vararg args: Any) = getMessage(key, false, *args)
 
     @JvmOverloads
     fun getMessage(key: String, stripColor: Boolean = false, vararg args: Any = emptyArray()): String {
