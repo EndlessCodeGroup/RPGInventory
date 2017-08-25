@@ -16,34 +16,41 @@
  * along with RPGInventory.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package ru.endlesscode.rpginventory.configuration.part;
+@file:Suppress("unused")
 
-import ninja.leaping.configurate.objectmapping.Setting;
-import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
+package ru.endlesscode.rpginventory.configuration
 
-@SuppressWarnings("unused")
+import ninja.leaping.configurate.objectmapping.Setting
+import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable
+
+class Configuration {
+    @Setting(comment = "Make sure that you have correctly configured the \"resourcePack\" section before enabling the plugin.")
+    val isEnabled = false
+
+    @Setting(value = "updates")
+    val updatesConfiguration = UpdatesConfiguration()
+
+    @Setting(value = "resourcePack")
+    val resourcePackConfiguration = ResourcePackConfiguration()
+
+    @Setting(comment = "Default locale for use")
+    val locale = "en_us"
+}
+
 @ConfigSerializable
-public class ResourcePackConfiguration {
+class UpdatesConfiguration {
+    @Setting
+    var isCheckUpdates = false
 
+    @Setting
+    var isDownloadUpdates = false
+}
+
+@ConfigSerializable
+class ResourcePackConfiguration {
     @Setting(comment = "TODO: Write useful comment")
-    private String sha = "unknown";
+    var sha = "unknown"
 
     @Setting(comment = "TODO: Write useless comment")
-    private String url = "unknown";
-
-    public String getSha() {
-        return sha;
-    }
-
-    public void setSha(String sha) {
-        this.sha = sha;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
+    var url = "unknown"
 }

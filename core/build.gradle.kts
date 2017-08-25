@@ -3,7 +3,7 @@ dependencies {
 }
 
 // Add core as dependency to all subprojects
-var core = project
+var core: Project = project
 subprojects {
     dependencies {
         compile(core)
