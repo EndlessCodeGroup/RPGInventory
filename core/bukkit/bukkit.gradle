@@ -3,6 +3,7 @@ bukkit {
     version = "1.11.2"
 
     meta {
+        main = "ru.endlesscode.rpginventory.RpgInventory"
         authors = ["OsipXD", "EndlessCode Group"]
     }
 

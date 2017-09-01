@@ -20,11 +20,11 @@ package ru.endlesscode.rpginventory.misc;
 
 import org.bukkit.ChatColor;
 import org.jetbrains.annotations.NotNull;
-import ru.endlesscode.rpginventory.RPGInventory;
+import ru.endlesscode.rpginventory.RpgInventory;
 
 public class I18NBukkit extends I18N {
 
-    public I18NBukkit(RPGInventory instance) {
+    public I18NBukkit(RpgInventory instance) {
         super(instance.getDataFolder(), instance.getConfiguration().getLocale());
     }
 

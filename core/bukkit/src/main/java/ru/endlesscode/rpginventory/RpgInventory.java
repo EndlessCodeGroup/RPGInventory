@@ -30,7 +30,7 @@ import java.util.logging.Level;
 /**
  * This class is entry point to plugin.
  */
-public class RPGInventory extends JavaPlugin {
+public class RpgInventory extends JavaPlugin {
 
     private ConfigurationProvider configProvider;
     private I18NBukkit locale;
