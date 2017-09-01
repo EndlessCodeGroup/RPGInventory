@@ -7,9 +7,20 @@ plugins {
 
 applyFrom("bukkit.gradle")
 
+// Runtime dependencies will be added into jar
+// Here we can remove not needed dependencies
+configurations {
+    "runtime" {
+        // Guava already in Bukkit
+        exclude(module = "guava")
+        // Better to use something other plugin that provides kotlin-runtime
+        exclude(module = "kotlin-stdlib-jre8")
+    }
+}
+
 val base: Project by extra
 tasks {
-    "shadowJar" (ShadowJar::class) {
+    val shadowJar = "shadowJar" (ShadowJar::class) {
         // Understandable filename
         baseName = "${base.name}-${project.name}"
         classifier = null
@@ -18,12 +29,7 @@ tasks {
         relocate("com", "ru.endlesscode.rpginventory.shaded.com")
         relocate("ninja", "ru.endlesscode.rpginventory.shaded.ninja")
     }
-}
 
-dependencies {
-    // Runtime dependencies will be bundled into the output jar
-    runtime(group = "ninja.leaping.configurate", name = "configurate-hocon", version = "3.3") {
-        // Guava already in Bukkit
-        exclude(group = "com.google.guava")
-    }
+    "jar"().enabled = false
+    "assemble"().dependsOn(shadowJar)
 }

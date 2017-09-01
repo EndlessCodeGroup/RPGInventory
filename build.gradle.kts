@@ -1,25 +1,25 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-val kotlinVersion: String by extra
-buildscript {
-    var kotlinVersion: String by extra
-    kotlinVersion = "1.1.3-2"
-    repositories { jcenter() }
-    dependencies { classpath(kotlinModule("gradle-plugin", kotlinVersion)) }
-}
+plugins { kotlin("jvm", "1.1.4-3") }
 
-
-val base: Project = project
+val kotlinVersion = "1.1.4-3"
+val root: Project = project
+val mockitoVersion by project
 subprojects {
     apply { plugin("kotlin") }
 
     // Apply shared configuration to subprojects
-    extra.set("base", base)
-    description = base.description
-    applyFrom(base.file("config/config.gradle"))
+    extra.set("base", root)
+    description = root.description
+    applyFrom(root.file("config/config.gradle"))
 
+    // Common dependencies
     dependencies {
-        compile(kotlinModule("stdlib-jre8", "1.1.3-2"))
+        // I think Kotlin runtime must be "provided" by other plugin
+        implementation(kotlin("stdlib-jre8", kotlinVersion))
+        testImplementation(kotlin("test-junit", kotlinVersion))
+        testImplementation(group = "org.mockito", name = "mockito-core", version = "$mockitoVersion")
+        testImplementation(group = "com.nhaarman", name = "mockito-kotlin-kt1.1", version = "1.5.+")
     }
 
     // Configure Kotlin
@@ -27,5 +27,12 @@ subprojects {
         kotlinOptions {
             jvmTarget = "1.8"
         }
+    }
+}
+
+// Gradle version used for generating the Gradle wrapper
+tasks {
+    "wrapper" (Wrapper::class) {
+        gradleVersion = "${project.findProperty("gradleVersion")}"
     }
 }
