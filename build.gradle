@@ -62,7 +62,7 @@ dependencies {
     compileOnly group: 'me.baks', name: 'RPGPlayerLeveling', version: '3.3.1'
     compileOnly group: 'com.sucy', name: 'SkillAPI', version: '3.90'
     compileOnly group: 'me.leothepro555', name: 'Skills'
-    testCompile group: 'junit', name: 'junit', version: '4.12'
+    testImplementation group: 'junit', name: 'junit', version: '4.12'
 }
 
 jacocoTestReport {
