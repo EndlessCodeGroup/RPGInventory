@@ -217,7 +217,7 @@ public class MyPetManager implements Listener {
 
     @Nullable
     private static Slot getMyPetSlot() {
-        for (Slot slot : SlotManager.getSlotManager().getSlots()) {
+        for (Slot slot : SlotManager.instance().getSlots()) {
             if (slot.getSlotType() == Slot.SlotType.MYPET) {
                 return slot;
             }

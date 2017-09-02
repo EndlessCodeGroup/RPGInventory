@@ -81,13 +81,13 @@ public enum ArmorType {
     public static Slot getArmorSlotById(int id) {
         switch (id) {
             case 5:
-                return SlotManager.getSlotManager().getSlot("helmet");
+                return SlotManager.instance().getSlot("helmet");
             case 6:
-                return SlotManager.getSlotManager().getSlot("chestplate");
+                return SlotManager.instance().getSlot("chestplate");
             case 7:
-                return SlotManager.getSlotManager().getSlot("leggings");
+                return SlotManager.instance().getSlot("leggings");
             case 8:
-                return SlotManager.getSlotManager().getSlot("boots");
+                return SlotManager.instance().getSlot("boots");
             default:
                 return null;
         }
@@ -113,16 +113,16 @@ public enum ArmorType {
         Slot temp = null;
         switch (this) {
             case HELMET:
-                temp = SlotManager.getSlotManager().getSlot("helmet");
+                temp = SlotManager.instance().getSlot("helmet");
                 break;
             case CHESTPLATE:
-                temp = SlotManager.getSlotManager().getSlot("chestplate");
+                temp = SlotManager.instance().getSlot("chestplate");
                 break;
             case LEGGINGS:
-                temp = SlotManager.getSlotManager().getSlot("leggings");
+                temp = SlotManager.instance().getSlot("leggings");
                 break;
             case BOOTS:
-                temp = SlotManager.getSlotManager().getSlot("boots");
+                temp = SlotManager.instance().getSlot("boots");
         }
 
         return temp == null ? -1 : temp.getSlotId();

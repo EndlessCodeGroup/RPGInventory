@@ -242,7 +242,7 @@ public class InventoryManager {
     public static void syncArmor(PlayerWrapper playerWrapper) {
         Player player = (Player) playerWrapper.getPlayer();
         Inventory inventory = playerWrapper.getInventory();
-        SlotManager sm = SlotManager.getSlotManager();
+        SlotManager sm = SlotManager.instance();
         if (ArmorType.HELMET.getSlot() != -1) {
             ItemStack helmet = player.getEquipment().getHelmet();
             Slot helmetSlot = sm.getSlot(ArmorType.HELMET.getSlot(), InventoryType.SlotType.CONTAINER);
@@ -275,14 +275,14 @@ public class InventoryManager {
 
     public static void syncQuickSlots(PlayerWrapper playerWrapper) {
         Player player = (Player) playerWrapper.getPlayer();
-        for (Slot quickSlot : SlotManager.getSlotManager().getQuickSlots()) {
+        for (Slot quickSlot : SlotManager.instance().getQuickSlots()) {
             playerWrapper.getInventory().setItem(quickSlot.getSlotId(), player.getInventory().getItem(quickSlot.getQuickSlot()));
         }
     }
 
     public static void syncInfoSlots(PlayerWrapper playerWrapper) {
         final Player player = (Player) playerWrapper.getPlayer();
-        for (Slot infoSlot : SlotManager.getSlotManager().getInfoSlots()) {
+        for (Slot infoSlot : SlotManager.instance().getInfoSlots()) {
             ItemStack cup = infoSlot.getCup();
             ItemMeta meta = cup.getItemMeta();
             List<String> lore = meta.getLore();
@@ -301,7 +301,7 @@ public class InventoryManager {
     }
 
     public static void syncShieldSlot(PlayerWrapper playerWrapper) {
-        Slot slot = SlotManager.getSlotManager().getShieldSlot();
+        Slot slot = SlotManager.instance().getShieldSlot();
         if (slot == null) {
             return;
         }
@@ -383,7 +383,7 @@ public class InventoryManager {
     @SuppressWarnings("WeakerAccess")
     public static void lockEmptySlots(@NotNull Inventory inventory) {
         for (int i = 0; i < inventory.getSize(); i++) {
-            Slot slot = SlotManager.getSlotManager().getSlot(i, InventoryType.SlotType.CONTAINER);
+            Slot slot = SlotManager.instance().getSlot(i, InventoryType.SlotType.CONTAINER);
             if (slot == null) {
                 inventory.setItem(i, fillSlot);
             } else if (ItemUtils.isEmpty(inventory.getItem(i))) {
@@ -396,7 +396,7 @@ public class InventoryManager {
         Inventory inventory = INVENTORIES.get(player.getUniqueId()).getInventory();
 
         for (int i = 0; i < inventory.getSize(); i++) {
-            Slot slot = SlotManager.getSlotManager().getSlot(i, InventoryType.SlotType.CONTAINER);
+            Slot slot = SlotManager.instance().getSlot(i, InventoryType.SlotType.CONTAINER);
             if (slot == null || slot.isCup(inventory.getItem(i))) {
                 inventory.setItem(i, null);
             }
@@ -409,7 +409,7 @@ public class InventoryManager {
 
     @Nullable
     public static Slot getQuickSlot(int slot) {
-        for (Slot quickSlot : SlotManager.getSlotManager().getQuickSlots()) {
+        for (Slot quickSlot : SlotManager.instance().getQuickSlots()) {
             if (slot == quickSlot.getQuickSlot()) {
                 return quickSlot;
             }
@@ -419,7 +419,7 @@ public class InventoryManager {
     }
 
     static void lockQuickSlots(@NotNull Player player) {
-        for (Slot quickSlot : SlotManager.getSlotManager().getQuickSlots()) {
+        for (Slot quickSlot : SlotManager.instance().getQuickSlots()) {
             int slotId = quickSlot.getQuickSlot();
 
             if (ItemUtils.isEmpty(player.getInventory().getItem(slotId))) {
@@ -435,7 +435,7 @@ public class InventoryManager {
     }
 
     static void unlockQuickSlots(@NotNull Player player) {
-        for (Slot quickSlot : SlotManager.getSlotManager().getQuickSlots()) {
+        for (Slot quickSlot : SlotManager.instance().getQuickSlots()) {
             int slotId = quickSlot.getQuickSlot();
             if (quickSlot.isCup(player.getInventory().getItem(slotId))) {
                 player.getInventory().setItem(slotId, null);
@@ -544,7 +544,7 @@ public class InventoryManager {
 
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public static boolean isQuickEmptySlot(ItemStack item) {
-        for (Slot quickSlot : SlotManager.getSlotManager().getQuickSlots()) {
+        for (Slot quickSlot : SlotManager.instance().getQuickSlots()) {
             if (quickSlot.isCup(item)) {
                 return true;
             }
@@ -558,7 +558,7 @@ public class InventoryManager {
     }
 
     public static boolean isEmptySlot(ItemStack item) {
-        for (Slot slot : SlotManager.getSlotManager().getSlots()) {
+        for (Slot slot : SlotManager.instance().getSlots()) {
             if (slot.isCup(item)) {
                 return true;
             }

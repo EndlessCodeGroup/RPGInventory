@@ -67,7 +67,7 @@ public class PetManager {
 
     public static boolean init(RPGInventory instance) {
         //noinspection ConstantConditions
-        SLOT_PET = SlotManager.getSlotManager().getPetSlot() != null ? SlotManager.getSlotManager().getPetSlot().getSlotId() : -1;
+        SLOT_PET = SlotManager.instance().getPetSlot() != null ? SlotManager.instance().getPetSlot().getSlotId() : -1;
 
         if (!isEnabled()) {
             return false;

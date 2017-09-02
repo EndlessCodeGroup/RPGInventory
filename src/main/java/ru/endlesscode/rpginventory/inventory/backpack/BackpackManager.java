@@ -88,7 +88,7 @@ public class BackpackManager {
     }
 
     private static boolean isEnabled() {
-        return SlotManager.getSlotManager().getBackpackSlot() != null;
+        return SlotManager.instance().getBackpackSlot() != null;
     }
 
     public static List<String> getBackpackList() {
@@ -198,7 +198,7 @@ public class BackpackManager {
 
         // Check RPGInventory slots
         inventory = InventoryManager.get(player).getInventory();
-        Slot backpackSlot = SlotManager.getSlotManager().getBackpackSlot();
+        Slot backpackSlot = SlotManager.instance().getBackpackSlot();
         if (BackpackManager.isBackpack(inventory.getItem(backpackSlot.getSlotId())) && !backpackSlot.isQuick()) {
             count++;
         }

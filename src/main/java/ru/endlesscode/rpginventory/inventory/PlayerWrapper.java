@@ -228,7 +228,7 @@ public class PlayerWrapper implements InventoryHolder {
     }
 
     private void startFlight() {
-        Slot elytraSlot = SlotManager.getSlotManager().getElytraSlot();
+        Slot elytraSlot = SlotManager.instance().getElytraSlot();
         ItemStack itemStack = this.inventory.getItem(elytraSlot.getSlotId());
         if (!elytraSlot.isCup(itemStack)) {
             Player player = this.player.getPlayer();
@@ -260,7 +260,7 @@ public class PlayerWrapper implements InventoryHolder {
     private void stopFlight() {
         if (savedChestplate != null) {
             Player player = this.player.getPlayer();
-            Slot elytraSlot = SlotManager.getSlotManager().getElytraSlot();
+            Slot elytraSlot = SlotManager.instance().getElytraSlot();
             this.inventory.setItem(elytraSlot.getSlotId(), player.getEquipment().getChestplate());
             player.getEquipment().setChestplate(this.savedChestplate);
             this.savedChestplate = null;

@@ -44,7 +44,7 @@ public class ConfigUpdater {
                 config.set("slots.crafting", null);
                 config.set("slots.enabled", true);
                 config.set("slots.level.spend", false);
-                SlotManager.getSlotManager().saveDefaults();
+                SlotManager.instance().saveDefaults();
             case 101:
             case 102:
             case 103:

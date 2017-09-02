@@ -82,7 +82,7 @@ public class SlotManager {
         return true;
     }
 
-    public static SlotManager getSlotManager() {
+    public static SlotManager instance() {
         if (slotManager == null) {
             slotManager = new SlotManager();
         }

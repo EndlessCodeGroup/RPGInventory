@@ -63,7 +63,7 @@ public class InventoryAPI {
         }
 
         Inventory inventory = InventoryManager.get(player).getInventory();
-        for (Slot slot : SlotManager.getSlotManager().getPassiveSlots()) {
+        for (Slot slot : SlotManager.instance().getPassiveSlots()) {
             for (int slotId : slot.getSlotIds()) {
                 ItemStack item = inventory.getItem(slotId);
                 if (!ItemUtils.isEmpty(item) && !InventoryManager.isEmptySlot(item)) {
@@ -90,7 +90,7 @@ public class InventoryAPI {
         }
 
         Inventory inventory = InventoryManager.get(player).getInventory();
-        for (Slot slot : SlotManager.getSlotManager().getActiveSlots()) {
+        for (Slot slot : SlotManager.instance().getActiveSlots()) {
             ItemStack item = inventory.getItem(slot.getSlotId());
 
             if (!ItemUtils.isEmpty(item) && !InventoryManager.isQuickEmptySlot(item)) {

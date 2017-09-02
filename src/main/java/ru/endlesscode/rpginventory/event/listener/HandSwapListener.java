@@ -42,8 +42,8 @@ public class HandSwapListener implements Listener {
     public void onHandSwap(PlayerSwapHandItemsEvent event) {
         Player player = event.getPlayer();
 
-        Slot offHandSlot = SlotManager.getSlotManager().getShieldSlot();
-        Slot mainHandSlot = SlotManager.getSlotManager().getSlot(player.getInventory().getHeldItemSlot(), InventoryType.SlotType.QUICKBAR);
+        Slot offHandSlot = SlotManager.instance().getShieldSlot();
+        Slot mainHandSlot = SlotManager.instance().getSlot(player.getInventory().getHeldItemSlot(), InventoryType.SlotType.QUICKBAR);
         ItemStack newOffHandItem = event.getOffHandItem();
         ItemStack newMainHandItem = event.getMainHandItem();
 

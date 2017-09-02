@@ -36,6 +36,7 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 import ru.endlesscode.rpginventory.RPGInventory;
@@ -67,7 +68,8 @@ public class ItemListener implements Listener {
         try {
             if (event.getEntityType() == EntityType.PLAYER) {
                 Modifier armorModifier = ItemManager.getModifier((Player) event.getEntity(), ItemStat.StatType.ARMOR);
-                double armor = (event.getDamage(EntityDamageEvent.DamageModifier.ARMOR) - armorModifier.getBonus())*armorModifier.getMultiplier();
+                double armorReduction = event.getDamage(EntityDamageEvent.DamageModifier.ARMOR);
+                double armor = (armorReduction - armorModifier.getBonus()) * armorModifier.getMultiplier();
                 if (armor > 0.0D) {
                     armor = 0.0D;
                 }
@@ -85,7 +87,8 @@ public class ItemListener implements Listener {
             itemInHand = damager.getEquipment().getItemInMainHand();
             damageModifier = ItemManager.getModifier(damager,
                     ItemUtils.isEmpty(itemInHand) ? ItemStat.StatType.HAND_DAMAGE : ItemStat.StatType.DAMAGE);
-        } else if (event.getDamager().getType() == EntityType.ARROW && ((Arrow) event.getDamager()).getShooter() instanceof Player) {
+        } else if (event.getDamager().getType() == EntityType.ARROW &&
+                ((Arrow) event.getDamager()).getShooter() instanceof Player) {
             damager = (Player) ((Arrow) event.getDamager()).getShooter();
             itemInHand = damager.getEquipment().getItemInMainHand();
             damageModifier = ItemManager.getModifier(damager, ItemStat.StatType.BOW_DAMAGE);
@@ -105,14 +108,15 @@ public class ItemListener implements Listener {
         // Checking battle system restrictions
         boolean forceWeapon = Config.getConfig().getBoolean("attack.force-weapon");
         boolean requireWeapon = Config.getConfig().getBoolean("attack.require-weapon");
+        PlayerInventory inventory = damager.getInventory();
         if ((forceWeapon || requireWeapon)
-                && SlotManager.getSlotManager().getSlot(damager.getInventory().getHeldItemSlot(), InventoryType.SlotType.QUICKBAR) == null) {
-            List<Slot> activeSlots = SlotManager.getSlotManager().getActiveSlots();
+                && SlotManager.instance().getSlot(inventory.getHeldItemSlot(), InventoryType.SlotType.QUICKBAR) == null) {
+            List<Slot> activeSlots = SlotManager.instance().getActiveSlots();
             if (activeSlots.size() != 0) {
                 if (forceWeapon) {
                     for (Slot activeSlot : activeSlots) {
-                        if (!InventoryManager.isQuickEmptySlot(damager.getInventory().getItem(activeSlot.getQuickSlot()))) {
-                            damager.getInventory().setHeldItemSlot(activeSlot.getQuickSlot());
+                        if (!InventoryManager.isQuickEmptySlot(inventory.getItem(activeSlot.getQuickSlot()))) {
+                            inventory.setHeldItemSlot(activeSlot.getQuickSlot());
                             break;
                         }
                     }
@@ -125,13 +129,14 @@ public class ItemListener implements Listener {
             }
         }
 
-        double damage = (CustomItem.isCustomItem(itemInHand) ? 1 : event.getDamage(EntityDamageEvent.DamageModifier.BASE))
-                + damageModifier.getBonus()*damageModifier.getMultiplier();
+        double baseDamage = event.getDamage(EntityDamageEvent.DamageModifier.BASE);
+        double damage = (CustomItem.isCustomItem(itemInHand) ? 1 : baseDamage)
+                + damageModifier.getBonus() * damageModifier.getMultiplier();
         double critChance = ItemManager.getModifier(damager, ItemStat.StatType.CRIT_CHANCE).getMultiplier() - 1.0;
         if (Math.random() <= critChance) {
             damage *= ItemManager.getModifier(damager, ItemStat.StatType.CRIT_DAMAGE).getMultiplier();
             damager.getWorld().playSound(event.getEntity().getLocation(), Sound.ENTITY_PLAYER_ATTACK_CRIT,
-                    1, (float) (0.5 + Math.random()*0.4));
+                    1, (float) (0.5 + Math.random() * 0.4));
             EffectUtils.playParticlesToAll(EnumWrappers.Particle.CRIT, 10, event.getEntity().getLocation());
         }
 
@@ -155,11 +160,11 @@ public class ItemListener implements Listener {
 
         // === START: Magic constants ===
         if (velocity.getY() == 0.41999998688697815D) {
-            double jump = (1.5 + Math.sqrt(jumpModifier.getBonus()))*jumpModifier.getMultiplier();
+            double jump = (1.5 + Math.sqrt(jumpModifier.getBonus())) * jumpModifier.getMultiplier();
             Vector moveDirection = event.getTo().toVector().subtract(event.getFrom().toVector());
-            velocity.setX(moveDirection.getX()*jump*player.getWalkSpeed());
-            velocity.setY(velocity.getY()*jump/1.5);
-            velocity.setZ(moveDirection.getZ()*jump*player.getWalkSpeed());
+            velocity.setX(moveDirection.getX() * jump * player.getWalkSpeed());
+            velocity.setY(velocity.getY() * jump / 1.5);
+            velocity.setZ(moveDirection.getZ() * jump * player.getWalkSpeed());
             player.setVelocity(velocity);
         }
         // === END: Magic constants ===
@@ -167,7 +172,8 @@ public class ItemListener implements Listener {
 
     @EventHandler
     public void onPlayerFall(EntityDamageEvent event) {
-        if (event.getEntity().getType() == EntityType.PLAYER && event.getCause() == EntityDamageEvent.DamageCause.FALL) {
+        if (event.getEntity().getType() == EntityType.PLAYER
+                && event.getCause() == EntityDamageEvent.DamageCause.FALL) {
             Player player = (Player) event.getEntity();
 
             if (!InventoryManager.playerIsLoaded(player)) {
@@ -175,7 +181,7 @@ public class ItemListener implements Listener {
             }
 
             Modifier jumpModifier = ItemManager.getModifier(player, ItemStat.StatType.JUMP);
-            double height = (1.5D + jumpModifier.getBonus())*jumpModifier.getMultiplier()*1.5;
+            double height = (1.5D + jumpModifier.getBonus()) * jumpModifier.getMultiplier() * 1.5;
             event.setDamage(event.getDamage() - height);
 
             if (event.getDamage() <= 0.0D) {

@@ -159,7 +159,7 @@ public class InventoryListener implements Listener {
             return;
         }
 
-        for (Slot quickSlot : SlotManager.getSlotManager().getQuickSlots()) {
+        for (Slot quickSlot : SlotManager.instance().getQuickSlots()) {
             int slotId = quickSlot.getQuickSlot();
             if (quickSlot.isCup(player.getInventory().getItem(slotId)) && quickSlot.isValidItem(event.getItem().getItemStack())) {
                 player.getInventory().setItem(slotId, event.getItem().getItemStack());
@@ -231,7 +231,7 @@ public class InventoryListener implements Listener {
             slotType = InventoryType.SlotType.QUICKBAR;
         }
 
-        final Slot slot = SlotManager.getSlotManager().getSlot(event.getSlot(), slotType);
+        final Slot slot = SlotManager.instance().getSlot(event.getSlot(), slotType);
         final Inventory inventory = event.getInventory();
         InventoryAction action = event.getAction();
         ActionType actionType = ActionType.getTypeOfAction(action);
@@ -239,7 +239,7 @@ public class InventoryListener implements Listener {
         ItemStack cursor = event.getCursor();
 
         if ((action == InventoryAction.HOTBAR_SWAP || action == InventoryAction.HOTBAR_MOVE_AND_READD)
-                && SlotManager.getSlotManager().getSlot(event.getHotbarButton(), InventoryType.SlotType.QUICKBAR) != null) {
+                && SlotManager.instance().getSlot(event.getHotbarButton(), InventoryType.SlotType.QUICKBAR) != null) {
             event.setCancelled(true);
             return;
         }

@@ -73,7 +73,7 @@ public class PetListener implements Listener {
 
         if (PetType.isPetItem(petItem)
                 && (event.getAction() == Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.RIGHT_CLICK_AIR)) {
-            Slot petSlot = SlotManager.getSlotManager().getPetSlot();
+            Slot petSlot = SlotManager.instance().getPetSlot();
             if (petSlot != null && petSlot.isCup(inventory.getItem(PetManager.getPetSlotId()))
                     && ItemManager.allowedForPlayer(player, petItem, false)) {
                 inventory.setItem(PetManager.getPetSlotId(), event.getItem());

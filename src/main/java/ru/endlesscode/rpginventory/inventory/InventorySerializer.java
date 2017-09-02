@@ -41,7 +41,7 @@ class InventorySerializer {
     static void savePlayer(@NotNull Player player, @NotNull PlayerWrapper playerWrapper, @NotNull File file) throws IOException {
         List<NbtCompound> slotList = new ArrayList<>();
         try (DataOutputStream dataOutput = new DataOutputStream(new GZIPOutputStream(new FileOutputStream(file)))) {
-            for (Slot slot : SlotManager.getSlotManager().getSlots()) {
+            for (Slot slot : SlotManager.instance().getSlots()) {
                 if (slot.getSlotType() == Slot.SlotType.ARMOR) {
                     continue;
                 }
@@ -119,7 +119,7 @@ class InventorySerializer {
             NbtCompound itemsNbt = playerNbt.containsKey("slots") ? playerNbt.getCompound("slots") : playerNbt;
             // ========================================
 
-            for (Slot slot : SlotManager.getSlotManager().getSlots()) {
+            for (Slot slot : SlotManager.instance().getSlots()) {
                 if (itemsNbt.containsKey(slot.getName())) {
                     NbtCompound slotNbt = itemsNbt.getCompound(slot.getName());
                     if (slot.getSlotType() != Slot.SlotType.valueOf(slotNbt.getString("type"))) {

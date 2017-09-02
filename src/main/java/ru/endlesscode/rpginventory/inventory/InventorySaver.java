@@ -53,7 +53,7 @@ public class InventorySaver {
 
         // Save armor
         List<ItemStack> armorList = new ArrayList<>(4);
-        List<Slot> armorSlots = SlotManager.getSlotManager().getArmorSlots();
+        List<Slot> armorSlots = SlotManager.instance().getArmorSlots();
 
         for (ItemStack armor : player.getInventory().getArmorContents()) {
             if (saveArmor || CustomItem.isCustomItem(armor) && !ItemManager.getCustomItem(armor).isDrop()) {
@@ -93,7 +93,7 @@ public class InventorySaver {
         List<ItemStack> additionalDrops = new ArrayList<>();
         if (!saveRpgInv) {
             // Save quick slots
-            for (Slot slot : SlotManager.getSlotManager().getQuickSlots()) {
+            for (Slot slot : SlotManager.instance().getQuickSlots()) {
                 ItemStack quickItem = player.getInventory().getItem(slot.getQuickSlot());
 
                 if (!ItemUtils.isEmpty(quickItem) && !slot.isCup(quickItem)) {
@@ -109,7 +109,7 @@ public class InventorySaver {
             // Save pet
             int petSlotId = PetManager.getPetSlotId();
             if (PetManager.isEnabled() && inventory.getItem(petSlotId) != null) {
-                Slot petSlot = SlotManager.getSlotManager().getPetSlot();
+                Slot petSlot = SlotManager.instance().getPetSlot();
                 ItemStack currentPetItem = inventory.getItem(petSlotId);
 
                 if (petSlot != null && !petSlot.isCup(currentPetItem)) {
@@ -124,7 +124,7 @@ public class InventorySaver {
                 }
             }
 
-            for (Slot slot : SlotManager.getSlotManager().getPassiveSlots()) {
+            for (Slot slot : SlotManager.instance().getPassiveSlots()) {
                 for (int slotId : slot.getSlotIds()) {
                     ItemStack item = inventory.getItem(slotId);
 
@@ -148,7 +148,7 @@ public class InventorySaver {
         INVENTORIES.put(player.getUniqueId(), contents.toArray(new ItemStack[contents.size()]));
 
         // Saving shield
-        Slot shieldSlot = SlotManager.getSlotManager().getShieldSlot();
+        Slot shieldSlot = SlotManager.instance().getShieldSlot();
         if (shieldSlot != null && (saveItems || !shieldSlot.isDrop())) {
             ItemStack itemInOffHand = player.getEquipment().getItemInOffHand();
             if (!ItemUtils.isEmpty(itemInOffHand)) {

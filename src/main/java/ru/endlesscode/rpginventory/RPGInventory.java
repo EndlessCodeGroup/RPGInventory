@@ -145,7 +145,7 @@ public class RPGInventory extends JavaPlugin {
         pm.registerEvents(new PlayerListener(), this);
         pm.registerEvents(new WorldListener(), this);
 
-        if (SlotManager.getSlotManager().getElytraSlot() != null) {
+        if (SlotManager.instance().getElytraSlot() != null) {
             pm.registerEvents(new ElytraListener(), this);
         }
 

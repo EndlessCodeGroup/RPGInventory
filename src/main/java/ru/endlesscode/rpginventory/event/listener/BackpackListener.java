@@ -89,7 +89,7 @@ public class BackpackListener implements Listener {
 
             BackpackUpdater.update(inventory, InventoryManager.get(player).getBackpack());
         } else if ((event.getRawSlot() >= event.getView().getTopInventory().getSize()
-                || event.getSlot() == SlotManager.getSlotManager().getBackpackSlot().getSlotId() && InventoryAPI.isRPGInventory(event.getInventory()))
+                || event.getSlot() == SlotManager.instance().getBackpackSlot().getSlotId() && InventoryAPI.isRPGInventory(event.getInventory()))
                 && !BackpackManager.playerCanTakeBackpack(player) && BackpackManager.isBackpack(event.getCursor())
                 && ActionType.getTypeOfAction(event.getAction()) == ActionType.SET) {
             // Prevent placing new backpack in bottom inventory if player can't take backpack
