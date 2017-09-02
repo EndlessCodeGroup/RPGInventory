@@ -235,7 +235,7 @@ public class PetListener implements Listener {
         } else if (event.getEntity() instanceof LivingEntity && (petEntity = (LivingEntity) event.getEntity()) instanceof Tameable
                 && !Config.getConfig().getBoolean("attack.own-pet") && player != null) {
             Tameable ownedEntity = (Tameable) petEntity;
-            if (ownedEntity.isTamed() && ownedEntity.getOwner().getUniqueId().equals(event.getDamager().getUniqueId())) {
+            if (ownedEntity.isTamed() && ownedEntity.getOwner().getUniqueId().equals(player.getUniqueId())) {
                 event.setCancelled(true);
             }
         } else if (player != null) {
