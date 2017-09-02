@@ -378,8 +378,10 @@ public class PetManager {
     }
 
     public static ItemStack toPetItem(@NotNull ItemStack item) {
+        List<String> itemLore = item.getItemMeta().getLore();
         for (PetType petType : PETS.values()) {
-            if (item.getItemMeta().getLore().equals(petType.getSpawnItem().getItemMeta().getLore()) && item.getMaxStackSize() == 1) {
+            List<String> petItemLore = petType.getSpawnItem().getItemMeta().getLore();
+            if (itemLore.equals(petItemLore)) {
                 return petType.getSpawnItem();
             }
         }
@@ -392,8 +394,10 @@ public class PetManager {
             return false;
         }
 
+        List<String> itemLore = item.getItemMeta().getLore();
         for (PetType petType : PETS.values()) {
-            if (item.getItemMeta().getLore().equals(petType.getSpawnItem().getItemMeta().getLore()) && item.getMaxStackSize() == 1) {
+            List<String> petItemLore = petType.getSpawnItem().getItemMeta().getLore();
+            if (itemLore.equals(petItemLore)) {
                 return true;
             }
         }

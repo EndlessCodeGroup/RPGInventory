@@ -238,6 +238,10 @@ public class PlayerWrapper implements InventoryHolder {
 
             this.flying = true;
         }
+
+        if (this.hasPet()) {
+            PetManager.despawnPet(player);
+        }
     }
 
     public boolean isFalling() {
@@ -261,7 +265,15 @@ public class PlayerWrapper implements InventoryHolder {
             player.getEquipment().setChestplate(this.savedChestplate);
             this.savedChestplate = null;
         }
+
         this.flying = false;
+
+        if (PetManager.isEnabled()) {
+            ItemStack petItem = inventory.getItem(PetManager.getPetSlotId());
+            if (PetManager.isPetItem(petItem)) {
+                PetManager.spawnPet(player.getPlayer(), petItem);
+            }
+        }
     }
 
     public boolean isFlying() {
