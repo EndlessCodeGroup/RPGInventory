@@ -21,6 +21,7 @@ package ru.endlesscode.rpginventory.pet;
 import com.comphenix.protocol.wrappers.nbt.NbtCompound;
 import com.comphenix.protocol.wrappers.nbt.NbtFactory;
 import org.bukkit.DyeColor;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.attribute.Attribute;
@@ -163,8 +164,10 @@ public class PetManager {
         }
 
         PetManager.despawnPet(player);
-        Animals pet = (Animals) player.getWorld().spawnEntity(LocationUtils.getLocationNearPlayer(player, 3),
-                EntityType.valueOf(petType.getRole().getDefaultSkin()));
+        Location petLoc = LocationUtils.getLocationNearPlayer(player, 3);
+        Animals pet = (Animals) player.getWorld().spawnEntity(
+                petLoc, EntityType.valueOf(petType.getRole().getDefaultSkin()));
+        pet.teleport(petLoc);
         EffectUtils.playSpawnEffect(pet);
         Map<String, String> features = petType.getFeatures();
 

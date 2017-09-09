@@ -19,6 +19,8 @@
 package ru.endlesscode.rpginventory.utils;
 
 import org.bukkit.Location;
+import org.bukkit.World;
+import org.bukkit.block.Block;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -50,13 +52,15 @@ public class LocationUtils {
         Location playerLoc = player.getLocation();
         List<Location> availableLocations = new ArrayList<>();
 
+        World world = player.getWorld();
         for (int x = playerLoc.getBlockX() - radius; x < playerLoc.getBlockX() + radius; x++) {
             for (int y = playerLoc.getBlockY() - radius; y < playerLoc.getBlockY() + radius; y++) {
                 for (int z = playerLoc.getBlockZ() - radius; z < playerLoc.getBlockZ() + radius; z++) {
-                    Location loc = new Location(player.getWorld(), x, y, z, (float) (-180 + Math.random()*360), 0.0F);
+                    Location loc = new Location(world, x + 0.5, y, z + 0.5);
                     if (loc.getBlock().isEmpty()) {
-                        Location underLoc = new Location(player.getWorld(), x, y - 1, z);
-                        if (!underLoc.getBlock().isEmpty() && !underLoc.getBlock().isLiquid()) {
+                        Block underBlock = loc.clone().subtract(0, 1, 0).getBlock();
+                        if (!underBlock.isEmpty() && !underBlock.isLiquid()) {
+                            loc.setYaw((float) (-180 + Math.random() * 360));
                             availableLocations.add(loc);
                         }
                     }
