@@ -19,7 +19,6 @@
 package ru.endlesscode.rpginventory.utils;
 
 import org.bukkit.Location;
-import org.bukkit.Particle;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -82,13 +81,11 @@ public class LocationUtils {
 
     public static List<Block> getStandingOn(Location playerLoc, double entityWidth) {
         double halfWidth = entityWidth / 2;
-        playerLoc.getWorld().spawnParticle(Particle.DRIP_WATER, playerLoc, 10);
 
         List<Block> blocksUnderPlayer = new ArrayList<>(2);
         for (int firstSign = -1; firstSign <= 1; firstSign += 2) {
             for (int secondSign = -1; secondSign <= 1; secondSign += 2) {
                 Location blockLoc = playerLoc.clone().add(firstSign * halfWidth, 0, secondSign * halfWidth);
-                playerLoc.getWorld().spawnParticle(Particle.DRIP_WATER, blockLoc, 10);
                 Block block = blockLoc.getBlock();
                 if (!blocksUnderPlayer.contains(block)) {
                     blocksUnderPlayer.add(block);
@@ -100,8 +97,6 @@ public class LocationUtils {
     }
 
     public static boolean isUnderAnyBlock(Block block, int distance) {
-        block.getWorld().spawnParticle(Particle.WATER_DROP, getBlockCenter(block.getLocation()), 10);
-
         for (int i = 1; i <= distance; i++) {
             Block blockUnderPlayer = block.getRelative(BlockFace.DOWN, i);
             if (!blockUnderPlayer.isEmpty()) {
