@@ -79,15 +79,6 @@ public class MyPetManager implements Listener {
         return true;
     }
 
-    @EventHandler
-    public void onPlayerInventoryLoaded(PlayerInventoryLoadEvent.Post event) {
-        Player player = event.getPlayer();
-        PlayerManager playerManager = MyPetApi.getPlayerManager();
-        if (playerManager.isMyPetPlayer(player)) {
-            syncPlayer(playerManager.getMyPetPlayer(player));
-        }
-    }
-
     private static void syncPlayer(MyPetPlayer mpPlayer) {
         Slot petSlot = getMyPetSlot();
         if (mpPlayer.isOnline() && mpPlayer.hasMyPet()) {
@@ -110,108 +101,6 @@ public class MyPetManager implements Listener {
             }
 
             MyPetApi.getMyPetManager().deactivateMyPet(mpPlayer, false);
-        }
-    }
-
-    @EventHandler(ignoreCancelled = true)
-    public void onMyPetCreate(MyPetCreateEvent event) {
-        Player player = event.getOwner().getPlayer();
-        if (!InventoryManager.playerIsLoaded(player)) {
-            return;
-        }
-
-        ItemStack petItem = new ItemStack(Material.MONSTER_EGG);
-        ItemMeta meta = petItem.getItemMeta();
-        meta.setDisplayName(RPGInventory.getLanguage().getMessage("mypet.egg", event.getMyPet().getPetName()));
-        petItem.setItemMeta(meta);
-        petItem = ItemUtils.setTag(petItem, MYPET_TAG, event.getMyPet().getUUID().toString());
-
-        Inventory inventory = InventoryManager.get(player).getInventory();
-        Slot petSlot = getMyPetSlot();
-
-        ItemStack currentPet = inventory.getItem(petSlot.getSlotId());
-        boolean hasPet = !petSlot.isCup(currentPet);
-        inventory.setItem(petSlot.getSlotId(), petItem);
-
-        if (hasPet) {
-            player.getInventory().addItem(currentPet);
-        }
-    }
-
-    @EventHandler(ignoreCancelled = true)
-    public void onMyPetCall(MyPetCallEvent event) {
-        Player player = event.getOwner().getPlayer();
-        if (!InventoryManager.playerIsLoaded(player)) {
-            return;
-        }
-
-        Inventory inventory = InventoryManager.get(player).getInventory();
-        ItemStack currentPet = inventory.getItem(getMyPetSlot().getSlotId());
-        boolean keepPet = true;
-
-        if (!isMyPetItem(currentPet)) {
-            keepPet = false;
-        } else {
-            UUID petUUID = UUID.fromString(ItemUtils.getTag(currentPet, MYPET_TAG));
-            if (!petUUID.equals(event.getMyPet().getUUID())) {
-                keepPet = false;
-            }
-        }
-
-        if (!keepPet) {
-            event.setCancelled(true);
-            MyPetApi.getMyPetManager().deactivateMyPet(event.getOwner(), true);
-        }
-    }
-
-    @EventHandler(ignoreCancelled = true)
-    public void onMyPetRemove(MyPetRemoveEvent event) {
-        Player player = event.getOwner().getPlayer();
-        if (!InventoryManager.playerIsLoaded(player)) {
-            return;
-        }
-
-        Inventory inventory = InventoryManager.get(player).getInventory();
-        Slot petSlot = getMyPetSlot();
-        ItemStack currentPetItem = inventory.getItem(petSlot.getSlotId());
-
-        if (isMyPetItem(currentPetItem)) {
-            UUID petUUID = UUID.fromString(ItemUtils.getTag(currentPetItem, MYPET_TAG));
-            if (petUUID.equals(event.getMyPet().getUUID())) {
-                inventory.setItem(petSlot.getSlotId(), petSlot.getCup());
-            }
-        }
-    }
-
-    @EventHandler
-    public void onMyPetItemUse(PlayerInteractEvent event) {
-        if (event.getItem() != null) {
-            Player player = event.getPlayer();
-
-            if (!InventoryManager.playerIsLoaded(player)) {
-                return;
-            }
-
-            Inventory inventory = InventoryManager.get(player).getInventory();
-
-            if (isMyPetItem(event.getItem())
-                    && (event.getAction() == Action.RIGHT_CLICK_BLOCK
-                    || event.getAction() == Action.RIGHT_CLICK_AIR)) {
-                Slot petSlot = getMyPetSlot();
-
-                ItemStack currentPet = inventory.getItem(petSlot.getSlotId());
-                boolean hasPet = !petSlot.isCup(currentPet);
-                ItemStack newPet = event.getItem();
-
-                if (!hasPet) {
-                    currentPet = null;
-                }
-
-                player.getEquipment().setItemInMainHand(currentPet);
-                inventory.setItem(petSlot.getSlotId(), newPet);
-
-                swapMyPets(player, hasPet, newPet);
-            }
         }
     }
 
@@ -325,5 +214,116 @@ public class MyPetManager implements Listener {
                 MyPetApi.getRepository().updateMyPetPlayer(user, null);
             }
         });
+    }
+
+    @EventHandler
+    public void onPlayerInventoryLoaded(PlayerInventoryLoadEvent.Post event) {
+        Player player = event.getPlayer();
+        PlayerManager playerManager = MyPetApi.getPlayerManager();
+        if (playerManager.isMyPetPlayer(player)) {
+            syncPlayer(playerManager.getMyPetPlayer(player));
+        }
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void onMyPetCreate(MyPetCreateEvent event) {
+        Player player = event.getOwner().getPlayer();
+        if (!InventoryManager.playerIsLoaded(player)) {
+            return;
+        }
+
+        ItemStack petItem = new ItemStack(Material.MONSTER_EGG);
+        ItemMeta meta = petItem.getItemMeta();
+        meta.setDisplayName(RPGInventory.getLanguage().getMessage("mypet.egg", event.getMyPet().getPetName()));
+        petItem.setItemMeta(meta);
+        petItem = ItemUtils.setTag(petItem, MYPET_TAG, event.getMyPet().getUUID().toString());
+
+        Inventory inventory = InventoryManager.get(player).getInventory();
+        Slot petSlot = getMyPetSlot();
+
+        ItemStack currentPet = inventory.getItem(petSlot.getSlotId());
+        boolean hasPet = !petSlot.isCup(currentPet);
+        inventory.setItem(petSlot.getSlotId(), petItem);
+
+        if (hasPet) {
+            player.getInventory().addItem(currentPet);
+        }
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void onMyPetCall(MyPetCallEvent event) {
+        Player player = event.getOwner().getPlayer();
+        if (!InventoryManager.playerIsLoaded(player)) {
+            return;
+        }
+
+        Inventory inventory = InventoryManager.get(player).getInventory();
+        ItemStack currentPet = inventory.getItem(getMyPetSlot().getSlotId());
+        boolean keepPet = true;
+
+        if (!isMyPetItem(currentPet)) {
+            keepPet = false;
+        } else {
+            UUID petUUID = UUID.fromString(ItemUtils.getTag(currentPet, MYPET_TAG));
+            if (!petUUID.equals(event.getMyPet().getUUID())) {
+                keepPet = false;
+            }
+        }
+
+        if (!keepPet) {
+            event.setCancelled(true);
+            MyPetApi.getMyPetManager().deactivateMyPet(event.getOwner(), true);
+        }
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void onMyPetRemove(MyPetRemoveEvent event) {
+        Player player = event.getOwner().getPlayer();
+        if (!InventoryManager.playerIsLoaded(player)) {
+            return;
+        }
+
+        Inventory inventory = InventoryManager.get(player).getInventory();
+        Slot petSlot = getMyPetSlot();
+        ItemStack currentPetItem = inventory.getItem(petSlot.getSlotId());
+
+        if (isMyPetItem(currentPetItem)) {
+            UUID petUUID = UUID.fromString(ItemUtils.getTag(currentPetItem, MYPET_TAG));
+            if (petUUID.equals(event.getMyPet().getUUID())) {
+                inventory.setItem(petSlot.getSlotId(), petSlot.getCup());
+            }
+        }
+    }
+
+    @EventHandler
+    public void onMyPetItemUse(PlayerInteractEvent event) {
+        if (event.getItem() != null) {
+            Player player = event.getPlayer();
+
+            if (!InventoryManager.playerIsLoaded(player)) {
+                return;
+            }
+
+            Inventory inventory = InventoryManager.get(player).getInventory();
+
+            if (isMyPetItem(event.getItem())
+                    && (event.getAction() == Action.RIGHT_CLICK_BLOCK
+                    || event.getAction() == Action.RIGHT_CLICK_AIR)) {
+                Slot petSlot = getMyPetSlot();
+
+                ItemStack currentPet = inventory.getItem(petSlot.getSlotId());
+                boolean hasPet = !petSlot.isCup(currentPet);
+                ItemStack newPet = event.getItem();
+
+                if (!hasPet) {
+                    currentPet = null;
+                }
+
+                player.getEquipment().setItemInMainHand(currentPet);
+                inventory.setItem(petSlot.getSlotId(), newPet);
+
+                swapMyPets(player, hasPet, newPet);
+            }
+        }
     }
 }

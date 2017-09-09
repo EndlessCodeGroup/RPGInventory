@@ -175,7 +175,7 @@ public class ArmorEquipListener implements Listener {
                             Slot armorSlot = SlotManager.instance().getSlot(type.name());
                             event.setCancelled(armorSlot != null
                                     && !InventoryManager.validateArmor(
-                                            player, InventoryAction.PLACE_ONE, armorSlot, event.getItem()));
+                                    player, InventoryAction.PLACE_ONE, armorSlot, event.getItem()));
                             return;
                         }
                     }

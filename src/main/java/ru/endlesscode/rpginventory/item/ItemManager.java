@@ -105,8 +105,8 @@ public class ItemManager {
 
             int sign = stat.getOperationType() == ItemStat.OperationType.MINUS ? -1 : 1;
             if (stat.isPercentage()) {
-                minMultiplier += sign * stat.getMinValue()/100;
-                maxMultiplier += sign * stat.getMaxValue()/100;
+                minMultiplier += sign * stat.getMinValue() / 100;
+                maxMultiplier += sign * stat.getMaxValue() / 100;
             } else {
                 minBonus += sign * stat.getMinValue();
                 maxBonus += sign * stat.getMaxValue();

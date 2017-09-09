@@ -17,7 +17,6 @@
  */
 
 
-
 package ru.endlesscode.rpginventory.misc.metrics;
 
 import org.bukkit.Bukkit;
@@ -334,7 +333,7 @@ public class Metrics {
                         }
                     }
                 }
-            }, 0, PING_INTERVAL*1200);
+            }, 0, PING_INTERVAL * 1200);
 
             return true;
         }

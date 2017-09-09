@@ -100,7 +100,7 @@ public class InventoryLocker {
 
     @Contract(pure = true)
     public static int getLine(int slot) {
-        return (slot - 9)/9 + 1;
+        return (slot - 9) / 9 + 1;
     }
 
     @NotNull

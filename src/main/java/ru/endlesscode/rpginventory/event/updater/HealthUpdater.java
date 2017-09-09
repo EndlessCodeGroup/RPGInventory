@@ -58,7 +58,7 @@ public class HealthUpdater extends BukkitRunnable {
     }
 
     public double getModifiedHealth() {
-        return (BASE_HEALTH + this.currentModifier.getBonus())*this.currentModifier.getMultiplier();
+        return (BASE_HEALTH + this.currentModifier.getBonus()) * this.currentModifier.getMultiplier();
     }
 
     @Override
@@ -189,10 +189,10 @@ public class HealthUpdater extends BukkitRunnable {
         double maxInHeart = Config.getConfig().getDouble("health.heart-value.max", 5);
 
         double healthScale;
-        if (this.player.getMaxHealth()/minInHeart < hearts) {
-            healthScale = this.player.getMaxHealth()/minInHeart;
-        } else if (this.player.getMaxHealth()/maxInHeart > hearts) {
-            healthScale = this.player.getMaxHealth()/maxInHeart;
+        if (this.player.getMaxHealth() / minInHeart < hearts) {
+            healthScale = this.player.getMaxHealth() / minInHeart;
+        } else if (this.player.getMaxHealth() / maxInHeart > hearts) {
+            healthScale = this.player.getMaxHealth() / maxInHeart;
         } else {
             healthScale = hearts;
         }

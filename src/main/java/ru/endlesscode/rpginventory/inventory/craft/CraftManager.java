@@ -41,7 +41,8 @@ public class CraftManager {
     private static List<CraftExtension> EXTENSIONS = new ArrayList<>();
     private static ItemStack capItem;
 
-    private CraftManager() {}
+    private CraftManager() {
+    }
 
     public static boolean init(RPGInventory instance) {
         MemorySection config = (MemorySection) Config.getConfig().get("craft");

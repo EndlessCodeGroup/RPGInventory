@@ -58,7 +58,7 @@ public class Backpack {
     }
 
     void open(Player player) {
-        int realSize = (int) Math.ceil(this.backpackType.getSize()/9.0)*9;
+        int realSize = (int) Math.ceil(this.backpackType.getSize() / 9.0) * 9;
         BackpackHolder holder = new BackpackHolder();
         Inventory inventory = Bukkit.createInventory(holder, realSize, backpackType.getTitle());
         holder.setInventory(inventory);
@@ -99,6 +99,6 @@ public class Backpack {
 
     boolean isOverdue() {
         int lifeTime = Config.getConfig().getInt("backpacks.expiration-time", 0);
-        return lifeTime != 0 && (System.currentTimeMillis() - this.lastUse)/(1_000*60*60*24) > lifeTime;
+        return lifeTime != 0 && (System.currentTimeMillis() - this.lastUse) / (1_000 * 60 * 60 * 24) > lifeTime;
     }
 }

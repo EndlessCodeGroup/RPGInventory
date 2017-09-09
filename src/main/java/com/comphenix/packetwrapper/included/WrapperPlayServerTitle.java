@@ -57,7 +57,7 @@ public class WrapperPlayServerTitle extends AbstractPacket {
 
     /**
      * Retrieve 0 (TITLE).
-     *
+     * <p>
      * Notes: chat
      *
      * @return The current 0 (TITLE)
@@ -77,7 +77,7 @@ public class WrapperPlayServerTitle extends AbstractPacket {
 
     /**
      * Retrieve 2 (TIMES).
-     *
+     * <p>
      * Notes: int
      *
      * @return The current 2 (TIMES)

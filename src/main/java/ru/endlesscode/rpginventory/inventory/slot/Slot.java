@@ -138,7 +138,7 @@ public class Slot {
 
                     if (min > max) {
                         min *= max;
-                        max = min/max;
+                        max = min / max;
                         min /= max;
                     }
 

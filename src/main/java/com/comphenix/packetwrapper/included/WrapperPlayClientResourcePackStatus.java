@@ -38,7 +38,7 @@ public class WrapperPlayClientResourcePackStatus extends AbstractPacket {
 
     /**
      * Retrieve Result.
-     *
+     * <p>
      * Notes: successfully loaded: 0, Declined: 1, Failed download: 2, Accepted: 3
      *
      * @return The current Result

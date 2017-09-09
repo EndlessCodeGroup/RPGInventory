@@ -42,7 +42,7 @@ public class WrapperPlayServerWindowItems extends AbstractPacket {
 
     /**
      * Retrieve Window ID.
-     *
+     * <p>
      * Notes: the id of window which items are being sent for. 0 for player
      * inventory.
      *

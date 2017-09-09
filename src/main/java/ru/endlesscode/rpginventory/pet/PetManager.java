@@ -59,9 +59,8 @@ import java.util.Map;
 public class PetManager {
     private static final Map<String, PetType> PETS = new HashMap<>();
     private static final Map<String, PetFood> PET_FOOD = new HashMap<>();
-    private static int SLOT_PET;
-
     private static final String DEATH_TIME_TAG = "pet.deathTime";
+    private static int SLOT_PET;
 
     private PetManager() {
     }
@@ -336,7 +335,7 @@ public class PetManager {
             return 0;
         }
 
-        int secondsSinceDeath = (int) ((System.currentTimeMillis() - deathTime)/1000);
+        int secondsSinceDeath = (int) ((System.currentTimeMillis() - deathTime) / 1000);
         int petCooldown = getPetFromItem(item).getCooldown();
         int itemCooldown = petCooldown - secondsSinceDeath;
         if (itemCooldown < 0 || itemCooldown > petCooldown) {

@@ -56,7 +56,7 @@ public class WrapperPlayServerWorldParticles extends AbstractPacket {
 
     /**
      * Retrieve X.
-     *
+     * <p>
      * Notes: x position of the particle
      *
      * @return The current X
@@ -76,7 +76,7 @@ public class WrapperPlayServerWorldParticles extends AbstractPacket {
 
     /**
      * Retrieve Y.
-     *
+     * <p>
      * Notes: y position of the particle
      *
      * @return The current Y
@@ -96,7 +96,7 @@ public class WrapperPlayServerWorldParticles extends AbstractPacket {
 
     /**
      * Retrieve Z.
-     *
+     * <p>
      * Notes: z position of the particle
      *
      * @return The current Z
@@ -116,7 +116,7 @@ public class WrapperPlayServerWorldParticles extends AbstractPacket {
 
     /**
      * Retrieve Offset X.
-     *
+     * <p>
      * Notes: this is added to the X position after being multiplied by
      * random.nextGaussian()
      *
@@ -137,7 +137,7 @@ public class WrapperPlayServerWorldParticles extends AbstractPacket {
 
     /**
      * Retrieve Offset Y.
-     *
+     * <p>
      * Notes: this is added to the Y position after being multiplied by
      * random.nextGaussian()
      *
@@ -158,7 +158,7 @@ public class WrapperPlayServerWorldParticles extends AbstractPacket {
 
     /**
      * Retrieve Offset Z.
-     *
+     * <p>
      * Notes: this is added to the Z position after being multiplied by
      * random.nextGaussian()
      *
@@ -179,7 +179,7 @@ public class WrapperPlayServerWorldParticles extends AbstractPacket {
 
     /**
      * Retrieve Particle data.
-     *
+     * <p>
      * Notes: the data of each particle
      *
      * @return The current Particle data
@@ -199,7 +199,7 @@ public class WrapperPlayServerWorldParticles extends AbstractPacket {
 
     /**
      * Retrieve Number of particles.
-     *
+     * <p>
      * Notes: the number of particles to create
      *
      * @return The current Number of particles
@@ -219,7 +219,7 @@ public class WrapperPlayServerWorldParticles extends AbstractPacket {
 
     /**
      * Retrieve Long Distance.
-     *
+     * <p>
      * Notes: if true, particle distance increases from 256 to 65536.
      *
      * @return The current Long Distance
@@ -239,7 +239,7 @@ public class WrapperPlayServerWorldParticles extends AbstractPacket {
 
     /**
      * Retrieve Data.
-     *
+     * <p>
      * Notes: length depends on particle. IRON_CRACK has a length of 2,
      * BLOCK_CRACK and BLOCK_DUST have lengths of 1, the rest have 0.
      *

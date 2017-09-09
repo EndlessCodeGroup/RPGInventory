@@ -149,7 +149,7 @@ public class PlayerWrapper implements InventoryHolder {
 
     boolean isPreparedToBuy(Slot slot) {
         if (this.timeWhenPreparedToBuy == 0 || this.slotPreparedToBuy != slot
-                || System.currentTimeMillis() - this.timeWhenPreparedToBuy > 10*1000) {
+                || System.currentTimeMillis() - this.timeWhenPreparedToBuy > 10 * 1000) {
             return false;
         }
 
@@ -348,7 +348,7 @@ public class PlayerWrapper implements InventoryHolder {
     }
 
     public String getLastMessage() {
-        if (System.currentTimeMillis() - this.lastMessageTime > 5*1000) {
+        if (System.currentTimeMillis() - this.lastMessageTime > 5 * 1000) {
             lastMessage = "";
         }
 

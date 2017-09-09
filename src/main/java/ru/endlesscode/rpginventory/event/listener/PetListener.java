@@ -135,7 +135,7 @@ public class PetListener implements Listener {
             itemInHand.setAmount(itemInHand.getAmount() - 1);
             player.getEquipment().setItemInMainHand(itemInHand);
 
-            pet.getWorld().playSound(pet.getLocation(), Sound.ENTITY_GENERIC_EAT, 1.0f, (float) (1.0 + Math.random()*0.4));
+            pet.getWorld().playSound(pet.getLocation(), Sound.ENTITY_GENERIC_EAT, 1.0f, (float) (1.0 + Math.random() * 0.4));
         }
     }
 

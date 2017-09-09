@@ -83,11 +83,11 @@ public class Modifier {
     }
 
     public double getBonus() {
-        return Utils.round(this.minBonus + (this.maxBonus - this.minBonus)*Math.random(), 1);
+        return Utils.round(this.minBonus + (this.maxBonus - this.minBonus) * Math.random(), 1);
     }
 
     public double getMultiplier() {
-        return Utils.round(this.minMultiplier + (this.maxMultiplier - this.minMultiplier)*Math.random(), 1);
+        return Utils.round(this.minMultiplier + (this.maxMultiplier - this.minMultiplier) * Math.random(), 1);
     }
 
     @Override
@@ -114,13 +114,13 @@ public class Modifier {
             str += minBonus;
 
             if (minBonus != maxBonus) {
-                str += "-" + (minBonus*maxBonus >= 0 ? Double.valueOf(Math.abs(maxBonus)) : "(+" + maxBonus + ")");
+                str += "-" + (minBonus * maxBonus >= 0 ? Double.valueOf(Math.abs(maxBonus)) : "(+" + maxBonus + ")");
             }
         }
 
         if (this.minMultiplier != 1 && this.maxMultiplier != 1) {
-            double minMultiplier = Utils.round(this.minMultiplier*100 - 100, 1);
-            double maxMultiplier = Utils.round(this.maxMultiplier*100 - 100, 1);
+            double minMultiplier = Utils.round(this.minMultiplier * 100 - 100, 1);
+            double maxMultiplier = Utils.round(this.maxMultiplier * 100 - 100, 1);
 
             if ((maxMultiplier <= 0 || minMultiplier >= 0) && Math.abs(minMultiplier) > Math.abs(maxMultiplier)) {
                 minMultiplier += maxMultiplier;
@@ -134,7 +134,7 @@ public class Modifier {
             str += minMultiplier;
 
             if (minMultiplier != maxMultiplier) {
-                str += "-" + (minMultiplier*maxMultiplier >= 0 ? Double.valueOf(Math.abs(maxMultiplier)) : "(+" + maxMultiplier + ")");
+                str += "-" + (minMultiplier * maxMultiplier >= 0 ? Double.valueOf(Math.abs(maxMultiplier)) : "(+" + maxMultiplier + ")");
             }
             str += "%";
         }
