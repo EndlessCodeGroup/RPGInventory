@@ -54,6 +54,8 @@ import java.util.Map;
  * All rights reserved 2014 - 2016 © «EndlessCode Group»
  */
 public class PlayerWrapper implements InventoryHolder {
+    private static final int FLIGHT_DELAY = 0;
+
     private final OfflinePlayer player;
     private final Inventory inventory;
     private final Map<String, Integer> buyedSlots = new HashMap<>();
@@ -219,10 +221,11 @@ public class PlayerWrapper implements InventoryHolder {
 
     public void onFall() {
         if (isFalling()) {
-            if (this.fallTime++ == 4) {
+            if (this.fallTime == 0) {
                 this.startFlight();
             }
-        } else if (player.getPlayer().getVelocity().getY() < 0) {
+            this.fallTime++;
+        } else {
             this.setFalling(true);
         }
     }

@@ -19,8 +19,10 @@
 package ru.endlesscode.rpginventory.utils;
 
 import org.bukkit.Location;
+import org.bukkit.Particle;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -37,26 +39,15 @@ import java.util.Random;
  * All rights reserved 2014 - 2016 © «EndlessCode Group»
  */
 public class LocationUtils {
-    public static List<Player> getNearbyPlayers(Location location, double distance) {
-        List<Player> nearbyPlayers = new ArrayList<>();
-        for (LivingEntity entity : location.getWorld().getLivingEntities()) {
-            if (entity.getType() == EntityType.PLAYER && entity.getLocation().distance(location) <= distance) {
-                nearbyPlayers.add((Player) entity);
-            }
-        }
-
-        return nearbyPlayers;
-    }
-
     public static Location getLocationNearPlayer(@NotNull Player player, int radius) {
-        Location playerLoc = player.getLocation();
+        Block playerBlock = player.getLocation().getBlock();
         List<Location> availableLocations = new ArrayList<>();
 
         World world = player.getWorld();
-        for (int x = playerLoc.getBlockX() - radius; x < playerLoc.getBlockX() + radius; x++) {
-            for (int y = playerLoc.getBlockY() - radius; y < playerLoc.getBlockY() + radius; y++) {
-                for (int z = playerLoc.getBlockZ() - radius; z < playerLoc.getBlockZ() + radius; z++) {
-                    Location loc = new Location(world, x + 0.5, y, z + 0.5);
+        for (int x = playerBlock.getX() - radius; x < playerBlock.getX() + radius; x++) {
+            for (int y = playerBlock.getY() - radius; y < playerBlock.getY() + radius; y++) {
+                for (int z = playerBlock.getZ() - radius; z < playerBlock.getZ() + radius; z++) {
+                    Location loc = getBlockCenter(new Location(world, x, y, z));
                     if (loc.getBlock().isEmpty()) {
                         Block underBlock = loc.clone().subtract(0, 1, 0).getBlock();
                         if (!underBlock.isEmpty() && !underBlock.isLiquid()) {
@@ -69,10 +60,67 @@ public class LocationUtils {
         }
 
         if (availableLocations.size() == 0) {
-            return playerLoc;
+            return getBlockCenter(playerBlock.getLocation().clone());
         }
 
         return availableLocations.get(new Random().nextInt(availableLocations.size()));
+    }
+
+    public static Location getBlockCenter(Location loc) {
+        return loc.add(0.5, 0, 0.5);
+    }
+
+    public static boolean isUnderAnyBlockHonestly(Location loc, double entityWidth, int distance) {
+        for (Block block : getStandingOn(loc, entityWidth)) {
+            if (isUnderAnyBlock(block, distance)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public static List<Block> getStandingOn(Location playerLoc, double entityWidth) {
+        double halfWidth = entityWidth / 2;
+        playerLoc.getWorld().spawnParticle(Particle.DRIP_WATER, playerLoc, 10);
+
+        List<Block> blocksUnderPlayer = new ArrayList<>(2);
+        for (int firstSign = -1; firstSign <= 1; firstSign += 2) {
+            for (int secondSign = -1; secondSign <= 1; secondSign += 2) {
+                Location blockLoc = playerLoc.clone().add(firstSign * halfWidth, 0, secondSign * halfWidth);
+                playerLoc.getWorld().spawnParticle(Particle.DRIP_WATER, blockLoc, 10);
+                Block block = blockLoc.getBlock();
+                if (!blocksUnderPlayer.contains(block)) {
+                    blocksUnderPlayer.add(block);
+                }
+            }
+        }
+
+        return blocksUnderPlayer;
+    }
+
+    public static boolean isUnderAnyBlock(Block block, int distance) {
+        block.getWorld().spawnParticle(Particle.WATER_DROP, getBlockCenter(block.getLocation()), 10);
+
+        for (int i = 1; i <= distance; i++) {
+            Block blockUnderPlayer = block.getRelative(BlockFace.DOWN, i);
+            if (!blockUnderPlayer.isEmpty()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public static List<Player> getNearbyPlayers(Location location, double distance) {
+        List<Player> nearbyPlayers = new ArrayList<>();
+        for (LivingEntity entity : location.getWorld().getLivingEntities()) {
+            if (entity.getType() == EntityType.PLAYER && entity.getLocation().distance(location) <= distance) {
+                nearbyPlayers.add((Player) entity);
+            }
+        }
+
+        return nearbyPlayers;
     }
 
     public static Vector getRandomVector() {

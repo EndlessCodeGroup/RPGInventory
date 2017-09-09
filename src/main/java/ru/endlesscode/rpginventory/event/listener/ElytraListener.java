@@ -19,13 +19,13 @@
 package ru.endlesscode.rpginventory.event.listener;
 
 import org.bukkit.Material;
-import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
 import ru.endlesscode.rpginventory.inventory.PlayerWrapper;
+import ru.endlesscode.rpginventory.utils.LocationUtils;
 
 /**
  * Created by OsipXD on 08.04.2016
@@ -43,7 +43,7 @@ public class ElytraListener implements Listener {
         PlayerWrapper playerWrapper = InventoryManager.get(player);
         boolean endFalling = false;
         if (!player.isOnGround()) {
-            if (playerIsOnAir(player)) {
+            if (playerIsSneakOnLadder(player) || isPlayerCanFall(player)) {
                 playerWrapper.onFall();
             } else if (!player.isGliding()) {
                 endFalling = true;
@@ -57,8 +57,16 @@ public class ElytraListener implements Listener {
         }
     }
 
-    private boolean playerIsOnAir(Player player) {
-        Material blockUnderPlayer = player.getLocation().getBlock().getRelative(BlockFace.DOWN).getType();
-        return blockUnderPlayer == Material.AIR;
+    private boolean isPlayerCanFall(Player player) {
+        return !LocationUtils.isUnderAnyBlockHonestly(player.getLocation(), player.getWidth(), 3)
+                && !playerIsOnLadder(player);
+    }
+
+    private boolean playerIsSneakOnLadder(Player player) {
+        return player.isSneaking() && playerIsOnLadder(player);
+    }
+
+    private boolean playerIsOnLadder(Player player) {
+        return player.getLocation().getBlock().getType() == Material.LADDER;
     }
 }
