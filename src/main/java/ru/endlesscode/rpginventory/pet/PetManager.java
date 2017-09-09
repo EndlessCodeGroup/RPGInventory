@@ -392,7 +392,7 @@ public class PetManager {
     }
 
     public static boolean isPetItem(@NotNull ItemStack item) {
-        if (!item.getItemMeta().hasLore()) {
+        if (!item.hasItemMeta() || !item.getItemMeta().hasLore()) {
             return false;
         }
 
