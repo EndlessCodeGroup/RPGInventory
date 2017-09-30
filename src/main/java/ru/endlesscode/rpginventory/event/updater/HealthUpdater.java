@@ -130,7 +130,7 @@ public class HealthUpdater extends BukkitRunnable {
 
         // Check if we need update health
         if (!this.currentModifier.equals(newModifier) || this.initHealth
-                || currentBonus != this.otherPluginsBonus + this.attributesBonus) {
+                || Math.abs(currentBonus - this.otherPluginsBonus + this.attributesBonus) <= 0.0000001) {
             if (!this.accepted) {
                 return;
             }

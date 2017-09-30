@@ -56,29 +56,30 @@ import java.util.logging.Logger;
 
 public class RPGInventory extends JavaPlugin {
     private static RPGInventory instance;
-    private static FileLanguage language;
 
-    private static Permission perms;
-    private static Economy economy;
+    private Permission perms;
+    private Economy economy;
 
-    private static PlayerUtils.LevelSystem levelSystem;
-    private static PlayerUtils.ClassSystem classSystem;
-    private static boolean pApiHooked;
+    private PlayerUtils.LevelSystem levelSystem;
+    private PlayerUtils.ClassSystem classSystem;
+
+    private FileLanguage language;
+    private boolean pApiHooked;
 
     public static RPGInventory getInstance() {
         return instance;
     }
 
     public static FileLanguage getLanguage() {
-        return language;
+        return instance.language;
     }
 
     public static Permission getPermissions() {
-        return perms;
+        return instance.perms;
     }
 
     public static Economy getEconomy() {
-        return economy;
+        return instance.economy;
     }
 
     @Contract(pure = true)
@@ -88,20 +89,20 @@ public class RPGInventory extends JavaPlugin {
 
     @Contract(pure = true)
     public static boolean economyConnected() {
-        return economy != null;
+        return instance.economy != null;
     }
 
     @Contract(pure = true)
     public static boolean placeholderApiHooked() {
-        return pApiHooked;
+        return instance.pApiHooked;
     }
 
     public static PlayerUtils.LevelSystem getLevelSystem() {
-        return levelSystem;
+        return instance.levelSystem;
     }
 
     public static PlayerUtils.ClassSystem getClassSystem() {
-        return classSystem;
+        return instance.classSystem;
     }
 
     public RPGInventory() {
