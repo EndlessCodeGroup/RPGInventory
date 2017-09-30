@@ -36,7 +36,8 @@ import ru.endlesscode.rpginventory.utils.ItemUtils;
 import ru.endlesscode.rpginventory.utils.PlayerUtils;
 import ru.endlesscode.rpginventory.utils.StringUtils;
 
-import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -57,12 +58,12 @@ public class ItemManager {
 
     public static boolean init(RPGInventory instance) {
         try {
-            File itemsFile = new File(RPGInventory.getInstance().getDataFolder(), "items.yml");
-            if (!itemsFile.exists()) {
+            Path itemsFile = RPGInventory.getInstance().getDataPath().resolve("items.yml");
+            if (Files.notExists(itemsFile)) {
                 RPGInventory.getInstance().saveResource("items.yml", false);
             }
 
-            FileConfiguration itemsConfig = YamlConfiguration.loadConfiguration(itemsFile);
+            FileConfiguration itemsConfig = YamlConfiguration.loadConfiguration(itemsFile.toFile());
 
             CUSTOM_ITEMS.clear();
             for (String key : itemsConfig.getConfigurationSection("items").getKeys(false)) {

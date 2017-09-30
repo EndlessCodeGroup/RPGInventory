@@ -27,7 +27,11 @@ import org.jetbrains.annotations.Nullable;
 import ru.endlesscode.rpginventory.utils.FileUtils;
 import ru.endlesscode.rpginventory.utils.ItemUtils;
 
-import java.io.*;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -40,14 +44,16 @@ import java.util.zip.GZIPOutputStream;
  * All rights reserved 2014 - 2016 © «EndlessCode Group»
  */
 class BackpackSerializer {
-    static void saveBackpack(Backpack backpack, File file) throws IOException {
+    static void saveBackpack(Backpack backpack, Path file) throws IOException {
         List<NbtCompound> nbtList = new ArrayList<>();
 
-        try (DataOutputStream dataOutput = new DataOutputStream(new GZIPOutputStream(new FileOutputStream(file)))) {
+        try (DataOutputStream dataOutput = new DataOutputStream(new GZIPOutputStream(Files.newOutputStream(file)))) {
             ItemStack[] contents = backpack.getContents();
             for (int i = 0; i < contents.length; i++) {
                 ItemStack item = contents[i];
-                nbtList.add(ItemUtils.itemStackToNBT(ItemUtils.isEmpty(item) ? new ItemStack(Material.AIR) : item, i + ""));
+                nbtList.add(ItemUtils.itemStackToNBT(ItemUtils.isEmpty(item)
+                        ? new ItemStack(Material.AIR)
+                        : item, i + ""));
             }
 
             NbtCompound backpackNbt = NbtFactory.ofCompound("Backpack");
@@ -59,9 +65,9 @@ class BackpackSerializer {
     }
 
     @Nullable
-    static Backpack loadBackpack(File file) throws IOException {
+    static Backpack loadBackpack(Path file) throws IOException {
         Backpack backpack;
-        try (DataInputStream dataInput = new DataInputStream(new GZIPInputStream(new FileInputStream(file)))) {
+        try (DataInputStream dataInput = new DataInputStream(new GZIPInputStream(Files.newInputStream(file)))) {
             NbtCompound nbtList = NbtBinarySerializer.DEFAULT.deserializeCompound(dataInput);
 
             BackpackType type = BackpackManager.getBackpackType(nbtList.getString("type"));
@@ -70,7 +76,7 @@ class BackpackSerializer {
             }
 
             long lastUse = (nbtList.containsKey("last-use")) ? nbtList.getLong("last-use") : System.currentTimeMillis();
-            backpack = new Backpack(type, UUID.fromString(FileUtils.stripExtension(file.getName())));
+            backpack = new Backpack(type, UUID.fromString(FileUtils.stripExtension(file.getFileName().toString())));
             backpack.setLastUse(lastUse);
             NbtCompound itemList = nbtList.getCompound("contents");
             ItemStack[] contents = new ItemStack[type.getSize()];

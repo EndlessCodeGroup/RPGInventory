@@ -25,8 +25,9 @@ import org.bukkit.event.inventory.InventoryType;
 import org.jetbrains.annotations.Nullable;
 import ru.endlesscode.rpginventory.RPGInventory;
 
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,16 +42,16 @@ public class SlotManager {
 
     private final List<Slot> slots = new ArrayList<>();
 
-    private final File slotsFile;
+    private final Path slotsFile;
     private final FileConfiguration slotsConfig;
 
     private SlotManager() {
-        this.slotsFile = new File(RPGInventory.getInstance().getDataFolder(), "slots.yml");
-        if (!slotsFile.exists()) {
+        this.slotsFile = RPGInventory.getInstance().getDataPath().resolve("slots.yml");
+        if (Files.notExists(slotsFile)) {
             RPGInventory.getInstance().saveResource("slots.yml", false);
         }
 
-        this.slotsConfig = YamlConfiguration.loadConfiguration(slotsFile);
+        this.slotsConfig = YamlConfiguration.loadConfiguration(slotsFile.toFile());
 
         for (String key : this.slotsConfig.getConfigurationSection("slots").getKeys(false)) {
             ConfigurationSection config = this.slotsConfig.getConfigurationSection("slots." + key);
@@ -261,7 +262,7 @@ public class SlotManager {
 
     public void saveDefaults() {
         try {
-            this.slotsConfig.save(this.slotsFile);
+            this.slotsConfig.save(this.slotsFile.toFile());
         } catch (IOException e) {
             e.printStackTrace();
         }

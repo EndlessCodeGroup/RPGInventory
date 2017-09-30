@@ -49,8 +49,9 @@ import ru.endlesscode.rpginventory.pet.PetManager;
 import ru.endlesscode.rpginventory.pet.PetType;
 import ru.endlesscode.rpginventory.utils.*;
 
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -453,7 +454,8 @@ public class InventoryManager {
     }
 
     private static boolean isNewPlayer(Player player) {
-        return !new File(RPGInventory.getInstance().getDataFolder(), "inventories/" + player.getUniqueId() + ".inv").exists();
+        Path dataFolder = RPGInventory.getInstance().getDataFolder().toPath();
+        return Files.notExists(dataFolder.resolve("inventories/" + player.getUniqueId() + ".inv"));
     }
 
     public static void loadPlayerInventory(Player player) {
@@ -463,16 +465,15 @@ public class InventoryManager {
         }
 
         try {
-            File folder = new File(RPGInventory.getInstance().getDataFolder(), "inventories");
-            if (!folder.exists()) {
-                folder.mkdir();
-            }
+            Path dataFolder = RPGInventory.getInstance().getDataPath();
+            Path folder = dataFolder.resolve("inventories");
+            Files.createDirectories(folder);
 
             // Load inventory from file
-            File file = new File(folder, player.getUniqueId() + ".inv");
+            Path file = folder.resolve(player.getUniqueId() + ".inv");
 
             PlayerWrapper playerWrapper;
-            if (file.exists()) {
+            if (Files.exists(file)) {
                 playerWrapper = InventorySerializer.loadPlayer(player, file);
             } else {
                 playerWrapper = new PlayerWrapper(player);
@@ -498,7 +499,7 @@ public class InventoryManager {
         RPGInventory.getInstance().getServer().getPluginManager().callEvent(new PlayerInventoryLoadEvent.Post(player));
     }
 
-    public static void unloadPlayerInventory(@NotNull Player player) {
+    public static void unloadPlayerInventory(Player player) {
         if (!InventoryManager.playerIsLoaded(player)) {
             return;
         }
@@ -514,22 +515,19 @@ public class InventoryManager {
         RPGInventory.getInstance().getServer().getPluginManager().callEvent(new PlayerInventoryUnloadEvent.Post(player));
     }
 
-    public static void savePlayerInventory(@NotNull Player player) {
+    public static void savePlayerInventory(Player player) {
         if (!InventoryManager.playerIsLoaded(player)) {
             return;
         }
 
         PlayerWrapper playerWrapper = INVENTORIES.get(player.getUniqueId());
         try {
-            File folder = new File(RPGInventory.getInstance().getDataFolder(), "inventories");
-            if (!folder.exists() && !folder.mkdir()) {
-                throw new IOException("Failed to create directory: " + folder.getName());
-            }
+            Path dataFolder = RPGInventory.getInstance().getDataPath();
+            Path folder = dataFolder.resolve("inventories");
+            Files.createDirectories(folder);
 
-            File file = new File(folder, player.getUniqueId() + ".inv");
-            if (file.exists() && !file.delete()) {
-                throw new IOException("Failed to delete file: " + file.getName());
-            }
+            Path file = folder.resolve(player.getUniqueId() + ".inv");
+            Files.deleteIfExists(file);
 
             InventorySerializer.savePlayer(player, playerWrapper, file);
         } catch (IOException e) {

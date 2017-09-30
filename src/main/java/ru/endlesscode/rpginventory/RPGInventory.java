@@ -52,6 +52,7 @@ import ru.endlesscode.rpginventory.utils.PlayerUtils;
 import ru.endlesscode.rpginventory.utils.StringUtils;
 
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.logging.Logger;
 
 public class RPGInventory extends JavaPlugin {
@@ -345,5 +346,9 @@ public class RPGInventory extends JavaPlugin {
             Config.save();
             Config.reload();
         }
+    }
+
+    public Path getDataPath() {
+        return getDataFolder().toPath();
     }
 }

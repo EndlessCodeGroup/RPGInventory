@@ -20,25 +20,25 @@ package ru.endlesscode.rpginventory.misc;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.plugin.Plugin;
 import ru.endlesscode.rpginventory.RPGInventory;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 
 public class Config {
     private static FileConfiguration config;
-    private static File configFile;
+    private static Path configFile;
 
-    public static void loadConfig(Plugin plugin) {
-        configFile = new File(plugin.getDataFolder(), "config.yml");
-        if (!configFile.exists()) {
+    public static void loadConfig(RPGInventory plugin) {
+        configFile = plugin.getDataPath().resolve("config.yml");
+        if (Files.notExists(configFile)) {
             plugin.saveDefaultConfig();
 
             try {
-                Files.copy(configFile.toPath(), new File(plugin.getDataFolder(), "config-example.yml").toPath(), StandardCopyOption.REPLACE_EXISTING);
+                Path destination = plugin.getDataPath().resolve("config-example.yml");
+                Files.copy(configFile, destination, StandardCopyOption.REPLACE_EXISTING);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -53,12 +53,12 @@ public class Config {
     }
 
     public static void reload() {
-        Config.config = YamlConfiguration.loadConfiguration(configFile);
+        Config.config = YamlConfiguration.loadConfiguration(configFile.toFile());
     }
 
     public static void save() {
         try {
-            config.save(configFile);
+            config.save(configFile.toFile());
         } catch (IOException e) {
             RPGInventory.getPluginLogger().warning(e.getMessage());
         }

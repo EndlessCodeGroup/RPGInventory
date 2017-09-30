@@ -34,8 +34,9 @@ import ru.endlesscode.rpginventory.inventory.slot.SlotManager;
 import ru.endlesscode.rpginventory.misc.Config;
 import ru.endlesscode.rpginventory.utils.ItemUtils;
 
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.*;
 
 /**
@@ -54,12 +55,12 @@ public class BackpackManager {
         }
 
         try {
-            File petsFile = new File(RPGInventory.getInstance().getDataFolder(), "backpacks.yml");
-            if (!petsFile.exists()) {
+            Path petsFile = RPGInventory.getInstance().getDataPath().resolve("backpacks.yml");
+            if (Files.notExists(petsFile)) {
                 RPGInventory.getInstance().saveResource("backpacks.yml", false);
             }
 
-            FileConfiguration petsConfig = YamlConfiguration.loadConfiguration(petsFile);
+            FileConfiguration petsConfig = YamlConfiguration.loadConfiguration(petsFile.toFile());
 
             BACKPACK_TYPES.clear();
             for (String key : petsConfig.getConfigurationSection("backpacks").getKeys(false)) {
@@ -135,14 +136,12 @@ public class BackpackManager {
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
     public static void saveBackpacks() {
-        File folder = new File(RPGInventory.getInstance().getDataFolder(), "backpacks");
-        if (!folder.exists()) {
-            folder.mkdir();
-        }
+        Path folder = RPGInventory.getInstance().getDataPath().resolve("backpacks");
 
         try {
+            Files.createDirectories(folder);
             for (Map.Entry<UUID, Backpack> entry : BACKPACKS.entrySet()) {
-                File bpFile = new File(folder, entry.getKey().toString() + ".bp");
+                Path bpFile = folder.resolve(entry.getKey().toString() + ".bp");
                 BackpackSerializer.saveBackpack(entry.getValue(), bpFile);
             }
         } catch (IOException e) {
@@ -153,23 +152,24 @@ public class BackpackManager {
     @SuppressWarnings("ResultOfMethodCallIgnored")
     private static void loadBackpacks() {
         try {
-            File folder = new File(RPGInventory.getInstance().getDataFolder(), "backpacks");
-            if (!folder.exists()) {
-                folder.mkdir();
-            }
+            Path folder = RPGInventory.getInstance().getDataPath().resolve("backpacks");
+            Files.createDirectories(folder);
 
             //noinspection ConstantConditions
-            for (File bpFile : folder.listFiles()) {
-                if (bpFile.getName().endsWith(".bp")) {
-                    Backpack backpack = BackpackSerializer.loadBackpack(bpFile);
-                    if (backpack == null || backpack.isOverdue()) {
-                        bpFile.delete();
-                        continue;
+            Files.list(folder).forEach(path -> {
+                try {
+                    if (path.getFileName().endsWith(".bp")) {
+                        Backpack backpack = BackpackSerializer.loadBackpack(path);
+                        if (backpack == null || backpack.isOverdue()) {
+                            Files.delete(path);
+                        } else {
+                            BACKPACKS.put(backpack.getUniqueId(), backpack);
+                        }
                     }
-
-                    BACKPACKS.put(backpack.getUniqueId(), backpack);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
                 }
-            }
+            });
         } catch (IOException e) {
             e.printStackTrace();
         }

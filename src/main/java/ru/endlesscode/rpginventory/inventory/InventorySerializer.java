@@ -24,23 +24,26 @@ import com.comphenix.protocol.wrappers.nbt.io.NbtBinarySerializer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.NotNull;
 import ru.endlesscode.rpginventory.event.updater.HealthUpdater;
 import ru.endlesscode.rpginventory.inventory.slot.Slot;
 import ru.endlesscode.rpginventory.inventory.slot.SlotManager;
 import ru.endlesscode.rpginventory.misc.Config;
 import ru.endlesscode.rpginventory.utils.ItemUtils;
 
-import java.io.*;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
 class InventorySerializer {
-    static void savePlayer(@NotNull Player player, @NotNull PlayerWrapper playerWrapper, @NotNull File file) throws IOException {
+    static void savePlayer(Player player, PlayerWrapper playerWrapper, Path file) throws IOException {
         List<NbtCompound> slotList = new ArrayList<>();
-        try (DataOutputStream dataOutput = new DataOutputStream(new GZIPOutputStream(new FileOutputStream(file)))) {
+        try (DataOutputStream dataOutput = new DataOutputStream(new GZIPOutputStream(Files.newOutputStream(file)))) {
             for (Slot slot : SlotManager.instance().getSlots()) {
                 if (slot.getSlotType() == Slot.SlotType.ARMOR) {
                     continue;
@@ -85,16 +88,18 @@ class InventorySerializer {
         }
     }
 
-    static PlayerWrapper loadPlayer(Player player, File file) throws IOException {
+    static PlayerWrapper loadPlayer(Player player, Path file) throws IOException {
         PlayerWrapper playerWrapper = new PlayerWrapper(player);
         Inventory inventory = playerWrapper.getInventory();
 
-        try (DataInputStream dataInput = new DataInputStream(new GZIPInputStream(new FileInputStream(file)))) {
+        try (DataInputStream dataInput = new DataInputStream(new GZIPInputStream(Files.newInputStream(file)))) {
             NbtCompound playerNbt = NbtBinarySerializer.DEFAULT.deserializeCompound(dataInput);
 
             // =========== Added in v1.1.8 ============
             if (playerNbt.containsKey("free-slots")) {
-                playerWrapper.setBuyedSlots(playerNbt.getInteger("free-slots") - Config.getConfig().getInt("slots.free"));
+                int savedFreeSlots = playerNbt.getInteger("free-slots");
+                int freeSlotsFromConfig = Config.getConfig().getInt("slots.free");
+                playerWrapper.setBuyedSlots(savedFreeSlots - freeSlotsFromConfig);
                 playerNbt.remove("free-slots");
             } else {
                 playerWrapper.setBuyedSlots(playerNbt.getInteger("buyed-slots"));

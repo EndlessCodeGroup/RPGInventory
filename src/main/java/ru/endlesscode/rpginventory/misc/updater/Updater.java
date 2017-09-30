@@ -21,7 +21,6 @@ package ru.endlesscode.rpginventory.misc.updater;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
@@ -63,8 +62,6 @@ public class Updater {
     private static final String TITLE_VALUE = "name";
     // Remote file's download link
     private static final String LINK_VALUE = "fileUrl";
-    // Remote file's release type
-    private static final String TYPE_VALUE = "releaseType";
     // Remote file's build version
     private static final String VERSION_VALUE = "gameVersion";
     // Remote description
@@ -79,8 +76,6 @@ public class Updater {
     private static final String DELIMITER = "^v|[\\s_-]v";
     // If the version number contains one of these, don't update.
     private static final String[] NO_UPDATE_TAG = {"-DEV", "-PRE", "-SNAPSHOT"};
-    // Used for downloading files
-    private static final int BYTE_SIZE = 1024;
     // Config key for api key
     private static final String API_KEY_CONFIG_KEY = "api-key";
     // Config key for disabling Updater
@@ -96,15 +91,10 @@ public class Updater {
     private final Plugin plugin;
     // Type of update check to run
     private final UpdateType type;
-    // The folder that downloads will be placed in
-    private final File updateFolder;
-    // The provided callback (if any)
-    private final UpdateCallback callback;
 
     /* Collected from Curse API */
 
     private String versionName;
-    private String versionType;
     private String infoLink;
     private String description;
 
@@ -125,8 +115,6 @@ public class Updater {
     public Updater(Plugin plugin, UpdateType type) {
         this.plugin = plugin;
         this.type = type;
-        this.updateFolder = this.plugin.getServer().getUpdateFolderFile();
-        this.callback = null;
 
         final File pluginFile = this.plugin.getDataFolder().getParentFile();
         final File updaterFile = new File(pluginFile, "Updater");
@@ -317,12 +305,15 @@ public class Updater {
 
         conn.addRequestProperty("User-Agent", Updater.USER_AGENT);
         conn.setDoOutput(true);
-
-        BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8));
         StringBuilder responseBuilder = new StringBuilder();
-        String line;
-        while ((line = reader.readLine()) != null) {
-            responseBuilder.append(line.trim());
+
+        try (BufferedReader reader = new BufferedReader(
+                new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8))
+        ) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                responseBuilder.append(line.trim());
+            }
         }
 
         JSONArray array = (JSONArray) JSONValue.parse(responseBuilder.toString());
@@ -345,7 +336,6 @@ public class Updater {
         }
 
         this.versionName = (String) latestUpdate.get(Updater.TITLE_VALUE);
-        this.versionType = (String) latestUpdate.get(Updater.TYPE_VALUE);
         this.infoLink = (String) latestUpdate.get(Updater.LINK_VALUE);
         this.description = (String) latestUpdate.get(Updater.DESCRIPTION_VALUE);
 
@@ -370,19 +360,6 @@ public class Updater {
             // Obtain the results of the project's file feed
             this.result = UpdateResult.UPDATE_AVAILABLE;
         }
-
-        if (this.callback != null) {
-            new BukkitRunnable() {
-                @Override
-                public void run() {
-                    runCallback();
-                }
-            }.runTask(this.plugin);
-        }
-    }
-
-    private void runCallback() {
-        this.callback.onFinish(this);
     }
 
     public String getDescription() {

@@ -45,7 +45,8 @@ import ru.endlesscode.rpginventory.utils.EffectUtils;
 import ru.endlesscode.rpginventory.utils.ItemUtils;
 import ru.endlesscode.rpginventory.utils.LocationUtils;
 
-import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -74,12 +75,12 @@ public class PetManager {
         }
 
         try {
-            File petsFile = new File(RPGInventory.getInstance().getDataFolder(), "pets.yml");
-            if (!petsFile.exists()) {
+            Path petsFile = RPGInventory.getInstance().getDataPath().resolve("pets.yml");
+            if (Files.notExists(petsFile)) {
                 RPGInventory.getInstance().saveResource("pets.yml", false);
             }
 
-            FileConfiguration petsConfig = YamlConfiguration.loadConfiguration(petsFile);
+            FileConfiguration petsConfig = YamlConfiguration.loadConfiguration(petsFile.toFile());
 
             PetManager.PETS.clear();
             for (String key : petsConfig.getConfigurationSection("pets").getKeys(false)) {
