@@ -305,7 +305,7 @@ public class RPGInventory extends JavaPlugin {
         new BukkitRunnable() {
             @Override
             public void run() {
-                Updater updater = new Updater(RPGInventory.instance, RPGInventory.instance.getFile(), Updater.UpdateType.NO_DOWNLOAD, false);
+                Updater updater = new Updater(RPGInventory.instance, Updater.UpdateType.NO_DOWNLOAD);
                 if (updater.getResult() == Updater.UpdateResult.UPDATE_AVAILABLE) {
                     String[] lines = {
                             StringUtils.coloredLine("&3=================&b[&eRPGInventory&b]&3==================="),

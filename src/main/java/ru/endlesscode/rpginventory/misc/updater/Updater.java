@@ -54,7 +54,7 @@ import java.util.logging.Level;
  * @version 2.3
  */
 
-@SuppressWarnings("ALL")
+// FIXME: Need to write own updater instead of this crap
 public class Updater {
 
     /* Constants */
@@ -89,8 +89,6 @@ public class Updater {
     private static final String API_KEY_DEFAULT = "PUT_API_KEY_HERE";
     // Default disable value in config
     private static final boolean DISABLE_DEFAULT = false;
-    // Secret key
-    private static final String SECRET_KEY = "BA8F94F2D6TF3ETR";
 
     /* User-provided variables */
 
@@ -98,10 +96,6 @@ public class Updater {
     private final Plugin plugin;
     // Type of update check to run
     private final UpdateType type;
-    // Whether to announce file downloads
-    private final boolean announce;
-    // The plugin file (jar)
-    private final File file;
     // The folder that downloads will be placed in
     private final File updateFolder;
     // The provided callback (if any)
@@ -112,8 +106,6 @@ public class Updater {
     private String versionName;
     private String versionType;
     private String infoLink;
-    private String downloadLink;
-    private String hashSum;
     private String description;
 
     /* Update process variables */
@@ -125,45 +117,16 @@ public class Updater {
     private Updater.UpdateResult result = Updater.UpdateResult.SUCCESS;
 
     /**
-     * Initialize the updater.
-     *
-     * @param plugin   The plugin that is checking for an update.
-     * @param file     The file that the plugin is running from, get this by doing this.getFile() from within your main class.
-     * @param type     Specify the type of update this will be. See {@link UpdateType}
-     * @param announce True if the program should announce the progress of new updates in console.
-     */
-    public Updater(Plugin plugin, File file, UpdateType type, boolean announce) {
-        this(plugin, file, type, null, announce);
-    }
-
-    /**
      * Initialize the updater with the provided callback.
      *
      * @param plugin   The plugin that is checking for an update.
-     * @param file     The file that the plugin is running from, get this by doing this.getFile() from within your main class.
      * @param type     Specify the type of update this will be. See {@link UpdateType}
-     * @param callback The callback instance to notify when the Updater has finished
      */
-    public Updater(Plugin plugin, File file, UpdateType type, UpdateCallback callback) {
-        this(plugin, file, type, callback, false);
-    }
-
-    /**
-     * Initialize the updater with the provided callback.
-     *
-     * @param plugin   The plugin that is checking for an update.
-     * @param file     The file that the plugin is running from, get this by doing this.getFile() from within your main class.
-     * @param type     Specify the type of update this will be. See {@link UpdateType}
-     * @param callback The callback instance to notify when the Updater has finished
-     * @param announce True if the program should announce the progress of new updates in console.
-     */
-    public Updater(Plugin plugin, File file, UpdateType type, UpdateCallback callback, boolean announce) {
+    public Updater(Plugin plugin, UpdateType type) {
         this.plugin = plugin;
         this.type = type;
-        this.announce = announce;
-        this.file = file;
         this.updateFolder = this.plugin.getServer().getUpdateFolderFile();
-        this.callback = callback;
+        this.callback = null;
 
         final File pluginFile = this.plugin.getDataFolder().getParentFile();
         final File updaterFile = new File(pluginFile, "Updater");
@@ -222,24 +185,6 @@ public class Updater {
     }
 
     /**
-     * Get the latest version's release type.
-     *
-     * @return latest version's release type.
-     * @see ReleaseType
-     */
-    public ReleaseType getLatestType() {
-        this.waitForThread();
-        if (this.versionType != null) {
-            for (ReleaseType type : ReleaseType.values()) {
-                if (this.versionType.equalsIgnoreCase(type.name())) {
-                    return type;
-                }
-            }
-        }
-        return null;
-    }
-
-    /**
      * Get the latest version's name (such as "Project v1.0").
      *
      * @return latest version's name.
@@ -247,16 +192,6 @@ public class Updater {
     public String getLatestName() {
         this.waitForThread();
         return this.versionName;
-    }
-
-    /**
-     * Get the latest version's direct file link.
-     *
-     * @return latest version's file link.
-     */
-    public String getDownloadLink() {
-        this.waitForThread();
-        return this.downloadLink;
     }
 
     /**
@@ -280,22 +215,6 @@ public class Updater {
                 this.plugin.getLogger().log(Level.SEVERE, null, e);
             }
         }
-    }
-
-    /**
-     * Check if the name of a jar is one of the plugins currently installed, used for extracting the correct files out of a zip.
-     *
-     * @param name a name to check for inside the plugins folder.
-     * @return true if a file inside the plugins folder is named this.
-     */
-    private boolean pluginExists(String name) {
-        File[] plugins = listFilesOrError(new File("plugins"));
-        for (final File file : plugins) {
-            if (file.getName().equals(name)) {
-                return true;
-            }
-        }
-        return false;
     }
 
     /**
@@ -357,7 +276,7 @@ public class Updater {
      * @param remoteVersion the remote version
      * @return true if Updater should consider the remote version an update, false if not.
      */
-    public boolean shouldUpdate(String localVersion, String remoteVersion) {
+    private boolean shouldUpdate(String localVersion, String remoteVersion) {
         return !localVersion.equalsIgnoreCase(remoteVersion);
     }
 
@@ -446,16 +365,6 @@ public class Updater {
         }
     }
 
-    private File[] listFilesOrError(File folder) {
-        File[] contents = folder.listFiles();
-        if (contents == null) {
-            this.plugin.getLogger().severe("The updater could not access files at: " + this.updateFolder.getAbsolutePath());
-            return new File[0];
-        } else {
-            return contents;
-        }
-    }
-
     private void runUpdater() {
         if (this.url != null && (this.read() && this.versionCheck())) {
             // Obtain the results of the project's file feed
@@ -497,10 +406,6 @@ public class Updater {
          */
         DISABLED,
         /**
-         * The updater found an update, but was unable to download it.
-         */
-        FAIL_DOWNLOAD,
-        /**
          * For some reason, the updater was unable to contact dev.bukkit.org to download the file.
          */
         FAIL_DBO,
@@ -519,10 +424,6 @@ public class Updater {
      */
     public enum UpdateType {
         /**
-         * Run a version check, and then if the file is out of date, download the newest version.
-         */
-        DEFAULT,
-        /**
          * Don't run a version check, just find the latest update and download it.
          */
         NO_VERSION_CHECK,
@@ -530,24 +431,6 @@ public class Updater {
          * Get information about the version and the download size, but don't actually download anything.
          */
         NO_DOWNLOAD
-    }
-
-    /**
-     * Represents the various release types of a file on BukkitDev.
-     */
-    public enum ReleaseType {
-        /**
-         * An "alpha" file.
-         */
-        ALPHA,
-        /**
-         * A "beta" file.
-         */
-        BETA,
-        /**
-         * A "release" file.
-         */
-        RELEASE
     }
 
     /**
