@@ -50,7 +50,7 @@ public class PetFood extends TexturedItem {
 
     private ItemStack foodItem;
 
-    PetFood(@NotNull ConfigurationSection config) {
+    PetFood(ConfigurationSection config) {
         super(config.getString("item"));
 
         this.name = StringUtils.coloredLine(config.getString("name"));

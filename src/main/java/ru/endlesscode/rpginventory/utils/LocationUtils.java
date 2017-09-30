@@ -26,7 +26,6 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +37,7 @@ import java.util.Random;
  * All rights reserved 2014 - 2016 © «EndlessCode Group»
  */
 public class LocationUtils {
-    public static Location getLocationNearPlayer(@NotNull Player player, int radius) {
+    public static Location getLocationNearPlayer(Player player, int radius) {
         Block playerBlock = player.getLocation().getBlock();
         List<Location> availableLocations = new ArrayList<>();
 

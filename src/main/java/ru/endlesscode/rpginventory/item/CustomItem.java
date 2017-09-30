@@ -23,7 +23,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
 import ru.endlesscode.rpginventory.utils.ItemUtils;
@@ -57,7 +56,7 @@ public class CustomItem extends ClassedItem {
 
     private ItemStack customItem;
 
-    CustomItem(String id, @NotNull ConfigurationSection config) {
+    CustomItem(String id, ConfigurationSection config) {
         super(config, config.getString("texture"));
 
         Rarity rarity = Rarity.valueOf(config.getString("rarity"));

@@ -25,7 +25,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ru.endlesscode.rpginventory.RPGInventory;
 import ru.endlesscode.rpginventory.event.listener.BackpackListener;
@@ -103,7 +102,7 @@ public class BackpackManager {
     }
 
     @Contract("_, null -> false")
-    public static boolean open(@NotNull Player player, @Nullable ItemStack bpItem) {
+    public static boolean open(Player player, @Nullable ItemStack bpItem) {
         if (ItemUtils.isEmpty(bpItem)) {
             return false;
         }

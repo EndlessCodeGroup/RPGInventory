@@ -124,7 +124,7 @@ public class InventoryLocker {
     }
 
     @NotNull
-    private static ItemStack addId(@NotNull ItemStack item) {
+    private static ItemStack addId(ItemStack item) {
         return ItemUtils.setTag(item, "locked", "0");
     }
 
@@ -136,11 +136,11 @@ public class InventoryLocker {
         return getBuyableSlotForLine(line).equals(currentItem);
     }
 
-    public static void lockSlots(@NotNull Player player) {
+    public static void lockSlots(Player player) {
         InventoryLocker.lockSlots(player, false);
     }
 
-    public static void lockSlots(@NotNull Player player, boolean force) {
+    public static void lockSlots(Player player, boolean force) {
         if (!force && player.getGameMode() == GameMode.CREATIVE) {
             return;
         }
@@ -160,7 +160,7 @@ public class InventoryLocker {
         InventoryManager.lockEmptySlots(player);
     }
 
-    public static void unlockSlots(@NotNull Player player) {
+    public static void unlockSlots(Player player) {
         if (isEnabled()) {
             for (int i = 8 + getSlots(player); i < 36; i++) {
                 ItemStack itemStack = player.getInventory().getItem(i);
@@ -174,7 +174,7 @@ public class InventoryLocker {
         InventoryManager.unlockEmptySlots(player);
     }
 
-    public static boolean canBuySlot(@NotNull Player player, int line) {
+    public static boolean canBuySlot(Player player, int line) {
         if (Config.getConfig().getBoolean("slots.money.enabled")) {
             double cost = Config.getConfig().getDouble("slots.money.cost.line" + line);
 
@@ -195,7 +195,7 @@ public class InventoryLocker {
         return true;
     }
 
-    private static int getSlots(@NotNull OfflinePlayer player) {
+    private static int getSlots(OfflinePlayer player) {
         int slots = Config.getConfig().getInt("slots.free") + InventoryManager.get(player).getBuyedGenericSlots();
         return slots > 27 ? 27 : slots;
     }

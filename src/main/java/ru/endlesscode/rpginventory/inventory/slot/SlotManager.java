@@ -22,7 +22,6 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.event.inventory.InventoryType;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ru.endlesscode.rpginventory.RPGInventory;
 
@@ -90,7 +89,7 @@ public class SlotManager {
         return slotManager;
     }
 
-    private boolean validateSlot(@NotNull Slot slot) {
+    private boolean validateSlot(Slot slot) {
         if (slot.getSlotType().isReadItemList() && slot.itemListIsEmpty()) {
             RPGInventory.getPluginLogger().warning("Slot with type " + slot.getSlotType()
                     + " must contains list of allowed items");

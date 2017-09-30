@@ -41,7 +41,6 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ru.endlesscode.rpginventory.RPGInventory;
 import ru.endlesscode.rpginventory.event.PetEquipEvent;
@@ -115,17 +114,21 @@ public class MyPetManager implements Listener {
         return null;
     }
 
-    public static boolean validatePet(Player player, InventoryAction action, @Nullable ItemStack currentItem, @NotNull ItemStack cursor) {
+    public static boolean validatePet(
+            Player player, InventoryAction action,
+            @Nullable ItemStack currentItem,
+            ItemStack cursor
+    ) {
         ActionType actionType = ActionType.getTypeOfAction(action);
-        boolean isAllowedAction = actionType == ActionType.GET ||
-                action == InventoryAction.SWAP_WITH_CURSOR ||
-                actionType == ActionType.DROP;
+        boolean isAllowedAction = actionType == ActionType.GET
+                || action == InventoryAction.SWAP_WITH_CURSOR
+                || actionType == ActionType.DROP;
 
         return !(!ItemUtils.isEmpty(currentItem) && isAllowedAction)
                 || swapMyPets(player, isMyPetItem(currentItem), cursor);
     }
 
-    private static boolean swapMyPets(final Player player, boolean hasPet, @NotNull ItemStack newPet) {
+    private static boolean swapMyPets(final Player player, boolean hasPet, ItemStack newPet) {
         if (hasPet) {
             PetUnequipEvent event = new PetUnequipEvent(player);
             RPGInventory.getInstance().getServer().getPluginManager().callEvent(event);

@@ -64,7 +64,7 @@ public class PetType extends ClassedItem {
     private ItemStack spawnItem;
     private Map<String, String> features;
 
-    PetType(@NotNull ConfigurationSection config) {
+    PetType(ConfigurationSection config) {
         super(config, config.getString("item"));
 
         this.name = StringUtils.coloredLine(config.getString("name"));

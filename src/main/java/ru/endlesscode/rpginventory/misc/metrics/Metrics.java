@@ -34,6 +34,7 @@ import java.net.Proxy;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.zip.GZIPOutputStream;
@@ -491,7 +492,7 @@ public class Metrics {
         }
 
 
-        byte[] uncompressed = json.toString().getBytes();
+        byte[] uncompressed = json.toString().getBytes(StandardCharsets.UTF_8);
         byte[] compressed = gzip(json.toString());
 
         // Headers
@@ -514,7 +515,8 @@ public class Metrics {
         os.flush();
 
         // Now read the response
-        final BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+        final BufferedReader reader = new BufferedReader(
+                new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8));
         String response = reader.readLine();
 
         // close resources

@@ -25,6 +25,7 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import ru.endlesscode.rpginventory.RPGInventory;
 import ru.endlesscode.rpginventory.inventory.backpack.BackpackManager;
 import ru.endlesscode.rpginventory.inventory.backpack.BackpackType;
@@ -60,13 +61,13 @@ public class ItemUtils {
             Material.BOW, Material.FLINT_AND_STEEL, Material.SHEARS, Material.FISHING_ROD
     );
 
-    public static ItemStack setTag(@NotNull ItemStack item, String tag, String value) {
+    public static ItemStack setTag(ItemStack item, String tag, String value) {
         item = toBukkitItemStack(item);
         NbtCompound nbt = NbtFactory.asCompound(NbtFactory.fromItemTag(item));
 
         if (!nbt.containsKey(tag)) {
             if (UNBREAKABLE_TAG.equals(tag) || HIDE_FLAGS_TAG.equals(tag)) {
-                nbt.put(tag, Integer.valueOf(value));
+                nbt.put(tag, Integer.parseInt(value));
             } else {
                 nbt.put(tag, value);
             }
@@ -76,12 +77,12 @@ public class ItemUtils {
         return item;
     }
 
-    public static String getTag(@NotNull ItemStack item, String tag) {
+    public static String getTag(ItemStack item, String tag) {
         return getTag(item, tag, null);
     }
 
     @SuppressWarnings("WeakerAccess")
-    public static String getTag(@NotNull ItemStack item, String tag, String defaultValue) {
+    public static String getTag(ItemStack item, String tag, @Nullable String defaultValue) {
         item = toBukkitItemStack(item);
         NbtCompound nbt = NbtFactory.asCompound(NbtFactory.fromItemTag(item));
 
@@ -92,7 +93,7 @@ public class ItemUtils {
         return nbt.getString(tag);
     }
 
-    public static boolean hasTag(@NotNull ItemStack originalItem, String tag) {
+    public static boolean hasTag(ItemStack originalItem, String tag) {
         if (!originalItem.hasItemMeta()) {
             return false;
         }
@@ -103,7 +104,7 @@ public class ItemUtils {
     }
 
     @NotNull
-    public static ItemStack getTexturedItem(@NotNull String texture) {
+    public static ItemStack getTexturedItem(String texture) {
         String[] textures = texture.split(":");
 
         if (Material.getMaterial(textures[0]) == null) {
@@ -135,7 +136,7 @@ public class ItemUtils {
         return itemsWithDurability.contains(item.getType());
     }
 
-    public static NbtCompound itemStackToNBT(@NotNull ItemStack originalItem, String name) {
+    public static NbtCompound itemStackToNBT(ItemStack originalItem, String name) {
         NbtCompound nbt = NbtFactory.ofCompound(name);
 
         nbt.put("material", originalItem.getType().name());
@@ -151,7 +152,7 @@ public class ItemUtils {
         return nbt;
     }
 
-    public static ItemStack nbtToItemStack(@NotNull NbtCompound nbt) {
+    public static ItemStack nbtToItemStack(NbtCompound nbt) {
         ItemStack item = new ItemStack(Material.valueOf(nbt.getString("material")));
 
         if (!ItemUtils.isEmpty(item)) {

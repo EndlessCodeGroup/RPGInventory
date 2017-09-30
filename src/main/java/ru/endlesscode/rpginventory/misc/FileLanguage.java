@@ -41,7 +41,7 @@ public class FileLanguage {
     private final Properties language = new Properties();
     private final File langFile;
 
-    public FileLanguage(@NotNull Plugin plugin) {
+    public FileLanguage(Plugin plugin) {
         this.plugin = plugin;
         String locale = Config.getConfig().getString("language");
         this.langFile = new File(

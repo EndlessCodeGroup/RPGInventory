@@ -20,7 +20,6 @@ package ru.endlesscode.rpginventory.pet;
 
 import com.comphenix.protocol.utility.MinecraftReflection;
 import org.bukkit.entity.LivingEntity;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Field;
@@ -38,7 +37,7 @@ public class Attributes {
     @Nullable
     private Object entity = null;
 
-    Attributes(@NotNull LivingEntity entity) {
+    Attributes(LivingEntity entity) {
         try {
             Method handleMethod = entity.getClass().getMethod("getHandle");
             this.entity = handleMethod.invoke(entity);
@@ -53,7 +52,7 @@ public class Attributes {
         this.setAttribute(type, speed);
     }
 
-    private void setAttribute(@NotNull String type, double speed) {
+    private void setAttribute(String type, double speed) {
         try {
             Method getAttributeMethod = MinecraftReflection.getMinecraftClass("EntityLiving")
                     .getMethod("getAttributeInstance", MinecraftReflection.getMinecraftClass("IAttribute"));

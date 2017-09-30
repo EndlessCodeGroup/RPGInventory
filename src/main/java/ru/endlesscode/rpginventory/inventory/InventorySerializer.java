@@ -85,7 +85,7 @@ class InventorySerializer {
         }
     }
 
-    static PlayerWrapper loadPlayer(@NotNull Player player, @NotNull File file) throws IOException {
+    static PlayerWrapper loadPlayer(Player player, File file) throws IOException {
         PlayerWrapper playerWrapper = new PlayerWrapper(player);
         Inventory inventory = playerWrapper.getInventory();
 

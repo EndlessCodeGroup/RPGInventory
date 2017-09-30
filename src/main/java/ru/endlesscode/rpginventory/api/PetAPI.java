@@ -20,7 +20,6 @@ package ru.endlesscode.rpginventory.api;
 
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
 import ru.endlesscode.rpginventory.inventory.PlayerWrapper;
@@ -38,11 +37,11 @@ public class PetAPI {
     /**
      * Get pet spawn item from RPGInventory of specific player
      *
-     * @param player - the player
+     * @param player - not null player
      * @return ItemStack if player have pet spawn item, null - otherwise
      */
     @Nullable
-    public static ItemStack getPetItem(@NotNull Player player) {
+    public static ItemStack getPetItem(Player player) {
         PlayerWrapper playerWrapper = InventoryManager.get(player);
         ItemStack petItem = PetManager.isEnabled() && playerWrapper != null ? playerWrapper.getInventory().getItem(PetManager.getPetSlotId()) : null;
 
@@ -52,11 +51,11 @@ public class PetAPI {
     /**
      * Get Pet of specific player
      *
-     * @param player - the player
+     * @param player - not null player
      * @return Pet if player have pet, null - otherwise
      */
     @Nullable
-    public static PetType getPet(@NotNull Player player) {
+    public static PetType getPet(Player player) {
         return PetManager.getPetFromItem(PetAPI.getPetItem(player));
     }
 }

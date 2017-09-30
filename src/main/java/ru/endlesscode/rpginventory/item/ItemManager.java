@@ -23,7 +23,6 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ru.endlesscode.rpginventory.RPGInventory;
 import ru.endlesscode.rpginventory.event.listener.ItemListener;
@@ -85,11 +84,11 @@ public class ItemManager {
         return true;
     }
 
-    public static Modifier getModifier(@NotNull Player player, ItemStat.StatType statType) {
+    public static Modifier getModifier(Player player, ItemStat.StatType statType) {
         return getModifier(player, statType, false);
     }
 
-    private static Modifier getModifier(@NotNull Player player, ItemStat.StatType statType, boolean notifyPlayer) {
+    private static Modifier getModifier(Player player, ItemStat.StatType statType, boolean notifyPlayer) {
         List<ItemStack> effectiveItems = InventoryUtils.collectEffectiveItems(player, notifyPlayer);
         double minBonus = 0;
         double maxBonus = 0;
@@ -128,11 +127,11 @@ public class ItemManager {
     }
 
     @Nullable
-    public static CustomItem getCustomItem(@NotNull ItemStack item) {
+    public static CustomItem getCustomItem(ItemStack item) {
         return CUSTOM_ITEMS.get(ItemUtils.getTag(item, ItemUtils.ITEM_TAG));
     }
 
-    public static boolean allowedForPlayer(@NotNull Player player, @NotNull ItemStack item, boolean notifyPlayer) {
+    public static boolean allowedForPlayer(Player player, ItemStack item, boolean notifyPlayer) {
         ClassedItem classedItem;
         if (CustomItem.isCustomItem(item)) {
             classedItem = ItemManager.getCustomItem(item);
@@ -161,7 +160,7 @@ public class ItemManager {
         return false;
     }
 
-    public static void updateStats(@NotNull final Player player) {
+    public static void updateStats(final Player player) {
         if (!InventoryManager.playerIsLoaded(player)) {
             return;
         }

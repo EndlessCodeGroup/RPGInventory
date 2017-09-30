@@ -41,7 +41,7 @@ import java.util.List;
  */
 public class StringUtils {
     @NotNull
-    public static String coloredLine(@NotNull String line) {
+    public static String coloredLine(String line) {
         return ChatColor.translateAlternateColorCodes('&', line);
     }
 

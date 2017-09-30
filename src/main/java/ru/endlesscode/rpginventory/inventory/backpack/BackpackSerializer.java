@@ -23,7 +23,6 @@ import com.comphenix.protocol.wrappers.nbt.NbtFactory;
 import com.comphenix.protocol.wrappers.nbt.io.NbtBinarySerializer;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ru.endlesscode.rpginventory.utils.FileUtils;
 import ru.endlesscode.rpginventory.utils.ItemUtils;
@@ -41,7 +40,7 @@ import java.util.zip.GZIPOutputStream;
  * All rights reserved 2014 - 2016 © «EndlessCode Group»
  */
 class BackpackSerializer {
-    static void saveBackpack(@NotNull Backpack backpack, @NotNull File file) throws IOException {
+    static void saveBackpack(Backpack backpack, File file) throws IOException {
         List<NbtCompound> nbtList = new ArrayList<>();
 
         try (DataOutputStream dataOutput = new DataOutputStream(new GZIPOutputStream(new FileOutputStream(file)))) {
@@ -60,7 +59,7 @@ class BackpackSerializer {
     }
 
     @Nullable
-    static Backpack loadBackpack(@NotNull File file) throws IOException {
+    static Backpack loadBackpack(File file) throws IOException {
         Backpack backpack;
         try (DataInputStream dataInput = new DataInputStream(new GZIPInputStream(new FileInputStream(file)))) {
             NbtCompound nbtList = NbtBinarySerializer.DEFAULT.deserializeCompound(dataInput);

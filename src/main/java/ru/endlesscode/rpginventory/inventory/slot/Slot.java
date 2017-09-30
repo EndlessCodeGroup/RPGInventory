@@ -54,7 +54,7 @@ public class Slot {
     private final int quickSlot;
     private final boolean drop;
 
-    public Slot(String name, @NotNull ConfigurationSection config) {
+    public Slot(String name, ConfigurationSection config) {
         this.name = name;
         this.slotType = SlotType.valueOf(config.getString("type"));
         this.slotIds = config.getIntegerList("slot").size() == 0 ? Collections.singletonList(config.getInt("slot"))
@@ -179,11 +179,11 @@ public class Slot {
         return this.allowed.isEmpty() && this.denied.isEmpty();
     }
 
-    private boolean isDenied(@NotNull ItemStack item) {
+    private boolean isDenied(ItemStack item) {
         return searchItem(this.denied, item);
     }
 
-    private boolean isAllowed(@NotNull ItemStack item) {
+    private boolean isAllowed(ItemStack item) {
         return searchItem(this.allowed, item);
     }
 

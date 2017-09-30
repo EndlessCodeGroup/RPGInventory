@@ -104,10 +104,14 @@ public class RPGInventory extends JavaPlugin {
         return classSystem;
     }
 
+    public RPGInventory() {
+        super();
+
+        instance = this;
+    }
+
     @Override
     public void onEnable() {
-        instance = this;
-
         Config.loadConfig(this);
         this.updateConfig();
         language = new FileLanguage(this);

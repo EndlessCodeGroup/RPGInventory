@@ -124,7 +124,7 @@ public class PlayerLoader extends PacketAdapter implements Listener {
         }
     }
 
-    private class LoadData {
+    private static class LoadData {
         boolean prepared = false;
         double damage = 0;
 

@@ -376,12 +376,12 @@ public class InventoryManager {
         player.updateInventory();
     }
 
-    static void lockEmptySlots(@NotNull Player player) {
+    static void lockEmptySlots(Player player) {
         lockEmptySlots(INVENTORIES.get(player.getUniqueId()).getInventory());
     }
 
     @SuppressWarnings("WeakerAccess")
-    public static void lockEmptySlots(@NotNull Inventory inventory) {
+    public static void lockEmptySlots(Inventory inventory) {
         for (int i = 0; i < inventory.getSize(); i++) {
             Slot slot = SlotManager.instance().getSlot(i, InventoryType.SlotType.CONTAINER);
             if (slot == null) {
@@ -392,7 +392,7 @@ public class InventoryManager {
         }
     }
 
-    static void unlockEmptySlots(@NotNull Player player) {
+    static void unlockEmptySlots(Player player) {
         Inventory inventory = INVENTORIES.get(player.getUniqueId()).getInventory();
 
         for (int i = 0; i < inventory.getSize(); i++) {
@@ -456,7 +456,7 @@ public class InventoryManager {
         return !new File(RPGInventory.getInstance().getDataFolder(), "inventories/" + player.getUniqueId() + ".inv").exists();
     }
 
-    public static void loadPlayerInventory(@NotNull Player player) {
+    public static void loadPlayerInventory(Player player) {
         if (!InventoryManager.isAllowedWorld(player.getWorld())) {
             INVENTORIES.remove(player.getUniqueId());
             return;
@@ -538,7 +538,7 @@ public class InventoryManager {
     }
 
     @Nullable
-    public static PlayerWrapper get(@NotNull OfflinePlayer player) {
+    public static PlayerWrapper get(OfflinePlayer player) {
         return INVENTORIES.get(player.getUniqueId());
     }
 

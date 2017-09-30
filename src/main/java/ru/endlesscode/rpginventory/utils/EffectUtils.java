@@ -29,7 +29,6 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ru.endlesscode.rpginventory.RPGInventory;
 
@@ -74,14 +73,14 @@ public class EffectUtils {
         }
     }
 
-    public static void playSpawnEffect(@NotNull Entity entity) {
+    public static void playSpawnEffect(Entity entity) {
         Location loc = entity.getLocation();
 
         entity.getWorld().playSound(loc, Sound.ENTITY_ENDERMEN_TELEPORT, 1, (float) (1.2 + Math.random() * 0.4));
         playParticlesToAll(EnumWrappers.Particle.EXPLOSION_LARGE, 3, loc);
     }
 
-    public static void playDespawnEffect(@NotNull Entity entity) {
+    public static void playDespawnEffect(Entity entity) {
         Location loc = entity.getLocation();
 
         entity.getWorld().playSound(loc, Sound.ENTITY_ENDERMEN_TELEPORT, 1, (float) (0.6 + Math.random() * 0.4));

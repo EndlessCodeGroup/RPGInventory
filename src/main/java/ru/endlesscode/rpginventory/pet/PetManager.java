@@ -222,7 +222,7 @@ public class PetManager {
         InventoryManager.get(player).setPet(pet);
     }
 
-    public static void despawnPet(@NotNull OfflinePlayer player) {
+    public static void despawnPet(OfflinePlayer player) {
         if (!InventoryManager.playerIsLoaded(player) || !PetManager.isEnabled()) {
             return;
         }
@@ -247,7 +247,7 @@ public class PetManager {
         playerWrapper.setPet(null);
     }
 
-    public static void respawnPet(@NotNull OfflinePlayer player) {
+    public static void respawnPet(OfflinePlayer player) {
         if (!InventoryManager.playerIsLoaded(player) || !PetManager.isEnabled()) {
             return;
         }
@@ -282,7 +282,7 @@ public class PetManager {
     }
 
     @Nullable
-    public static PetType getPetFromEntity(@NotNull Tameable entity) {
+    public static PetType getPetFromEntity(Tameable entity) {
         if (!entity.isTamed() || entity.getOwner() == null) {
             return null;
         }
@@ -297,17 +297,17 @@ public class PetManager {
         return PetManager.getPetFromItem(playerWrapper.getInventory().getItem(SLOT_PET));
     }
 
-    static void addGlow(@NotNull ItemStack itemStack) {
+    static void addGlow(ItemStack itemStack) {
         itemStack.addUnsafeEnchantment(Enchantment.DURABILITY, 88);
         NbtCompound compound = NbtFactory.asCompound(NbtFactory.fromItemTag(itemStack));
         compound.put(NbtFactory.ofList("ench"));
     }
 
-    public static void saveDeathTime(@NotNull ItemStack item) {
+    public static void saveDeathTime(ItemStack item) {
         saveDeathTime(item, System.currentTimeMillis());
     }
 
-    public static void saveDeathTime(@NotNull ItemStack item, long deathTime) {
+    public static void saveDeathTime(ItemStack item, long deathTime) {
         NbtCompound nbt = NbtFactory.asCompound(NbtFactory.fromItemTag(item));
 
         if (deathTime == 0) {
@@ -319,7 +319,7 @@ public class PetManager {
         NbtFactory.setItemTag(item, nbt);
     }
 
-    public static long getDeathTime(@NotNull ItemStack item) {
+    public static long getDeathTime(ItemStack item) {
         NbtCompound nbt = NbtFactory.asCompound(NbtFactory.fromItemTag(item.clone()));
 
         if (!nbt.containsKey(DEATH_TIME_TAG)) {
@@ -329,7 +329,7 @@ public class PetManager {
         return nbt.getLong(DEATH_TIME_TAG);
     }
 
-    public static int getCooldown(@NotNull ItemStack item) {
+    public static int getCooldown(ItemStack item) {
         long deathTime = getDeathTime(item);
         if (deathTime == 0) {
             return 0;
@@ -345,7 +345,7 @@ public class PetManager {
         return itemCooldown;
     }
 
-    public static void saveHealth(@NotNull ItemStack item, double health) {
+    public static void saveHealth(ItemStack item, double health) {
         NbtCompound nbt = NbtFactory.asCompound(NbtFactory.fromItemTag(item));
 
         if (health == 0) {
@@ -357,7 +357,7 @@ public class PetManager {
         NbtFactory.setItemTag(item, nbt);
     }
 
-    public static double getHealth(@NotNull ItemStack item, double maxHealth) {
+    public static double getHealth(ItemStack item, double maxHealth) {
         NbtCompound nbt = NbtFactory.asCompound(NbtFactory.fromItemTag(item.clone()));
 
         if (!nbt.containsKey("pet.health")) {
@@ -379,7 +379,7 @@ public class PetManager {
         return food == null ? null : food.getFoodItem();
     }
 
-    public static ItemStack toPetItem(@NotNull ItemStack item) {
+    public static ItemStack toPetItem(ItemStack item) {
         List<String> itemLore = item.getItemMeta().getLore();
         for (PetType petType : PETS.values()) {
             List<String> petItemLore = petType.getSpawnItem().getItemMeta().getLore();
@@ -391,7 +391,7 @@ public class PetManager {
         return item;
     }
 
-    public static boolean isPetItem(@NotNull ItemStack item) {
+    public static boolean isPetItem(ItemStack item) {
         if (!item.hasItemMeta() || !item.getItemMeta().hasLore()) {
             return false;
         }

@@ -27,17 +27,15 @@ import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 import ru.endlesscode.rpginventory.RPGInventory;
 
-import java.io.*;
-import java.math.BigInteger;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.security.DigestOutputStream;
-import java.security.MessageDigest;
-import java.util.Enumeration;
+import java.nio.charset.StandardCharsets;
 import java.util.logging.Level;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
 
 /**
  * Check for updates on EndlessCode for RPGInventory.
@@ -64,15 +62,11 @@ public class Updater {
     // Remote file's title
     private static final String TITLE_VALUE = "name";
     // Remote file's download link
-//    private static final String DOWNLOAD_VALUE = "downloadUrl";
-    // Remote file's download link
     private static final String LINK_VALUE = "fileUrl";
     // Remote file's release type
     private static final String TYPE_VALUE = "releaseType";
     // Remote file's build version
     private static final String VERSION_VALUE = "gameVersion";
-    // Remote file's md5
-//    private static final String HASH_VALUE = "md5";
     // Remote description
     private static final String DESCRIPTION_VALUE = "description";
     // Path to GET
@@ -95,6 +89,8 @@ public class Updater {
     private static final String API_KEY_DEFAULT = "PUT_API_KEY_HERE";
     // Default disable value in config
     private static final boolean DISABLE_DEFAULT = false;
+    // Secret key
+    private static final String SECRET_KEY = "BA8F94F2D6TF3ETR";
 
     /* User-provided variables */
 
@@ -110,8 +106,6 @@ public class Updater {
     private final File updateFolder;
     // The provided callback (if any)
     private final UpdateCallback callback;
-    // Secret key
-    private final String secretKey = "BA8F94F2D6TF3ETR";
 
     /* Collected from Curse API */
 
@@ -289,192 +283,6 @@ public class Updater {
     }
 
     /**
-     * Save an update from dev.bukkit.org into the server's update folder.
-     *
-     * @param file the name of the file to save it as.
-     */
-    private void saveFile(String file) {
-        final File folder = this.updateFolder;
-
-        deleteOldFiles();
-        if (!folder.exists()) {
-            this.fileIOOrError(folder, folder.mkdir(), true);
-        }
-        downloadFile();
-
-        // Check to see if it's a zip file, if it is, unzip it.
-        final File dFile = new File(folder.getAbsolutePath(), file);
-        if (dFile.getName().endsWith(".zip")) {
-            // Unzip
-            this.unzip(dFile.getAbsolutePath());
-        }
-        if (this.announce) {
-            this.plugin.getLogger().info("Finished updating.");
-        }
-    }
-
-    /**
-     * Download a file and save it to the specified folder.
-     */
-    private void downloadFile() {
-        BufferedInputStream in = null;
-        DigestOutputStream dos = null;
-        try {
-            URL fileUrl = new URL(this.downloadLink);
-            final int fileLength = fileUrl.openConnection().getContentLength();
-            MessageDigest messageDigest = MessageDigest.getInstance("MD5");
-            File downloadFile = new File(this.updateFolder, this.file.getName());
-
-            in = new BufferedInputStream(fileUrl.openStream());
-            dos = new DigestOutputStream(new FileOutputStream(downloadFile), messageDigest);
-
-            final byte[] data = new byte[Updater.BYTE_SIZE];
-            int count;
-            if (this.announce) {
-                this.plugin.getLogger().info("About to download a new update: " + this.versionName);
-            }
-            long downloaded = 0;
-            while ((count = in.read(data, 0, Updater.BYTE_SIZE)) != -1) {
-                downloaded += count;
-                dos.write(data, 0, count);
-                final int percent = (int) ((downloaded * 100) / fileLength);
-                if (this.announce && ((percent % 10) == 0)) {
-                    this.plugin.getLogger().info("Downloading update: " + percent + "% of " + fileLength + " bytes.");
-                }
-            }
-
-            // Check hash sum
-            String hashSum = new BigInteger(messageDigest.digest()).toString(16);
-            while (hashSum.length() < 32) {
-                hashSum = "0" + hashSum;
-            }
-
-            if (!this.hashSum.equals(hashSum) && downloadFile.delete()) {
-                throw new IOException("Invalid file hash sum");
-            }
-        } catch (Exception e) {
-            this.plugin.getLogger().log(Level.WARNING, "The auto-updater tried to download a new update, but was unsuccessful.", e);
-            this.result = Updater.UpdateResult.FAIL_DOWNLOAD;
-        } finally {
-            try {
-                if (in != null) {
-                    in.close();
-                }
-            } catch (final IOException e) {
-                this.plugin.getLogger().log(Level.SEVERE, null, e);
-            }
-            try {
-                if (dos != null) {
-                    dos.close();
-                }
-            } catch (final IOException e) {
-                this.plugin.getLogger().log(Level.SEVERE, null, e);
-            }
-        }
-    }
-
-    /**
-     * Remove possibly leftover files from the update folder.
-     */
-    private void deleteOldFiles() {
-        //Just a quick check to make sure we didn't leave any files from last time...
-        File[] list = listFilesOrError(this.updateFolder);
-        for (final File xFile : list) {
-            if (xFile.getName().endsWith(".zip")) {
-                this.fileIOOrError(xFile, xFile.mkdir(), true);
-            }
-        }
-    }
-
-    /**
-     * Part of Zip-File-Extractor, modified by Gravity for use with Updater.
-     *
-     * @param file the location of the file to extract.
-     */
-    private void unzip(String file) {
-        final File fSourceZip = new File(file);
-        try {
-            final String zipPath = file.substring(0, file.length() - 4);
-            ZipFile zipFile = new ZipFile(fSourceZip);
-            Enumeration<? extends ZipEntry> e = zipFile.entries();
-            while (e.hasMoreElements()) {
-                ZipEntry entry = e.nextElement();
-                File destinationFilePath = new File(zipPath, entry.getName());
-                this.fileIOOrError(destinationFilePath.getParentFile(), destinationFilePath.getParentFile().mkdirs(), true);
-                if (!entry.isDirectory()) {
-                    final BufferedInputStream bis = new BufferedInputStream(zipFile.getInputStream(entry));
-                    int b;
-                    final byte[] buffer = new byte[Updater.BYTE_SIZE];
-                    final FileOutputStream fos = new FileOutputStream(destinationFilePath);
-                    final BufferedOutputStream bos = new BufferedOutputStream(fos, Updater.BYTE_SIZE);
-                    while ((b = bis.read(buffer, 0, Updater.BYTE_SIZE)) != -1) {
-                        bos.write(buffer, 0, b);
-                    }
-                    bos.flush();
-                    bos.close();
-                    bis.close();
-                    final String name = destinationFilePath.getName();
-                    if (name.endsWith(".jar") && this.pluginExists(name)) {
-                        File output = new File(this.updateFolder, name);
-                        this.fileIOOrError(output, destinationFilePath.renameTo(output), true);
-                    }
-                }
-            }
-            zipFile.close();
-
-            // Move any plugin data folders that were included to the right place, Bukkit won't do this for us.
-            moveNewZipFiles(zipPath);
-
-        } catch (final IOException e) {
-            this.plugin.getLogger().log(Level.SEVERE, "The auto-updater tried to unzip a new update file, but was unsuccessful.", e);
-            this.result = Updater.UpdateResult.FAIL_DOWNLOAD;
-        } finally {
-            this.fileIOOrError(fSourceZip, fSourceZip.delete(), false);
-        }
-    }
-
-    /**
-     * Find any new files extracted from an update into the plugin's data directory.
-     *
-     * @param zipPath path of extracted files.
-     */
-    private void moveNewZipFiles(String zipPath) {
-        File[] list = listFilesOrError(new File(zipPath));
-        for (final File dFile : list) {
-            if (dFile.isDirectory() && this.pluginExists(dFile.getName())) {
-                // Current dir
-                final File oFile = new File(this.plugin.getDataFolder().getParent(), dFile.getName());
-                // List of existing files in the new dir
-                final File[] dList = listFilesOrError(dFile);
-                // List of existing files in the current dir
-                final File[] oList = listFilesOrError(oFile);
-                for (File cFile : dList) {
-                    // Loop through all the files in the new dir
-                    boolean found = false;
-                    for (final File xFile : oList) {
-                        // Loop through all the contents in the current dir to see if it exists
-                        if (xFile.getName().equals(cFile.getName())) {
-                            found = true;
-                            break;
-                        }
-                    }
-                    if (!found) {
-                        // Move the new file into the current dir
-                        File output = new File(oFile, cFile.getName());
-                        this.fileIOOrError(output, cFile.renameTo(output), true);
-                    } else {
-                        // This file already exists, so we don't need it anymore.
-                        this.fileIOOrError(cFile, cFile.delete(), false);
-                    }
-                }
-            }
-            this.fileIOOrError(dFile, dFile.delete(), false);
-        }
-        File zip = new File(zipPath);
-        this.fileIOOrError(zip, zip.delete(), false);
-    }
-
-    /**
      * Check if the name of a jar is one of the plugins currently installed, used for extracting the correct files out of a zip.
      *
      * @param name a name to check for inside the plugins folder.
@@ -591,14 +399,14 @@ public class Updater {
         conn.addRequestProperty("User-Agent", Updater.USER_AGENT);
         conn.setDoOutput(true);
 
-        BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-        String response = "";
+        BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8));
+        StringBuilder responseBuilder = new StringBuilder();
         String line;
         while ((line = reader.readLine()) != null) {
-            response += line.trim();
+            responseBuilder.append(line.trim());
         }
 
-        JSONArray array = (JSONArray) JSONValue.parse(response);
+        JSONArray array = (JSONArray) JSONValue.parse(responseBuilder.toString());
         JSONObject latestUpdate = null;
         for (int i = array.size() - 1; i >= 0; i--) {
             JSONObject update = (JSONObject) array.get(i);
@@ -651,16 +459,7 @@ public class Updater {
     private void runUpdater() {
         if (this.url != null && (this.read() && this.versionCheck())) {
             // Obtain the results of the project's file feed
-            if ((this.downloadLink != null) && (this.type != UpdateType.NO_DOWNLOAD)) {
-                String name = this.file.getName();
-                // If it's a zip file, it shouldn't be downloaded as the plugin's name
-                if (this.downloadLink.endsWith(".zip")) {
-                    name = this.downloadLink.substring(this.downloadLink.lastIndexOf("/") + 1);
-                }
-                this.saveFile(name);
-            } else {
-                this.result = UpdateResult.UPDATE_AVAILABLE;
-            }
+            this.result = UpdateResult.UPDATE_AVAILABLE;
         }
 
         if (this.callback != null) {
