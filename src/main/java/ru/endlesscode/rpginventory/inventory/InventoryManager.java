@@ -543,7 +543,7 @@ public class InventoryManager {
     }
 
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
-    public static boolean isQuickEmptySlot(ItemStack item) {
+    public static boolean isQuickEmptySlot(@Nullable ItemStack item) {
         for (Slot quickSlot : SlotManager.instance().getQuickSlots()) {
             if (quickSlot.isCup(item)) {
                 return true;
@@ -553,11 +553,11 @@ public class InventoryManager {
         return false;
     }
 
-    public static boolean isFilledSlot(ItemStack item) {
+    public static boolean isFilledSlot(@Nullable ItemStack item) {
         return fillSlot.equals(item);
     }
 
-    public static boolean isEmptySlot(ItemStack item) {
+    public static boolean isEmptySlot(@Nullable ItemStack item) {
         for (Slot slot : SlotManager.instance().getSlots()) {
             if (slot.isCup(item)) {
                 return true;
@@ -569,7 +569,7 @@ public class InventoryManager {
 
     @Contract("null -> false")
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
-    public static boolean playerIsLoaded(AnimalTamer player) {
+    public static boolean playerIsLoaded(@Nullable AnimalTamer player) {
         return player != null && INVENTORIES.containsKey(player.getUniqueId());
     }
 

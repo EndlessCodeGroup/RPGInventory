@@ -391,8 +391,8 @@ public class PetManager {
         return item;
     }
 
-    public static boolean isPetItem(ItemStack item) {
-        if (!item.hasItemMeta() || !item.getItemMeta().hasLore()) {
+    public static boolean isPetItem(@Nullable ItemStack item) {
+        if (item == null || !item.hasItemMeta() || !item.getItemMeta().hasLore()) {
             return false;
         }
 

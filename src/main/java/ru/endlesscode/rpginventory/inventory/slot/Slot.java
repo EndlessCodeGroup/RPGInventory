@@ -159,7 +159,7 @@ public class Slot {
         return this.cup.clone();
     }
 
-    public boolean isCup(ItemStack itemStack) {
+    public boolean isCup(@Nullable ItemStack itemStack) {
         return this.cup.equals(itemStack);
     }
 
