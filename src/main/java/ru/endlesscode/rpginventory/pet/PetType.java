@@ -132,25 +132,25 @@ public class PetType extends ClassedItem {
 
         FileLanguage lang = RPGInventory.getLanguage();
         List<String> lore = new ArrayList<>();
-        lore.add(StringUtils.coloredLine("&8" + lang.getCaption("pet.role." + this.role.name().toLowerCase())));
+        lore.add(StringUtils.coloredLine("&8" + lang.getMessage("pet.role." + this.role.name().toLowerCase())));
 
         // Add class and level requirements
         if (this.getLevel() != -1) {
-            lore.add(lang.getCaption("item.level", this.getLevel()));
+            lore.add(lang.getMessage("item.level", this.getLevel()));
         }
 
         if (this.getClasses() != null) {
-            lore.add(lang.getCaption("item.class", this.getClassesString()));
+            lore.add(lang.getMessage("item.class", this.getClassesString()));
         }
 
         lore.addAll(this.lore);
 
-        lore.add(lang.getCaption("pet.health", (int) (this.health)));
+        lore.add(lang.getMessage("pet.health", (int) (this.health)));
         if (this.role == Role.COMPANION && (this.attackMobs || this.attackPlayers)) {
-            lore.add(lang.getCaption("pet.damage", (int) (this.damage)));
+            lore.add(lang.getMessage("pet.damage", (int) (this.damage)));
         }
-        lore.add(lang.getCaption("pet.speed", Utils.round(this.speed, 2)));
-        lore.add(lang.getCaption("pet.revival." + (this.revival ? "yes" : "no"), this.cooldown));
+        lore.add(lang.getMessage("pet.speed", Utils.round(this.speed, 2)));
+        lore.add(lang.getMessage("pet.revival." + (this.revival ? "yes" : "no"), this.cooldown));
 
         meta.setLore(lore);
         spawnItem.setItemMeta(meta);

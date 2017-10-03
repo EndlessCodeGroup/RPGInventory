@@ -264,7 +264,7 @@ public class PetListener implements Listener {
 
         Horse vehicle = (Horse) event.getVehicle();
         if (PetManager.getPetFromEntity(vehicle) != null && player != vehicle.getOwner()) {
-            PlayerUtils.sendMessage(player, RPGInventory.getLanguage().getCaption("error.mount.owner", vehicle.getOwner().getName()));
+            PlayerUtils.sendMessage(player, RPGInventory.getLanguage().getMessage("error.mount.owner", vehicle.getOwner().getName()));
             event.setCancelled(true);
         }
     }

@@ -108,7 +108,7 @@ public class PlayerUtils {
     public static boolean checkMoney(Player player, double cost) {
         double balance = (RPGInventory.economyConnected() ? RPGInventory.getEconomy().getBalance(player) : 0);
         if (balance < cost) {
-            PlayerUtils.sendMessage(player, RPGInventory.getLanguage().getCaption("error.money", StringUtils.doubleToString(cost - balance)));
+            PlayerUtils.sendMessage(player, RPGInventory.getLanguage().getMessage("error.money", StringUtils.doubleToString(cost - balance)));
             return false;
         }
 

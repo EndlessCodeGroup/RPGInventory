@@ -272,7 +272,7 @@ public class RPGInventory extends JavaPlugin {
     }
 
     private void onFirstStart() {
-        StringUtils.coloredConsole(RPGInventory.getLanguage().getCaption("firststart"));
+        StringUtils.coloredConsole(RPGInventory.getLanguage().getMessage("firststart"));
     }
 
     private boolean setupPermissions() {

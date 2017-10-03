@@ -93,7 +93,7 @@ public class Modifier {
     @Override
     public String toString() {
         if (this.equals(EMPTY)) {
-            return RPGInventory.getLanguage().getCaption("stat.message.no_bonus");
+            return RPGInventory.getLanguage().getMessage("stat.message.no_bonus");
         }
 
         String str = "";

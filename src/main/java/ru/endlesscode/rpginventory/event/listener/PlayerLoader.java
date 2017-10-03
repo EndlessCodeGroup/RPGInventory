@@ -117,7 +117,7 @@ public class PlayerLoader extends PacketAdapter implements Listener {
                 new BukkitRunnable() {
                     @Override
                     public void run() {
-                        player.kickPlayer(RPGInventory.getLanguage().getCaption("error.rp.denied"));
+                        player.kickPlayer(RPGInventory.getLanguage().getMessage("error.rp.denied"));
                     }
                 }.runTaskLater(this.plugin, 20);
                 loadList.remove(player.getUniqueId());

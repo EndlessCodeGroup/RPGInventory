@@ -320,7 +320,7 @@ public class PlayerWrapper implements InventoryHolder {
 
         this.healthUpdater.setAttributesBonus(0);
         this.healthUpdater.setOtherPluginsBonus(0);
-        this.player.getPlayer().kickPlayer(RPGInventory.getLanguage().getCaption("message.fixhp"));
+        this.player.getPlayer().kickPlayer(RPGInventory.getLanguage().getMessage("message.fixhp"));
         return true;
     }
 

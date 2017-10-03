@@ -103,7 +103,7 @@ public class ArmorEquipListener implements Listener {
         }
 
         if (InventoryManager.get(player).isFlying()) {
-            PlayerUtils.sendMessage(player, RPGInventory.getLanguage().getCaption("error.fall"));
+            PlayerUtils.sendMessage(player, RPGInventory.getLanguage().getMessage("error.fall"));
             event.setCancelled(true);
             return;
         }

@@ -46,7 +46,7 @@ public class PlayerListener implements Listener {
     public void onCommand(PlayerCommandPreprocessEvent event) {
         Player player = event.getPlayer();
         if (InventoryManager.isAllowedWorld(player.getWorld()) && !InventoryManager.playerIsLoaded(player)) {
-            PlayerUtils.sendMessage(player, RPGInventory.getLanguage().getCaption("error.rp.denied"));
+            PlayerUtils.sendMessage(player, RPGInventory.getLanguage().getMessage("error.rp.denied"));
             event.setCancelled(true);
         }
     }
@@ -90,7 +90,7 @@ public class PlayerListener implements Listener {
 
         if (PlayerLoader.isPreparedPlayer(player)) {
             PlayerLoader.removePlayer(player);
-            player.kickPlayer(RPGInventory.getLanguage().getCaption("error.rp.denied"));
+            player.kickPlayer(RPGInventory.getLanguage().getMessage("error.rp.denied"));
             event.setCancelled(true);
         } else {
             Location toLocation = event.getTo();
@@ -111,7 +111,7 @@ public class PlayerListener implements Listener {
         Player player = event.getPlayer();
 
         if (InventoryManager.isAllowedWorld(player.getWorld()) && !InventoryManager.playerIsLoaded(player)) {
-            PlayerUtils.sendMessage(player, RPGInventory.getLanguage().getCaption("error.rp.denied"));
+            PlayerUtils.sendMessage(player, RPGInventory.getLanguage().getMessage("error.rp.denied"));
             event.setCancelled(true);
         }
     }
