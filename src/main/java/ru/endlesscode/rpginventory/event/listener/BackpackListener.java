@@ -93,7 +93,7 @@ public class BackpackListener implements Listener {
                 && !BackpackManager.playerCanTakeBackpack(player) && BackpackManager.isBackpack(event.getCursor())
                 && ActionType.getTypeOfAction(event.getAction()) == ActionType.SET) {
             // Prevent placing new backpack in bottom inventory if player can't take backpack
-            PlayerUtils.sendMessage(player, RPGInventory.getLanguage().getCaption("backpack.limit", BackpackManager.getLimit()));
+            PlayerUtils.sendMessage(player, RPGInventory.getLanguage().getMessage("backpack.limit", BackpackManager.getLimit()));
             event.setCancelled(true);
         }
     }
@@ -126,7 +126,7 @@ public class BackpackListener implements Listener {
         }
 
         if (BackpackManager.isBackpack(event.getItem().getItemStack()) && !BackpackManager.playerCanTakeBackpack(player)) {
-            PlayerUtils.sendMessage(player, RPGInventory.getLanguage().getCaption("backpack.limit", BackpackManager.getLimit()));
+            PlayerUtils.sendMessage(player, RPGInventory.getLanguage().getMessage("backpack.limit", BackpackManager.getLimit()));
             event.setCancelled(true);
         }
     }

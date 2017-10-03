@@ -58,8 +58,8 @@ public class InventoryLocker {
             // Setup locked slot
             InventoryLocker.lockedSlot = ItemUtils.getTexturedItem(Config.getConfig().getString("slots.locked"));
             ItemMeta meta = InventoryLocker.lockedSlot.getItemMeta();
-            meta.setDisplayName(RPGInventory.getLanguage().getCaption("locked.name"));
-            meta.setLore(Collections.singletonList(RPGInventory.getLanguage().getCaption("locked.lore")));
+            meta.setDisplayName(RPGInventory.getLanguage().getMessage("locked.name"));
+            meta.setLore(Collections.singletonList(RPGInventory.getLanguage().getMessage("locked.lore")));
 
             InventoryLocker.lockedSlot.setItemMeta(meta);
             lockedSlot = addId(lockedSlot);
@@ -67,8 +67,8 @@ public class InventoryLocker {
             // Setup buyable slot
             InventoryLocker.buyableSlot = ItemUtils.getTexturedItem(Config.getConfig().getString("slots.buyable"));
             meta = InventoryLocker.buyableSlot.getItemMeta();
-            meta.setDisplayName(RPGInventory.getLanguage().getCaption("buyable.name"));
-            meta.setLore(Collections.singletonList(RPGInventory.getLanguage().getCaption("buyable.lore")));
+            meta.setDisplayName(RPGInventory.getLanguage().getMessage("buyable.name"));
+            meta.setLore(Collections.singletonList(RPGInventory.getLanguage().getMessage("buyable.lore")));
 
             InventoryLocker.buyableSlot.setItemMeta(meta);
             buyableSlot = addId(buyableSlot);
@@ -111,11 +111,11 @@ public class InventoryLocker {
         FileLanguage lang = RPGInventory.getLanguage();
 
         if (Config.getConfig().getBoolean("slots.money.enabled")) {
-            lore.add(lang.getCaption("buyable.money", StringUtils.doubleToString(Config.getConfig().getDouble("slots.money.cost.line" + line))));
+            lore.add(lang.getMessage("buyable.money", StringUtils.doubleToString(Config.getConfig().getDouble("slots.money.cost.line" + line))));
         }
 
         if (Config.getConfig().getBoolean("slots.level.enabled")) {
-            lore.add(lang.getCaption("buyable.level", Config.getConfig().getInt("slots.level.required.line" + line)));
+            lore.add(lang.getMessage("buyable.level", Config.getConfig().getInt("slots.level.required.line" + line)));
         }
         im.setLore(lore);
         slot.setItemMeta(im);
@@ -187,7 +187,7 @@ public class InventoryLocker {
             int requirement = Config.getConfig().getInt("slots.level.required.line" + line);
 
             if (!PlayerUtils.checkLevel(player, requirement)) {
-                PlayerUtils.sendMessage(player, RPGInventory.getLanguage().getCaption("error.level", requirement));
+                PlayerUtils.sendMessage(player, RPGInventory.getLanguage().getMessage("error.level", requirement));
                 return false;
             }
         }

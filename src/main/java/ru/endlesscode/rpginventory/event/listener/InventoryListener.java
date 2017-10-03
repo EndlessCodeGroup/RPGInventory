@@ -284,7 +284,7 @@ public class InventoryListener implements Listener {
 
                 // Check flying
                 if (playerWrapper.isFlying()) {
-                    PlayerUtils.sendMessage(player, RPGInventory.getLanguage().getCaption("error.fall"));
+                    PlayerUtils.sendMessage(player, RPGInventory.getLanguage().getMessage("error.fall"));
                     event.setCancelled(true);
                     return;
                 }
@@ -373,7 +373,7 @@ public class InventoryListener implements Listener {
             }
 
             if (!PlayerUtils.checkLevel(player, slot.getRequiredLevel())) {
-                PlayerUtils.sendMessage(player, RPGInventory.getLanguage().getCaption("error.level", slot.getRequiredLevel()));
+                PlayerUtils.sendMessage(player, RPGInventory.getLanguage().getMessage("error.level", slot.getRequiredLevel()));
                 return false;
             }
 

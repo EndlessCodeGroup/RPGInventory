@@ -58,7 +58,7 @@ import java.util.UUID;
 
 @SuppressWarnings("ResultOfMethodCallIgnored")
 public class InventoryManager {
-    static final String TITLE = RPGInventory.getLanguage().getCaption("title");
+    static final String TITLE = RPGInventory.getLanguage().getMessage("title");
     private static final Map<UUID, PlayerWrapper> INVENTORIES = new HashMap<>();
 
     private static ItemStack fillSlot = null;
@@ -591,7 +591,7 @@ public class InventoryManager {
         double cost = slot.getCost();
 
         if (!playerWrapper.isPreparedToBuy(slot)) {
-            PlayerUtils.sendMessage(player, RPGInventory.getLanguage().getCaption("error.buyable", slot.getCost()));
+            PlayerUtils.sendMessage(player, RPGInventory.getLanguage().getMessage("error.buyable", slot.getCost()));
             playerWrapper.prepareToBuy(slot);
             return false;
         }
@@ -601,7 +601,7 @@ public class InventoryManager {
         }
 
         playerWrapper.setBuyedSlots(slot.getName());
-        PlayerUtils.sendMessage(player, RPGInventory.getLanguage().getCaption("message.buyed"));
+        PlayerUtils.sendMessage(player, RPGInventory.getLanguage().getMessage("message.buyed"));
 
         return true;
     }

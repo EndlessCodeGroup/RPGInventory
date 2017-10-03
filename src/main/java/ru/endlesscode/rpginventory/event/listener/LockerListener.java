@@ -83,7 +83,7 @@ public class LockerListener implements Listener {
                     event.setCancelled(true);
                 }
             } else {
-                PlayerUtils.sendMessage(player, RPGInventory.getLanguage().getCaption("error.previous"));
+                PlayerUtils.sendMessage(player, RPGInventory.getLanguage().getMessage("error.previous"));
                 event.setCancelled(true);
             }
         }

@@ -143,7 +143,7 @@ public class ItemManager {
 
         if (!PlayerUtils.checkLevel(player, classedItem.getLevel())) {
             if (notifyPlayer) {
-                PlayerUtils.sendMessage(player, RPGInventory.getLanguage().getCaption("error.item.level", classedItem.getLevel()));
+                PlayerUtils.sendMessage(player, RPGInventory.getLanguage().getMessage("error.item.level", classedItem.getLevel()));
             }
 
             return false;
@@ -154,7 +154,7 @@ public class ItemManager {
         }
 
         if (notifyPlayer) {
-            PlayerUtils.sendMessage(player, RPGInventory.getLanguage().getCaption("error.item.class", classedItem.getClassesString()));
+            PlayerUtils.sendMessage(player, RPGInventory.getLanguage().getMessage("error.item.class", classedItem.getClassesString()));
         }
 
         return false;
@@ -176,13 +176,13 @@ public class ItemManager {
             switch (loreElement) {
                 case "_UNBREAKABLE_":
                     if (item.isUnbreakable()) {
-                        lore.add(lang.getCaption("item.unbreakable"));
+                        lore.add(lang.getMessage("item.unbreakable"));
                         lastIsSeparator = false;
                     }
                     break;
                 case "_DROP_":
                     if (!item.isDrop()) {
-                        lore.add(lang.getCaption("item.nodrop"));
+                        lore.add(lang.getMessage("item.nodrop"));
                         lastIsSeparator = false;
                     }
                     break;
@@ -194,13 +194,13 @@ public class ItemManager {
                     break;
                 case "_LEVEL_":
                     if (item.getLevel() != -1) {
-                        lore.add(lang.getCaption("item.level", item.getLevel()));
+                        lore.add(lang.getMessage("item.level", item.getLevel()));
                         lastIsSeparator = false;
                     }
                     break;
                 case "_CLASS_":
                     if (item.getClasses() != null) {
-                        lore.add(lang.getCaption("item.class", item.getClassesString()));
+                        lore.add(lang.getMessage("item.class", item.getClassesString()));
                         lastIsSeparator = false;
                     }
                     break;
@@ -212,21 +212,21 @@ public class ItemManager {
                     break;
                 case "_SKILLS_":
                     if (item.hasLeftClickCaption()) {
-                        lore.add(lang.getCaption("item.left-click", item.getLeftClickCaption()));
+                        lore.add(lang.getMessage("item.left-click", item.getLeftClickCaption()));
                         lastIsSeparator = false;
                     }
                     if (item.hasRightClickCaption()) {
-                        lore.add(lang.getCaption("item.right-click", item.getRightClickCaption()));
+                        lore.add(lang.getMessage("item.right-click", item.getRightClickCaption()));
                         lastIsSeparator = false;
                     }
                     break;
                 case "_STATS_":
                     if (item.isStatsHidden()) {
-                        lore.add(lang.getCaption("item.hide"));
+                        lore.add(lang.getMessage("item.hide"));
                         lastIsSeparator = false;
                     } else {
                         for (ItemStat stat : item.getStats()) {
-                            lore.add(lang.getCaption("stat." + stat.getType().name().toLowerCase(), stat.getStringValue()));
+                            lore.add(lang.getMessage("stat." + stat.getType().name().toLowerCase(), stat.getStringValue()));
                             lastIsSeparator = false;
                         }
                     }

@@ -204,7 +204,7 @@ class RPGInventoryCommandExecutor implements CommandExecutor {
 
         Player player = ((Player) sender).getPlayer();
         if (!InventoryManager.get(player).resetMaxHealth()) {
-            PlayerUtils.sendMessage(player, RPGInventory.getLanguage().getCaption("error.fixhp"));
+            PlayerUtils.sendMessage(player, RPGInventory.getLanguage().getMessage("error.fixhp"));
         }
     }
 
@@ -215,7 +215,7 @@ class RPGInventoryCommandExecutor implements CommandExecutor {
 
         Player player = RPGInventory.getInstance().getServer().getPlayer(playerName);
         if (!InventoryManager.get(player).resetMaxHealth()) {
-            sender.sendMessage(RPGInventory.getLanguage().getCaption("error.fixhp"));
+            sender.sendMessage(RPGInventory.getLanguage().getMessage("error.fixhp"));
         }
     }
 
@@ -248,7 +248,7 @@ class RPGInventoryCommandExecutor implements CommandExecutor {
     }
 
     private static void missingRights(CommandSender sender) {
-        sender.sendMessage(RPGInventory.getLanguage().getCaption("message.perms"));
+        sender.sendMessage(RPGInventory.getLanguage().getMessage("message.perms"));
         RPGInventoryCommandExecutor.printHelp(sender);
     }
 

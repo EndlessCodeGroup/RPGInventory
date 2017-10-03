@@ -210,7 +210,7 @@ public class PetManager {
         }
         pet.setAgeLock(true);
 
-        pet.setCustomName(RPGInventory.getLanguage().getCaption("pet.name", petType.getName(), player.getName()));
+        pet.setCustomName(RPGInventory.getLanguage().getMessage("pet.name", petType.getName(), player.getName()));
         pet.setMaxHealth(petType.getHealth());
         pet.setCanPickupItems(false);
         pet.setRemoveWhenFarAway(false);

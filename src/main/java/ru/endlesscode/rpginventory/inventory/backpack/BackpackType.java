@@ -63,9 +63,9 @@ public class BackpackType extends TexturedItem {
 
         FileLanguage lang = RPGInventory.getLanguage();
         List<String> lore = new ArrayList<>();
-        lore.addAll(Arrays.asList(lang.getCaption("backpack.desc").split("\n")));
+        lore.addAll(Arrays.asList(lang.getMessage("backpack.desc").split("\n")));
         lore.addAll(this.lore);
-        lore.add(lang.getCaption("backpack.size", this.size));
+        lore.add(lang.getMessage("backpack.size", this.size));
 
         meta.setLore(lore);
         spawnItem.setItemMeta(meta);
