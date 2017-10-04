@@ -49,8 +49,9 @@ public class FileLanguage {
                 String.format("lang/%s.lang", locale)
         );
         this.saveDefault();
-        this.checkAndUpdateLocaleFile();
+        this.checkAndUpdateOutdatedLocaleFile();
         this.load();
+        this.validateLocaleFile();
     }
 
     private void saveDefault() {
@@ -93,16 +94,13 @@ public class FileLanguage {
     }
 
     //Oh crap.
-    private void checkAndUpdateLocaleFile() {
+    private void checkAndUpdateOutdatedLocaleFile() {
         final Path path = Paths.get(this.langFile.toURI());
         List<String> lines;
         try {
             lines = Files.readAllLines(path, StandardCharsets.UTF_8);
         } catch (IOException e) {
-            this.plugin.getLogger().log(Level.WARNING,
-                    "Failed to read locale file: {0}; continue without localization.",
-                    e.getLocalizedMessage()
-            );
+            this.plugin.getLogger().log(Level.WARNING, "Failed to read locale file", e);
             return;
         }
 
@@ -139,10 +137,28 @@ public class FileLanguage {
                     StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING
             );
         } catch (IOException e) {
-            this.plugin.getLogger().log(Level.WARNING,
-                    "Failed to save locale file: {0}; continue without localization.",
-                    e.getLocalizedMessage()
-            );
+            this.plugin.getLogger().log(Level.WARNING, "Failed to save locale file: {0}", e.getLocalizedMessage());
+        }
+    }
+
+    private void validateLocaleFile() {
+        Properties properties = new Properties();
+        try (InputStreamReader isr = new InputStreamReader(this.plugin.getResource("lang/en.lang"), StandardCharsets.UTF_8)) {
+            properties.load(isr);
+        } catch (IOException e) {
+            this.plugin.getLogger().log(Level.WARNING, "Failed to read inbuilt locale file", e);
+            //Just ignore. We can't help with that shit.
+            return;
+        }
+
+        if (this.language.keySet().containsAll(properties.keySet())) {
+            return;
+        }
+
+        for (Object key : properties.keySet()) {
+            if (!this.language.containsKey(key)) {
+                this.language.setProperty((String) key, properties.getProperty((String) key));
+            }
         }
     }
 
@@ -167,7 +183,7 @@ public class FileLanguage {
         if (!this.messageCache.containsKey(key)) {
             this.messageCache.put(key, new MessageFormat(
                     ChatColor.translateAlternateColorCodes(
-                            '&', this.language.getProperty(key, key)
+                            '&', this.language.getProperty(key, "Unknown localization key: \"" + key + "\"")
                     )
             ));
         }
