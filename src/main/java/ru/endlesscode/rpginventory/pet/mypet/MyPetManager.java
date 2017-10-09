@@ -115,7 +115,8 @@ public class MyPetManager implements Listener {
     }
 
     public static boolean validatePet(
-            Player player, InventoryAction action,
+            Player player,
+            InventoryAction action,
             @Nullable ItemStack currentItem,
             ItemStack cursor
     ) {

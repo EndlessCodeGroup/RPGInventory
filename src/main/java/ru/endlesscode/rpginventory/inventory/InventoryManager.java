@@ -252,7 +252,7 @@ public class InventoryManager {
         }
 
         if (ArmorType.CHESTPLATE.getSlot() != -1) {
-            ItemStack savedChestplate = InventoryManager.get(player).getSavedChestplate();
+            ItemStack savedChestplate = playerWrapper.getSavedChestplate();
             ItemStack chestplate = savedChestplate == null ? player.getEquipment().getChestplate() : savedChestplate;
             Slot chestplateSlot = sm.getSlot(ArmorType.CHESTPLATE.getSlot(), InventoryType.SlotType.CONTAINER);
             inventory.setItem(ArmorType.CHESTPLATE.getSlot(), (ItemUtils.isEmpty(chestplate))
@@ -312,11 +312,26 @@ public class InventoryManager {
         playerWrapper.getInventory().setItem(slot.getSlotId(), ItemUtils.isEmpty(itemInHand) ? slot.getCup() : itemInHand);
     }
 
-    private static void updateInventory(@NotNull Player player, @NotNull Inventory inventory, int slot, InventoryAction action, ItemStack currentItem, @NotNull ItemStack cursor) {
+    private static void updateInventory(
+            @NotNull Player player,
+            @NotNull Inventory inventory,
+            int slot,
+            InventoryAction action,
+            ItemStack currentItem,
+            @NotNull ItemStack cursor
+    ) {
         InventoryManager.updateInventory(player, inventory, slot, InventoryType.SlotType.CONTAINER, action, currentItem, cursor);
     }
 
-    private static void updateInventory(@NotNull Player player, @NotNull Inventory inventory, int slot, InventoryType.SlotType slotType, InventoryAction action, ItemStack currentItem, ItemStack cursorItem) {
+    private static void updateInventory(
+            @NotNull Player player,
+            @NotNull Inventory inventory,
+            int slot,
+            InventoryType.SlotType slotType,
+            InventoryAction action,
+            ItemStack currentItem,
+            ItemStack cursorItem
+    ) {
         if (ActionType.getTypeOfAction(action) == ActionType.DROP) {
             return;
         }
@@ -381,7 +396,6 @@ public class InventoryManager {
         lockEmptySlots(INVENTORIES.get(player.getUniqueId()).getInventory());
     }
 
-    @SuppressWarnings("WeakerAccess")
     public static void lockEmptySlots(Inventory inventory) {
         for (int i = 0; i < inventory.getSize(); i++) {
             Slot slot = SlotManager.instance().getSlot(i, InventoryType.SlotType.CONTAINER);
