@@ -34,6 +34,8 @@ import ru.endlesscode.rpginventory.utils.LocationUtils;
  * All rights reserved 2014 - 2016 © «EndlessCode Group»
  */
 public class ElytraListener implements Listener {
+    private boolean isGetWidthMethodAvailable = true;
+
     @EventHandler(ignoreCancelled = true)
     public void onPlayerFall(PlayerMoveEvent event) {
         Player player = event.getPlayer();
@@ -59,7 +61,14 @@ public class ElytraListener implements Listener {
     }
 
     private boolean isPlayerCanFall(Player player) {
-        double playerWidth = (VersionHandler.is1_9()) ? 0.6 : player.getWidth();
+        double playerWidth = 0.6D;
+        if (this.isGetWidthMethodAvailable) {
+            try {
+                playerWidth = player.getWidth();
+            } catch (NoSuchMethodError ex) {
+                this.isGetWidthMethodAvailable = false;
+            }
+        }
         return !LocationUtils.isUnderAnyBlockHonestly(player.getLocation(), playerWidth, 3)
                 && !playerIsOnLadder(player);
     }
