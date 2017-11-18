@@ -19,21 +19,22 @@
 package ru.endlesscode.rpginventory;
 
 import net.milkbowl.vault.permission.Permission;
+
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginManager;
+
+import java.util.List;
+
 import ru.endlesscode.rpginventory.api.InventoryAPI;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
 import ru.endlesscode.rpginventory.inventory.backpack.BackpackManager;
 import ru.endlesscode.rpginventory.item.ItemManager;
 import ru.endlesscode.rpginventory.pet.PetManager;
-import ru.endlesscode.rpginventory.utils.PlayerUtils;
 import ru.endlesscode.rpginventory.utils.StringUtils;
-
-import java.util.List;
 
 /**
  * Created by OsipXD on 28.08.2015
@@ -197,28 +198,6 @@ class RPGInventoryCommandExecutor implements CommandExecutor {
         ((Player) sender).openInventory(InventoryManager.get(player).getInventory());
     }
 
-    private static void fixHp(CommandSender sender) {
-        if (!validatePlayer(sender)) {
-            return;
-        }
-
-        Player player = ((Player) sender).getPlayer();
-        if (!InventoryManager.get(player).resetMaxHealth()) {
-            PlayerUtils.sendMessage(player, RPGInventory.getLanguage().getMessage("error.fixhp"));
-        }
-    }
-
-    private static void fixHp(CommandSender sender, String playerName) {
-        if (!validatePlayer(sender, playerName)) {
-            return;
-        }
-
-        Player player = RPGInventory.getInstance().getServer().getPlayer(playerName);
-        if (!InventoryManager.get(player).resetMaxHealth()) {
-            sender.sendMessage(RPGInventory.getLanguage().getMessage("error.fixhp"));
-        }
-    }
-
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     private static boolean validatePlayer(CommandSender sender) {
         if (!(sender instanceof Player)) {
@@ -294,20 +273,6 @@ class RPGInventoryCommandExecutor implements CommandExecutor {
                     } else {
                         missingRights(sender);
                     }
-                    break;
-                case "fixhp":
-                    if (args.length == 1) {
-                        if (perms.has(sender, "rpginventory.fixhp")) {
-                            RPGInventoryCommandExecutor.fixHp(sender);
-                        } else {
-                            missingRights(sender);
-                        }
-                    } else if (perms.has(sender, "rpginventory.fixhp.others")) {
-                        RPGInventoryCommandExecutor.fixHp(sender, args[1]);
-                    } else {
-                        missingRights(sender);
-                    }
-
                     break;
                 default:
                     RPGInventoryCommandExecutor.printHelp(sender);

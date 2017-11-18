@@ -26,7 +26,6 @@ error.rp.force: &c리소스 팩이 비활성화 되었습니다.
 error.item.level: &6그것은 &c{0} &6레벨이 필요합니다
 error.item.class: &6그것은 클래스가 필요합니다 &c{0}
 error.mount.owner: &6주인에게 귀속되어 있습니다 {0}
-error.fixhp: &6체력 고정이 필요하지 않습니다
 
 message.buyed: &a&l성공적으로 슬릇을 구입했습니다
 message.fixhp: &6체력이 고정되었습니다 다시 로그인 해주세요
@@ -56,7 +55,6 @@ stat.message.no_bonus: 없음
 stat.damage: &c데미지: &7{0}
 stat.bow_damage: &c데미지 (활): &7{0}
 stat.hand_damage: &c데미지 (손): &7{0}
-stat.health: &2체력: &7{0}
 stat.armor: &3피해 감소: &7{0}
 stat.crit_chance: &6크리티컬 확률: &7{0}
 stat.crit_damage: &6크리티컬 데미지: &7{0}

@@ -126,7 +126,6 @@ public class ItemStat {
         DAMAGE,
         BOW_DAMAGE,
         HAND_DAMAGE,
-        HEALTH,
         ARMOR,
         JUMP,
         CRIT_CHANCE(true),

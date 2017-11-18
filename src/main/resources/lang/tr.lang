@@ -26,7 +26,6 @@ error.rp.force: &cKaynak paketini devre dışı bırakamazsın!
 error.item.level: &c{0} &6Seviye lazım!
 error.item.class: &6Gereken Irk: &c{0}
 error.mount.owner: &6Bineğin sahibi {0}
-error.fixhp: &6Can düzeltmeye ihtiyacı yok!
 
 message.buyed: &a&lBu bölmeyi başarıyla aldın!
 message.fixhp: &6Canın düzeltildi, lütfen sunucuya tekrar bağlan!
@@ -56,7 +55,6 @@ stat.message.no_bonus: Bonus yok
 stat.damage: &cHasar: &7{0}
 stat.bow_damage: &cHasar: (Vurus): &7{0}
 stat.hand_damage: &cHasar: (El): &7{0}
-stat.health: &2Can: &7{0}
 stat.armor: &3Zırh: &7{0}
 stat.crit_chance: &6Kritik şansı: &7{0}
 stat.crit_damage: &6Kritik hasarı: &7{0}

@@ -34,6 +34,15 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
 import ru.endlesscode.rpginventory.RPGInventory;
 import ru.endlesscode.rpginventory.api.InventoryAPI;
 import ru.endlesscode.rpginventory.event.PetEquipEvent;
@@ -47,15 +56,11 @@ import ru.endlesscode.rpginventory.item.ItemManager;
 import ru.endlesscode.rpginventory.misc.Config;
 import ru.endlesscode.rpginventory.pet.PetManager;
 import ru.endlesscode.rpginventory.pet.PetType;
-import ru.endlesscode.rpginventory.utils.*;
-
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import ru.endlesscode.rpginventory.utils.EffectUtils;
+import ru.endlesscode.rpginventory.utils.InventoryUtils;
+import ru.endlesscode.rpginventory.utils.ItemUtils;
+import ru.endlesscode.rpginventory.utils.PlayerUtils;
+import ru.endlesscode.rpginventory.utils.StringUtils;
 
 @SuppressWarnings("ResultOfMethodCallIgnored")
 public class InventoryManager {
@@ -501,7 +506,6 @@ public class InventoryManager {
                 return;
             }
 
-            playerWrapper.startHealthUpdater();
             INVENTORIES.put(player.getUniqueId(), playerWrapper);
         } catch (IOException e) {
             e.printStackTrace();
@@ -543,7 +547,7 @@ public class InventoryManager {
             Path file = folder.resolve(player.getUniqueId() + ".inv");
             Files.deleteIfExists(file);
 
-            InventorySerializer.savePlayer(player, playerWrapper, file);
+            InventorySerializer.savePlayer(playerWrapper, file);
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -102,22 +102,6 @@ resource-pack:
   # Hash (works as identifier of RP)
   hash: PUT_YOUR_HASH_HERE
 
-# Health settings
-health:
-  # Base health for all players (used for command /rpginv fixhp)
-  base: 20.0
-
-  # Enable HP auto-scale system
-  scale: true
-
-  # Max value of hearts (half-hearts)
-  hearts: 20
-
-  # Minimal and maximal value of HP in one heart (half-heart)
-  heart-capacity:
-    min: 1
-    max: 5
-
 # Join messages
 join-messages:
   # Delay in seconds for every message

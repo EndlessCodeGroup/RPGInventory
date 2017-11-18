@@ -26,7 +26,6 @@ error.rp.force: &cVypnuti resource-packu neni povoleno!
 error.item.level: &6Vyzaduje &c{0} &6level
 error.item.class: &6Vyzaduje tridu &c{0}
 error.mount.owner: &6Zvire patri %
-error.fixhp: &6Fixing HP not needed
 
 message.buyed: &a&lUspesne jsi zakoupil slot
 message.fixhp: &6Your HP was fixed, please login to server again.
@@ -56,7 +55,6 @@ stat.message.no_bonus: No bonus
 stat.damage: &cUtok: &7{0}
 stat.bow_damage: &cUtok (na dalku): &7{0}
 stat.hand_damage: &cUtok (na blizko): &7{0}
-stat.health: &2Zivoty: &7{0}
 stat.armor: &3Brneni: &7{0}
 stat.crit_chance: &6Sance na kriticky utok: &7{0}
 stat.crit_damage: &6Poskozeni kritickym utokem: &7{0}

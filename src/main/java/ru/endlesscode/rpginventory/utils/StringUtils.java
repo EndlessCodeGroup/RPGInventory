@@ -18,21 +18,21 @@
 
 package ru.endlesscode.rpginventory.utils;
 
-import me.clip.placeholderapi.PlaceholderAPI;
-import me.clip.placeholderapi.external.EZPlaceholderHook;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import me.clip.placeholderapi.PlaceholderAPI;
+import me.clip.placeholderapi.external.EZPlaceholderHook;
 import ru.endlesscode.rpginventory.RPGInventory;
-import ru.endlesscode.rpginventory.event.updater.HealthUpdater;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
 import ru.endlesscode.rpginventory.inventory.PlayerWrapper;
 import ru.endlesscode.rpginventory.item.ItemManager;
 import ru.endlesscode.rpginventory.item.ItemStat;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by OsipXD on 29.08.2015
@@ -76,10 +76,6 @@ public class StringUtils {
 
         PlayerWrapper playerWrapper = InventoryManager.get(player);
         if (playerWrapper != null) {
-            // Health Updater
-            HealthUpdater hu = playerWrapper.getHealthUpdater();
-            line = line.replaceAll("%PLUGIN_HP%", hu.getModifiedHealth() + "");
-            line = line.replaceAll("%OTHER_HP%", hu.getOtherPluginsBonus() + hu.getAttributesBonus() + "");
 
             // Modifiers
             line = line.replaceAll("%DAMAGE%", ItemManager.getModifier(player, ItemStat.StatType.DAMAGE).toString());
@@ -111,12 +107,7 @@ public class StringUtils {
                 return "";
             }
 
-            HealthUpdater hu = playerWrapper.getHealthUpdater();
             switch (identifier) {
-                case "health":
-                    return hu.getModifiedHealth() + "";
-                case "health_other_plugins":
-                    return hu.getOtherPluginsBonus() + hu.getAttributesBonus() + "";
                 case "damage_bonus":
                     return ItemManager.getModifier(player, ItemStat.StatType.DAMAGE).toString();
                 case "bow_damage_bonus":

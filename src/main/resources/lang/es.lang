@@ -26,7 +26,6 @@ error.rp.force: &cNo se permite deshabilitar el pack de recursos.
 error.item.level: &6Nivel &c{0} &6requerido
 error.item.class: &6Clase &c{0} &6requerida
 error.mount.owner: &6La montura pertenece a {0}
-error.fixhp: &6No es necesario arreglar tu cantidad de vida
 
 message.buyed: &a&lYa haz comprado el espacio
 message.fixhp: &6Tu cantidad de vida ha sido arreglada, por favor reingrese al servidor
@@ -56,7 +55,6 @@ stat.message.no_bonus: Sin bonus
 stat.damage: &cDaño: &7{0}
 stat.bow_damage: &cDaño (flecha): &7{0}
 stat.hand_damage: &cDaño (mano): &7{0}
-stat.health: &2Vida: &7{0}
 stat.armor: &3Armadura: &7{0}
 stat.crit_chance: &6Chance de golpe crítico: &7{0}
 stat.crit_damage: &6Daño de golpe crítico: &7{0}

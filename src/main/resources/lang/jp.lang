@@ -26,7 +26,6 @@ error.rp.force: &cリソースパックが無効になっています。
 error.item.level: &6それは&c{0}&6レベルが必要になります
 error.item.class: &6それはクラスが必要になります &c{0}
 error.mount.owner: &6主人に帰属しています {0}
-error.fixhp: &6体力を固定する必要がありません
 
 message.buyed: &a&l正常にスペースを購入しました
 message.fixhp: &6体力が固定されました
@@ -56,7 +55,6 @@ stat.message.no_bonus: なし
 stat.damage: &c被害: &7{0}
 stat.bow_damage: &c被害 (弓): &7{0}
 stat.hand_damage: &c被害 (手): &7{0}
-stat.health: &2健康: &7{0}
 stat.armor: &3被害減少: &7{0}
 stat.crit_chance: &6クリティカル確率: &7{0}
 stat.crit_damage: &6クリティカル被害: &7{0}

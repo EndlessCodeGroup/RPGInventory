@@ -26,7 +26,6 @@ error.rp.force: &cDisabling of the resource-pack is not allowed.
 error.item.level: &6Required &c{0} &6level
 error.item.class: &6Required class &c{0}
 error.mount.owner: &6Mount belongs to {0}
-error.fixhp: &6Fixing HP not needed
 
 message.buyed: &a&lYou have successfully purchased the slot
 message.fixhp: &6Your HP was fixed, please login to server again
@@ -56,7 +55,6 @@ stat.message.no_bonus: No bonus
 stat.damage: &cDamage: &7{0}
 stat.bow_damage: &cDamage (shoot): &7{0}
 stat.hand_damage: &cDamage (hand): &7{0}
-stat.health: &2Health: &7{0}
 stat.armor: &3Armor: &7{0}
 stat.crit_chance: &6Crit Chance: &7{0}
 stat.crit_damage: &6Crit Damage: &7{0}

@@ -26,7 +26,6 @@ error.rp.force: &cNão é permitido desabilitar o pacote de recursos.
 error.item.level: &6Nivel &c{0} &6requerido
 error.item.class: &6Classe &c{0} &6requerida
 error.mount.owner: &6A moldura pertence a {0}
-error.fixhp: &6Não há necessidade de corrigir a sua quantidade de vida!!
 
 message.buyed: &a&Você já comprou o espaço
 message.fixhp: &6A sua quantidade de vida foi corrigida, por favor, re-entrar no servidor
@@ -56,7 +55,6 @@ stat.message.no_bonus: Sem bonus
 stat.damage: &cDano: &7{0}
 stat.bow_damage: &cDano (flecha): &7{0}
 stat.hand_damage: &cDano (mão): &7{0}
-stat.health: &2Vida: &7{0}
 stat.armor: &3Armadura: &7{0}
 stat.crit_chance: &6Chance de golpe crítico: &7{0}
 stat.crit_damage: &6Dano de golpe crítico: &7{0}

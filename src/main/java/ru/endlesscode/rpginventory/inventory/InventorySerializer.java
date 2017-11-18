@@ -21,14 +21,10 @@ package ru.endlesscode.rpginventory.inventory;
 import com.comphenix.protocol.wrappers.nbt.NbtCompound;
 import com.comphenix.protocol.wrappers.nbt.NbtFactory;
 import com.comphenix.protocol.wrappers.nbt.io.NbtBinarySerializer;
+
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import ru.endlesscode.rpginventory.event.updater.HealthUpdater;
-import ru.endlesscode.rpginventory.inventory.slot.Slot;
-import ru.endlesscode.rpginventory.inventory.slot.SlotManager;
-import ru.endlesscode.rpginventory.misc.Config;
-import ru.endlesscode.rpginventory.utils.ItemUtils;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -40,8 +36,13 @@ import java.util.List;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
+import ru.endlesscode.rpginventory.inventory.slot.Slot;
+import ru.endlesscode.rpginventory.inventory.slot.SlotManager;
+import ru.endlesscode.rpginventory.misc.Config;
+import ru.endlesscode.rpginventory.utils.ItemUtils;
+
 class InventorySerializer {
-    static void savePlayer(Player player, PlayerWrapper playerWrapper, Path file) throws IOException {
+    static void savePlayer(PlayerWrapper playerWrapper, Path file) throws IOException {
         List<NbtCompound> slotList = new ArrayList<>();
         try (DataOutputStream dataOutput = new DataOutputStream(new GZIPOutputStream(Files.newOutputStream(file)))) {
             for (Slot slot : SlotManager.instance().getSlots()) {
@@ -75,15 +76,6 @@ class InventorySerializer {
             playerNbt.put(NbtFactory.ofCompound("slots", slotList));
             playerNbt.put("buyed-slots", playerWrapper.getBuyedGenericSlots());
 
-            HealthUpdater healthUpdater = playerWrapper.getHealthUpdater();
-            double attributesBonus = healthUpdater.getAttributesBonus();
-            double otherPluginsBonus = healthUpdater.getOtherPluginsBonus();
-            double initHealth = (attributesBonus == 0 && otherPluginsBonus == 0) ? -1 : healthUpdater.getHealth();
-
-            playerNbt.put("health.current", initHealth == 0 ? player.getHealth() : initHealth);
-            playerNbt.put("health.attributes", healthUpdater.getAttributesBonus());
-            playerNbt.put("health.other-plugins", healthUpdater.getOtherPluginsBonus());
-
             NbtBinarySerializer.DEFAULT.serialize(playerNbt, dataOutput);
         }
     }
@@ -104,19 +96,6 @@ class InventorySerializer {
             } else {
                 playerWrapper.setBuyedSlots(playerNbt.getInteger("buyed-slots"));
                 playerNbt.remove("buyed-slots");
-            }
-            // ========================================
-
-            // =========== Added in v1.3.3 ============
-            HealthUpdater healthUpdater = playerWrapper.getHealthUpdater();
-            if (playerNbt.containsKey("health.current")) {
-                double health = playerNbt.getDouble("health.current");
-                if (health != -1) {
-                    healthUpdater.setHealth(health);
-                }
-
-                healthUpdater.setAttributesBonus(playerNbt.getDouble("health.attributes"));
-                healthUpdater.setOtherPluginsBonus(playerNbt.getDouble("health.other-plugins"));
             }
             // ========================================
 

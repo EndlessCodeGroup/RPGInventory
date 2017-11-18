@@ -26,7 +26,6 @@ error.rp.force: &cIskljlucivanje teksture nije dozvoljeno!
 error.item.level: &6Potrebno &c{0} &6levela
 error.item.class: &6Potrebna klasa &c{0}
 error.mount.owner: &6Mount je od {0}
-error.fixhp: &6Popravljanje HP nije potrebno
 
 message.buyed: &a&lUspesno ste kupili slot
 message.fixhp: &6Vas HP je popravljen, molimo vas da se re logujete
@@ -56,7 +55,6 @@ stat.message.no_bonus: No bonus
 stat.damage: &cDamage: &7{0}
 stat.bow_damage: &cDamage (shoot): &7{0}
 stat.hand_damage: &cDamage (hand): &7{0}
-stat.health: &2Health: &7{0}
 stat.armor: &3Armor: &7{0}
 stat.crit_chance: &6Crit Chance: &7{0}
 stat.crit_damage: &6Crit Damage: &7{0}

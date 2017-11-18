@@ -30,8 +30,13 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import ru.endlesscode.rpginventory.RPGInventory;
-import ru.endlesscode.rpginventory.event.updater.HealthUpdater;
 import ru.endlesscode.rpginventory.event.updater.StatsUpdater;
 import ru.endlesscode.rpginventory.inventory.backpack.Backpack;
 import ru.endlesscode.rpginventory.inventory.slot.Slot;
@@ -43,24 +48,17 @@ import ru.endlesscode.rpginventory.pet.PetManager;
 import ru.endlesscode.rpginventory.pet.PetType;
 import ru.endlesscode.rpginventory.utils.ItemUtils;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 /**
  * Created by OsipXD on 09.11.2015
  * It is part of the RpgInventory.
  * All rights reserved 2014 - 2016 © «EndlessCode Group»
  */
 public class PlayerWrapper implements InventoryHolder {
-    private static final int FLIGHT_DELAY = 0;
 
     private final OfflinePlayer player;
     private final Inventory inventory;
     private final Map<String, Integer> buyedSlots = new HashMap<>();
     private final List<String> permissions = new ArrayList<>();
-    private final HealthUpdater healthUpdater;
 
     private InventoryView inventoryView;
     private Slot slotPreparedToBuy = null;
@@ -80,16 +78,6 @@ public class PlayerWrapper implements InventoryHolder {
     public PlayerWrapper(OfflinePlayer player) {
         this.player = player;
         this.inventory = Bukkit.createInventory(this, 54, InventoryManager.TITLE);
-
-        this.healthUpdater = new HealthUpdater(player.getPlayer());
-    }
-
-    void startHealthUpdater() {
-        this.healthUpdater.runTaskTimer(RPGInventory.getInstance(), 1, 1);
-    }
-
-    public HealthUpdater getHealthUpdater() {
-        return healthUpdater;
     }
 
     @Override
@@ -190,9 +178,6 @@ public class PlayerWrapper implements InventoryHolder {
         if (rpgInvModifier != null) {
             speedAttribute.removeModifier(rpgInvModifier);
         }
-
-        this.healthUpdater.setHealth(player.getHealth());
-        this.healthUpdater.stop();
     }
 
     public Backpack getBackpack() {
@@ -295,9 +280,6 @@ public class PlayerWrapper implements InventoryHolder {
 
         this.clearStats();
 
-        // Restoring of scale settings
-        player.getPlayer().setHealthScaled(false);
-
         // Removing pet
         if (PetManager.isEnabled()) {
             PetManager.despawnPet(player);
@@ -311,17 +293,6 @@ public class PlayerWrapper implements InventoryHolder {
 
     public void updateStatsLater() {
         new StatsUpdater(player.getPlayer()).runTaskLater(RPGInventory.getInstance(), 1);
-    }
-
-    public boolean resetMaxHealth() {
-        if (this.healthUpdater.getAttributesBonus() == 0 && this.healthUpdater.getOtherPluginsBonus() == 0) {
-            return false;
-        }
-
-        this.healthUpdater.setAttributesBonus(0);
-        this.healthUpdater.setOtherPluginsBonus(0);
-        this.player.getPlayer().kickPlayer(RPGInventory.getLanguage().getMessage("message.fixhp"));
-        return true;
     }
 
     public void updatePermissions() {
