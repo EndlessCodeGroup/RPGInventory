@@ -280,9 +280,6 @@ public class PlayerWrapper implements InventoryHolder {
 
         this.clearStats();
 
-        // Restoring of scale settings
-        player.getPlayer().setHealthScaled(false);
-
         // Removing pet
         if (PetManager.isEnabled()) {
             PetManager.despawnPet(player);

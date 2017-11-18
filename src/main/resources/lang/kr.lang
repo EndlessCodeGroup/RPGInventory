@@ -55,7 +55,6 @@ stat.message.no_bonus: 없음
 stat.damage: &c데미지: &7{0}
 stat.bow_damage: &c데미지 (활): &7{0}
 stat.hand_damage: &c데미지 (손): &7{0}
-stat.health: &2체력: &7{0}
 stat.armor: &3피해 감소: &7{0}
 stat.crit_chance: &6크리티컬 확률: &7{0}
 stat.crit_damage: &6크리티컬 데미지: &7{0}

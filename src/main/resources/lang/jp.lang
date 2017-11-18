@@ -55,7 +55,6 @@ stat.message.no_bonus: なし
 stat.damage: &c被害: &7{0}
 stat.bow_damage: &c被害 (弓): &7{0}
 stat.hand_damage: &c被害 (手): &7{0}
-stat.health: &2健康: &7{0}
 stat.armor: &3被害減少: &7{0}
 stat.crit_chance: &6クリティカル確率: &7{0}
 stat.crit_damage: &6クリティカル被害: &7{0}

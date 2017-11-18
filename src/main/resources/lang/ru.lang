@@ -54,7 +54,6 @@ stat.message.no_bonus: Нет бонуса
 stat.damage: &cУрон: &7{0}
 stat.bow_damage: &cУрон (выстрел): &7{0}
 stat.hand_damage: &cУрон (рука): &7{0}
-stat.health: &2Здоровье: &7{0}
 stat.armor: &3Броня: &7{0}
 stat.crit_chance: &6Шанс крит.: &7{0}
 stat.crit_damage: &6Крит. урон: &7{0}

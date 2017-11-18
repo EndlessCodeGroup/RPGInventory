@@ -55,7 +55,6 @@ stat.message.no_bonus: Sin bonus
 stat.damage: &cDaño: &7{0}
 stat.bow_damage: &cDaño (flecha): &7{0}
 stat.hand_damage: &cDaño (mano): &7{0}
-stat.health: &2Vida: &7{0}
 stat.armor: &3Armadura: &7{0}
 stat.crit_chance: &6Chance de golpe crítico: &7{0}
 stat.crit_damage: &6Daño de golpe crítico: &7{0}

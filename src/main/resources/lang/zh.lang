@@ -55,7 +55,6 @@ stat.message.no_bonus: 0
 stat.damage: &c附加伤害: &7{0}
 stat.bow_damage: &c附加伤害 (弓箭): &7{0}
 stat.hand_damage: &c附加伤害 (空手): &7{0}
-stat.health: &2血量: &7{0}
 stat.armor: &3护甲: &7{0}
 stat.crit_chance: &6暴击率: &7{0}
 stat.crit_damage: &6暴击伤害: &7{0}
