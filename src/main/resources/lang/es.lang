@@ -26,7 +26,6 @@ error.rp.force: &cNo se permite deshabilitar el pack de recursos.
 error.item.level: &6Nivel &c{0} &6requerido
 error.item.class: &6Clase &c{0} &6requerida
 error.mount.owner: &6La montura pertenece a {0}
-error.fixhp: &6No es necesario arreglar tu cantidad de vida
 
 message.buyed: &a&lYa haz comprado el espacio
 message.fixhp: &6Tu cantidad de vida ha sido arreglada, por favor reingrese al servidor

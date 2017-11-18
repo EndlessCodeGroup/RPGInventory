@@ -26,7 +26,6 @@ error.rp.force: &c不允许关闭服务器材质包.
 error.item.level: &6需要 &c{0} &6级.
 error.item.class: &6你的种族必须为 &c{0}
 error.mount.owner: &6坐骑的主人为 {0}
-error.fixhp: &6不需要修复血量.
 
 message.buyed: &a&l你成功解锁了一个凹槽!
 message.fixhp: &6你的血量已修复,请重新登录服务器.

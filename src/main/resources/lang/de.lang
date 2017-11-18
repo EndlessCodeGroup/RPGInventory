@@ -26,7 +26,6 @@ error.rp.force: &cDu darfst das Resource-Pack nicht deaktivieren.
 error.item.level: &6Benötigtes &c{0} &6Level
 error.item.class: &6Benötigte Klasse &c{0}
 error.mount.owner: &6Dieses Reittier gehört: {0}
-error.fixhp: &6Fixen der LP nicht nötig.
 
 message.buyed: &a&lDu hast den Slot erfolgreich freigeschaltet
 message.fixhp: &6Deine LP wurden gefixt. Bitte logge dich erneut auf dem Server ein.

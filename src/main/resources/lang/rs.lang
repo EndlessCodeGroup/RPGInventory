@@ -26,7 +26,6 @@ error.rp.force: &cIskljlucivanje teksture nije dozvoljeno!
 error.item.level: &6Potrebno &c{0} &6levela
 error.item.class: &6Potrebna klasa &c{0}
 error.mount.owner: &6Mount je od {0}
-error.fixhp: &6Popravljanje HP nije potrebno
 
 message.buyed: &a&lUspesno ste kupili slot
 message.fixhp: &6Vas HP je popravljen, molimo vas da se re logujete

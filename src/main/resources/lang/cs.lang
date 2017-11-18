@@ -26,7 +26,6 @@ error.rp.force: &cVypnuti resource-packu neni povoleno!
 error.item.level: &6Vyzaduje &c{0} &6level
 error.item.class: &6Vyzaduje tridu &c{0}
 error.mount.owner: &6Zvire patri %
-error.fixhp: &6Fixing HP not needed
 
 message.buyed: &a&lUspesne jsi zakoupil slot
 message.fixhp: &6Your HP was fixed, please login to server again.

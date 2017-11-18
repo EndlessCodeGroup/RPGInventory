@@ -26,7 +26,6 @@ error.rp.force: &cNão é permitido desabilitar o pacote de recursos.
 error.item.level: &6Nivel &c{0} &6requerido
 error.item.class: &6Classe &c{0} &6requerida
 error.mount.owner: &6A moldura pertence a {0}
-error.fixhp: &6Não há necessidade de corrigir a sua quantidade de vida!!
 
 message.buyed: &a&Você já comprou o espaço
 message.fixhp: &6A sua quantidade de vida foi corrigida, por favor, re-entrar no servidor

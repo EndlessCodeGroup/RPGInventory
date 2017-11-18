@@ -26,7 +26,6 @@ error.rp.force: &cリソースパックが無効になっています。
 error.item.level: &6それは&c{0}&6レベルが必要になります
 error.item.class: &6それはクラスが必要になります &c{0}
 error.mount.owner: &6主人に帰属しています {0}
-error.fixhp: &6体力を固定する必要がありません
 
 message.buyed: &a&l正常にスペースを購入しました
 message.fixhp: &6体力が固定されました
