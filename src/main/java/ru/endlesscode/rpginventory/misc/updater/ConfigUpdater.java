@@ -19,11 +19,12 @@
 package ru.endlesscode.rpginventory.misc.updater;
 
 import org.bukkit.configuration.file.FileConfiguration;
-import ru.endlesscode.rpginventory.inventory.slot.SlotManager;
-import ru.endlesscode.rpginventory.misc.Config;
 
 import java.util.Arrays;
 import java.util.Collections;
+
+import ru.endlesscode.rpginventory.inventory.slot.SlotManager;
+import ru.endlesscode.rpginventory.misc.Config;
 
 /**
  * Created by OsipXD on 05.09.2015
@@ -31,11 +32,10 @@ import java.util.Collections;
  * All rights reserved 2014 - 2016 © «EndlessCode Group»
  */
 public class ConfigUpdater {
-    public static void update(double configVersion) {
+    public static void update(int configVersion) {
         FileConfiguration config = Config.getConfig();
-        int version = (int) (configVersion * 10);
 
-        switch (version) {
+        switch (configVersion) {
             case 91:
                 config.set("ids", null);
                 config.set("attack.auto-held", true);
@@ -180,6 +180,11 @@ public class ConfigUpdater {
                 config.set("resource-pack.delay", 2);
                 config.set("check-update", config.getBoolean("auto-update"));
                 config.set("auto-update", null);
+            case 210:
+            case 211:
+            case 212:
+            case 213:
+                config.set("health", null);
         }
     }
 }

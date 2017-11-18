@@ -23,8 +23,10 @@ import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketEvent;
+
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
+
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
@@ -33,7 +35,17 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
-import ru.endlesscode.rpginventory.event.listener.*;
+
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.logging.Logger;
+
+import ru.endlesscode.rpginventory.event.listener.ArmorEquipListener;
+import ru.endlesscode.rpginventory.event.listener.ElytraListener;
+import ru.endlesscode.rpginventory.event.listener.HandSwapListener;
+import ru.endlesscode.rpginventory.event.listener.PlayerListener;
+import ru.endlesscode.rpginventory.event.listener.PlayerLoader;
+import ru.endlesscode.rpginventory.event.listener.WorldListener;
 import ru.endlesscode.rpginventory.inventory.InventoryLocker;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
 import ru.endlesscode.rpginventory.inventory.backpack.BackpackManager;
@@ -50,10 +62,7 @@ import ru.endlesscode.rpginventory.pet.PetManager;
 import ru.endlesscode.rpginventory.pet.mypet.MyPetManager;
 import ru.endlesscode.rpginventory.utils.PlayerUtils;
 import ru.endlesscode.rpginventory.utils.StringUtils;
-
-import java.io.IOException;
-import java.nio.file.Path;
-import java.util.logging.Logger;
+import ru.endlesscode.rpginventory.utils.VersionUtils;
 
 public class RPGInventory extends JavaPlugin {
     private static RPGInventory instance;
@@ -330,19 +339,22 @@ public class RPGInventory extends JavaPlugin {
     }
 
     private void updateConfig() {
+        String fullVersion = this.getDescription().getVersion();
+        String currentVersion = VersionUtils.trimQualifiers(fullVersion);
+
         if (!Config.getConfig().contains("version")) {
-            Config.getConfig().set("version", this.getDescription().getVersion());
+            Config.getConfig().set("version", currentVersion);
             Config.save();
             return;
         }
 
-        Double currentVersion = Double.parseDouble(this.getDescription().getVersion().replaceFirst("\\.", ""));
-        Double configVersion = Double.parseDouble(Config.getConfig().getString("version").replaceFirst("\\.", ""));
+        int currentVersionCode = VersionUtils.versionToCode(currentVersion);
+        int configVersionCode = VersionUtils.versionToCode(Config.getConfig().getString("version"));
 
-        if (configVersion < currentVersion) {
-            ConfigUpdater.update(configVersion);
+        if (configVersionCode < currentVersionCode) {
+            ConfigUpdater.update(configVersionCode);
             Config.getConfig().set("version", null);
-            Config.getConfig().set("version", this.getDescription().getVersion());
+            Config.getConfig().set("version", currentVersion);
             Config.save();
             Config.reload();
         }
