@@ -18,6 +18,7 @@
 
 package ru.endlesscode.rpginventory.event.updater;
 
+import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
@@ -121,16 +122,16 @@ public class HealthUpdater extends BukkitRunnable {
     }
 
     private void waiting() {
-        double currentMaxHealth = player.getMaxHealth();
+        double currentMaxHealth = player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue();
         double currentBonus =
                 this.initHealth
                         ? this.attributesBonus + this.otherPluginsBonus
                         : currentMaxHealth - this.getModifiedHealth();
         Modifier newModifier = ItemManager.getModifier(player, ItemStat.StatType.HEALTH);
 
-        // Check if we need update health
-        if (!this.currentModifier.equals(newModifier) || this.initHealth
-                || Math.abs(currentBonus - this.otherPluginsBonus + this.attributesBonus) <= 0.0000001) {
+        // Check if we need update health. TODO: Test me
+        boolean t = Math.abs(currentBonus - this.otherPluginsBonus + this.attributesBonus) > 0.0;
+        if (!this.currentModifier.equals(newModifier) || this.initHealth || t) {
             if (!this.accepted) {
                 return;
             }
