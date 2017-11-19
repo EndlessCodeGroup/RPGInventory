@@ -19,11 +19,20 @@
 package ru.endlesscode.rpginventory.item;
 
 import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
+
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import ru.endlesscode.rpginventory.RPGInventory;
 import ru.endlesscode.rpginventory.event.listener.ItemListener;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
@@ -35,13 +44,6 @@ import ru.endlesscode.rpginventory.utils.InventoryUtils;
 import ru.endlesscode.rpginventory.utils.ItemUtils;
 import ru.endlesscode.rpginventory.utils.PlayerUtils;
 import ru.endlesscode.rpginventory.utils.StringUtils;
-
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Created by OsipXD on 18.09.2015
@@ -67,8 +69,7 @@ public class ItemManager {
 
             CUSTOM_ITEMS.clear();
             for (String key : itemsConfig.getConfigurationSection("items").getKeys(false)) {
-                CustomItem customItem = new CustomItem(key, itemsConfig.getConfigurationSection("items." + key));
-                CUSTOM_ITEMS.put(key, customItem);
+                tryToAddItem(key, itemsConfig.getConfigurationSection("items." + key));
             }
 
             RPGInventory.getPluginLogger().info(CUSTOM_ITEMS.size() + " item(s) has been loaded");
@@ -83,6 +84,17 @@ public class ItemManager {
 
         instance.getServer().getPluginManager().registerEvents(new ItemListener(), instance);
         return true;
+    }
+
+    private static void tryToAddItem(String name, ConfigurationSection config) {
+        try {
+            CustomItem customItem = new CustomItem(name, config);
+            CUSTOM_ITEMS.put(name, customItem);
+        } catch (Exception e) {
+            String message = String.format(
+                    "Item '%s' can't be added: %s", name, e.getLocalizedMessage());
+            RPGInventory.getPluginLogger().warning(message);
+        }
     }
 
     public static Modifier getModifier(Player player, ItemStat.StatType statType) {
