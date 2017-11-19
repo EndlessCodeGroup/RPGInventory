@@ -19,6 +19,7 @@
 package ru.endlesscode.rpginventory.inventory.backpack;
 
 import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -26,6 +27,16 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
 import ru.endlesscode.rpginventory.RPGInventory;
 import ru.endlesscode.rpginventory.event.listener.BackpackListener;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
@@ -33,11 +44,6 @@ import ru.endlesscode.rpginventory.inventory.slot.Slot;
 import ru.endlesscode.rpginventory.inventory.slot.SlotManager;
 import ru.endlesscode.rpginventory.misc.Config;
 import ru.endlesscode.rpginventory.utils.ItemUtils;
-
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.*;
 
 /**
  * Created by OsipXD on 05.10.2015
@@ -64,8 +70,7 @@ public class BackpackManager {
 
             BACKPACK_TYPES.clear();
             for (String key : petsConfig.getConfigurationSection("backpacks").getKeys(false)) {
-                BackpackType backpackType = new BackpackType(petsConfig.getConfigurationSection("backpacks." + key));
-                BACKPACK_TYPES.put(key, backpackType);
+                tryToAddBackpack(key, petsConfig.getConfigurationSection("backpacks." + key));
             }
 
             BackpackManager.loadBackpacks();
@@ -85,6 +90,17 @@ public class BackpackManager {
         // Register events
         instance.getServer().getPluginManager().registerEvents(new BackpackListener(), instance);
         return true;
+    }
+
+    private static void tryToAddBackpack(String name, ConfigurationSection config) {
+        try {
+            BackpackType backpackType = new BackpackType(config);
+            BACKPACK_TYPES.put(name, backpackType);
+        } catch (Exception e) {
+            String message = String.format(
+                    "Backpack '%s' can't be added: %s", name, e.getLocalizedMessage());
+            RPGInventory.getPluginLogger().warning(message);
+        }
     }
 
     private static boolean isEnabled() {
