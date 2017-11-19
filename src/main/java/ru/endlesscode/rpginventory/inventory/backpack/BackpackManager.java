@@ -126,19 +126,25 @@ public class BackpackManager {
 
         BackpackType type;
         String bpId = ItemUtils.getTag(bpItem, ItemUtils.BACKPACK_TAG);
-
         if (bpId == null || (type = BackpackManager.getBackpackType(bpId)) == null) {
             return false;
         }
 
         Backpack backpack;
-        String bpUniqueId = ItemUtils.getTag(bpItem, ItemUtils.BACKPACK_UID_TAG);
-        if (bpUniqueId == null || !BACKPACKS.containsKey(UUID.fromString(bpUniqueId))) {
-            backpack = type.createBackpack();
-            ItemUtils.setTag(bpItem, ItemUtils.BACKPACK_UID_TAG, backpack.getUniqueId().toString());
+        String bpUid = ItemUtils.getTag(bpItem, ItemUtils.BACKPACK_UID_TAG);
+        UUID uuid = bpUid == null ? null : UUID.fromString(bpUid);
+        if (!BACKPACKS.containsKey(uuid)) {
+            if (uuid == null) {
+                backpack = type.createBackpack();
+                ItemUtils.setTag(
+                        bpItem, ItemUtils.BACKPACK_UID_TAG, backpack.getUniqueId().toString());
+            } else {
+                backpack = type.createBackpack(uuid);
+            }
+
             BACKPACKS.put(backpack.getUniqueId(), backpack);
         } else {
-            backpack = BACKPACKS.get(UUID.fromString(bpUniqueId));
+            backpack = BACKPACKS.get(uuid);
         }
 
         backpack.open(player);
