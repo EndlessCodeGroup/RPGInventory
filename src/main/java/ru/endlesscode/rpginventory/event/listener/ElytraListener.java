@@ -65,10 +65,14 @@ public class ElytraListener implements Listener {
 
     @EventHandler(ignoreCancelled = true)
     public void onEntityToggleGlide(EntityToggleGlideEvent event) {
-        if (event.getEntityType() != EntityType.PLAYER) return;
+        if (event.getEntityType() != EntityType.PLAYER) {
+            return;
+        }
 
         Player player = (Player) event.getEntity();
-        if (!InventoryManager.playerIsLoaded(player)) return;
+        if (!InventoryManager.playerIsLoaded(player)) {
+            return;
+        }
 
         if (event.isGliding()) {
             PlayerWrapper playerWrapper = InventoryManager.get(player);

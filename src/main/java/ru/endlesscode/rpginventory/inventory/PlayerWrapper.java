@@ -229,8 +229,9 @@ public class PlayerWrapper implements InventoryHolder {
     }
 
     public void onStartGliding() {
-        if (!this.hasPet()) return;
-        PetManager.despawnPet(player);
+        if (this.hasPet()) {
+            PetManager.despawnPet(player);
+        }
     }
 
     public boolean isFalling() {
