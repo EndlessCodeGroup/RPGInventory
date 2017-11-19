@@ -21,15 +21,17 @@ package ru.endlesscode.rpginventory.inventory.backpack;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.UUID;
+
 import ru.endlesscode.rpginventory.RPGInventory;
 import ru.endlesscode.rpginventory.item.TexturedItem;
 import ru.endlesscode.rpginventory.misc.FileLanguage;
 import ru.endlesscode.rpginventory.utils.ItemUtils;
 import ru.endlesscode.rpginventory.utils.StringUtils;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * Created by OsipXD on 05.10.2015
@@ -71,6 +73,10 @@ public class BackpackType extends TexturedItem {
         spawnItem.setItemMeta(meta);
 
         this.item = ItemUtils.setTag(spawnItem, ItemUtils.BACKPACK_TAG, this.id);
+    }
+
+    Backpack createBackpack(UUID uuid) {
+        return new Backpack(this, uuid);
     }
 
     Backpack createBackpack() {

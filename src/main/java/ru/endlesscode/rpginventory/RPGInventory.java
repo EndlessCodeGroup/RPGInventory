@@ -248,6 +248,7 @@ public class RPGInventory extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        BackpackManager.saveBackpacks();
         this.savePlayers();
     }
 

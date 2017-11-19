@@ -20,9 +20,10 @@ package ru.endlesscode.rpginventory.inventory.backpack;
 
 import org.bukkit.inventory.Inventory;
 import org.bukkit.scheduler.BukkitRunnable;
-import ru.endlesscode.rpginventory.RPGInventory;
 
 import java.util.Arrays;
+
+import ru.endlesscode.rpginventory.RPGInventory;
 
 /**
  * Created by OsipXD on 26.08.2016
@@ -33,18 +34,22 @@ public class BackpackUpdater extends BukkitRunnable {
     private final Inventory inventory;
     private final Backpack backpack;
 
+    private static final int DELAY = 2;
+
     private BackpackUpdater(Inventory inventory, Backpack backpack) {
         this.inventory = inventory;
         this.backpack = backpack;
     }
 
     public static void update(Inventory inventory, Backpack backpack) {
-        new BackpackUpdater(inventory, backpack).runTaskLater(RPGInventory.getInstance(), 2);
+        new BackpackUpdater(inventory, backpack).runTaskLater(RPGInventory.getInstance(), DELAY);
     }
 
     @Override
     public void run() {
         backpack.onUse();
-        backpack.setContents(Arrays.copyOfRange(inventory.getContents(), 0, backpack.getType().getSize()));
+
+        int backpackSize = backpack.getType().getSize();
+        backpack.setContents(Arrays.copyOfRange(inventory.getContents(), 0, backpackSize));
     }
 }
