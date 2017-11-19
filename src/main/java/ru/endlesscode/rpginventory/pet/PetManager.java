@@ -20,22 +20,38 @@ package ru.endlesscode.rpginventory.pet;
 
 import com.comphenix.protocol.wrappers.nbt.NbtCompound;
 import com.comphenix.protocol.wrappers.nbt.NbtFactory;
+
 import org.bukkit.DyeColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.*;
+import org.bukkit.entity.Animals;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Horse;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.Tameable;
+import org.bukkit.entity.Wolf;
 import org.bukkit.inventory.HorseInventory;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import ru.endlesscode.rpginventory.RPGInventory;
 import ru.endlesscode.rpginventory.event.listener.PetListener;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
@@ -44,13 +60,6 @@ import ru.endlesscode.rpginventory.inventory.slot.SlotManager;
 import ru.endlesscode.rpginventory.utils.EffectUtils;
 import ru.endlesscode.rpginventory.utils.ItemUtils;
 import ru.endlesscode.rpginventory.utils.LocationUtils;
-
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Created by OsipXD on 26.08.2015
@@ -84,15 +93,13 @@ public class PetManager {
 
             PetManager.PETS.clear();
             for (String key : petsConfig.getConfigurationSection("pets").getKeys(false)) {
-                PetType petType = new PetType(petsConfig.getConfigurationSection("pets." + key));
-                PetManager.PETS.put(key, petType);
+                tryToAddPet(key, petsConfig.getConfigurationSection("pets." + key));
             }
             RPGInventory.getPluginLogger().info(PetManager.PETS.size() + " pet(s) has been loaded");
 
             PetManager.PET_FOOD.clear();
             for (String key : petsConfig.getConfigurationSection("food").getKeys(false)) {
-                PetFood pet = new PetFood(petsConfig.getConfigurationSection("food." + key));
-                PetManager.PET_FOOD.put(key, pet);
+                tryToAddPetFood(key, petsConfig.getConfigurationSection("food." + key));
             }
             RPGInventory.getPluginLogger().info(PetManager.PET_FOOD.size() + " food(s) has been loaded");
         } catch (Exception e) {
@@ -107,6 +114,28 @@ public class PetManager {
         // Register events
         instance.getServer().getPluginManager().registerEvents(new PetListener(), instance);
         return true;
+    }
+
+    private static void tryToAddPet(String name, ConfigurationSection config) {
+        try {
+            PetType petType = new PetType(config);
+            PetManager.PETS.put(name, petType);
+        } catch (Exception e) {
+            String message = String.format(
+                    "Pet '%s' can't be added: %s", name, e.getLocalizedMessage());
+            RPGInventory.getPluginLogger().warning(message);
+        }
+    }
+
+    private static void tryToAddPetFood(String name, ConfigurationSection config) {
+        try {
+            PetFood pet = new PetFood(config);
+            PetManager.PET_FOOD.put(name, pet);
+        } catch (Exception e) {
+            String message = String.format(
+                    "Pet food '%s' can't be added: %s", name, e.getLocalizedMessage());
+            RPGInventory.getPluginLogger().warning(message);
+        }
     }
 
     public static void initPlayer(@NotNull Player player) {
