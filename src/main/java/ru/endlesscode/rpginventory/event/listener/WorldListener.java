@@ -23,6 +23,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.world.WorldSaveEvent;
+
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
 import ru.endlesscode.rpginventory.inventory.backpack.BackpackManager;
 
@@ -34,6 +35,10 @@ import ru.endlesscode.rpginventory.inventory.backpack.BackpackManager;
 public class WorldListener implements Listener {
     @EventHandler
     public void onWorldSave(WorldSaveEvent event) {
+        if (!event.getWorld().equals(Bukkit.getWorlds().get(0))) {
+            return;
+        }
+
         BackpackManager.saveBackpacks();
 
         for (Player player : Bukkit.getServer().getOnlinePlayers()) {
