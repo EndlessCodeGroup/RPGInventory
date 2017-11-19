@@ -156,7 +156,6 @@ public class BackpackManager {
         return BACKPACK_TYPES.get(bpId);
     }
 
-    @SuppressWarnings("ResultOfMethodCallIgnored")
     public static void saveBackpacks() {
         Path folder = RPGInventory.getInstance().getDataPath().resolve("backpacks");
 
@@ -171,29 +170,33 @@ public class BackpackManager {
         }
     }
 
-    @SuppressWarnings("ResultOfMethodCallIgnored")
     private static void loadBackpacks() {
         try {
             Path folder = RPGInventory.getInstance().getDataPath().resolve("backpacks");
             Files.createDirectories(folder);
 
-            //noinspection ConstantConditions
-            Files.list(folder).forEach(path -> {
-                try {
-                    if (path.getFileName().endsWith(".bp")) {
-                        Backpack backpack = BackpackSerializer.loadBackpack(path);
-                        if (backpack == null || backpack.isOverdue()) {
-                            Files.delete(path);
-                        } else {
-                            BACKPACKS.put(backpack.getUniqueId(), backpack);
-                        }
-                    }
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            });
-        } catch (IOException e) {
+            Files.list(folder)
+                    .filter((file) -> Files.isRegularFile(file) && file.toString().endsWith(".bp"))
+                    .forEach(BackpackManager::tryToLoadBackpack);
+        } catch (IOException | RuntimeException e) {
             e.printStackTrace();
+        }
+    }
+
+    private static void tryToLoadBackpack(Path path) {
+        try {
+            loadBackpack(path);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static void loadBackpack(Path path) throws IOException {
+        Backpack backpack = BackpackSerializer.loadBackpack(path);
+        if (backpack == null || backpack.isOverdue()) {
+            Files.delete(path);
+        } else {
+            BACKPACKS.put(backpack.getUniqueId(), backpack);
         }
     }
 
