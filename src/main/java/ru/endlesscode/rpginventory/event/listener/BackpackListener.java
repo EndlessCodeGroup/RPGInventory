@@ -29,6 +29,8 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+
 import ru.endlesscode.rpginventory.RPGInventory;
 import ru.endlesscode.rpginventory.api.InventoryAPI;
 import ru.endlesscode.rpginventory.inventory.ActionType;
@@ -51,18 +53,20 @@ public class BackpackListener implements Listener {
     @SuppressWarnings("deprecation")
     @EventHandler(priority = EventPriority.LOWEST)
     public void onUseBackpack(PlayerInteractEvent event) {
-        if (!event.hasItem() || !ItemUtils.hasTag(event.getItem().clone(), ItemUtils.BACKPACK_TAG)) {
+        ItemStack item = event.getItem();
+        if (!event.hasItem() || !ItemUtils.hasTag(item, ItemUtils.BACKPACK_TAG)) {
             return;
         }
 
         Player player = event.getPlayer();
-        if ((event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK)
+        Action action = event.getAction();
+        if ((action == Action.RIGHT_CLICK_AIR || action == Action.RIGHT_CLICK_BLOCK)
                 && InventoryManager.isQuickSlot(player.getInventory().getHeldItemSlot())) {
-            BackpackManager.open(player, event.getItem());
+            BackpackManager.open(player, item);
         }
 
         event.setCancelled(true);
-        event.getPlayer().updateInventory();
+        player.updateInventory();
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
@@ -76,8 +80,10 @@ public class BackpackListener implements Listener {
 
         if (inventory.getHolder() instanceof BackpackHolder) {
             // Click inside backpack
-            if (BackpackManager.isBackpack(event.getCurrentItem()) || BackpackManager.isBackpack(event.getCursor()) ||
-                    InventoryManager.isFilledSlot(event.getCurrentItem()) || InventoryManager.isFilledSlot(event.getCursor())) {
+            if (BackpackManager.isBackpack(event.getCurrentItem())
+                    || BackpackManager.isBackpack(event.getCursor())
+                    || InventoryManager.isFilledSlot(event.getCurrentItem())
+                    || InventoryManager.isFilledSlot(event.getCursor())) {
                 event.setCancelled(true);
                 return;
             }
@@ -89,11 +95,15 @@ public class BackpackListener implements Listener {
 
             BackpackUpdater.update(inventory, InventoryManager.get(player).getBackpack());
         } else if ((event.getRawSlot() >= event.getView().getTopInventory().getSize()
-                || event.getSlot() == SlotManager.instance().getBackpackSlot().getSlotId() && InventoryAPI.isRPGInventory(event.getInventory()))
-                && !BackpackManager.playerCanTakeBackpack(player) && BackpackManager.isBackpack(event.getCursor())
+                || event.getSlot() == SlotManager.instance().getBackpackSlot().getSlotId()
+                        && InventoryAPI.isRPGInventory(event.getInventory()))
+                && !BackpackManager.playerCanTakeBackpack(player)
+                && BackpackManager.isBackpack(event.getCursor())
                 && ActionType.getTypeOfAction(event.getAction()) == ActionType.SET) {
             // Prevent placing new backpack in bottom inventory if player can't take backpack
-            PlayerUtils.sendMessage(player, RPGInventory.getLanguage().getMessage("backpack.limit", BackpackManager.getLimit()));
+            int limit = BackpackManager.getLimit();
+            String message = RPGInventory.getLanguage().getMessage("backpack.limit", limit);
+            PlayerUtils.sendMessage(player, message);
             event.setCancelled(true);
         }
     }
@@ -103,7 +113,8 @@ public class BackpackListener implements Listener {
         Inventory inventory = event.getInventory();
         Player player = (Player) event.getPlayer();
 
-        if (!InventoryManager.playerIsLoaded(player) || !(inventory.getHolder() instanceof BackpackHolder)) {
+        if (!InventoryManager.playerIsLoaded(player)
+                || !(inventory.getHolder() instanceof BackpackHolder)) {
             return;
         }
 
@@ -125,8 +136,11 @@ public class BackpackListener implements Listener {
             return;
         }
 
-        if (BackpackManager.isBackpack(event.getItem().getItemStack()) && !BackpackManager.playerCanTakeBackpack(player)) {
-            PlayerUtils.sendMessage(player, RPGInventory.getLanguage().getMessage("backpack.limit", BackpackManager.getLimit()));
+        if (BackpackManager.isBackpack(event.getItem().getItemStack())
+                && !BackpackManager.playerCanTakeBackpack(player)) {
+            int limit = BackpackManager.getLimit();
+            String message = RPGInventory.getLanguage().getMessage("backpack.limit", limit);
+            PlayerUtils.sendMessage(player, message);
             event.setCancelled(true);
         }
     }
