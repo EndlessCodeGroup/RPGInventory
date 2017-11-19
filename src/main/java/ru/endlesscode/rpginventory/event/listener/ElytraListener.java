@@ -19,13 +19,15 @@
 package ru.endlesscode.rpginventory.event.listener;
 
 import org.bukkit.Material;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityToggleGlideEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
 import ru.endlesscode.rpginventory.inventory.PlayerWrapper;
-import ru.endlesscode.rpginventory.nms.VersionHandler;
 import ru.endlesscode.rpginventory.utils.LocationUtils;
 
 /**
@@ -39,7 +41,8 @@ public class ElytraListener implements Listener {
     @EventHandler(ignoreCancelled = true)
     public void onPlayerFall(PlayerMoveEvent event) {
         Player player = event.getPlayer();
-        if (!InventoryManager.playerIsLoaded(player) || player.isFlying()) {
+        if (!InventoryManager.playerIsLoaded(player) || player.isFlying()
+                || player.getVehicle() != null) {
             return;
         }
 
@@ -57,6 +60,19 @@ public class ElytraListener implements Listener {
 
         if (endFalling) {
             playerWrapper.setFalling(false);
+        }
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void onEntityToggleGlide(EntityToggleGlideEvent event) {
+        if (event.getEntityType() != EntityType.PLAYER) return;
+
+        Player player = (Player) event.getEntity();
+        if (!InventoryManager.playerIsLoaded(player)) return;
+
+        if (event.isGliding()) {
+            PlayerWrapper playerWrapper = InventoryManager.get(player);
+            playerWrapper.onStartGliding();
         }
     }
 
