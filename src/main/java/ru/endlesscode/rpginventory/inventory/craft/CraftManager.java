@@ -19,18 +19,20 @@
 package ru.endlesscode.rpginventory.inventory.craft;
 
 import com.comphenix.protocol.ProtocolLibrary;
+
 import org.bukkit.configuration.MemorySection;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
-import ru.endlesscode.rpginventory.RPGInventory;
-import ru.endlesscode.rpginventory.event.listener.CraftListener;
-import ru.endlesscode.rpginventory.misc.Config;
-import ru.endlesscode.rpginventory.utils.ItemUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+
+import ru.endlesscode.rpginventory.RPGInventory;
+import ru.endlesscode.rpginventory.event.listener.CraftListener;
+import ru.endlesscode.rpginventory.misc.Config;
+import ru.endlesscode.rpginventory.utils.ItemUtils;
 
 /**
  * Created by OsipXD on 29.08.2016
