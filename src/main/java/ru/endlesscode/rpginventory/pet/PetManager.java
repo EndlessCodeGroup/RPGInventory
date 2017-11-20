@@ -35,6 +35,7 @@ import org.bukkit.entity.Animals;
 import org.bukkit.entity.Horse;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Ocelot;
+import org.bukkit.entity.Pig;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Tameable;
 import org.bukkit.entity.Wolf;
@@ -201,23 +202,31 @@ public class PetManager {
 
         switch (petType.getRole()) {
             case MOUNT:
-                Horse horsePet = (Horse) pet;
-                HorseInventory horseInv = horsePet.getInventory();
-                horseInv.setSaddle(new ItemStack(Material.SADDLE));
+                switch (pet.getType()) {
+                    case HORSE:
+                        Horse horsePet = (Horse) pet;
+                        HorseInventory horseInv = horsePet.getInventory();
+                        horseInv.setSaddle(new ItemStack(Material.SADDLE));
 
-                if (features.containsKey("CHEST") && features.get("CHEST").equals("TRUE")) {
-                    horsePet.setCarryingChest(true);
+                        if (features.containsKey("CHEST") && features.get("CHEST").equals("TRUE")) {
+                            horsePet.setCarryingChest(true);
+                        }
+
+                        if (features.containsKey("ARMOR")) {
+                            horseInv.setArmor(new ItemStack(Material.valueOf(features.get("ARMOR"))));
+                        }
+
+                        String color = features.getOrDefault("COLOR", "BROWN");
+                        String style = features.getOrDefault("STYLE", "NONE");
+
+                        horsePet.setColor(Horse.Color.valueOf(color));
+                        horsePet.setStyle(Horse.Style.valueOf(style));
+
+                        break;
+                    case PIG:
+                        Pig pigPet = (Pig) pet;
+                        pigPet.setSaddle(true);
                 }
-
-                if (features.containsKey("ARMOR")) {
-                    horseInv.setArmor(new ItemStack(Material.valueOf(features.get("ARMOR"))));
-                }
-
-                String color = features.getOrDefault("COLOR", "BROWN");
-                String style = features.getOrDefault("STYLE", "NONE");
-
-                horsePet.setColor(Horse.Color.valueOf(color));
-                horsePet.setStyle(Horse.Style.valueOf(style));
 
                 break;
             case COMPANION:

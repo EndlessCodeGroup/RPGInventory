@@ -228,7 +228,7 @@ public class PetType extends ClassedItem {
 
     public enum Role {
         COMPANION("WOLF", "OCELOT"),
-        MOUNT("HORSE");
+        MOUNT("HORSE", "PIG");
 
         private final String defaultSkin;
         private final List<String> possibleSkins;
