@@ -87,6 +87,19 @@ pets:
     - "ARMOR: IRON_BARDING"
     - "COLOR: DARK_BROWN"
     - "STYLE: WHITE"
+  pig:
+    name: "&6&lPig"
+    item-name: "&5&lPig's Summoning Stone"
+    lore:
+    - "&e&oRide faster than wind!"
+    - "&e&oBut... where my carrot?"
+    item: MONSTER_EGG:Pig
+    type: MOUNT
+    health: 100
+    speed: 12.5
+    revival: true
+    cooldown: 60
+    skin: PIG
 food:
   bone:
     name: "&f&lBone"
