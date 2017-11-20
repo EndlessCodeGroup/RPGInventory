@@ -78,7 +78,7 @@ public class CraftListener extends PacketAdapter implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.LOW)
     public void onInventoryOpen(InventoryOpenEvent event) {
         final Player player = (Player) event.getPlayer();
         if (!InventoryManager.playerIsLoaded(player)
