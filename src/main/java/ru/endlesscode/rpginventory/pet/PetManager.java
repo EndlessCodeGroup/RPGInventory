@@ -32,9 +32,9 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Animals;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Horse;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Ocelot;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Tameable;
 import org.bukkit.entity.Wolf;
@@ -194,8 +194,7 @@ public class PetManager {
 
         PetManager.despawnPet(player);
         Location petLoc = LocationUtils.getLocationNearPlayer(player, 3);
-        Animals pet = (Animals) player.getWorld().spawnEntity(
-                petLoc, EntityType.valueOf(petType.getRole().getDefaultSkin()));
+        Animals pet = (Animals) player.getWorld().spawnEntity(petLoc, petType.getSkin());
         pet.teleport(petLoc);
         EffectUtils.playSpawnEffect(pet);
         Map<String, String> features = petType.getFeatures();
@@ -224,9 +223,17 @@ public class PetManager {
 
                 break;
             case COMPANION:
-                Wolf wolfPet = (Wolf) pet;
-                if (features.containsKey("COLLAR")) {
-                    wolfPet.setCollarColor(DyeColor.valueOf(features.get("COLLAR")));
+                switch (pet.getType()) {
+                    case WOLF:
+                        Wolf wolfPet = (Wolf) pet;
+                        if (features.containsKey("COLLAR")) {
+                            wolfPet.setCollarColor(DyeColor.valueOf(features.get("COLLAR")));
+                        }
+                        break;
+                    case OCELOT:
+                        Ocelot ocelotPet = (Ocelot) pet;
+                        String type = features.getOrDefault("TYPE", "WILD_OCELOT");
+                        ocelotPet.setCatType(Ocelot.Type.valueOf(type));
                 }
         }
 

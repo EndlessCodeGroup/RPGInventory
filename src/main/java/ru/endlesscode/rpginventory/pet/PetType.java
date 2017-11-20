@@ -19,22 +19,25 @@
 package ru.endlesscode.rpginventory.pet;
 
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import ru.endlesscode.rpginventory.RPGInventory;
 import ru.endlesscode.rpginventory.item.ClassedItem;
 import ru.endlesscode.rpginventory.misc.FileLanguage;
 import ru.endlesscode.rpginventory.utils.ItemUtils;
 import ru.endlesscode.rpginventory.utils.StringUtils;
 import ru.endlesscode.rpginventory.utils.Utils;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Created by OsipXD on 26.08.2015
@@ -52,6 +55,7 @@ public class PetType extends ClassedItem {
 
     // Stats
     private final Role role;
+    private final EntityType skin;
     private final double health;
     private final double damage;
     private final double speed;
@@ -72,6 +76,7 @@ public class PetType extends ClassedItem {
         this.lore = StringUtils.coloredLines(config.getStringList("lore"));
 
         this.role = Role.valueOf(config.getString("type", "COMPANION"));
+        this.skin = role.getPossibleSkin(config.getString("skin"));
 
         this.health = config.getDouble("health");
         this.damage = config.getDouble("damage", 0);
@@ -217,18 +222,35 @@ public class PetType extends ClassedItem {
         return features;
     }
 
+    public EntityType getSkin() {
+        return skin;
+    }
+
     public enum Role {
-        COMPANION("WOLF"),
+        COMPANION("WOLF", "OCELOT"),
         MOUNT("HORSE");
 
         private final String defaultSkin;
+        private final List<String> possibleSkins;
 
-        Role(String defaultSkin) {
-            this.defaultSkin = defaultSkin;
+        Role(String... skins) {
+            this.defaultSkin = skins[0];
+            this.possibleSkins = Arrays.asList(skins);
         }
 
         public String getDefaultSkin() {
             return defaultSkin;
+        }
+
+        public EntityType getPossibleSkin(String skin) {
+            String possibleSkin = skin;
+            if (possibleSkin == null) {
+                possibleSkin = defaultSkin;
+            } else if (!possibleSkins.contains(skin)) {
+                possibleSkin = defaultSkin;
+            }
+
+            return EntityType.valueOf(possibleSkin);
         }
     }
 }
