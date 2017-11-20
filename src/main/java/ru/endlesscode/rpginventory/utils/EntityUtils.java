@@ -19,16 +19,17 @@
 package ru.endlesscode.rpginventory.utils;
 
 import com.comphenix.protocol.utility.MinecraftReflection;
+
 import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.Tameable;
-import ru.endlesscode.rpginventory.inventory.InventoryManager;
-import ru.endlesscode.rpginventory.pet.PetManager;
-import ru.endlesscode.rpginventory.pet.PetType;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+
+import ru.endlesscode.rpginventory.inventory.InventoryManager;
+import ru.endlesscode.rpginventory.pet.PetManager;
+import ru.endlesscode.rpginventory.pet.PetType;
 
 /**
  * Created by OsipXD on 02.12.2015
@@ -48,7 +49,7 @@ public class EntityUtils {
             return;
         }
 
-        PetType petType = PetManager.getPetFromEntity((Tameable) entity);
+        PetType petType = PetManager.getPetFromEntity(entity, player);
         double speedModifier = petType == null ? 1.0 : 0.4 / petType.getSpeed();
 
         Class<?> entityInsentientClass = MinecraftReflection.getMinecraftClass("EntityInsentient");

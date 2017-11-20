@@ -32,9 +32,10 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Animals;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Horse;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Ocelot;
+import org.bukkit.entity.Pig;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Tameable;
 import org.bukkit.entity.Wolf;
@@ -194,44 +195,60 @@ public class PetManager {
 
         PetManager.despawnPet(player);
         Location petLoc = LocationUtils.getLocationNearPlayer(player, 3);
-        Animals pet = (Animals) player.getWorld().spawnEntity(
-                petLoc, EntityType.valueOf(petType.getRole().getDefaultSkin()));
+        Animals pet = (Animals) player.getWorld().spawnEntity(petLoc, petType.getSkin());
         pet.teleport(petLoc);
         EffectUtils.playSpawnEffect(pet);
         Map<String, String> features = petType.getFeatures();
 
         switch (petType.getRole()) {
             case MOUNT:
-                Horse horsePet = (Horse) pet;
-                HorseInventory horseInv = horsePet.getInventory();
-                horseInv.setSaddle(new ItemStack(Material.SADDLE));
+                switch (pet.getType()) {
+                    case HORSE:
+                        Horse horsePet = (Horse) pet;
+                        HorseInventory horseInv = horsePet.getInventory();
+                        horseInv.setSaddle(new ItemStack(Material.SADDLE));
 
-                if (features.containsKey("CHEST") && features.get("CHEST").equals("TRUE")) {
-                    horsePet.setCarryingChest(true);
-                }
+                        if (features.containsKey("CHEST") && features.get("CHEST").equals("TRUE")) {
+                            horsePet.setCarryingChest(true);
+                        }
 
-                if (features.containsKey("ARMOR")) {
-                    horseInv.setArmor(new ItemStack(Material.valueOf(features.get("ARMOR"))));
-                }
+                        if (features.containsKey("ARMOR")) {
+                            horseInv.setArmor(new ItemStack(Material.valueOf(features.get("ARMOR"))));
+                        }
 
-                if (features.containsKey("COLOR")) {
-                    horsePet.setColor(Horse.Color.valueOf(features.get("COLOR")));
-                }
+                        String color = features.getOrDefault("COLOR", "BROWN");
+                        String style = features.getOrDefault("STYLE", "NONE");
 
-                if (features.containsKey("STYLE")) {
-                    horsePet.setStyle(Horse.Style.valueOf(features.get("STYLE")));
+                        horsePet.setColor(Horse.Color.valueOf(color));
+                        horsePet.setStyle(Horse.Style.valueOf(style));
+
+                        break;
+                    case PIG:
+                        Pig pigPet = (Pig) pet;
+                        pigPet.setSaddle(true);
                 }
 
                 break;
             case COMPANION:
-                Wolf wolfPet = (Wolf) pet;
-                if (features.containsKey("COLLAR")) {
-                    wolfPet.setCollarColor(DyeColor.valueOf(features.get("COLLAR")));
+                switch (pet.getType()) {
+                    case WOLF:
+                        Wolf wolfPet = (Wolf) pet;
+                        if (features.containsKey("COLLAR")) {
+                            wolfPet.setCollarColor(DyeColor.valueOf(features.get("COLLAR")));
+                        }
+                        break;
+                    case OCELOT:
+                        Ocelot ocelotPet = (Ocelot) pet;
+                        String type = features.getOrDefault("TYPE", "WILD_OCELOT");
+                        ocelotPet.setCatType(Ocelot.Type.valueOf(type));
                 }
         }
 
-        ((Tameable) pet).setTamed(true);
-        ((Tameable) pet).setOwner(player);
+        if (pet instanceof Tameable) {
+            ((Tameable) pet).setTamed(true);
+            ((Tameable) pet).setOwner(player);
+        }
+
         pet.setBreed(false);
         if (petType.isAdult()) {
             pet.setAdult();
@@ -312,15 +329,11 @@ public class PetManager {
     }
 
     @Nullable
-    public static PetType getPetFromEntity(Tameable entity) {
-        if (!entity.isTamed() || entity.getOwner() == null) {
-            return null;
-        }
-
-        OfflinePlayer player = (OfflinePlayer) entity.getOwner();
+    public static PetType getPetFromEntity(LivingEntity entity, OfflinePlayer player) {
         PlayerWrapper playerWrapper = InventoryManager.get(player);
 
-        if (!InventoryManager.playerIsLoaded(player) || !PetManager.isEnabled() || entity != playerWrapper.getPet()) {
+        if (!InventoryManager.playerIsLoaded(player) || !PetManager.isEnabled()
+                || entity != playerWrapper.getPet()) {
             return null;
         }
 
