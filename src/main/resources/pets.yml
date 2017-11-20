@@ -1,4 +1,22 @@
 pets:
+  kitty:
+    name: "&7&lKitty"
+    item-name: "&7&lKitty's Summoning Stone"
+    lore:
+    - "&e&oMeow! Meow! Meow!"
+    item: MONSTER_EGG:Ghast
+    type: COMPANION
+    health: 20
+    damage: 3
+    speed: 3.5
+    attack-mobs: false
+    attack-players: false
+    revival: true
+    cooldown: 60
+    skin: OCELOT
+    features:
+    - "BABY: TRUE"
+    - "TYPE: BLACK_CAT"
   puppy:
     name: "&7&lPuppy"
     item-name: "&7&lPuppy's Summoning Stone"
