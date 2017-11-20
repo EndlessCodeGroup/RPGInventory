@@ -213,13 +213,11 @@ public class PetManager {
                     horseInv.setArmor(new ItemStack(Material.valueOf(features.get("ARMOR"))));
                 }
 
-                if (features.containsKey("COLOR")) {
-                    horsePet.setColor(Horse.Color.valueOf(features.get("COLOR")));
-                }
+                String color = features.getOrDefault("COLOR", "BROWN");
+                String style = features.getOrDefault("STYLE", "NONE");
 
-                if (features.containsKey("STYLE")) {
-                    horsePet.setStyle(Horse.Style.valueOf(features.get("STYLE")));
-                }
+                horsePet.setColor(Horse.Color.valueOf(color));
+                horsePet.setStyle(Horse.Style.valueOf(style));
 
                 break;
             case COMPANION:
