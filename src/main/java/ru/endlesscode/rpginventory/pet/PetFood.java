@@ -20,19 +20,19 @@ package ru.endlesscode.rpginventory.pet;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Tameable;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import ru.endlesscode.rpginventory.RPGInventory;
 import ru.endlesscode.rpginventory.item.TexturedItem;
 import ru.endlesscode.rpginventory.misc.FileLanguage;
 import ru.endlesscode.rpginventory.utils.ItemUtils;
 import ru.endlesscode.rpginventory.utils.StringUtils;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by OsipXD on 28.08.2015
@@ -93,7 +93,7 @@ public class PetFood extends TexturedItem {
     }
 
     public boolean canBeEaten(LivingEntity pet) {
-        PetType petType = PetManager.getPetFromEntity((Tameable) pet);
-        return petType != null && this.eaters.contains(petType.getRole().getDefaultSkin());
+        String petType = pet.getType().toString();
+        return petType != null && this.eaters.contains(petType);
     }
 }

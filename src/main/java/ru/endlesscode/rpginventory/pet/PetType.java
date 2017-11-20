@@ -28,6 +28,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -122,7 +123,7 @@ public class PetType extends ClassedItem {
                 features.put(data[0], data[1]);
             }
         } else {
-            features = null;
+            features = Collections.emptyMap();
         }
 
         this.features = features;

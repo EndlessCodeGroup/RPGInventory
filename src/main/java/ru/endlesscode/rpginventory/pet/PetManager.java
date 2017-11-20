@@ -244,8 +244,11 @@ public class PetManager {
                 }
         }
 
-        ((Tameable) pet).setTamed(true);
-        ((Tameable) pet).setOwner(player);
+        if (pet instanceof Tameable) {
+            ((Tameable) pet).setTamed(true);
+            ((Tameable) pet).setOwner(player);
+        }
+
         pet.setBreed(false);
         if (petType.isAdult()) {
             pet.setAdult();
@@ -326,15 +329,11 @@ public class PetManager {
     }
 
     @Nullable
-    public static PetType getPetFromEntity(Tameable entity) {
-        if (!entity.isTamed() || entity.getOwner() == null) {
-            return null;
-        }
-
-        OfflinePlayer player = (OfflinePlayer) entity.getOwner();
+    public static PetType getPetFromEntity(LivingEntity entity, OfflinePlayer player) {
         PlayerWrapper playerWrapper = InventoryManager.get(player);
 
-        if (!InventoryManager.playerIsLoaded(player) || !PetManager.isEnabled() || entity != playerWrapper.getPet()) {
+        if (!InventoryManager.playerIsLoaded(player) || !PetManager.isEnabled()
+                || entity != playerWrapper.getPet()) {
             return null;
         }
 

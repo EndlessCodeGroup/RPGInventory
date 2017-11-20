@@ -18,13 +18,27 @@
 
 package ru.endlesscode.rpginventory.event.listener;
 
-import org.bukkit.*;
-import org.bukkit.entity.*;
+import org.bukkit.GameMode;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.Sound;
+import org.bukkit.entity.Arrow;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Horse;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.Tameable;
+import org.bukkit.entity.Wolf;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.entity.*;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.entity.EntityPortalEnterEvent;
+import org.bukkit.event.entity.EntityTargetLivingEntityEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -35,6 +49,7 @@ import org.bukkit.inventory.HorseInventory;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
+
 import ru.endlesscode.rpginventory.RPGInventory;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
 import ru.endlesscode.rpginventory.inventory.PlayerWrapper;
@@ -191,7 +206,7 @@ public class PetListener implements Listener {
 
         PlayerWrapper playerWrapper = InventoryManager.get(player);
         if (playerWrapper.hasPet() && petEntity == playerWrapper.getPet()) {
-            PetType petType = PetManager.getPetFromEntity((Tameable) petEntity);
+            PetType petType = PetManager.getPetFromEntity(petEntity, player);
 
             if (petType == null) {
                 return;
@@ -227,7 +242,7 @@ public class PetListener implements Listener {
 
         LivingEntity petEntity;
         if (event.getDamager() instanceof LivingEntity && (petEntity = (LivingEntity) event.getDamager()) instanceof Tameable) {
-            PetType petType = PetManager.getPetFromEntity((Tameable) petEntity);
+            PetType petType = PetManager.getPetFromEntity(petEntity, player);
 
             if (petType != null) {
                 event.setDamage(petType.getDamage());
@@ -263,7 +278,7 @@ public class PetListener implements Listener {
         }
 
         Horse vehicle = (Horse) event.getVehicle();
-        if (PetManager.getPetFromEntity(vehicle) != null && player != vehicle.getOwner()) {
+        if (PetManager.getPetFromEntity(vehicle, player) != null && player != vehicle.getOwner()) {
             PlayerUtils.sendMessage(player, RPGInventory.getLanguage().getMessage("error.mount.owner", vehicle.getOwner().getName()));
             event.setCancelled(true);
         }
@@ -318,7 +333,7 @@ public class PetListener implements Listener {
         PlayerWrapper playerWrapper = InventoryManager.get(player);
         if (playerWrapper.hasPet() && playerWrapper.getPet().getPassenger() != player) {
             LivingEntity petEntity = playerWrapper.getPet();
-            PetType pet = PetManager.getPetFromEntity((Tameable) petEntity);
+            PetType pet = PetManager.getPetFromEntity(petEntity, player);
             if (pet != null && pet.getRole() != PetType.Role.COMPANION) {
                 EntityUtils.goPetToPlayer(player, petEntity);
             }
