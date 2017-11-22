@@ -1,0 +1,73 @@
+/*
+ * This file is part of RPGInventory.
+ * Copyright (C) 2015-2017 Osip Fatkullin
+ *
+ * RPGInventory is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ * RPGInventory is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with RPGInventory.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+package ru.endlesscode.rpginventory.utils;
+
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
+/**
+ * Created by OsipXD on 22.11.2017
+ * It is part of the RPGInventory.
+ * All rights reserved 2014 - 2017 © «EndlessCode Group»
+ */
+public final class ResourcePackUtils {
+
+    private final static String HEADER_LOCATION = "Location";
+    private final static String MIME_ZIP = "application/zip";
+
+    private ResourcePackUtils() {
+        // Utility class
+    }
+
+    public static void validateUrl(String address) throws IOException {
+        HttpURLConnection.setFollowRedirects(false);
+        HttpURLConnection conn = getRealConnection(address);
+        String realUrl = conn.getURL().toString();
+        if (!realUrl.equals(address)) {
+            throw new IllegalArgumentException(
+                    String.format("Link isn't direct. Redirect found!\n" +
+                            "Your link: %s\nDirect link: %s", address, realUrl)
+            );
+        }
+
+        int codeType = conn.getResponseCode() / 100;
+        if (codeType != 2) {
+            throw new IllegalArgumentException(conn.getResponseMessage());
+        }
+
+        String contentType = conn.getContentType();
+        if (!contentType.equals(MIME_ZIP)) {
+            throw new IllegalArgumentException(
+                    String.format("MIME type should be '%s' but given '%s'", MIME_ZIP, contentType)
+            );
+        }
+    }
+
+    private static HttpURLConnection getRealConnection(String address) throws IOException {
+        URL url = new URL(address);
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        int codeType = conn.getResponseCode() / 100;
+        if (codeType == 3) {
+            return getRealConnection(conn.getHeaderField(HEADER_LOCATION));
+        }
+
+        return conn;
+    }
+}

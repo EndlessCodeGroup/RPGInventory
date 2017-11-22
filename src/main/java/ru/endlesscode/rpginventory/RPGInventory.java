@@ -61,6 +61,7 @@ import ru.endlesscode.rpginventory.nms.VersionHandler;
 import ru.endlesscode.rpginventory.pet.PetManager;
 import ru.endlesscode.rpginventory.pet.mypet.MyPetManager;
 import ru.endlesscode.rpginventory.utils.PlayerUtils;
+import ru.endlesscode.rpginventory.utils.ResourcePackUtils;
 import ru.endlesscode.rpginventory.utils.StringUtils;
 import ru.endlesscode.rpginventory.utils.VersionUtils;
 
@@ -204,7 +205,8 @@ public class RPGInventory extends JavaPlugin {
 
         // Check resource-pack settings
         if (Config.getConfig().getBoolean("resource-pack.enabled", true)) {
-            if (Config.getConfig().getString("resource-pack.url").equals("PUT_YOUR_URL_HERE")) {
+            String rpUrl = Config.getConfig().getString("resource-pack.url");
+            if (rpUrl.equals("PUT_YOUR_URL_HERE")) {
                 this.getLogger().warning("Set resource-pack's url in config!");
                 this.getPluginLoader().disablePlugin(this);
                 return false;
@@ -212,6 +214,19 @@ public class RPGInventory extends JavaPlugin {
 
             if (Config.getConfig().getString("resource-pack.hash").equals("PUT_YOUR_HASH_HERE")) {
                 this.getLogger().warning("Your resource pack hash incorrect!");
+            }
+
+            try {
+                ResourcePackUtils.validateUrl(rpUrl);
+            } catch (Exception e) {
+                String[] messageLines = e.getLocalizedMessage().split("\n");
+                this.getLogger().warning("");
+                this.getLogger().warning("##### May be something wrong with your RP link! #####");
+                for (String line : messageLines) {
+                    this.getLogger().warning("# " + line);
+                }
+                this.getLogger().warning("#####################################################");
+                this.getLogger().warning("");
             }
         }
 
