@@ -20,7 +20,9 @@ package ru.endlesscode.rpginventory.utils;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.UnknownHostException;
 
 /**
  * Created by OsipXD on 22.11.2017
@@ -38,7 +40,17 @@ public final class ResourcePackUtils {
 
     public static void validateUrl(String address) throws IOException {
         HttpURLConnection.setFollowRedirects(false);
-        HttpURLConnection conn = getRealConnection(address);
+        HttpURLConnection conn;
+        try {
+            conn = getRealConnection(address);
+        } catch (MalformedURLException e) {
+            throw new IllegalArgumentException("Wrong URL: " + e.getMessage());
+        } catch (UnknownHostException e) {
+            throw new IllegalArgumentException("Unknown host: " + e.getMessage());
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Error: " + e.getMessage());
+        }
+
         String realUrl = conn.getURL().toString();
         if (!realUrl.equals(address)) {
             throw new IllegalArgumentException(
