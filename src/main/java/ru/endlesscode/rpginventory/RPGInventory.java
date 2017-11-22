@@ -221,11 +221,11 @@ public class RPGInventory extends JavaPlugin {
             } catch (Exception e) {
                 String[] messageLines = e.getLocalizedMessage().split("\n");
                 this.getLogger().warning("");
-                this.getLogger().warning("##### May be something wrong with your RP link! #####");
+                this.getLogger().warning("######### Something wrong with your RP link! #########");
                 for (String line : messageLines) {
                     this.getLogger().warning("# " + line);
                 }
-                this.getLogger().warning("#####################################################");
+                this.getLogger().warning("######################################################");
                 this.getLogger().warning("");
             }
         }
