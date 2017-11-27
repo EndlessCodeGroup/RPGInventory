@@ -258,10 +258,12 @@ public class PetManager {
         pet.setAgeLock(true);
 
         pet.setCustomName(RPGInventory.getLanguage().getMessage("pet.name", petType.getName(), player.getName()));
-        pet.setMaxHealth(petType.getHealth());
         pet.setCanPickupItems(false);
         pet.setRemoveWhenFarAway(false);
-        pet.setHealth(PetManager.getHealth(petItem, pet.getMaxHealth()));
+
+        AttributeInstance maxHealth = pet.getAttribute(Attribute.GENERIC_MAX_HEALTH);
+        maxHealth.setBaseValue(petType.getHealth());
+        pet.setHealth(PetManager.getHealth(petItem, maxHealth.getBaseValue()));
 
         AttributeInstance speedAttribute = pet.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED);
         speedAttribute.setBaseValue(petType.getSpeed());
