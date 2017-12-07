@@ -18,27 +18,13 @@
 
 package ru.endlesscode.rpginventory.event.listener;
 
-import org.bukkit.GameMode;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.Sound;
-import org.bukkit.entity.Arrow;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Horse;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Tameable;
-import org.bukkit.entity.Wolf;
+import org.bukkit.*;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.event.entity.EntityPortalEnterEvent;
-import org.bukkit.event.entity.EntityTargetLivingEntityEvent;
-import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.entity.*;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -49,7 +35,6 @@ import org.bukkit.inventory.HorseInventory;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
-
 import ru.endlesscode.rpginventory.RPGInventory;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
 import ru.endlesscode.rpginventory.inventory.PlayerWrapper;
@@ -241,13 +226,16 @@ public class PetListener implements Listener {
         }
 
         LivingEntity petEntity;
-        if (event.getDamager() instanceof LivingEntity && (petEntity = (LivingEntity) event.getDamager()) instanceof Tameable) {
-            PetType petType = PetManager.getPetFromEntity(petEntity, player);
+        if (event.getDamager() instanceof LivingEntity
+                && (petEntity = (LivingEntity) event.getDamager()) instanceof Tameable) {
+            Player owner = (Player) ((Tameable) petEntity).getOwner();
+            PetType petType = PetManager.getPetFromEntity(petEntity, owner);
 
             if (petType != null) {
                 event.setDamage(petType.getDamage());
             }
-        } else if (event.getEntity() instanceof LivingEntity && (petEntity = (LivingEntity) event.getEntity()) instanceof Tameable
+        } else if (event.getEntity() instanceof LivingEntity
+                && (petEntity = (LivingEntity) event.getEntity()) instanceof Tameable
                 && !Config.getConfig().getBoolean("attack.own-pet") && player != null) {
             Tameable ownedEntity = (Tameable) petEntity;
             if (ownedEntity.isTamed() && ownedEntity.getOwner().getUniqueId().equals(player.getUniqueId())) {
