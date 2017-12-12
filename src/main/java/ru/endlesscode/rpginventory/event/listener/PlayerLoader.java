@@ -18,8 +18,8 @@
 
 package ru.endlesscode.rpginventory.event.listener;
 
-import com.comphenix.packetwrapper.included.WrapperPlayClientResourcePackStatus;
-import com.comphenix.packetwrapper.included.WrapperPlayServerResourcePackSend;
+import com.comphenix.packetwrapper.WrapperPlayClientResourcePackStatus;
+import com.comphenix.packetwrapper.WrapperPlayServerResourcePackSend;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketEvent;
 import org.bukkit.Bukkit;

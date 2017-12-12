@@ -18,8 +18,8 @@
 
 package ru.endlesscode.rpginventory.utils;
 
-import com.comphenix.packetwrapper.included.WrapperPlayServerTitle;
-import com.comphenix.packetwrapper.included.WrapperPlayServerWorldParticles;
+import com.comphenix.packetwrapper.WrapperPlayServerTitle;
+import com.comphenix.packetwrapper.WrapperPlayServerWorldParticles;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.wrappers.EnumWrappers;
 import com.comphenix.protocol.wrappers.WrappedChatComponent;

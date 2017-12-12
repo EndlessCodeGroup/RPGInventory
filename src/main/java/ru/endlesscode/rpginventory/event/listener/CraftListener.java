@@ -18,7 +18,7 @@
 
 package ru.endlesscode.rpginventory.event.listener;
 
-import com.comphenix.packetwrapper.included.WrapperPlayServerWindowItems;
+import com.comphenix.packetwrapper.WrapperPlayServerWindowItems;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketEvent;
 

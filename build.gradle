@@ -1,5 +1,6 @@
 plugins {
     id 'ru.endlesscode.bukkitgradle' version '0.7.0'
+    id 'com.github.johnrengelman.shadow' version '2.0.1'
     id 'jacoco'
 }
 
@@ -47,6 +48,10 @@ repositories {
     }
 }
 
+shadowJar {
+    relocate 'com', "${project.group}.shade.com"
+}
+
 dependencies {
     compileOnly bukkit()
     compileOnly (group: 'net.milkbowl.vault', name: 'VaultAPI', version: '1.6') {
@@ -72,4 +77,6 @@ jacocoTestReport {
     }
 }
 
+// Add custom tasks
+jar.dependsOn shadowJar
 check.dependsOn jacocoTestReport
