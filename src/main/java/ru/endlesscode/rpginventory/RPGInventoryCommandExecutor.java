@@ -123,12 +123,6 @@ class RPGInventoryCommandExecutor implements CommandExecutor {
             sender.sendMessage(StringUtils.coloredLine("&6rpginv open &7- open inventory"));
         }
 
-        if (RPGInventory.getPermissions().has(sender, "rpginventory.fixhp.others")) {
-            sender.sendMessage(StringUtils.coloredLine("&6rpginv fixhp (&eplayer&6) &7- fix incorrect hp"));
-        } else if (RPGInventory.getPermissions().has(sender, "rpginventory.fixhp")) {
-            sender.sendMessage(StringUtils.coloredLine("&6rpginv fixhp &7- fix incorrect hp"));
-        }
-
         if (RPGInventory.getPermissions().has(sender, "rpginventory.admin")) {
             sender.sendMessage(StringUtils.coloredLine("&6rpginv reload &7- reload config"));
             sender.sendMessage(StringUtils.coloredLine("&6rpginv list [&etype&6] &7- show list of pets, food or items"));
