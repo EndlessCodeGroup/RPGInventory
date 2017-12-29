@@ -412,9 +412,9 @@ public class InventoryListener implements Listener {
         InventoryAction action = event.getAction();
         ActionType actionType = ActionType.getTypeOfAction(action);
 
-        if (InventoryManager.validateArmor(player, action, slot, cursor)) {
+        if (InventoryManager.validateArmor(player, action, slot, cursor) && playerWrapper.getInventoryView() != null) {
             // Event of equip armor
-            InventoryClickEvent fakeEvent = new InventoryClickEvent((playerWrapper.getInventoryView()),
+            InventoryClickEvent fakeEvent = new InventoryClickEvent(playerWrapper.getInventoryView(),
                     InventoryType.SlotType.ARMOR, InventoryUtils.getArmorSlotId(slot), event.getClick(), action);
             Bukkit.getPluginManager().callEvent(fakeEvent);
 

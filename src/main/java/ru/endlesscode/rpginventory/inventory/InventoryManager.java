@@ -555,7 +555,7 @@ public class InventoryManager {
 
     @Nullable
     public static PlayerWrapper get(OfflinePlayer player) {
-        return INVENTORIES.get(player.getUniqueId());
+        return player == null ? null : INVENTORIES.get(player.getUniqueId());
     }
 
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")

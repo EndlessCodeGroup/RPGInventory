@@ -335,7 +335,7 @@ public class PetManager {
         PlayerWrapper playerWrapper = InventoryManager.get(player);
 
         if (!InventoryManager.playerIsLoaded(player) || !PetManager.isEnabled()
-                || entity != playerWrapper.getPet()) {
+                || entity == null || entity != playerWrapper.getPet()) {
             return null;
         }
 
