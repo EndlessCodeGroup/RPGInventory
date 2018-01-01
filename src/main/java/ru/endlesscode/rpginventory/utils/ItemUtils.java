@@ -185,6 +185,7 @@ public class ItemUtils {
         }
 
         short durability = item.getDurability();
+        int amount = item.getAmount();
         short textureDurability;
         if (CustomItem.isCustomItem(item)) {
             CustomItem custom = ItemManager.getCustomItem(item);
@@ -223,19 +224,18 @@ public class ItemUtils {
             PetManager.saveHealth(item, health);
         } else if (PetFood.isFoodItem(item)) {
             PetFood food = PetManager.getFoodFromItem(item);
-            int amount = item.getAmount();
             if (food == null) {
                 return new ItemStack(Material.AIR);
             }
             textureDurability = food.getTextureDurability();
 
             item = food.getFoodItem();
-            item.setAmount(amount);
         } else {
             return item;
         }
 
         item.setDurability(textureDurability == -1 ? durability : textureDurability);
+        item.setAmount(amount);
         return item;
     }
 
