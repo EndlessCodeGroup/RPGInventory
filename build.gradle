@@ -65,7 +65,7 @@ dependencies {
     compileOnly group: 'com.herocraftonline', name: 'Heroes', version: '1.5.5.7'
     compileOnly group: 'de.keyle', name: 'MyPet', version: '2.3.2-SNAPSHOT'
     compileOnly group: 'org.tobiyas', name: 'RacesAndClasses', version: '1.2.0'
-    compileOnly group: 'me.baks', name: 'RPGPlayerLeveling', version: '3.3.1'
+    compileOnly group: 'me.baks', name: 'RPGPlayerLeveling', version: '3.7.2'
     compileOnly group: 'com.sucy', name: 'SkillAPI', version: '3.90'
     compileOnly group: 'me.leothepro555', name: 'Skills'
     testImplementation group: 'junit', name: 'junit', version: '4.12'

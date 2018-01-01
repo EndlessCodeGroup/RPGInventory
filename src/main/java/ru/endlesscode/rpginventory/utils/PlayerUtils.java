@@ -65,7 +65,7 @@ public class PlayerUtils {
                 level = LevelAPI.getCurrentLevel(player);
                 break;
             case RPGPL:
-                level = API.getPlayerLevel(player);
+                level = new API().getPlayerLevel(player);
                 break;
         }
 
