@@ -84,6 +84,7 @@ public class SlotManager {
 
     public static SlotManager instance() {
         if (slotManager == null) {
+            //Really?
             slotManager = new SlotManager();
         }
 
