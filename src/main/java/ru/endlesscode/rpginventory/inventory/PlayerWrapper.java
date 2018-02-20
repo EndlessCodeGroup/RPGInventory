@@ -217,6 +217,9 @@ public class PlayerWrapper implements InventoryHolder {
 
     private void startFlight() {
         Slot elytraSlot = SlotManager.instance().getElytraSlot();
+        if (elytraSlot == null) {
+            return;
+        }
         ItemStack itemStack = this.inventory.getItem(elytraSlot.getSlotId());
         if (!elytraSlot.isCup(itemStack)) {
             Player player = this.player.getPlayer();
@@ -248,9 +251,9 @@ public class PlayerWrapper implements InventoryHolder {
     }
 
     private void stopFlight() {
-        if (savedChestplate != null) {
+        Slot elytraSlot = SlotManager.instance().getElytraSlot();
+        if (savedChestplate != null && elytraSlot != null) {
             Player player = this.player.getPlayer();
-            Slot elytraSlot = SlotManager.instance().getElytraSlot();
             this.inventory.setItem(elytraSlot.getSlotId(), player.getEquipment().getChestplate());
             player.getEquipment().setChestplate(this.savedChestplate);
             this.savedChestplate = null;
