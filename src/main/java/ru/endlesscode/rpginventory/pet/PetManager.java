@@ -162,16 +162,12 @@ public class PetManager {
 
     @NotNull
     public static List<String> getPetList() {
-        List<String> petList = new ArrayList<>();
-        petList.addAll(PETS.keySet());
-        return petList;
+        return new ArrayList<>(PETS.keySet());
     }
 
     @NotNull
     public static List<String> getFoodList() {
-        List<String> foodList = new ArrayList<>();
-        foodList.addAll(PET_FOOD.keySet());
-        return foodList;
+        return new ArrayList<>(PET_FOOD.keySet());
     }
 
     public static void startCooldownTimer(Player player, ItemStack petItem) {
@@ -209,6 +205,7 @@ public class PetManager {
                         horseInv.setSaddle(new ItemStack(Material.SADDLE));
 
                         if (features.containsKey("CHEST") && features.get("CHEST").equals("TRUE")) {
+                            //noinspection deprecation
                             horsePet.setCarryingChest(true);
                         }
 
@@ -365,10 +362,14 @@ public class PetManager {
     }
 
     public static long getDeathTime(ItemStack item) {
+        if (ItemUtils.isEmpty(item)) {
+            return 0L;
+        }
+
         NbtCompound nbt = NbtFactory.asCompound(NbtFactory.fromItemTag(item.clone()));
 
         if (!nbt.containsKey(DEATH_TIME_TAG)) {
-            return 0;
+            return 0L;
         }
 
         return nbt.getLong(DEATH_TIME_TAG);
@@ -380,8 +381,13 @@ public class PetManager {
             return 0;
         }
 
+        PetType petFromItem = getPetFromItem(item);
+        if (petFromItem == null) {
+            return 0;
+        }
+
         int secondsSinceDeath = (int) ((System.currentTimeMillis() - deathTime) / 1000);
-        int petCooldown = getPetFromItem(item).getCooldown();
+        int petCooldown = petFromItem.getCooldown();
         int itemCooldown = petCooldown - secondsSinceDeath;
         if (itemCooldown < 0 || itemCooldown > petCooldown) {
             itemCooldown = 0;
