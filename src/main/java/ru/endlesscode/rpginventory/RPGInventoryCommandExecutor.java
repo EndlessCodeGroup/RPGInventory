@@ -230,7 +230,7 @@ class RPGInventoryCommandExecutor implements CommandExecutor {
         Permission perms = RPGInventory.getPermissions();
 
         if (args.length > 0) {
-            String subCommand = args[0];
+            String subCommand = args[0].toLowerCase();
 
             if (perms.has(sender, "rpginventory.admin")) {
                 if (subCommand.equals("pet") && args.length >= 3) {

@@ -34,15 +34,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
 import ru.endlesscode.rpginventory.RPGInventory;
 import ru.endlesscode.rpginventory.api.InventoryAPI;
 import ru.endlesscode.rpginventory.event.PetEquipEvent;
@@ -56,11 +47,15 @@ import ru.endlesscode.rpginventory.item.ItemManager;
 import ru.endlesscode.rpginventory.misc.Config;
 import ru.endlesscode.rpginventory.pet.PetManager;
 import ru.endlesscode.rpginventory.pet.PetType;
-import ru.endlesscode.rpginventory.utils.EffectUtils;
-import ru.endlesscode.rpginventory.utils.InventoryUtils;
-import ru.endlesscode.rpginventory.utils.ItemUtils;
-import ru.endlesscode.rpginventory.utils.PlayerUtils;
-import ru.endlesscode.rpginventory.utils.StringUtils;
+import ru.endlesscode.rpginventory.utils.*;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 @SuppressWarnings("ResultOfMethodCallIgnored")
 public class InventoryManager {
@@ -553,9 +548,15 @@ public class InventoryManager {
         }
     }
 
-    @Nullable
     public static PlayerWrapper get(OfflinePlayer player) {
-        return player == null ? null : INVENTORIES.get(player.getUniqueId());
+        if (player == null) {
+            throw new NullPointerException("OfflinePlayer can not be null!");
+        }
+        PlayerWrapper playerWrapper = INVENTORIES.get(player.getUniqueId());
+        if (playerWrapper == null) {
+            throw new NullPointerException(player.getName() + "'s inventory is not loaded!");
+        }
+        return playerWrapper;
     }
 
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")

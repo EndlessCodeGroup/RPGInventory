@@ -154,6 +154,10 @@ public class ItemManager {
             return true;
         }
 
+        if (classedItem == null) {
+            return true; //Or false?
+        }
+
         if (!PlayerUtils.checkLevel(player, classedItem.getLevel())) {
             if (notifyPlayer) {
                 PlayerUtils.sendMessage(player, RPGInventory.getLanguage().getMessage("error.item.level", classedItem.getLevel()));
