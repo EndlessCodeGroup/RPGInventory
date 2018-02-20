@@ -550,11 +550,11 @@ public class InventoryManager {
 
     public static PlayerWrapper get(OfflinePlayer player) {
         if (player == null) {
-            throw new NullPointerException("OfflinePlayer can not be null!");
+            throw new IllegalArgumentException("OfflinePlayer can not be null!");
         }
         PlayerWrapper playerWrapper = INVENTORIES.get(player.getUniqueId());
         if (playerWrapper == null) {
-            throw new NullPointerException(player.getName() + "'s inventory is not loaded!");
+            throw new IllegalArgumentException(player.getName() + "'s inventory is not loaded!");
         }
         return playerWrapper;
     }
