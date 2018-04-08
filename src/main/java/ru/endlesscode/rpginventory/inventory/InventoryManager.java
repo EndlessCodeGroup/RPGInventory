@@ -62,7 +62,6 @@ public class InventoryManager {
     static final String TITLE = RPGInventory.getLanguage().getMessage("title");
     private static final Map<UUID, PlayerWrapper> INVENTORIES = new HashMap<>();
 
-    @Nullable
     private static ItemStack fillSlot = null;
 
     private InventoryManager() {
@@ -90,7 +89,7 @@ public class InventoryManager {
                 || actionType == ActionType.SET && slot.isValidItem(item) && ItemManager.allowedForPlayer(player, item, true);
     }
 
-    @Nullable
+    @NotNull
     public static ItemStack getFillSlot() {
         return fillSlot;
     }

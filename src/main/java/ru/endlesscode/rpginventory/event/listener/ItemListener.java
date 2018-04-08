@@ -207,6 +207,9 @@ public class ItemListener implements Listener {
 
         if (CustomItem.isCustomItem(event.getItem())) {
             CustomItem customItem = ItemManager.getCustomItem(event.getItem());
+            if (customItem == null) {
+                return;
+            }
 
             if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
                 customItem.onRightClick(player);

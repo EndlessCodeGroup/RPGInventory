@@ -43,9 +43,8 @@ import java.util.List;
  * All rights reserved 2014 - 2016 © «EndlessCode Group»
  */
 public class InventoryLocker {
-    @Nullable
+
     private static ItemStack lockedSlot = null;
-    @Nullable
     private static ItemStack buyableSlot = null;
 
     private InventoryLocker() {
@@ -58,21 +57,21 @@ public class InventoryLocker {
 
         try {
             // Setup locked slot
-            InventoryLocker.lockedSlot = ItemUtils.getTexturedItem(Config.getConfig().getString("slots.locked"));
-            ItemMeta meta = InventoryLocker.lockedSlot.getItemMeta();
+            lockedSlot = ItemUtils.getTexturedItem(Config.getConfig().getString("slots.locked"));
+            ItemMeta meta = lockedSlot.getItemMeta();
             meta.setDisplayName(RPGInventory.getLanguage().getMessage("locked.name"));
             meta.setLore(Collections.singletonList(RPGInventory.getLanguage().getMessage("locked.lore")));
 
-            InventoryLocker.lockedSlot.setItemMeta(meta);
+            lockedSlot.setItemMeta(meta);
             lockedSlot = addId(lockedSlot);
 
             // Setup buyable slot
-            InventoryLocker.buyableSlot = ItemUtils.getTexturedItem(Config.getConfig().getString("slots.buyable"));
-            meta = InventoryLocker.buyableSlot.getItemMeta();
+            buyableSlot = ItemUtils.getTexturedItem(Config.getConfig().getString("slots.buyable"));
+            meta = buyableSlot.getItemMeta();
             meta.setDisplayName(RPGInventory.getLanguage().getMessage("buyable.name"));
             meta.setLore(Collections.singletonList(RPGInventory.getLanguage().getMessage("buyable.lore")));
 
-            InventoryLocker.buyableSlot.setItemMeta(meta);
+            buyableSlot.setItemMeta(meta);
             buyableSlot = addId(buyableSlot);
         } catch (Exception e) {
 

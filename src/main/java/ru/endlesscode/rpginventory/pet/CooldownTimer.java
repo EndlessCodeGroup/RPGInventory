@@ -25,7 +25,10 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 import ru.endlesscode.rpginventory.RPGInventory;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
+import ru.endlesscode.rpginventory.inventory.slot.*;
 import ru.endlesscode.rpginventory.utils.ItemUtils;
+
+import java.util.*;
 
 /**
  * Created by OsipXD on 27.08.2015
@@ -67,8 +70,16 @@ class CooldownTimer extends BukkitRunnable {
                     + RPGInventory.getLanguage().getMessage("pet.cooldown", cooldown));
             item.setItemMeta(im);
             PetManager.addGlow(item);
-            ItemUtils.setTag(item, ItemUtils.PET_TAG, ItemUtils.getTag(this.petItem, ItemUtils.PET_TAG));
-            inventory.setItem(PetManager.getPetSlotId(), item);
+            String itemTag = ItemUtils.getTag(this.petItem, ItemUtils.PET_TAG);
+
+            if (itemTag == null) {
+                Slot petSlot = Objects.requireNonNull(SlotManager.instance().getPetSlot(), "Pet slot can't be null!");
+                inventory.setItem(PetManager.getPetSlotId(), petSlot.getCup());
+                this.cancel();
+            } else {
+                ItemUtils.setTag(item, ItemUtils.PET_TAG, itemTag);
+                inventory.setItem(PetManager.getPetSlotId(), item);
+            }
         } else {
             PetManager.saveDeathTime(this.petItem, 0);
             PetManager.spawnPet(this.player, this.petItem);

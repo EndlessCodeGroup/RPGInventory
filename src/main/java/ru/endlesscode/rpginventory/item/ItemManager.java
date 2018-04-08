@@ -141,7 +141,12 @@ public class ItemManager {
 
     @Nullable
     public static CustomItem getCustomItem(ItemStack item) {
-        return CUSTOM_ITEMS.get(ItemUtils.getTag(item, ItemUtils.ITEM_TAG));
+        String tag = ItemUtils.getTag(item, ItemUtils.ITEM_TAG);
+        if (tag == null) {
+            return null;
+        }
+
+        return CUSTOM_ITEMS.get(tag);
     }
 
     public static boolean allowedForPlayer(Player player, ItemStack item, boolean notifyPlayer) {

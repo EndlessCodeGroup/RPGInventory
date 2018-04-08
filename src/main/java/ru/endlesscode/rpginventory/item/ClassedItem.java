@@ -51,6 +51,10 @@ public class ClassedItem extends TexturedItem {
 
     @NotNull
     protected String getClassesString() {
+        if (this.classes == null) {
+            return "";
+        }
+
         StringBuilder classesString = new StringBuilder();
         for (String theClass : this.classes) {
             if (classesString.length() > 0) {

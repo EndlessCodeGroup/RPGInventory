@@ -204,9 +204,9 @@ public class BackpackManager {
         return !ItemUtils.isEmpty(item) && ItemUtils.hasTag(item, ItemUtils.BACKPACK_TAG);
     }
 
-    public static boolean playerCanTakeBackpack(@NotNull Player player) {
+    public static boolean backpackLimitReached(@NotNull Player player) {
         if (BACKPACK_LIMIT == 0) {
-            return true;
+            return false;
         }
 
         // Check vanilla inventory
@@ -222,11 +222,13 @@ public class BackpackManager {
         // Check RPGInventory slots
         inventory = InventoryManager.get(player).getInventory();
         Slot backpackSlot = SlotManager.instance().getBackpackSlot();
-        if (BackpackManager.isBackpack(inventory.getItem(backpackSlot.getSlotId())) && !backpackSlot.isQuick()) {
+        if (backpackSlot != null
+                && BackpackManager.isBackpack(inventory.getItem(backpackSlot.getSlotId()))
+                && !backpackSlot.isQuick()) {
             count++;
         }
 
-        return count < BACKPACK_LIMIT;
+        return count >= BACKPACK_LIMIT;
     }
 
     public static int getLimit() {

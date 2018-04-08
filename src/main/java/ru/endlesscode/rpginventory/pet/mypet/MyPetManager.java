@@ -53,7 +53,7 @@ import ru.endlesscode.rpginventory.inventory.slot.SlotManager;
 import ru.endlesscode.rpginventory.utils.ItemUtils;
 import ru.endlesscode.rpginventory.utils.PlayerUtils;
 
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Created by Keyle on 21.05.2016
@@ -83,7 +83,7 @@ public class MyPetManager implements Listener {
         if (mpPlayer.isOnline() && mpPlayer.hasMyPet()) {
             Player player = mpPlayer.getPlayer();
 
-            if (!InventoryManager.playerIsLoaded(player)) {
+            if (!InventoryManager.playerIsLoaded(player) || petSlot == null) {
                 return;
             }
 
@@ -91,8 +91,13 @@ public class MyPetManager implements Listener {
             ItemStack currentPet = inventory.getItem(petSlot.getSlotId());
             if (isMyPetItem(currentPet)) {
                 MyPet pet = mpPlayer.getMyPet();
-                UUID petUUID = UUID.fromString(ItemUtils.getTag(currentPet, MYPET_TAG));
-                if (petUUID.equals(pet.getUUID())) {
+                String petId = ItemUtils.getTag(currentPet, MYPET_TAG);
+                if (petId == null) {
+                    return;
+                }
+
+                UUID petUuid = UUID.fromString(petId);
+                if (petUuid.equals(pet.getUUID())) {
                     return;
                 }
             } else {
@@ -148,7 +153,12 @@ public class MyPetManager implements Listener {
             return false;
         }
 
-        final UUID petUUID = UUID.fromString(ItemUtils.getTag(newPet, MYPET_TAG));
+        String petId = ItemUtils.getTag(newPet, MYPET_TAG);
+        if (petId == null) {
+            return false;
+        }
+
+        final UUID petUUID = UUID.fromString(petId);
         new BukkitRunnable() {
             @Override
             public void run() {
@@ -243,7 +253,7 @@ public class MyPetManager implements Listener {
         petItem = ItemUtils.setTag(petItem, MYPET_TAG, event.getMyPet().getUUID().toString());
 
         Inventory inventory = InventoryManager.get(player).getInventory();
-        Slot petSlot = getMyPetSlot();
+        Slot petSlot = Objects.requireNonNull(getMyPetSlot(), "MyPet slot should be exist!");
 
         ItemStack currentPet = inventory.getItem(petSlot.getSlotId());
         boolean hasPet = !petSlot.isCup(currentPet);
@@ -262,15 +272,21 @@ public class MyPetManager implements Listener {
         }
 
         Inventory inventory = InventoryManager.get(player).getInventory();
-        ItemStack currentPet = inventory.getItem(getMyPetSlot().getSlotId());
+        Slot petSlot = Objects.requireNonNull(getMyPetSlot(), "MyPet slot should be exist!");
+        ItemStack currentPet = inventory.getItem(petSlot.getSlotId());
         boolean keepPet = true;
 
         if (!isMyPetItem(currentPet)) {
             keepPet = false;
         } else {
-            UUID petUUID = UUID.fromString(ItemUtils.getTag(currentPet, MYPET_TAG));
-            if (!petUUID.equals(event.getMyPet().getUUID())) {
+            String petTag = ItemUtils.getTag(currentPet, MYPET_TAG);
+            if (petTag == null) {
                 keepPet = false;
+            } else {
+                UUID petUUID = UUID.fromString(petTag);
+                if (!petUUID.equals(event.getMyPet().getUUID())) {
+                    keepPet = false;
+                }
             }
         }
 
@@ -288,11 +304,17 @@ public class MyPetManager implements Listener {
         }
 
         Inventory inventory = InventoryManager.get(player).getInventory();
-        Slot petSlot = getMyPetSlot();
+        Slot petSlot = Objects.requireNonNull(getMyPetSlot(), "MyPet slot should be exist!");
         ItemStack currentPetItem = inventory.getItem(petSlot.getSlotId());
 
         if (isMyPetItem(currentPetItem)) {
-            UUID petUUID = UUID.fromString(ItemUtils.getTag(currentPetItem, MYPET_TAG));
+            String petTag = ItemUtils.getTag(currentPetItem, MYPET_TAG);
+            if (petTag == null) {
+                inventory.setItem(petSlot.getSlotId(), petSlot.getCup());
+                return;
+            }
+
+            UUID petUUID = UUID.fromString(petTag);
             if (petUUID.equals(event.getMyPet().getUUID())) {
                 inventory.setItem(petSlot.getSlotId(), petSlot.getCup());
             }
@@ -313,8 +335,7 @@ public class MyPetManager implements Listener {
             if (isMyPetItem(event.getItem())
                     && (event.getAction() == Action.RIGHT_CLICK_BLOCK
                     || event.getAction() == Action.RIGHT_CLICK_AIR)) {
-                Slot petSlot = getMyPetSlot();
-
+                Slot petSlot = Objects.requireNonNull(getMyPetSlot(), "MyPet slot should be exist!");
                 ItemStack currentPet = inventory.getItem(petSlot.getSlotId());
                 boolean hasPet = !petSlot.isCup(currentPet);
                 ItemStack newPet = event.getItem();

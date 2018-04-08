@@ -20,6 +20,7 @@ package ru.endlesscode.rpginventory;
 
 import net.milkbowl.vault.permission.Permission;
 
+import org.bukkit.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -85,13 +86,13 @@ class RPGInventoryCommandExecutor implements CommandExecutor {
     private static void giveItem(@NotNull CommandSender sender, String playerName, String itemId) {
         if (validatePlayer(sender, playerName)) {
             Player player = RPGInventory.getInstance().getServer().getPlayer(playerName);
-            ItemStack petItem = ItemManager.getItem(itemId);
+            ItemStack item = ItemManager.getItem(itemId);
 
-            if (petItem != null) {
-                player.getInventory().addItem(petItem);
-                return;
-            } else {
+            if (item.getType() == Material.AIR) {
                 sender.sendMessage(StringUtils.coloredLine("&cItem '" + itemId + "' not found!"));
+            } else {
+                player.getInventory().addItem(item);
+                return;
             }
         }
 
@@ -103,7 +104,7 @@ class RPGInventoryCommandExecutor implements CommandExecutor {
             Player player = RPGInventory.getInstance().getServer().getPlayer(playerName);
             ItemStack bpItem = BackpackManager.getItem(id);
 
-            if (bpItem != null) {
+            if (bpItem.getType() == Material.AIR) {
                 player.getInventory().addItem(bpItem);
                 return;
             } else {
