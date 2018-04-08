@@ -28,6 +28,7 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerGameModeChangeEvent;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.*;
 import ru.endlesscode.rpginventory.RPGInventory;
 import ru.endlesscode.rpginventory.inventory.InventoryLocker;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
@@ -43,7 +44,7 @@ import java.util.List;
  */
 public class LockerListener implements Listener {
     @EventHandler
-    public void onGameModeSwitch(PlayerGameModeChangeEvent event) {
+    public void onGameModeSwitch(@NotNull PlayerGameModeChangeEvent event) {
         Player player = event.getPlayer();
 
         if (!InventoryManager.playerIsLoaded(player)) {
@@ -58,7 +59,7 @@ public class LockerListener implements Listener {
     }
 
     @EventHandler
-    public void onInventoryClick(InventoryClickEvent event) {
+    public void onInventoryClick(@NotNull InventoryClickEvent event) {
         Player player = (Player) event.getWhoClicked();
         ItemStack currentItem = event.getCurrentItem();
 
@@ -90,7 +91,7 @@ public class LockerListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
-    public void onPlayerDeath(PlayerDeathEvent event) {
+    public void onPlayerDeath(@NotNull PlayerDeathEvent event) {
         if (!InventoryManager.playerIsLoaded(event.getEntity())) {
             return;
         }

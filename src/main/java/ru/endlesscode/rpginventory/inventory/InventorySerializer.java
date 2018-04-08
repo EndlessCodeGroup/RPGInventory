@@ -36,13 +36,14 @@ import java.util.List;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
+import org.jetbrains.annotations.*;
 import ru.endlesscode.rpginventory.inventory.slot.Slot;
 import ru.endlesscode.rpginventory.inventory.slot.SlotManager;
 import ru.endlesscode.rpginventory.misc.Config;
 import ru.endlesscode.rpginventory.utils.ItemUtils;
 
 class InventorySerializer {
-    static void savePlayer(PlayerWrapper playerWrapper, Path file) throws IOException {
+    static void savePlayer(@NotNull PlayerWrapper playerWrapper, @NotNull Path file) throws IOException {
         List<NbtCompound> slotList = new ArrayList<>();
         try (DataOutputStream dataOutput = new DataOutputStream(new GZIPOutputStream(Files.newOutputStream(file)))) {
             for (Slot slot : SlotManager.instance().getSlots()) {
@@ -80,7 +81,8 @@ class InventorySerializer {
         }
     }
 
-    static PlayerWrapper loadPlayer(Player player, Path file) throws IOException {
+    @NotNull
+    static PlayerWrapper loadPlayer(Player player, @NotNull Path file) throws IOException {
         PlayerWrapper playerWrapper = new PlayerWrapper(player);
         Inventory inventory = playerWrapper.getInventory();
 

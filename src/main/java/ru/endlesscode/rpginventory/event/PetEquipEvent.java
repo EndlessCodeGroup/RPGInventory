@@ -41,6 +41,7 @@ public class PetEquipEvent extends PlayerEvent implements Cancellable {
         this.petItem = petItem;
     }
 
+    @NotNull
     @SuppressWarnings("unused")
     public static HandlerList getHandlerList() {
         return handlers;

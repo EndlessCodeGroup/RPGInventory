@@ -29,6 +29,7 @@ import me.leothepro555.skills.Skills;
 import me.robin.battlelevels.api.BattleLevelsAPI;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.jetbrains.annotations.*;
 import ru.endlesscode.rpginventory.RPGInventory;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
 import ru.endlesscode.rpginventory.inventory.PlayerWrapper;
@@ -42,7 +43,7 @@ import java.util.List;
  */
 public class PlayerUtils {
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
-    public static boolean checkLevel(Player player, int required) {
+    public static boolean checkLevel(@NotNull Player player, int required) {
         int level = 0;
         switch (RPGInventory.getLevelSystem()) {
             case EXP:
@@ -72,7 +73,7 @@ public class PlayerUtils {
         return level >= required;
     }
 
-    public static boolean checkClass(Player player, List<String> classes) {
+    public static boolean checkClass(@NotNull Player player, @NotNull List<String> classes) {
         String playerClass = "";
         switch (RPGInventory.getClassSystem()) {
             case PERMISSIONS:
@@ -105,7 +106,7 @@ public class PlayerUtils {
     }
 
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
-    public static boolean checkMoney(Player player, double cost) {
+    public static boolean checkMoney(@NotNull Player player, double cost) {
         double balance = (RPGInventory.economyConnected() ? RPGInventory.getEconomy().getBalance(player) : 0);
         if (balance < cost) {
             PlayerUtils.sendMessage(player, RPGInventory.getLanguage().getMessage("error.money", StringUtils.doubleToString(cost - balance)));
@@ -115,7 +116,7 @@ public class PlayerUtils {
         return true;
     }
 
-    public static void updateInventory(final Player player) {
+    public static void updateInventory(@NotNull final Player player) {
         new BukkitRunnable() {
             @Override
             public void run() {
@@ -124,7 +125,7 @@ public class PlayerUtils {
         }.runTaskLater(RPGInventory.getInstance(), 1);
     }
 
-    public static void sendMessage(Player player, String message) {
+    public static void sendMessage(@NotNull Player player, String message) {
         if (InventoryManager.playerIsLoaded(player)) {
             PlayerWrapper wrapper = InventoryManager.get(player);
 

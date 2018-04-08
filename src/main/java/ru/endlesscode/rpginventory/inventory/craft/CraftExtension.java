@@ -22,7 +22,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.*;
 import ru.endlesscode.rpginventory.RPGInventory;
 import ru.endlesscode.rpginventory.utils.StringUtils;
 
@@ -78,11 +78,11 @@ public class CraftExtension {
         return slots;
     }
 
-    boolean isUnlockedForPlayer(Player player) {
+    boolean isUnlockedForPlayer(@NotNull Player player) {
         return RPGInventory.getPermissions().has(player, "rpginventory.craft." + this.name);
     }
 
-    void registerExtension(List<CraftExtension> extensions) {
+    void registerExtension(@NotNull List<CraftExtension> extensions) {
         extensions.remove(this);
 
         if (this.includes == null) {

@@ -19,6 +19,7 @@
 package ru.endlesscode.rpginventory.misc;
 
 import org.bukkit.ChatColor;
+import org.jetbrains.annotations.*;
 import ru.endlesscode.rpginventory.RPGInventory;
 
 import java.io.IOException;
@@ -39,6 +40,7 @@ public class FileLanguage {
     private final RPGInventory plugin;
     private final HashMap<String, MessageFormat> messageCache = new HashMap<>();
     private final Properties language = new Properties();
+    @NotNull
     private final Path langFile;
 
     public FileLanguage(RPGInventory plugin) {
@@ -159,23 +161,28 @@ public class FileLanguage {
         }
     }
 
+    @NotNull
     @Deprecated
     public String getCaption(String name, Object... args) {
         return this.getMessage(name, args);
     }
 
+    @NotNull
     public String getMessage(String key) {
         return this.getMessage(key, false);
     }
 
+    @NotNull
     public String getMessage(String key, boolean stripColor) {
         return this.getMessage(key, stripColor, (Object[]) null);
     }
 
+    @NotNull
     public String getMessage(String key, Object... args) {
         return this.getMessage(key, false, args);
     }
 
+    @NotNull
     public String getMessage(String key, boolean stripColor, Object... args) {
         if (!this.messageCache.containsKey(key)) {
             this.messageCache.put(key, new MessageFormat(

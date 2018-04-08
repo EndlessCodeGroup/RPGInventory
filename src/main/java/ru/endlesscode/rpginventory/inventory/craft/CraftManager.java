@@ -23,7 +23,7 @@ import com.comphenix.protocol.ProtocolLibrary;
 import org.bukkit.configuration.MemorySection;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,13 +40,14 @@ import ru.endlesscode.rpginventory.utils.ItemUtils;
  * All rights reserved 2014 - 2016 © «EndlessCode Group»
  */
 public class CraftManager {
+    @NotNull
     private static List<CraftExtension> EXTENSIONS = new ArrayList<>();
     private static ItemStack capItem;
 
     private CraftManager() {
     }
 
-    public static boolean init(RPGInventory instance) {
+    public static boolean init(@NotNull RPGInventory instance) {
         MemorySection config = (MemorySection) Config.getConfig().get("craft");
         if (!config.getBoolean("enabled") || !config.contains("extensions")) {
             return false;
@@ -69,6 +70,7 @@ public class CraftManager {
         return true;
     }
 
+    @NotNull
     public static List<CraftExtension> getExtensions(Player player) {
         List<CraftExtension> extensions = new ArrayList<>(EXTENSIONS);
         for (CraftExtension extension : EXTENSIONS) {

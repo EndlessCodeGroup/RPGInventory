@@ -36,6 +36,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.jetbrains.annotations.*;
 import ru.endlesscode.rpginventory.RPGInventory;
 import ru.endlesscode.rpginventory.event.updater.StatsUpdater;
 import ru.endlesscode.rpginventory.inventory.backpack.Backpack;
@@ -60,12 +61,16 @@ public class PlayerWrapper implements InventoryHolder {
     private final Map<String, Integer> buyedSlots = new HashMap<>();
     private final List<String> permissions = new ArrayList<>();
 
+    @Nullable
     private InventoryView inventoryView;
+    @Nullable
     private Slot slotPreparedToBuy = null;
     private long timeWhenPreparedToBuy = 0;
+    @Nullable
     private Backpack backpack = null;
     private LivingEntity pet;
 
+    @Nullable
     private ItemStack savedChestplate = null;
     private boolean falling = false;
     private boolean flying = false;
@@ -85,6 +90,7 @@ public class PlayerWrapper implements InventoryHolder {
         return inventory;
     }
 
+    @Nullable
     public InventoryView getInventoryView() {
         return inventoryView;
     }
@@ -148,7 +154,7 @@ public class PlayerWrapper implements InventoryHolder {
         return true;
     }
 
-    public void addPermissions(List<String> permissions) {
+    public void addPermissions(@NotNull List<String> permissions) {
         this.permissions.addAll(permissions);
 
         for (String permission : permissions) {
@@ -180,11 +186,12 @@ public class PlayerWrapper implements InventoryHolder {
         }
     }
 
+    @Nullable
     public Backpack getBackpack() {
         return this.backpack;
     }
 
-    public void setBackpack(Backpack backpack) {
+    public void setBackpack(@Nullable Backpack backpack) {
         this.backpack = backpack;
     }
 
@@ -273,7 +280,7 @@ public class PlayerWrapper implements InventoryHolder {
         return flying;
     }
 
-    ItemStack getSavedChestplate() {
+    @Nullable ItemStack getSavedChestplate() {
         return savedChestplate;
     }
 

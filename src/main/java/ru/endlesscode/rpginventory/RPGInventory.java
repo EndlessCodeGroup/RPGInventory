@@ -33,8 +33,7 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.*;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -171,7 +170,7 @@ public class RPGInventory extends JavaPlugin {
             protocolManager.addPacketListener(
                     new PacketAdapter(this, PacketType.Play.Server.RECIPES) {
                         @Override
-                        public void onPacketSending(PacketEvent event) {
+                        public void onPacketSending(@NotNull PacketEvent event) {
                             event.setCancelled(true);
                         }
                     });
@@ -376,6 +375,7 @@ public class RPGInventory extends JavaPlugin {
         }
     }
 
+    @NotNull
     public Path getDataPath() {
         return getDataFolder().toPath();
     }

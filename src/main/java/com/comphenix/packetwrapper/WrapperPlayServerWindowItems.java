@@ -22,6 +22,7 @@ package com.comphenix.packetwrapper;
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketContainer;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.*;
 import ru.endlesscode.rpginventory.nms.VersionHandler;
 
 import java.util.Arrays;
@@ -79,7 +80,7 @@ public class WrapperPlayServerWindowItems extends AbstractPacket {
      *
      * @param value - new value.
      */
-    public void setSlotData(List<ItemStack> value) {
+    public void setSlotData(@NotNull List<ItemStack> value) {
         if (VersionHandler.is1_9() || VersionHandler.is1_10()) {
             handle.getItemArrayModifier().write(0, value.toArray(new ItemStack[value.size()]));
         } else {

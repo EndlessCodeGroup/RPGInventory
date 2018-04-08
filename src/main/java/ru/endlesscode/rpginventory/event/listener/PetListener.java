@@ -49,6 +49,7 @@ import org.bukkit.inventory.HorseInventory;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.jetbrains.annotations.*;
 import ru.endlesscode.rpginventory.RPGInventory;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
 import ru.endlesscode.rpginventory.inventory.PlayerWrapper;
@@ -70,7 +71,7 @@ import ru.endlesscode.rpginventory.utils.PlayerUtils;
  */
 public class PetListener implements Listener {
     @EventHandler
-    public void onItemUse(PlayerInteractEvent event) {
+    public void onItemUse(@NotNull PlayerInteractEvent event) {
         Player player = event.getPlayer();
 
         if (!event.hasItem() || !InventoryManager.playerIsLoaded(player)) {
@@ -100,7 +101,7 @@ public class PetListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
-    public void onPlayerDeath(PlayerDeathEvent event) {
+    public void onPlayerDeath(@NotNull PlayerDeathEvent event) {
         Player player = event.getEntity();
 
         if (!InventoryManager.playerIsLoaded(player) || !PetManager.isEnabled()) {
@@ -111,7 +112,7 @@ public class PetListener implements Listener {
     }
 
     @EventHandler
-    public void onPlayerRespawn(PlayerRespawnEvent event) {
+    public void onPlayerRespawn(@NotNull PlayerRespawnEvent event) {
         Player player = event.getPlayer();
 
         if (!InventoryManager.playerIsLoaded(player) || !PetManager.isEnabled()) {
@@ -125,7 +126,7 @@ public class PetListener implements Listener {
     }
 
     @EventHandler
-    public void onPetFeed(PlayerInteractEntityEvent event) {
+    public void onPetFeed(@NotNull PlayerInteractEntityEvent event) {
         Player player = event.getPlayer();
         ItemStack itemInHand = player.getEquipment().getItemInMainHand();
 
@@ -154,7 +155,7 @@ public class PetListener implements Listener {
     }
 
     @EventHandler
-    public void onPetDeath(EntityDeathEvent event) {
+    public void onPetDeath(@NotNull EntityDeathEvent event) {
         if (!(event.getEntity() instanceof Tameable)) {
             return;
         }
@@ -190,7 +191,7 @@ public class PetListener implements Listener {
     }
 
     @EventHandler
-    public void onTarget(EntityTargetLivingEntityEvent event) {
+    public void onTarget(@NotNull EntityTargetLivingEntityEvent event) {
         if (!(event.getEntity() instanceof Tameable) || !(event.getEntity() instanceof LivingEntity)
                 || event.getTarget() == null || !InventoryManager.isAllowedWorld(event.getTarget().getWorld())) {
             return;
@@ -220,7 +221,7 @@ public class PetListener implements Listener {
     }
 
     @EventHandler(ignoreCancelled = true)
-    public void onAttack(EntityDamageByEntityEvent event) {
+    public void onAttack(@NotNull EntityDamageByEntityEvent event) {
         if (!InventoryManager.isAllowedWorld(event.getEntity().getWorld())) {
             return;
         }
@@ -269,7 +270,7 @@ public class PetListener implements Listener {
     }
 
     @EventHandler
-    public void onMountPet(VehicleEnterEvent event) {
+    public void onMountPet(@NotNull VehicleEnterEvent event) {
         if (event.getEntered().getType() != EntityType.PLAYER || event.getVehicle().getType() != EntityType.HORSE) {
             return;
         }
@@ -287,7 +288,7 @@ public class PetListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
-    public void onWorldChanged(EntityPortalEnterEvent event) {
+    public void onWorldChanged(@NotNull EntityPortalEnterEvent event) {
         if (!(event.getEntity() instanceof Tameable) || !(event.getEntity() instanceof LivingEntity)) {
             return;
         }
@@ -304,7 +305,7 @@ public class PetListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
-    public void onPetInventoryOpened(InventoryOpenEvent event) {
+    public void onPetInventoryOpened(@NotNull InventoryOpenEvent event) {
         Player player = (Player) event.getPlayer();
         if (!InventoryManager.playerIsLoaded(player)) {
             return;
@@ -326,7 +327,7 @@ public class PetListener implements Listener {
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
-    public void onPlayerMove(PlayerMoveEvent event) {
+    public void onPlayerMove(@NotNull PlayerMoveEvent event) {
         Player player = event.getPlayer();
         if (!InventoryManager.playerIsLoaded(player)) {
             return;

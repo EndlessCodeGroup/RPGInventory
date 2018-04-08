@@ -21,7 +21,7 @@ package ru.endlesscode.rpginventory.utils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,10 +41,11 @@ import ru.endlesscode.rpginventory.item.ItemStat;
  */
 public class StringUtils {
     @NotNull
-    public static String coloredLine(String line) {
+    public static String coloredLine(@NotNull String line) {
         return ChatColor.translateAlternateColorCodes('&', line);
     }
 
+    @NotNull
     public static List<String> coloredLines(List<String> lines) {
         List<String> coloredLines = new ArrayList<>(lines.size());
         for (String line : lines) {
@@ -62,7 +63,8 @@ public class StringUtils {
         Bukkit.getServer().getConsoleSender().sendMessage(message);
     }
 
-    public static String setPlaceholders(Player player, String line) {
+    @NotNull
+    public static String setPlaceholders(@NotNull Player player, @NotNull String line) {
         // Using Placeholder API
         if (RPGInventory.placeholderApiHooked()) {
             return PlaceholderAPI.setPlaceholders(player, line);
@@ -97,7 +99,7 @@ public class StringUtils {
         }
 
         @Override
-        public String onPlaceholderRequest(Player player, String identifier) {
+        public String onPlaceholderRequest(@Nullable Player player, @NotNull String identifier) {
             if (player == null) {
                 return "";
             }

@@ -48,6 +48,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import org.jetbrains.annotations.*;
 import ru.endlesscode.rpginventory.RPGInventory;
 import ru.endlesscode.rpginventory.api.InventoryAPI;
 import ru.endlesscode.rpginventory.event.PlayerInventoryLoadEvent;
@@ -74,7 +75,7 @@ import ru.endlesscode.rpginventory.utils.PlayerUtils;
  */
 public class InventoryListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
-    public void onPlayerJoin(final PlayerJoinEvent event) {
+    public void onPlayerJoin(@NotNull final PlayerJoinEvent event) {
         final Player player = event.getPlayer();
 
         if (InventoryManager.isAllowedWorld(player.getWorld())) {
@@ -83,14 +84,14 @@ public class InventoryListener implements Listener {
     }
 
     @EventHandler
-    public void onPlayerQuit(PlayerQuitEvent event) {
+    public void onPlayerQuit(@NotNull PlayerQuitEvent event) {
         Player player = event.getPlayer();
         PlayerLoader.removePlayer(player);
         InventoryManager.unloadPlayerInventory(player);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
-    public void onLoadInventory(PlayerInventoryLoadEvent.Post event) {
+    public void onLoadInventory(@NotNull PlayerInventoryLoadEvent.Post event) {
         Player player = event.getPlayer();
         ItemManager.updateStats(player);
 
@@ -106,7 +107,7 @@ public class InventoryListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
-    public void prePlayerRespawn(PlayerRespawnEvent event) {
+    public void prePlayerRespawn(@NotNull PlayerRespawnEvent event) {
         Player player = event.getPlayer();
 
         if (!InventoryManager.playerIsLoaded(player)) {
@@ -117,7 +118,7 @@ public class InventoryListener implements Listener {
     }
 
     @EventHandler
-    public void onQuickSlotHeld(PlayerItemHeldEvent event) {
+    public void onQuickSlotHeld(@NotNull PlayerItemHeldEvent event) {
         Player player = event.getPlayer();
 
         if (!InventoryManager.playerIsLoaded(player)) {
@@ -134,16 +135,16 @@ public class InventoryListener implements Listener {
     }
 
     @EventHandler
-    public void onBreakItem(PlayerItemBreakEvent event) {
+    public void onBreakItem(@NotNull PlayerItemBreakEvent event) {
         this.onItemDisappeared(event, event.getBrokenItem());
     }
 
     @EventHandler
-    public void onDropQuickSlot(PlayerDropItemEvent event) {
+    public void onDropQuickSlot(@NotNull PlayerDropItemEvent event) {
         this.onItemDisappeared(event, event.getItemDrop().getItemStack());
     }
 
-    private void onItemDisappeared(PlayerEvent event, ItemStack item) {
+    private void onItemDisappeared(PlayerEvent event, @NotNull ItemStack item) {
         final Player player = event.getPlayer();
         final PlayerInventory inventory = player.getInventory();
         final int slotId = inventory.getHeldItemSlot();
@@ -167,7 +168,7 @@ public class InventoryListener implements Listener {
     }
 
     @EventHandler(ignoreCancelled = true)
-    public void onPickupToQuickSlot(PlayerPickupItemEvent event) {
+    public void onPickupToQuickSlot(@NotNull PlayerPickupItemEvent event) {
         Player player = event.getPlayer();
 
         if (!InventoryManager.playerIsLoaded(player) || !ItemManager.allowedForPlayer(player, event.getItem().getItemStack(), false)) {
@@ -191,7 +192,7 @@ public class InventoryListener implements Listener {
     }
 
     @EventHandler(ignoreCancelled = true)
-    public void onInventoryDrag(InventoryDragEvent event) {
+    public void onInventoryDrag(@NotNull InventoryDragEvent event) {
         Player player = (Player) event.getWhoClicked();
 
         if (!InventoryManager.playerIsLoaded(player)) {
@@ -228,7 +229,7 @@ public class InventoryListener implements Listener {
 
     @SuppressWarnings("deprecation")
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
-    public void onInventoryClick(final InventoryClickEvent event) {
+    public void onInventoryClick(@NotNull final InventoryClickEvent event) {
         final Player player = (Player) event.getWhoClicked();
 
         if (!InventoryManager.playerIsLoaded(player)) {
@@ -380,7 +381,7 @@ public class InventoryListener implements Listener {
      *
      * @return Click is valid
      */
-    private boolean validateClick(Player player, PlayerWrapper playerWrapper, Slot slot,
+    private boolean validateClick(Player player, @Nullable PlayerWrapper playerWrapper, @NotNull Slot slot,
                                   ActionType actionType, ItemStack currentItem, InventoryType.SlotType slotType) {
         if (playerWrapper != null) {
             if (player != playerWrapper.getPlayer()) {
@@ -404,8 +405,8 @@ public class InventoryListener implements Listener {
     /**
      * It happens when player click on armor slot
      */
-    private void onArmorSlotClick(InventoryClickEvent event, PlayerWrapper playerWrapper, final Slot slot,
-                                  ItemStack cursor, ItemStack currentItem) {
+    private void onArmorSlotClick(InventoryClickEvent event, PlayerWrapper playerWrapper, @NotNull final Slot slot,
+                                  @NotNull ItemStack cursor, ItemStack currentItem) {
         final Player player = playerWrapper.getPlayer().getPlayer();
         final Inventory inventory = event.getInventory();
         final int rawSlot = event.getRawSlot();
@@ -448,7 +449,7 @@ public class InventoryListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.LOW)
-    public void onInventoryOpen(InventoryOpenEvent event) {
+    public void onInventoryOpen(@NotNull InventoryOpenEvent event) {
         Inventory inventory = event.getInventory();
         HumanEntity player = event.getPlayer();
 
@@ -466,7 +467,7 @@ public class InventoryListener implements Listener {
     }
 
     @EventHandler
-    public void onInventoryClose(InventoryCloseEvent event) {
+    public void onInventoryClose(@NotNull InventoryCloseEvent event) {
         if (InventoryAPI.isRPGInventory(event.getInventory())) {
             PlayerWrapper playerWrapper = (PlayerWrapper) event.getInventory().getHolder();
             if (event.getPlayer() != playerWrapper.getPlayer()) {
@@ -478,7 +479,7 @@ public class InventoryListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
-    public void onWorldChanged(PlayerChangedWorldEvent event) {
+    public void onWorldChanged(@NotNull PlayerChangedWorldEvent event) {
         Player player = event.getPlayer();
         if (!InventoryManager.playerIsLoaded(player)) {
             if (InventoryManager.isAllowedWorld(player.getWorld())) {

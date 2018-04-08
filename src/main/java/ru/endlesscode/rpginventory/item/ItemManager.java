@@ -24,7 +24,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.*;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -58,7 +58,7 @@ public class ItemManager {
     private ItemManager() {
     }
 
-    public static boolean init(RPGInventory instance) {
+    public static boolean init(@NotNull RPGInventory instance) {
         try {
             Path itemsFile = RPGInventory.getInstance().getDataPath().resolve("items.yml");
             if (Files.notExists(itemsFile)) {
@@ -86,7 +86,7 @@ public class ItemManager {
         return true;
     }
 
-    private static void tryToAddItem(String name, ConfigurationSection config) {
+    private static void tryToAddItem(String name, @NotNull ConfigurationSection config) {
         try {
             CustomItem customItem = new CustomItem(name, config);
             CUSTOM_ITEMS.put(name, customItem);
@@ -128,12 +128,12 @@ public class ItemManager {
         return new Modifier(minBonus, maxBonus, minMultiplier, maxMultiplier);
     }
 
+    @NotNull
     public static List<String> getItemList() {
-        List<String> itemList = new ArrayList<>();
-        itemList.addAll(CUSTOM_ITEMS.keySet());
-        return itemList;
+        return new ArrayList<>(CUSTOM_ITEMS.keySet());
     }
 
+    @NotNull
     public static ItemStack getItem(String itemId) {
         CustomItem customItem = CUSTOM_ITEMS.get(itemId);
         return customItem == null ? new ItemStack(Material.AIR) : customItem.getItemStack();
@@ -185,7 +185,8 @@ public class ItemManager {
         InventoryManager.get(player).updateStatsLater();
     }
 
-    static List<String> buildLore(CustomItem item) {
+    @NotNull
+    static List<String> buildLore(@NotNull CustomItem item) {
         FileLanguage lang = RPGInventory.getLanguage();
         List<String> lore = new ArrayList<>();
         boolean lastIsSeparator = false;

@@ -29,7 +29,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
-import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.*;
 import ru.endlesscode.rpginventory.RPGInventory;
 
 import java.lang.reflect.InvocationTargetException;
@@ -41,15 +41,15 @@ import java.util.List;
  * All rights reserved 2014 - 2016 © «EndlessCode Group»
  */
 public class EffectUtils {
-    public static void playParticlesToAll(EnumWrappers.Particle particle, int particleNum, Location location) {
+    public static void playParticlesToAll(EnumWrappers.Particle particle, int particleNum, @NotNull Location location) {
         playParticlesToAll(particle, particleNum, location, 30.0D);
     }
 
-    private static void playParticlesToAll(EnumWrappers.Particle particle, int particleNum, Location location, double distance) {
+    private static void playParticlesToAll(EnumWrappers.Particle particle, int particleNum, @NotNull Location location, double distance) {
         playParticlesToAll(particle, particleNum, location, LocationUtils.getRandomVector(), distance);
     }
 
-    private static void playParticlesToAll(EnumWrappers.Particle particle, int particleNum, Location location, Vector direction, double distance) {
+    private static void playParticlesToAll(EnumWrappers.Particle particle, int particleNum, @NotNull Location location, @NotNull Vector direction, double distance) {
         for (Player player : LocationUtils.getNearbyPlayers(location, distance)) {
             playParticles(player, particle, particleNum, location, direction);
         }
@@ -87,7 +87,7 @@ public class EffectUtils {
         playParticlesToAll(EnumWrappers.Particle.SMOKE_NORMAL, 3, loc);
     }
 
-    public static void sendTitle(final Player player, int delay, String title, final List<String> subtitles, @Nullable final Runnable callback) {
+    public static void sendTitle(final Player player, int delay, String title, @NotNull final List<String> subtitles, @Nullable final Runnable callback) {
         if (delay < 2) {
             delay = 2;
         }

@@ -18,8 +18,11 @@
 
 package ru.endlesscode.rpginventory.utils;
 
+import org.jetbrains.annotations.*;
+
 public class VersionUtils {
 
+    @NotNull
     public static String trimQualifiers(String fullVersion) {
         String version = fullVersion;
         if (fullVersion.contains("-")) {

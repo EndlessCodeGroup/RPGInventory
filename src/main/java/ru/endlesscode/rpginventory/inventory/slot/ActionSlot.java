@@ -20,6 +20,7 @@ package ru.endlesscode.rpginventory.inventory.slot;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.*;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
 
 /**
@@ -32,14 +33,14 @@ public class ActionSlot extends Slot {
     private final String command;
     private final boolean isGui;
 
-    ActionSlot(String name, ConfigurationSection config) {
+    ActionSlot(String name, @NotNull ConfigurationSection config) {
         super(name, config);
         this.actionType = ActionType.valueOf(config.getString("action"));
         this.command = config.getString("command");
         this.isGui = config.getBoolean("gui", false);
     }
 
-    public void preformAction(Player player) {
+    public void preformAction(@NotNull Player player) {
         if (this.isGui) {
             player.closeInventory();
         }

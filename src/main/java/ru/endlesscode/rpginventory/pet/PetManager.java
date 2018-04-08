@@ -76,7 +76,7 @@ public class PetManager {
     private PetManager() {
     }
 
-    public static boolean init(RPGInventory instance) {
+    public static boolean init(@NotNull RPGInventory instance) {
         //noinspection ConstantConditions
         SLOT_PET = SlotManager.instance().getPetSlot() != null ? SlotManager.instance().getPetSlot().getSlotId() : -1;
 
@@ -117,7 +117,7 @@ public class PetManager {
         return true;
     }
 
-    private static void tryToAddPet(String name, ConfigurationSection config) {
+    private static void tryToAddPet(String name, @NotNull ConfigurationSection config) {
         try {
             PetType petType = new PetType(config);
             PetManager.PETS.put(name, petType);
@@ -128,7 +128,7 @@ public class PetManager {
         }
     }
 
-    private static void tryToAddPetFood(String name, ConfigurationSection config) {
+    private static void tryToAddPetFood(String name, @NotNull ConfigurationSection config) {
         try {
             PetFood pet = new PetFood(config);
             PetManager.PET_FOOD.put(name, pet);
@@ -328,7 +328,7 @@ public class PetManager {
     }
 
     @Nullable
-    public static PetType getPetFromEntity(LivingEntity entity, OfflinePlayer player) {
+    public static PetType getPetFromEntity(@Nullable LivingEntity entity, OfflinePlayer player) {
         PlayerWrapper playerWrapper = InventoryManager.get(player);
 
         if (!InventoryManager.playerIsLoaded(player) || !PetManager.isEnabled()
@@ -345,11 +345,11 @@ public class PetManager {
         compound.put(NbtFactory.ofList("ench"));
     }
 
-    public static void saveDeathTime(ItemStack item) {
+    public static void saveDeathTime(@NotNull ItemStack item) {
         saveDeathTime(item, System.currentTimeMillis());
     }
 
-    public static void saveDeathTime(ItemStack item, long deathTime) {
+    public static void saveDeathTime(@NotNull ItemStack item, long deathTime) {
         NbtCompound nbt = NbtFactory.asCompound(NbtFactory.fromItemTag(item));
 
         if (deathTime == 0) {
@@ -361,7 +361,7 @@ public class PetManager {
         NbtFactory.setItemTag(item, nbt);
     }
 
-    public static long getDeathTime(ItemStack item) {
+    public static long getDeathTime(@NotNull ItemStack item) {
         if (ItemUtils.isEmpty(item)) {
             return 0L;
         }
@@ -375,7 +375,7 @@ public class PetManager {
         return nbt.getLong(DEATH_TIME_TAG);
     }
 
-    public static int getCooldown(ItemStack item) {
+    public static int getCooldown(@NotNull ItemStack item) {
         long deathTime = getDeathTime(item);
         if (deathTime == 0) {
             return 0;
@@ -396,7 +396,7 @@ public class PetManager {
         return itemCooldown;
     }
 
-    public static void saveHealth(ItemStack item, double health) {
+    public static void saveHealth(@NotNull ItemStack item, double health) {
         NbtCompound nbt = NbtFactory.asCompound(NbtFactory.fromItemTag(item));
 
         if (health == 0) {

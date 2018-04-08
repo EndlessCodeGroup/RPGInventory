@@ -26,6 +26,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
+import org.jetbrains.annotations.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,7 +69,7 @@ public class LocationUtils {
         return loc.add(0.5, 0, 0.5);
     }
 
-    public static boolean isUnderAnyBlockHonestly(Location loc, double entityWidth, int distance) {
+    public static boolean isUnderAnyBlockHonestly(@NotNull Location loc, double entityWidth, int distance) {
         for (Block block : getStandingOn(loc, entityWidth)) {
             if (isUnderAnyBlock(block, distance)) {
                 return true;
@@ -78,7 +79,8 @@ public class LocationUtils {
         return false;
     }
 
-    public static List<Block> getStandingOn(Location playerLoc, double entityWidth) {
+    @NotNull
+    public static List<Block> getStandingOn(@NotNull Location playerLoc, double entityWidth) {
         double halfWidth = entityWidth / 2;
 
         List<Block> blocksUnderPlayer = new ArrayList<>(2);
@@ -95,7 +97,7 @@ public class LocationUtils {
         return blocksUnderPlayer;
     }
 
-    public static boolean isUnderAnyBlock(Block block, int distance) {
+    public static boolean isUnderAnyBlock(@NotNull Block block, int distance) {
         for (int i = 1; i <= distance; i++) {
             Block blockUnderPlayer = block.getRelative(BlockFace.DOWN, i);
             if (!blockUnderPlayer.isEmpty()) {
@@ -106,6 +108,7 @@ public class LocationUtils {
         return false;
     }
 
+    @NotNull
     public static List<Player> getNearbyPlayers(Location location, double distance) {
         List<Player> nearbyPlayers = new ArrayList<>();
         for (LivingEntity entity : location.getWorld().getLivingEntities()) {
@@ -117,6 +120,7 @@ public class LocationUtils {
         return nearbyPlayers;
     }
 
+    @NotNull
     public static Vector getRandomVector() {
         Vector vector = new Vector();
         vector.setX(0.0D + Math.random() - Math.random());

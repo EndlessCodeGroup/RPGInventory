@@ -31,6 +31,7 @@ import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+import org.jetbrains.annotations.*;
 import ru.endlesscode.rpginventory.RPGInventory;
 import ru.endlesscode.rpginventory.api.InventoryAPI;
 import ru.endlesscode.rpginventory.inventory.ActionType;
@@ -52,7 +53,7 @@ import ru.endlesscode.rpginventory.utils.PlayerUtils;
 public class BackpackListener implements Listener {
     @SuppressWarnings("deprecation")
     @EventHandler(priority = EventPriority.LOWEST)
-    public void onUseBackpack(PlayerInteractEvent event) {
+    public void onUseBackpack(@NotNull PlayerInteractEvent event) {
         ItemStack item = event.getItem();
         if (!event.hasItem() || !ItemUtils.hasTag(item, ItemUtils.BACKPACK_TAG)) {
             return;
@@ -70,7 +71,7 @@ public class BackpackListener implements Listener {
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
-    public void onBackpackClick(final InventoryClickEvent event) {
+    public void onBackpackClick(@NotNull final InventoryClickEvent event) {
         final Inventory inventory = event.getInventory();
         final Player player = (Player) event.getWhoClicked();
 
@@ -109,7 +110,7 @@ public class BackpackListener implements Listener {
     }
 
     @EventHandler
-    public void onBackpackClose(InventoryCloseEvent event) {
+    public void onBackpackClose(@NotNull InventoryCloseEvent event) {
         Inventory inventory = event.getInventory();
         Player player = (Player) event.getPlayer();
 
@@ -130,7 +131,7 @@ public class BackpackListener implements Listener {
     }
 
     @EventHandler(ignoreCancelled = true)
-    public void onBackpackPickup(PlayerPickupItemEvent event) {
+    public void onBackpackPickup(@NotNull PlayerPickupItemEvent event) {
         Player player = event.getPlayer();
         if (!InventoryManager.playerIsLoaded(player)) {
             return;

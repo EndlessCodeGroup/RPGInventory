@@ -75,8 +75,7 @@ public class PetFood extends TexturedItem {
         meta.setDisplayName(this.name);
 
         FileLanguage lang = RPGInventory.getLanguage();
-        List<String> lore = new ArrayList<>();
-        lore.addAll(this.lore);
+        List<String> lore = new ArrayList<>(this.lore);
         lore.add(lang.getMessage("pet.food.value", (int) (this.value)));
         meta.setLore(lore);
         spawnItem.setItemMeta(meta);
@@ -92,7 +91,7 @@ public class PetFood extends TexturedItem {
         return value;
     }
 
-    public boolean canBeEaten(LivingEntity pet) {
+    public boolean canBeEaten(@NotNull LivingEntity pet) {
         String petType = pet.getType().toString();
         return petType != null && this.eaters.contains(petType);
     }

@@ -24,12 +24,14 @@ import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.events.PacketContainer;
 import com.google.common.base.Objects;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.*;
 
 import java.lang.reflect.InvocationTargetException;
 
 @SuppressWarnings("ALL")
 public abstract class AbstractPacket {
     // The packet we will be modifying
+    @Nullable
     protected PacketContainer handle;
 
     /**
@@ -38,7 +40,7 @@ public abstract class AbstractPacket {
      * @param handle - handle to the raw packet data.
      * @param type   - the packet type.
      */
-    protected AbstractPacket(PacketContainer handle, PacketType type) {
+    protected AbstractPacket(@Nullable PacketContainer handle, PacketType type) {
         // Make sure we're given a valid packet
         if (handle == null) {
             throw new IllegalArgumentException("Packet handle cannot be NULL.");
@@ -55,6 +57,7 @@ public abstract class AbstractPacket {
      *
      * @return Raw packet data.
      */
+    @Nullable
     public PacketContainer getHandle() {
         return handle;
     }

@@ -41,7 +41,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.*;
 import ru.endlesscode.rpginventory.RPGInventory;
 import ru.endlesscode.rpginventory.event.PetEquipEvent;
 import ru.endlesscode.rpginventory.event.PetUnequipEvent;
@@ -64,7 +64,7 @@ import java.util.UUID;
 public class MyPetManager implements Listener {
     private static final String MYPET_TAG = "mypet.uuid";
 
-    public static boolean init(RPGInventory instance) {
+    public static boolean init(@NotNull RPGInventory instance) {
         if (MyPetManager.getMyPetSlot() == null) {
             instance.getLogger().warning("MyPet found, but slot for MyPet not configured!");
             return false;
@@ -115,7 +115,7 @@ public class MyPetManager implements Listener {
     }
 
     public static boolean validatePet(
-            Player player,
+            @NotNull Player player,
             InventoryAction action,
             @Nullable ItemStack currentItem,
             ItemStack cursor
@@ -129,7 +129,7 @@ public class MyPetManager implements Listener {
                 || swapMyPets(player, isMyPetItem(currentItem), cursor);
     }
 
-    private static boolean swapMyPets(final Player player, boolean hasPet, ItemStack newPet) {
+    private static boolean swapMyPets(@NotNull final Player player, boolean hasPet, ItemStack newPet) {
         if (hasPet) {
             PetUnequipEvent event = new PetUnequipEvent(player);
             RPGInventory.getInstance().getServer().getPluginManager().callEvent(event);
@@ -163,7 +163,7 @@ public class MyPetManager implements Listener {
         return !ItemUtils.isEmpty(item) && ItemUtils.hasTag(item, MYPET_TAG);
     }
 
-    private static void deactivateMyPet(final Player player) {
+    private static void deactivateMyPet(@NotNull final Player player) {
         if (!MyPetApi.getPlayerManager().isMyPetPlayer(player)) {
             return;
         }
@@ -178,7 +178,7 @@ public class MyPetManager implements Listener {
 
     }
 
-    private static void activateMyPet(final Player player, UUID petUUID) {
+    private static void activateMyPet(@NotNull final Player player, UUID petUUID) {
         final MyPetPlayer user;
         if (MyPetApi.getPlayerManager().isMyPetPlayer(player)) {
             user = MyPetApi.getPlayerManager().getMyPetPlayer(player);
@@ -193,7 +193,7 @@ public class MyPetManager implements Listener {
         final WorldGroup wg = WorldGroup.getGroupByWorld(player.getWorld().getName());
         MyPetApi.getRepository().getMyPet(petUUID, new RepositoryCallback<StoredMyPet>() {
             @Override
-            public void callback(StoredMyPet storedMyPet) {
+            public void callback(@NotNull StoredMyPet storedMyPet) {
                 if (!storedMyPet.getWorldGroup().equals(wg.getName())) {
                     PlayerUtils.sendMessage(player, "This pet doesn't belong into this world.");
                     return;
@@ -221,7 +221,7 @@ public class MyPetManager implements Listener {
     }
 
     @EventHandler
-    public void onPlayerInventoryLoaded(PlayerInventoryLoadEvent.Post event) {
+    public void onPlayerInventoryLoaded(@NotNull PlayerInventoryLoadEvent.Post event) {
         Player player = event.getPlayer();
         PlayerManager playerManager = MyPetApi.getPlayerManager();
         if (playerManager.isMyPetPlayer(player)) {
@@ -230,7 +230,7 @@ public class MyPetManager implements Listener {
     }
 
     @EventHandler(ignoreCancelled = true)
-    public void onMyPetCreate(MyPetCreateEvent event) {
+    public void onMyPetCreate(@NotNull MyPetCreateEvent event) {
         Player player = event.getOwner().getPlayer();
         if (!InventoryManager.playerIsLoaded(player)) {
             return;
@@ -255,7 +255,7 @@ public class MyPetManager implements Listener {
     }
 
     @EventHandler(ignoreCancelled = true)
-    public void onMyPetCall(MyPetCallEvent event) {
+    public void onMyPetCall(@NotNull MyPetCallEvent event) {
         Player player = event.getOwner().getPlayer();
         if (!InventoryManager.playerIsLoaded(player)) {
             return;
@@ -281,7 +281,7 @@ public class MyPetManager implements Listener {
     }
 
     @EventHandler(ignoreCancelled = true)
-    public void onMyPetRemove(MyPetRemoveEvent event) {
+    public void onMyPetRemove(@NotNull MyPetRemoveEvent event) {
         Player player = event.getOwner().getPlayer();
         if (!InventoryManager.playerIsLoaded(player)) {
             return;
@@ -300,7 +300,7 @@ public class MyPetManager implements Listener {
     }
 
     @EventHandler
-    public void onMyPetItemUse(PlayerInteractEvent event) {
+    public void onMyPetItemUse(@NotNull PlayerInteractEvent event) {
         if (event.getItem() != null) {
             Player player = event.getPlayer();
 

@@ -39,6 +39,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
+import org.jetbrains.annotations.*;
 import ru.endlesscode.rpginventory.RPGInventory;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
 import ru.endlesscode.rpginventory.inventory.slot.Slot;
@@ -61,7 +62,7 @@ import java.util.List;
  */
 public class ItemListener implements Listener {
     @EventHandler(priority = EventPriority.LOW)
-    public void onDamage(EntityDamageByEntityEvent event) {
+    public void onDamage(@NotNull EntityDamageByEntityEvent event) {
         Player damager;
 
         // Defensive stats
@@ -144,7 +145,7 @@ public class ItemListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
-    public void onPlayerJump(PlayerMoveEvent event) {
+    public void onPlayerJump(@NotNull PlayerMoveEvent event) {
         Player player = event.getPlayer();
 
         if (!InventoryManager.playerIsLoaded(player)) {
@@ -171,7 +172,7 @@ public class ItemListener implements Listener {
     }
 
     @EventHandler
-    public void onPlayerFall(EntityDamageEvent event) {
+    public void onPlayerFall(@NotNull EntityDamageEvent event) {
         if (event.getEntity().getType() == EntityType.PLAYER
                 && event.getCause() == EntityDamageEvent.DamageCause.FALL) {
             Player player = (Player) event.getEntity();
@@ -191,7 +192,7 @@ public class ItemListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
-    public void onItemUse(PlayerInteractEvent event) {
+    public void onItemUse(@NotNull PlayerInteractEvent event) {
         Player player = event.getPlayer();
 
         if (!InventoryManager.playerIsLoaded(player) || !event.hasItem()) {
@@ -222,7 +223,7 @@ public class ItemListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
-    public void afterPlayerRespawn(PlayerRespawnEvent event) {
+    public void afterPlayerRespawn(@NotNull PlayerRespawnEvent event) {
         Player player = event.getPlayer();
 
         if (!InventoryManager.playerIsLoaded(player)) {
@@ -233,7 +234,7 @@ public class ItemListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
-    public void afterEquipChange(InventoryClickEvent event) {
+    public void afterEquipChange(@NotNull InventoryClickEvent event) {
         Player player = (Player) event.getWhoClicked();
 
         if (!InventoryManager.playerIsLoaded(player)) {
@@ -246,7 +247,7 @@ public class ItemListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
-    public void afterEquipChange(final InventoryDragEvent event) {
+    public void afterEquipChange(@NotNull final InventoryDragEvent event) {
         final Player player = (Player) event.getWhoClicked();
 
         if (!InventoryManager.playerIsLoaded(player)) {
@@ -268,7 +269,7 @@ public class ItemListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
-    public void afterItemHeld(final PlayerItemHeldEvent event) {
+    public void afterItemHeld(@NotNull final PlayerItemHeldEvent event) {
         Player player = event.getPlayer();
 
         if (!InventoryManager.playerIsLoaded(player)) {
@@ -289,7 +290,7 @@ public class ItemListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
-    public void afterPickupItem(PlayerPickupItemEvent event) {
+    public void afterPickupItem(@NotNull PlayerPickupItemEvent event) {
         Player player = event.getPlayer();
 
         if (!InventoryManager.playerIsLoaded(player)) {
@@ -303,7 +304,7 @@ public class ItemListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
-    public void afterDropItem(PlayerDropItemEvent event) {
+    public void afterDropItem(@NotNull PlayerDropItemEvent event) {
         Player player = event.getPlayer();
 
         if (!InventoryManager.playerIsLoaded(player)) {
@@ -316,7 +317,7 @@ public class ItemListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
-    public void afterBreakItem(PlayerItemBreakEvent event) {
+    public void afterBreakItem(@NotNull PlayerItemBreakEvent event) {
         Player player = event.getPlayer();
 
         if (!InventoryManager.playerIsLoaded(player)) {

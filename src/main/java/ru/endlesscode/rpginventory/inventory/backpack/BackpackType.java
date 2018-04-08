@@ -27,6 +27,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
+import org.jetbrains.annotations.*;
 import ru.endlesscode.rpginventory.RPGInventory;
 import ru.endlesscode.rpginventory.item.TexturedItem;
 import ru.endlesscode.rpginventory.misc.FileLanguage;
@@ -40,7 +41,9 @@ import ru.endlesscode.rpginventory.utils.StringUtils;
  */
 public class BackpackType extends TexturedItem {
     private final String id;
+    @NotNull
     private final String name;
+    @NotNull
     private final List<String> lore;
     private final int size;
 
@@ -75,11 +78,11 @@ public class BackpackType extends TexturedItem {
         this.item = ItemUtils.setTag(spawnItem, ItemUtils.BACKPACK_TAG, this.id);
     }
 
-    Backpack createBackpack(UUID uuid) {
+    @NotNull Backpack createBackpack(UUID uuid) {
         return new Backpack(this, uuid);
     }
 
-    Backpack createBackpack() {
+    @NotNull Backpack createBackpack() {
         return new Backpack(this);
     }
 
@@ -87,7 +90,7 @@ public class BackpackType extends TexturedItem {
         return this.size;
     }
 
-    String getTitle() {
+    @NotNull String getTitle() {
         return this.name;
     }
 

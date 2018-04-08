@@ -25,8 +25,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.*;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -55,7 +54,7 @@ public class BackpackManager {
     private static final HashMap<UUID, Backpack> BACKPACKS = new HashMap<>();
     private static int BACKPACK_LIMIT;
 
-    public static boolean init(RPGInventory instance) {
+    public static boolean init(@NotNull RPGInventory instance) {
         if (!isEnabled()) {
             return false;
         }
@@ -92,7 +91,7 @@ public class BackpackManager {
         return true;
     }
 
-    private static void tryToAddBackpack(String name, ConfigurationSection config) {
+    private static void tryToAddBackpack(String name, @NotNull ConfigurationSection config) {
         try {
             BackpackType backpackType = new BackpackType(config);
             BACKPACK_TYPES.put(name, backpackType);
@@ -107,19 +106,19 @@ public class BackpackManager {
         return SlotManager.instance().getBackpackSlot() != null;
     }
 
+    @NotNull
     public static List<String> getBackpackList() {
-        List<String> backpackList = new ArrayList<>();
-        backpackList.addAll(BACKPACK_TYPES.keySet());
-        return backpackList;
+        return new ArrayList<>(BACKPACK_TYPES.keySet());
     }
 
+    @NotNull
     public static ItemStack getItem(String id) {
         BackpackType backpackType = BACKPACK_TYPES.get(id);
         return backpackType == null ? new ItemStack(Material.AIR) : backpackType.getItem();
     }
 
     @Contract("_, null -> false")
-    public static boolean open(Player player, @Nullable ItemStack bpItem) {
+    public static boolean open(@NotNull Player player, @Nullable ItemStack bpItem) {
         if (ItemUtils.isEmpty(bpItem)) {
             return false;
         }
@@ -178,12 +177,12 @@ public class BackpackManager {
             Files.list(folder)
                     .filter((file) -> Files.isRegularFile(file) && file.toString().endsWith(".bp"))
                     .forEach(BackpackManager::tryToLoadBackpack);
-        } catch (IOException | RuntimeException e) {
+        } catch (@NotNull IOException | RuntimeException e) {
             e.printStackTrace();
         }
     }
 
-    private static void tryToLoadBackpack(Path path) {
+    private static void tryToLoadBackpack(@NotNull Path path) {
         try {
             loadBackpack(path);
         } catch (IOException e) {
@@ -191,7 +190,7 @@ public class BackpackManager {
         }
     }
 
-    private static void loadBackpack(Path path) throws IOException {
+    private static void loadBackpack(@NotNull Path path) throws IOException {
         Backpack backpack = BackpackSerializer.loadBackpack(path);
         if (backpack == null || backpack.isOverdue()) {
             Files.delete(path);
@@ -205,7 +204,7 @@ public class BackpackManager {
         return !ItemUtils.isEmpty(item) && ItemUtils.hasTag(item, ItemUtils.BACKPACK_TAG);
     }
 
-    public static boolean playerCanTakeBackpack(Player player) {
+    public static boolean playerCanTakeBackpack(@NotNull Player player) {
         if (BACKPACK_LIMIT == 0) {
             return true;
         }

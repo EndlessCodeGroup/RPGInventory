@@ -21,7 +21,7 @@ package ru.endlesscode.rpginventory.utils;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.*;
 import ru.endlesscode.rpginventory.api.InventoryAPI;
 import ru.endlesscode.rpginventory.inventory.ArmorType;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
@@ -34,7 +34,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class InventoryUtils {
-    public static void heldFreeSlot(Player player, int start, SearchType type) {
+    public static void heldFreeSlot(@NotNull Player player, int start, SearchType type) {
         if (type == SearchType.NEXT) {
             for (int i = start + 1; i < start + 9; i++) {
                 int index = i % 9;
@@ -86,7 +86,8 @@ public class InventoryUtils {
         return slotType;
     }
 
-    public static List<ItemStack> collectEffectiveItems(Player player, boolean notifyPlayer) {
+    @NotNull
+    public static List<ItemStack> collectEffectiveItems(@NotNull Player player, boolean notifyPlayer) {
         List<ItemStack> items = new ArrayList<>(InventoryAPI.getPassiveItems(player));
         Collections.addAll(items, player.getInventory().getArmorContents());
 
