@@ -23,13 +23,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Sound;
-import org.bukkit.entity.Arrow;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Horse;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Tameable;
-import org.bukkit.entity.Wolf;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -253,7 +247,8 @@ public class PetListener implements Listener {
                 && (petEntity = (LivingEntity) event.getEntity()) instanceof Tameable
                 && !Config.getConfig().getBoolean("attack.own-pet") && player != null) {
             Tameable ownedEntity = (Tameable) petEntity;
-            if (ownedEntity.isTamed() && ownedEntity.getOwner().getUniqueId().equals(player.getUniqueId())) {
+            AnimalTamer owner = ownedEntity.getOwner();
+            if (owner != null && owner.getUniqueId().equals(player.getUniqueId())) {
                 event.setCancelled(true);
             }
         } else if (player != null) {
