@@ -63,7 +63,7 @@ public class ItemUtils {
             Material.BOW, Material.FLINT_AND_STEEL, Material.SHEARS, Material.FISHING_ROD
     );
 
-    public static ItemStack setTag(ItemStack item, String tag, String value) {
+    public static ItemStack setTag(ItemStack item, String tag, @NotNull String value) {
         item = toBukkitItemStack(item);
         NbtCompound nbt = NbtFactory.asCompound(NbtFactory.fromItemTag(item));
 
@@ -79,10 +79,12 @@ public class ItemUtils {
         return item;
     }
 
+    @Nullable
     public static String getTag(ItemStack item, String tag) {
         return getTag(item, tag, null);
     }
 
+    @Nullable
     @SuppressWarnings("WeakerAccess")
     public static String getTag(ItemStack item, String tag, @Nullable String defaultValue) {
         item = toBukkitItemStack(item);
@@ -154,6 +156,7 @@ public class ItemUtils {
         return nbt;
     }
 
+    @NotNull
     public static ItemStack nbtToItemStack(NbtCompound nbt) {
         ItemStack item = new ItemStack(Material.valueOf(nbt.getString("material")));
 
@@ -170,6 +173,7 @@ public class ItemUtils {
         return item;
     }
 
+    @NotNull
     public static ItemStack[] syncItems(ItemStack[] items) {
         for (int i = 0; i < items.length; i++) {
             items[i] = ItemUtils.syncItem(items[i]);
@@ -178,8 +182,9 @@ public class ItemUtils {
         return items;
     }
 
+    @NotNull
     @Contract("null -> !null")
-    private static ItemStack syncItem(ItemStack item) {
+    private static ItemStack syncItem(@NotNull ItemStack item) {
         if (ItemUtils.isEmpty(item)) {
             return new ItemStack(Material.AIR);
         }
@@ -240,10 +245,11 @@ public class ItemUtils {
     }
 
     @Contract("null -> true")
-    public static boolean isEmpty(ItemStack item) {
+    public static boolean isEmpty(@Nullable ItemStack item) {
         return item == null || item.getType() == Material.AIR;
     }
 
+    @NotNull
     private static ItemStack toBukkitItemStack(ItemStack item) {
         return !item.getClass().getName().endsWith("CraftItemStack") ? MinecraftReflection.getBukkitItemStack(item) : item;
     }

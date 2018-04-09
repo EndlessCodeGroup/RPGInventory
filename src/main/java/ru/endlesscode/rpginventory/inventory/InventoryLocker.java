@@ -43,34 +43,35 @@ import java.util.List;
  * All rights reserved 2014 - 2016 © «EndlessCode Group»
  */
 public class InventoryLocker {
+
     private static ItemStack lockedSlot = null;
     private static ItemStack buyableSlot = null;
 
     private InventoryLocker() {
     }
 
-    public static boolean init(RPGInventory instance) {
+    public static boolean init(@NotNull RPGInventory instance) {
         if (!isEnabled()) {
             return false;
         }
 
         try {
             // Setup locked slot
-            InventoryLocker.lockedSlot = ItemUtils.getTexturedItem(Config.getConfig().getString("slots.locked"));
-            ItemMeta meta = InventoryLocker.lockedSlot.getItemMeta();
+            lockedSlot = ItemUtils.getTexturedItem(Config.getConfig().getString("slots.locked"));
+            ItemMeta meta = lockedSlot.getItemMeta();
             meta.setDisplayName(RPGInventory.getLanguage().getMessage("locked.name"));
             meta.setLore(Collections.singletonList(RPGInventory.getLanguage().getMessage("locked.lore")));
 
-            InventoryLocker.lockedSlot.setItemMeta(meta);
+            lockedSlot.setItemMeta(meta);
             lockedSlot = addId(lockedSlot);
 
             // Setup buyable slot
-            InventoryLocker.buyableSlot = ItemUtils.getTexturedItem(Config.getConfig().getString("slots.buyable"));
-            meta = InventoryLocker.buyableSlot.getItemMeta();
+            buyableSlot = ItemUtils.getTexturedItem(Config.getConfig().getString("slots.buyable"));
+            meta = buyableSlot.getItemMeta();
             meta.setDisplayName(RPGInventory.getLanguage().getMessage("buyable.name"));
             meta.setLore(Collections.singletonList(RPGInventory.getLanguage().getMessage("buyable.lore")));
 
-            InventoryLocker.buyableSlot.setItemMeta(meta);
+            buyableSlot.setItemMeta(meta);
             buyableSlot = addId(buyableSlot);
         } catch (Exception e) {
 
@@ -136,11 +137,11 @@ public class InventoryLocker {
         return getBuyableSlotForLine(line).equals(currentItem);
     }
 
-    public static void lockSlots(Player player) {
+    public static void lockSlots(@NotNull Player player) {
         InventoryLocker.lockSlots(player, false);
     }
 
-    public static void lockSlots(Player player, boolean force) {
+    public static void lockSlots(@NotNull Player player, boolean force) {
         if (!force && player.getGameMode() == GameMode.CREATIVE) {
             return;
         }
@@ -160,7 +161,7 @@ public class InventoryLocker {
         InventoryManager.lockEmptySlots(player);
     }
 
-    public static void unlockSlots(Player player) {
+    public static void unlockSlots(@NotNull Player player) {
         if (isEnabled()) {
             for (int i = 8 + getSlots(player); i < 36; i++) {
                 ItemStack itemStack = player.getInventory().getItem(i);
@@ -174,7 +175,7 @@ public class InventoryLocker {
         InventoryManager.unlockEmptySlots(player);
     }
 
-    public static boolean canBuySlot(Player player, int line) {
+    public static boolean canBuySlot(@NotNull Player player, int line) {
         if (Config.getConfig().getBoolean("slots.money.enabled")) {
             double cost = Config.getConfig().getDouble("slots.money.cost.line" + line);
 

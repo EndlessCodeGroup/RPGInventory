@@ -27,6 +27,7 @@ import org.bukkit.entity.Player;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+import org.jetbrains.annotations.*;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
 import ru.endlesscode.rpginventory.pet.PetManager;
 import ru.endlesscode.rpginventory.pet.PetType;
@@ -37,7 +38,7 @@ import ru.endlesscode.rpginventory.pet.PetType;
  * All rights reserved 2014 - 2016 © «EndlessCode Group»
  */
 public class EntityUtils {
-    public static void goPetToPlayer(final Player player, final LivingEntity entity) {
+    public static void goPetToPlayer(@NotNull final Player player, @NotNull final LivingEntity entity) {
         if (!InventoryManager.playerIsLoaded(player) || !player.isOnline() || entity.isDead()) {
             return;
         }
@@ -61,7 +62,7 @@ public class EntityUtils {
             Object navigation = entityInsentientClass.getDeclaredMethod("getNavigation").invoke(insentient);
             navigationAbstractClass.getDeclaredMethod("a", double.class, double.class, double.class, double.class)
                     .invoke(navigation, target.getX(), target.getY(), target.getZ(), speedModifier);
-        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+        } catch (@NotNull IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
             e.printStackTrace();
         }
     }

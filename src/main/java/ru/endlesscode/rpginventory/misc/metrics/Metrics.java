@@ -26,6 +26,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.scheduler.BukkitTask;
+import org.jetbrains.annotations.*;
 import ru.endlesscode.rpginventory.misc.Config;
 
 import java.io.*;
@@ -65,6 +66,7 @@ public class Metrics {
     /**
      * The plugin this metrics submits for
      */
+    @Nullable
     private final Plugin plugin;
 
     /**
@@ -75,11 +77,13 @@ public class Metrics {
     /**
      * The plugin configuration file
      */
+    @NotNull
     private final YamlConfiguration configuration;
 
     /**
      * The plugin configuration file
      */
+    @NotNull
     private final File configurationFile;
 
     /**
@@ -100,9 +104,10 @@ public class Metrics {
     /**
      * The scheduled task
      */
+    @Nullable
     private volatile BukkitTask task = null;
 
-    public Metrics(final Plugin plugin) throws IOException {
+    public Metrics(@Nullable final Plugin plugin) throws IOException {
         if (plugin == null) {
             throw new IllegalArgumentException("Plugin cannot be null");
         }
@@ -163,7 +168,7 @@ public class Metrics {
      * @param key
      * @param value
      */
-    private static void appendJSONPair(StringBuilder json, String key, String value) {
+    private static void appendJSONPair(@NotNull StringBuilder json, @NotNull String key, String value) {
         boolean isValueNumeric = false;
 
         try {
@@ -242,7 +247,7 @@ public class Metrics {
      * @param text the text to encode
      * @return the encoded text, as UTF-8
      */
-    private static String urlEncode(final String text) throws UnsupportedEncodingException {
+    private static String urlEncode(@NotNull final String text) throws UnsupportedEncodingException {
         return URLEncoder.encode(text, "UTF-8");
     }
 
@@ -253,7 +258,8 @@ public class Metrics {
      * @param name The name of the graph
      * @return Graph object created. Will never return NULL under normal circumstances unless bad parameters are given
      */
-    public Graph createGraph(final String name) {
+    @Nullable
+    public Graph createGraph(@Nullable final String name) {
         if (name == null) {
             throw new IllegalArgumentException("Graph name cannot be null");
         }
@@ -273,7 +279,7 @@ public class Metrics {
      *
      * @param graph The name of the graph
      */
-    public void addGraph(final Graph graph) {
+    public void addGraph(@Nullable final Graph graph) {
         if (graph == null) {
             throw new IllegalArgumentException("Graph cannot be null");
         }
@@ -612,6 +618,7 @@ public class Metrics {
          *
          * @return an unmodifiable {@link java.util.Set} of the plotter objects
          */
+        @NotNull
         public Set<Plotter> getPlotters() {
             return Collections.unmodifiableSet(plotters);
         }

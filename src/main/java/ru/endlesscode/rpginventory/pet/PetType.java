@@ -69,7 +69,7 @@ public class PetType extends ClassedItem {
     private ItemStack spawnItem;
     private Map<String, String> features;
 
-    PetType(ConfigurationSection config) {
+    PetType(@NotNull ConfigurationSection config) {
         super(config, config.getString("item"));
 
         this.name = StringUtils.coloredLine(config.getString("name"));
@@ -99,7 +99,7 @@ public class PetType extends ClassedItem {
 
     @Nullable
     @Contract("null -> null")
-    public static ItemStack clone(ItemStack oldItem) {
+    public static ItemStack clone(@NotNull ItemStack oldItem) {
         PetType petType = PetManager.getPetFromItem(oldItem);
 
         if (petType == null) {
@@ -113,7 +113,7 @@ public class PetType extends ClassedItem {
         return newItem;
     }
 
-    private void storeFeatures(List<String> featureList) {
+    private void storeFeatures(@Nullable List<String> featureList) {
         // Load features
         Map<String, String> features;
         if (featureList != null && featureList.size() > 0) {
@@ -232,6 +232,7 @@ public class PetType extends ClassedItem {
         MOUNT("HORSE", "PIG");
 
         private final String defaultSkin;
+        @NotNull
         private final List<String> possibleSkins;
 
         Role(String... skins) {

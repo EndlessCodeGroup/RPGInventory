@@ -20,6 +20,7 @@ package ru.endlesscode.rpginventory.utils;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.*;
 
 /**
  * Created by OsipXD on 16.11.2015
@@ -34,7 +35,7 @@ public class CommandUtils {
      * @param command   The command
      * @param runFromOp If true, command will be run from OP
      */
-    public static void sendCommand(Player player, String command, boolean runFromOp) {
+    public static void sendCommand(@NotNull Player player, String command, boolean runFromOp) {
         command = StringUtils.setPlaceholders(player, command);
 
         if (runFromOp) {

@@ -18,6 +18,8 @@
 
 package ru.endlesscode.rpginventory.utils;
 
+import org.jetbrains.annotations.*;
+
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -38,7 +40,7 @@ public final class ResourcePackUtils {
         // Utility class
     }
 
-    public static void validateUrl(String address) throws IOException {
+    public static void validateUrl(@NotNull String address) throws IOException {
         HttpURLConnection.setFollowRedirects(false);
         HttpURLConnection conn;
         try {
@@ -72,7 +74,8 @@ public final class ResourcePackUtils {
         }
     }
 
-    private static HttpURLConnection getRealConnection(String address) throws IOException {
+    @NotNull
+    private static HttpURLConnection getRealConnection(@NotNull String address) throws IOException {
         URL url = new URL(address);
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         int codeType = conn.getResponseCode() / 100;

@@ -22,7 +22,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.event.inventory.InventoryType;
-import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.*;
 import ru.endlesscode.rpginventory.RPGInventory;
 
 import java.io.IOException;
@@ -42,7 +42,9 @@ public class SlotManager {
 
     private final List<Slot> slots = new ArrayList<>();
 
+    @NotNull
     private final Path slotsFile;
+    @NotNull
     private final FileConfiguration slotsConfig;
 
     private SlotManager() {
@@ -82,9 +84,9 @@ public class SlotManager {
         return true;
     }
 
+    @NotNull
     public static SlotManager instance() {
         if (slotManager == null) {
-            //Really?
             slotManager = new SlotManager();
         }
 
@@ -158,6 +160,7 @@ public class SlotManager {
         return null;
     }
 
+    @NotNull
     public List<Slot> getQuickSlots() {
         List<Slot> quickSlots = new ArrayList<>();
         for (Slot slot : this.slots) {
@@ -169,6 +172,7 @@ public class SlotManager {
         return quickSlots;
     }
 
+    @NotNull
     public List<Slot> getPassiveSlots() {
         List<Slot> passiveSlots = new ArrayList<>();
         for (Slot slot : this.slots) {
@@ -180,6 +184,7 @@ public class SlotManager {
         return passiveSlots;
     }
 
+    @NotNull
     public List<Slot> getActiveSlots() {
         List<Slot> activeSlots = new ArrayList<>();
         for (Slot slot : this.slots) {
@@ -191,6 +196,7 @@ public class SlotManager {
         return activeSlots;
     }
 
+    @NotNull
     public List<Slot> getArmorSlots() {
         List<Slot> armorSlots = new ArrayList<>(4);
         for (Slot slot : this.slots) {
@@ -202,6 +208,7 @@ public class SlotManager {
         return armorSlots;
     }
 
+    @NotNull
     public List<Slot> getInfoSlots() {
         List<Slot> infoSlots = new ArrayList<>();
         for (Slot slot : this.slots) {
@@ -213,6 +220,7 @@ public class SlotManager {
         return infoSlots;
     }
 
+    @NotNull
     public List<Slot> getSlots() {
         return this.slots;
     }

@@ -21,6 +21,7 @@ package ru.endlesscode.rpginventory.misc.updater;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
+import org.jetbrains.annotations.*;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
@@ -104,6 +105,7 @@ public class Updater {
     // Updater thread
     private Thread thread;
     // Used for determining the outcome of the update process
+    @NotNull
     private Updater.UpdateResult result = Updater.UpdateResult.SUCCESS;
 
     /**
@@ -140,7 +142,7 @@ public class Updater {
             } else {
                 config.load(updaterConfigFile);
             }
-        } catch (final Exception e) {
+        } catch (@NotNull final Exception e) {
             final String message;
             message = createFile ? "The updater could not create configuration at " + updaterFile.getAbsolutePath()
                     : "The updater could not load configuration at " + updaterFile.getAbsolutePath();
@@ -156,7 +158,7 @@ public class Updater {
             this.url = new URL(Updater.HOST + Updater.QUERY);
             this.thread = new Thread(new UpdateRunnable());
             this.thread.start();
-        } catch (final MalformedURLException e) {
+        } catch (@NotNull final MalformedURLException e) {
             runUpdater();
         }
     }
@@ -167,6 +169,7 @@ public class Updater {
      * @return result of the update process.
      * @see UpdateResult
      */
+    @NotNull
     public Updater.UpdateResult getResult() {
         this.waitForThread();
         return this.result;
@@ -199,7 +202,7 @@ public class Updater {
         if ((this.thread != null) && this.thread.isAlive()) {
             try {
                 this.thread.join();
-            } catch (final InterruptedException e) {
+            } catch (@NotNull final InterruptedException e) {
                 this.plugin.getLogger().log(Level.SEVERE, null, e);
             }
         }
@@ -274,7 +277,7 @@ public class Updater {
      * @param version a version number to check for tags in.
      * @return true if updating should be disabled.
      */
-    private boolean hasTag(String version) {
+    private boolean hasTag(@NotNull String version) {
         for (final String string : Updater.NO_UPDATE_TAG) {
             if (version.contains(string)) {
                 return true;
@@ -291,7 +294,7 @@ public class Updater {
     private boolean read() {
         try {
             return tryToRead();
-        } catch (final IOException | NullPointerException e) {
+        } catch (@NotNull final IOException | NullPointerException e) {
             RPGInventory.getPluginLogger().severe("The updater could not contact " + HOST + " for check updates.");
             RPGInventory.getPluginLogger().severe("The site experiencing temporary downtime.");
             this.result = UpdateResult.FAIL_DBO;
@@ -349,7 +352,7 @@ public class Updater {
      * @param result result of file operation.
      * @param create true if a file is being created, false if deleted.
      */
-    private void fileIOOrError(File file, boolean result, boolean create) {
+    private void fileIOOrError(@NotNull File file, boolean result, boolean create) {
         if (!result) {
             this.plugin.getLogger().severe("The updater could not " + (create ? "create" : "delete") + " file at: " + file.getAbsolutePath());
         }

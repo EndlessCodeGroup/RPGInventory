@@ -40,18 +40,18 @@ import java.util.List;
 @SuppressWarnings({"unused", "WeakerAccess"})
 public class InventoryAPI {
     /**
-     * Checks if opened inventory is RPGInventory
+     * Checks if opened inventory is RPGInventory.
      *
      * @param inventory - opened inventory
      * @return true - if opened RPGInventory, false - otherwise
      */
     public static boolean isRPGInventory(Inventory inventory) {
         InventoryHolder holder = inventory.getHolder();
-        return holder != null && holder instanceof PlayerWrapper;
+        return holder instanceof PlayerWrapper;
     }
 
     /**
-     * Get all passive item from RPGInventory of specific player
+     * Get all passive item from RPGInventory of specific player.
      *
      * @param player - the player
      * @return List of not null passive item
@@ -78,7 +78,7 @@ public class InventoryAPI {
     }
 
     /**
-     * Get all active item from RPGInventory of specific player
+     * Get all active item from RPGInventory of specific player.
      *
      * @param player - the player
      * @return List of not null active item

@@ -35,6 +35,7 @@ import org.bukkit.plugin.Plugin;
 
 import java.util.List;
 
+import org.jetbrains.annotations.*;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
 import ru.endlesscode.rpginventory.inventory.craft.CraftExtension;
 import ru.endlesscode.rpginventory.inventory.craft.CraftManager;
@@ -48,14 +49,14 @@ import ru.endlesscode.rpginventory.utils.PlayerUtils;
  */
 public class CraftListener extends PacketAdapter implements Listener {
 
-    public CraftListener(Plugin plugin) {
+    public CraftListener(@NotNull Plugin plugin) {
         super(plugin, WrapperPlayServerWindowItems.TYPE);
 
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
     @Override
-    public void onPacketSending(PacketEvent event) {
+    public void onPacketSending(@NotNull PacketEvent event) {
         Player player = event.getPlayer();
         //noinspection ConstantConditions
         if (event.isCancelled() || !InventoryManager.playerIsLoaded(player)
@@ -79,7 +80,7 @@ public class CraftListener extends PacketAdapter implements Listener {
     }
 
     @EventHandler(priority = EventPriority.LOW)
-    public void onInventoryOpen(InventoryOpenEvent event) {
+    public void onInventoryOpen(@NotNull InventoryOpenEvent event) {
         final Player player = (Player) event.getPlayer();
         if (!InventoryManager.playerIsLoaded(player)
                 || event.getInventory().getType() != InventoryType.WORKBENCH
@@ -92,7 +93,7 @@ public class CraftListener extends PacketAdapter implements Listener {
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
-    public void onInventoryClick(InventoryClickEvent event) {
+    public void onInventoryClick(@NotNull InventoryClickEvent event) {
         final Player player = (Player) event.getWhoClicked();
         //noinspection ConstantConditions
         if (!InventoryManager.playerIsLoaded(player)
@@ -119,7 +120,7 @@ public class CraftListener extends PacketAdapter implements Listener {
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
-    public void onWorkbenchClosed(InventoryCloseEvent event) {
+    public void onWorkbenchClosed(@NotNull InventoryCloseEvent event) {
         Player player = (Player) event.getPlayer();
         if (!InventoryManager.playerIsLoaded(player)) {
             return;

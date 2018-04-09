@@ -22,8 +22,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.*;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
 import ru.endlesscode.rpginventory.utils.ItemUtils;
 import ru.endlesscode.rpginventory.utils.StringUtils;
@@ -38,11 +37,14 @@ import java.util.List;
  */
 public class CustomItem extends ClassedItem {
     // Required options
+    @NotNull
     private final String name;
     private final List<ItemStat> stats = new ArrayList<>();
 
     // Not required options
+    @Nullable
     private final List<String> lore;
+    @Nullable
     private final List<String> permissions;
     private final boolean drop;
     private final boolean unbreakable;
@@ -56,7 +58,7 @@ public class CustomItem extends ClassedItem {
 
     private ItemStack customItem;
 
-    CustomItem(String id, ConfigurationSection config) {
+    CustomItem(String id, @NotNull ConfigurationSection config) {
         super(config, config.getString("texture"));
 
         Rarity rarity = Rarity.valueOf(config.getString("rarity"));
@@ -147,6 +149,7 @@ public class CustomItem extends ClassedItem {
         return drop;
     }
 
+    @Nullable
     public List<String> getLore() {
         return lore;
     }
@@ -159,15 +162,15 @@ public class CustomItem extends ClassedItem {
         return this.rightClickAction != null && this.rightClickAction.getCaption() != null;
     }
 
-    String getLeftClickCaption() {
+    @NotNull String getLeftClickCaption() {
         return this.leftClickAction == null ? "" : this.leftClickAction.getCaption();
     }
 
-    String getRightClickCaption() {
+    @NotNull String getRightClickCaption() {
         return this.rightClickAction == null ? "" : this.rightClickAction.getCaption();
     }
 
-    List<ItemStat> getStats() {
+    @NotNull List<ItemStat> getStats() {
         return stats;
     }
 

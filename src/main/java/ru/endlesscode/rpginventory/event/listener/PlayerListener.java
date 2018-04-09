@@ -31,6 +31,7 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
+import org.jetbrains.annotations.*;
 import ru.endlesscode.rpginventory.RPGInventory;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
 import ru.endlesscode.rpginventory.inventory.InventorySaver;
@@ -43,7 +44,7 @@ import ru.endlesscode.rpginventory.utils.PlayerUtils;
  */
 public class PlayerListener implements Listener {
     @EventHandler
-    public void onCommand(PlayerCommandPreprocessEvent event) {
+    public void onCommand(@NotNull PlayerCommandPreprocessEvent event) {
         Player player = event.getPlayer();
         if (InventoryManager.isAllowedWorld(player.getWorld()) && !InventoryManager.playerIsLoaded(player)) {
             PlayerUtils.sendMessage(player, RPGInventory.getLanguage().getMessage("error.rp.denied"));
@@ -52,7 +53,7 @@ public class PlayerListener implements Listener {
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
-    public void onDamageWhenPlayerNotLoaded(EntityDamageEvent event) {
+    public void onDamageWhenPlayerNotLoaded(@NotNull EntityDamageEvent event) {
         if (event.getEntityType() != EntityType.PLAYER) {
             return;
         }
@@ -70,7 +71,7 @@ public class PlayerListener implements Listener {
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
-    public void onTargetWhenPlayerNotLoaded(EntityTargetLivingEntityEvent event) {
+    public void onTargetWhenPlayerNotLoaded(@NotNull EntityTargetLivingEntityEvent event) {
         if (event.getTarget() == null || event.getTarget().getType() != EntityType.PLAYER) {
             return;
         }
@@ -81,7 +82,7 @@ public class PlayerListener implements Listener {
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
-    public void onPlayerMoveWhenNotLoaded(PlayerMoveEvent event) {
+    public void onPlayerMoveWhenNotLoaded(@NotNull PlayerMoveEvent event) {
         Player player = event.getPlayer();
 
         if (!InventoryManager.isAllowedWorld(player.getWorld()) || InventoryManager.playerIsLoaded(player)) {
@@ -107,7 +108,7 @@ public class PlayerListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.LOW)
-    public void onPlayerInteractWhenNotLoaded(PlayerInteractEvent event) {
+    public void onPlayerInteractWhenNotLoaded(@NotNull PlayerInteractEvent event) {
         Player player = event.getPlayer();
 
         if (InventoryManager.isAllowedWorld(player.getWorld()) && !InventoryManager.playerIsLoaded(player)) {
@@ -117,7 +118,7 @@ public class PlayerListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.LOW)
-    public void onPlayerDead(PlayerDeathEvent event) {
+    public void onPlayerDead(@NotNull PlayerDeathEvent event) {
         Player player = event.getEntity();
 
         if (!InventoryManager.playerIsLoaded(player)) {
@@ -131,7 +132,7 @@ public class PlayerListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.LOW)
-    public void onPlayerRespawn(PlayerRespawnEvent event) {
+    public void onPlayerRespawn(@NotNull PlayerRespawnEvent event) {
         Player player = event.getPlayer();
 
         if (!InventoryManager.playerIsLoaded(player)) {

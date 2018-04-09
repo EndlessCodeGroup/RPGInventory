@@ -22,6 +22,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.*;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
 import ru.endlesscode.rpginventory.misc.Config;
 
@@ -34,12 +35,13 @@ import java.util.UUID;
  */
 public class Backpack {
     private final UUID id;
+    @NotNull
     private final BackpackType backpackType;
 
     private long lastUse;
     private ItemStack[] contents;
 
-    public Backpack(BackpackType backpackType) {
+    public Backpack(@NotNull BackpackType backpackType) {
         this(backpackType, UUID.randomUUID());
     }
 
@@ -53,11 +55,12 @@ public class Backpack {
         return this.id;
     }
 
+    @NotNull
     public BackpackType getType() {
         return backpackType;
     }
 
-    void open(Player player) {
+    void open(@NotNull Player player) {
         int realSize = (int) Math.ceil(this.backpackType.getSize() / 9.0) * 9;
         BackpackHolder holder = new BackpackHolder();
         Inventory inventory = Bukkit.createInventory(holder, realSize, backpackType.getTitle());

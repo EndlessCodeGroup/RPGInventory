@@ -20,6 +20,7 @@ package ru.endlesscode.rpginventory;
 
 import net.milkbowl.vault.permission.Permission;
 
+import org.bukkit.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -29,6 +30,7 @@ import org.bukkit.plugin.PluginManager;
 
 import java.util.List;
 
+import org.jetbrains.annotations.*;
 import ru.endlesscode.rpginventory.api.InventoryAPI;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
 import ru.endlesscode.rpginventory.inventory.backpack.BackpackManager;
@@ -43,7 +45,7 @@ import ru.endlesscode.rpginventory.utils.StringUtils;
  */
 @SuppressWarnings("deprecation")
 class RPGInventoryCommandExecutor implements CommandExecutor {
-    private static void givePet(CommandSender sender, String playerName, String petId) {
+    private static void givePet(@NotNull CommandSender sender, String playerName, String petId) {
         if (validatePlayer(sender, playerName)) {
             Player player = RPGInventory.getInstance().getServer().getPlayer(playerName);
             ItemStack petItem = PetManager.getPetItem(petId);
@@ -59,7 +61,7 @@ class RPGInventoryCommandExecutor implements CommandExecutor {
         sender.sendMessage(StringUtils.coloredLine("&3Use &6/rpginv pet [&eplayer&6] [&epetId&6]"));
     }
 
-    private static void giveFood(CommandSender sender, String playerName, String foodId, String stringAmount) {
+    private static void giveFood(@NotNull CommandSender sender, String playerName, String foodId, @NotNull String stringAmount) {
         if (validatePlayer(sender, playerName)) {
             Player player = RPGInventory.getInstance().getServer().getPlayer(playerName);
             ItemStack foodItem = PetManager.getFoodItem(foodId);
@@ -81,28 +83,28 @@ class RPGInventoryCommandExecutor implements CommandExecutor {
         sender.sendMessage(StringUtils.coloredLine("&3Use &6/rpginv food [&eplayer&6] [&efoodId&6] (&eamount&6)"));
     }
 
-    private static void giveItem(CommandSender sender, String playerName, String itemId) {
+    private static void giveItem(@NotNull CommandSender sender, String playerName, String itemId) {
         if (validatePlayer(sender, playerName)) {
             Player player = RPGInventory.getInstance().getServer().getPlayer(playerName);
-            ItemStack petItem = ItemManager.getItem(itemId);
+            ItemStack item = ItemManager.getItem(itemId);
 
-            if (petItem != null) {
-                player.getInventory().addItem(petItem);
-                return;
-            } else {
+            if (item.getType() == Material.AIR) {
                 sender.sendMessage(StringUtils.coloredLine("&cItem '" + itemId + "' not found!"));
+            } else {
+                player.getInventory().addItem(item);
+                return;
             }
         }
 
         sender.sendMessage(StringUtils.coloredLine("&3Use &6/rpginv item [&eplayer&6] [&eitemId&6]"));
     }
 
-    private static void giveBackpack(CommandSender sender, String playerName, String id) {
+    private static void giveBackpack(@NotNull CommandSender sender, String playerName, String id) {
         if (validatePlayer(sender, playerName)) {
             Player player = RPGInventory.getInstance().getServer().getPlayer(playerName);
             ItemStack bpItem = BackpackManager.getItem(id);
 
-            if (bpItem != null) {
+            if (bpItem.getType() == Material.AIR) {
                 player.getInventory().addItem(bpItem);
                 return;
             } else {
@@ -135,7 +137,7 @@ class RPGInventoryCommandExecutor implements CommandExecutor {
         sender.sendMessage(StringUtils.coloredLine("&3====================================================="));
     }
 
-    private static void printList(CommandSender sender, String type) {
+    private static void printList(@NotNull CommandSender sender, String type) {
         switch (type) {
             case "pet":
             case "pets":
@@ -170,7 +172,7 @@ class RPGInventoryCommandExecutor implements CommandExecutor {
         sender.sendMessage(StringUtils.coloredLine("&e[RPGInventory] Plugin successfully reloaded!"));
     }
 
-    private static void openInventory(CommandSender sender) {
+    private static void openInventory(@NotNull CommandSender sender) {
         if (!validatePlayer(sender)) {
             return;
         }
@@ -183,7 +185,7 @@ class RPGInventoryCommandExecutor implements CommandExecutor {
         InventoryManager.get(player).openInventory();
     }
 
-    private static void openInventory(CommandSender sender, String playerName) {
+    private static void openInventory(@NotNull CommandSender sender, String playerName) {
         if (!validatePlayer(sender) || !validatePlayer(sender, playerName)) {
             return;
         }
@@ -202,7 +204,7 @@ class RPGInventoryCommandExecutor implements CommandExecutor {
         return validatePlayer(sender, (Player) sender);
     }
 
-    private static boolean validatePlayer(CommandSender sender, String playerName) {
+    private static boolean validatePlayer(@NotNull CommandSender sender, String playerName) {
         Player player = RPGInventory.getInstance().getServer().getPlayer(playerName);
         if (player == null) {
             sender.sendMessage(StringUtils.coloredLine("&cPlayer '" + playerName + "' not found!"));
@@ -211,7 +213,7 @@ class RPGInventoryCommandExecutor implements CommandExecutor {
         return validatePlayer(sender, player);
     }
 
-    private static boolean validatePlayer(CommandSender sender, Player player) {
+    private static boolean validatePlayer(@NotNull CommandSender sender, Player player) {
         if (!InventoryManager.playerIsLoaded(player)) {
             sender.sendMessage(StringUtils.coloredLine("&cThis command not allowed here."));
             return false;
@@ -226,7 +228,7 @@ class RPGInventoryCommandExecutor implements CommandExecutor {
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public boolean onCommand(@NotNull CommandSender sender, Command command, String label, @NotNull String[] args) {
         Permission perms = RPGInventory.getPermissions();
 
         if (args.length > 0) {

@@ -19,7 +19,7 @@
 package ru.endlesscode.rpginventory.inventory;
 
 import org.bukkit.event.inventory.InventoryAction;
-import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.*;
 
 /**
  * Created by OsipXD on 09.04.2016
@@ -32,6 +32,7 @@ public enum ActionType {
     DROP,
     OTHER;
 
+    @NotNull
     @Contract(pure = true)
     public static ActionType getTypeOfAction(InventoryAction action) {
         if (action == InventoryAction.PLACE_ALL || action == InventoryAction.PLACE_ONE

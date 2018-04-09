@@ -67,7 +67,7 @@ public class InventoryManager {
     private InventoryManager() {
     }
 
-    public static boolean init(RPGInventory instance) {
+    public static boolean init(@NotNull RPGInventory instance) {
         try {
             fillSlot = ItemUtils.getTexturedItem(Config.getConfig().getString("fill"));
             ItemMeta meta = fillSlot.getItemMeta();
@@ -89,6 +89,7 @@ public class InventoryManager {
                 || actionType == ActionType.SET && slot.isValidItem(item) && ItemManager.allowedForPlayer(player, item, true);
     }
 
+    @NotNull
     public static ItemStack getFillSlot() {
         return fillSlot;
     }
@@ -132,7 +133,7 @@ public class InventoryManager {
 
     public static void updateShieldSlot(@NotNull Player player, @NotNull Inventory inventory, @NotNull Slot slot, int slotId,
                                         InventoryType.SlotType slotType, InventoryAction action,
-                                        ItemStack currentItem, ItemStack cursor) {
+                                        ItemStack currentItem, @NotNull ItemStack cursor) {
         ActionType actionType = ActionType.getTypeOfAction(action);
         if (actionType == ActionType.GET) {
             if (slot.isCup(currentItem)) {
@@ -301,7 +302,7 @@ public class InventoryManager {
         player.updateInventory();
     }
 
-    public static void syncShieldSlot(PlayerWrapper playerWrapper) {
+    public static void syncShieldSlot(@NotNull PlayerWrapper playerWrapper) {
         Slot slot = SlotManager.instance().getShieldSlot();
         if (slot == null) {
             return;
@@ -330,7 +331,7 @@ public class InventoryManager {
             InventoryType.SlotType slotType,
             InventoryAction action,
             ItemStack currentItem,
-            ItemStack cursorItem
+            @NotNull ItemStack cursorItem
     ) {
         if (ActionType.getTypeOfAction(action) == ActionType.DROP) {
             return;
@@ -458,7 +459,7 @@ public class InventoryManager {
         }
     }
 
-    private static void sendResourcePack(final Player player) {
+    private static void sendResourcePack(@NotNull final Player player) {
         new BukkitRunnable() {
             @Override
             public void run() {
@@ -512,7 +513,7 @@ public class InventoryManager {
         RPGInventory.getInstance().getServer().getPluginManager().callEvent(new PlayerInventoryLoadEvent.Post(player));
     }
 
-    public static void unloadPlayerInventory(Player player) {
+    public static void unloadPlayerInventory(@NotNull Player player) {
         if (!InventoryManager.playerIsLoaded(player)) {
             return;
         }
@@ -528,7 +529,7 @@ public class InventoryManager {
         RPGInventory.getInstance().getServer().getPluginManager().callEvent(new PlayerInventoryUnloadEvent.Post(player));
     }
 
-    public static void savePlayerInventory(Player player) {
+    public static void savePlayerInventory(@NotNull Player player) {
         if (!InventoryManager.playerIsLoaded(player)) {
             return;
         }
@@ -548,7 +549,7 @@ public class InventoryManager {
         }
     }
 
-    public static PlayerWrapper get(OfflinePlayer player) {
+    public static PlayerWrapper get(@Nullable OfflinePlayer player) {
         if (player == null) {
             throw new IllegalArgumentException("OfflinePlayer can not be null!");
         }
@@ -591,7 +592,7 @@ public class InventoryManager {
     }
 
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
-    public static boolean isAllowedWorld(World world) {
+    public static boolean isAllowedWorld(@NotNull World world) {
         List<String> list = Config.getConfig().getStringList("worlds.list");
 
         switch (ListType.valueOf(Config.getConfig().getString("worlds.mode"))) {
@@ -604,7 +605,7 @@ public class InventoryManager {
         return false;
     }
 
-    public static boolean buySlot(Player player, PlayerWrapper playerWrapper, Slot slot) {
+    public static boolean buySlot(@NotNull Player player, PlayerWrapper playerWrapper, Slot slot) {
         double cost = slot.getCost();
 
         if (!playerWrapper.isPreparedToBuy(slot)) {
@@ -623,7 +624,7 @@ public class InventoryManager {
         return true;
     }
 
-    public static void initPlayer(final Player player, boolean skipJoinMessage) {
+    public static void initPlayer(@NotNull final Player player, boolean skipJoinMessage) {
         boolean rpEnabled = Config.getConfig().getBoolean("resource-pack.enabled", true);
         if (rpEnabled) {
             player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 60, 1));

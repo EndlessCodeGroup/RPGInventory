@@ -26,6 +26,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityToggleGlideEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 
+import org.jetbrains.annotations.*;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
 import ru.endlesscode.rpginventory.inventory.PlayerWrapper;
 import ru.endlesscode.rpginventory.utils.LocationUtils;
@@ -39,7 +40,7 @@ public class ElytraListener implements Listener {
     private boolean isGetWidthMethodAvailable = true;
 
     @EventHandler(ignoreCancelled = true)
-    public void onPlayerFall(PlayerMoveEvent event) {
+    public void onPlayerFall(@NotNull PlayerMoveEvent event) {
         Player player = event.getPlayer();
         if (!InventoryManager.playerIsLoaded(player) || player.isFlying()
                 || player.getVehicle() != null) {
@@ -64,7 +65,7 @@ public class ElytraListener implements Listener {
     }
 
     @EventHandler(ignoreCancelled = true)
-    public void onEntityToggleGlide(EntityToggleGlideEvent event) {
+    public void onEntityToggleGlide(@NotNull EntityToggleGlideEvent event) {
         if (event.getEntityType() != EntityType.PLAYER) {
             return;
         }
@@ -80,7 +81,7 @@ public class ElytraListener implements Listener {
         }
     }
 
-    private boolean isPlayerCanFall(Player player) {
+    private boolean isPlayerCanFall(@NotNull Player player) {
         double playerWidth = 0.6D;
         if (this.isGetWidthMethodAvailable) {
             try {

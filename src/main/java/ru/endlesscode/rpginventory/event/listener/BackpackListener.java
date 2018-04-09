@@ -31,6 +31,7 @@ import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+import org.jetbrains.annotations.*;
 import ru.endlesscode.rpginventory.RPGInventory;
 import ru.endlesscode.rpginventory.api.InventoryAPI;
 import ru.endlesscode.rpginventory.inventory.ActionType;
@@ -40,7 +41,7 @@ import ru.endlesscode.rpginventory.inventory.backpack.Backpack;
 import ru.endlesscode.rpginventory.inventory.backpack.BackpackHolder;
 import ru.endlesscode.rpginventory.inventory.backpack.BackpackManager;
 import ru.endlesscode.rpginventory.inventory.backpack.BackpackUpdater;
-import ru.endlesscode.rpginventory.inventory.slot.SlotManager;
+import ru.endlesscode.rpginventory.inventory.slot.*;
 import ru.endlesscode.rpginventory.utils.ItemUtils;
 import ru.endlesscode.rpginventory.utils.PlayerUtils;
 
@@ -52,7 +53,7 @@ import ru.endlesscode.rpginventory.utils.PlayerUtils;
 public class BackpackListener implements Listener {
     @SuppressWarnings("deprecation")
     @EventHandler(priority = EventPriority.LOWEST)
-    public void onUseBackpack(PlayerInteractEvent event) {
+    public void onUseBackpack(@NotNull PlayerInteractEvent event) {
         ItemStack item = event.getItem();
         if (!event.hasItem() || !ItemUtils.hasTag(item, ItemUtils.BACKPACK_TAG)) {
             return;
@@ -70,13 +71,15 @@ public class BackpackListener implements Listener {
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
-    public void onBackpackClick(final InventoryClickEvent event) {
+    public void onBackpackClick(@NotNull final InventoryClickEvent event) {
         final Inventory inventory = event.getInventory();
         final Player player = (Player) event.getWhoClicked();
 
         if (!InventoryManager.playerIsLoaded(player)) {
             return;
         }
+
+        Slot backpackSlot = SlotManager.instance().getBackpackSlot();
 
         if (inventory.getHolder() instanceof BackpackHolder) {
             // Click inside backpack
@@ -94,10 +97,11 @@ public class BackpackListener implements Listener {
             }
 
             BackpackUpdater.update(inventory, InventoryManager.get(player).getBackpack());
-        } else if ((event.getRawSlot() >= event.getView().getTopInventory().getSize()
-                || event.getSlot() == SlotManager.instance().getBackpackSlot().getSlotId()
-                        && InventoryAPI.isRPGInventory(event.getInventory()))
-                && !BackpackManager.playerCanTakeBackpack(player)
+        } else if (backpackSlot != null
+                && (event.getRawSlot() >= event.getView().getTopInventory().getSize()
+                || event.getSlot() == backpackSlot.getSlotId()
+                && InventoryAPI.isRPGInventory(event.getInventory()))
+                && BackpackManager.backpackLimitReached(player)
                 && BackpackManager.isBackpack(event.getCursor())
                 && ActionType.getTypeOfAction(event.getAction()) == ActionType.SET) {
             // Prevent placing new backpack in bottom inventory if player can't take backpack
@@ -109,7 +113,7 @@ public class BackpackListener implements Listener {
     }
 
     @EventHandler
-    public void onBackpackClose(InventoryCloseEvent event) {
+    public void onBackpackClose(@NotNull InventoryCloseEvent event) {
         Inventory inventory = event.getInventory();
         Player player = (Player) event.getPlayer();
 
@@ -130,14 +134,14 @@ public class BackpackListener implements Listener {
     }
 
     @EventHandler(ignoreCancelled = true)
-    public void onBackpackPickup(PlayerPickupItemEvent event) {
+    public void onBackpackPickup(@NotNull PlayerPickupItemEvent event) {
         Player player = event.getPlayer();
         if (!InventoryManager.playerIsLoaded(player)) {
             return;
         }
 
         if (BackpackManager.isBackpack(event.getItem().getItemStack())
-                && !BackpackManager.playerCanTakeBackpack(player)) {
+                && BackpackManager.backpackLimitReached(player)) {
             int limit = BackpackManager.getLimit();
             String message = RPGInventory.getLanguage().getMessage("backpack.limit", limit);
             PlayerUtils.sendMessage(player, message);

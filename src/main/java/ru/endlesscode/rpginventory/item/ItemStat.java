@@ -18,6 +18,7 @@
 
 package ru.endlesscode.rpginventory.item;
 
+import org.jetbrains.annotations.*;
 import ru.endlesscode.rpginventory.utils.StringUtils;
 
 /**
@@ -27,6 +28,7 @@ import ru.endlesscode.rpginventory.utils.StringUtils;
  */
 public class ItemStat {
     private final StatType type;
+    @NotNull
     private final OperationType operationType;
     private final boolean percentage;
     private final double minValue;
@@ -47,7 +49,7 @@ public class ItemStat {
         }
     }
 
-    String getStringValue() {
+    @NotNull String getStringValue() {
         String value = this.operationType.getOperation() + StringUtils.doubleToString(this.minValue);
 
         if (this.maxValue != -1) {
@@ -87,7 +89,7 @@ public class ItemStat {
         return percentage;
     }
 
-    OperationType getOperationType() {
+    @NotNull OperationType getOperationType() {
         return operationType;
     }
 
@@ -106,6 +108,7 @@ public class ItemStat {
             this.operation = operation;
         }
 
+        @NotNull
         public static OperationType valueOf(char operation) {
             for (OperationType operationType : OperationType.values()) {
                 if (operationType.getOperation() == operation) {

@@ -47,7 +47,9 @@ public class Slot {
     private final List<String> allowed = new ArrayList<>();
     private final List<String> denied = new ArrayList<>();
 
+    @NotNull
     private final List<Integer> slotIds;
+    @NotNull
     private final ItemStack cup;
     private final int requiredLevel;
     private final int cost;
@@ -179,11 +181,11 @@ public class Slot {
         return this.allowed.isEmpty() && this.denied.isEmpty();
     }
 
-    private boolean isDenied(ItemStack item) {
+    private boolean isDenied(@NotNull ItemStack item) {
         return searchItem(this.denied, item);
     }
 
-    private boolean isAllowed(ItemStack item) {
+    private boolean isAllowed(@NotNull ItemStack item) {
         return searchItem(this.allowed, item);
     }
 

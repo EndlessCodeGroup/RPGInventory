@@ -20,7 +20,7 @@ package ru.endlesscode.rpginventory.pet;
 
 import com.comphenix.protocol.utility.MinecraftReflection;
 import org.bukkit.entity.LivingEntity;
-import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.*;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -41,7 +41,7 @@ public class Attributes {
         try {
             Method handleMethod = entity.getClass().getMethod("getHandle");
             this.entity = handleMethod.invoke(entity);
-        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+        } catch (@NotNull NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
         }
     }
@@ -52,7 +52,7 @@ public class Attributes {
         this.setAttribute(type, speed);
     }
 
-    private void setAttribute(String type, double speed) {
+    private void setAttribute(@NotNull String type, double speed) {
         try {
             Method getAttributeMethod = MinecraftReflection.getMinecraftClass("EntityLiving")
                     .getMethod("getAttributeInstance", MinecraftReflection.getMinecraftClass("IAttribute"));
@@ -62,7 +62,7 @@ public class Attributes {
 
             Method aMethod = MinecraftReflection.getMinecraftClass("AttributeInstance").getMethod("setValue", double.class);
             aMethod.invoke(attribute, speed);
-        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException | NoSuchFieldException e) {
+        } catch (@NotNull NoSuchMethodException | IllegalAccessException | InvocationTargetException | NoSuchFieldException e) {
             e.printStackTrace();
         }
     }

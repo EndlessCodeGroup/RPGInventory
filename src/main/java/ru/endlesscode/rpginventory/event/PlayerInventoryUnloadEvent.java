@@ -21,6 +21,7 @@ package ru.endlesscode.rpginventory.event;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.player.PlayerEvent;
+import org.jetbrains.annotations.*;
 
 /**
  * Created by OsipXD on 11.09.2015
@@ -34,11 +35,13 @@ public class PlayerInventoryUnloadEvent extends PlayerEvent {
         super(who);
     }
 
+    @NotNull
     @SuppressWarnings("unused")
     public static HandlerList getHandlerList() {
         return handlers;
     }
 
+    @NotNull
     @Override
     public HandlerList getHandlers() {
         return handlers;

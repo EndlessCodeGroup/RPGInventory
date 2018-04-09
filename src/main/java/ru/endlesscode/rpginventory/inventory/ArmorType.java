@@ -21,7 +21,7 @@ package ru.endlesscode.rpginventory.inventory;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.*;
 import ru.endlesscode.rpginventory.inventory.slot.Slot;
 import ru.endlesscode.rpginventory.inventory.slot.SlotManager;
 import ru.endlesscode.rpginventory.utils.ItemUtils;
@@ -38,7 +38,8 @@ public enum ArmorType {
     BOOTS,
     UNKNOWN;
 
-    public static ArmorType matchType(ItemStack item) {
+    @NotNull
+    public static ArmorType matchType(@NotNull ItemStack item) {
         if (ItemUtils.isEmpty(item)) {
             return UNKNOWN;
         }
@@ -94,7 +95,7 @@ public enum ArmorType {
     }
 
     @Nullable
-    public ItemStack getItem(Player player) {
+    public ItemStack getItem(@NotNull Player player) {
         switch (this) {
             case HELMET:
                 return player.getEquipment().getHelmet();

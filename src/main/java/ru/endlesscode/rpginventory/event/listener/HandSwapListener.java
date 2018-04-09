@@ -25,6 +25,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.*;
 import ru.endlesscode.rpginventory.inventory.ActionType;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
 import ru.endlesscode.rpginventory.inventory.slot.Slot;
@@ -39,7 +40,7 @@ import ru.endlesscode.rpginventory.utils.ItemUtils;
  */
 public class HandSwapListener implements Listener {
     @EventHandler
-    public void onHandSwap(PlayerSwapHandItemsEvent event) {
+    public void onHandSwap(@NotNull PlayerSwapHandItemsEvent event) {
         Player player = event.getPlayer();
 
         Slot offHandSlot = SlotManager.instance().getShieldSlot();
@@ -72,7 +73,7 @@ public class HandSwapListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
-    public void afterHandSwap(PlayerSwapHandItemsEvent event) {
+    public void afterHandSwap(@NotNull PlayerSwapHandItemsEvent event) {
         ItemManager.updateStats(event.getPlayer());
     }
 }

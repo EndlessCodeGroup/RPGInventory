@@ -22,6 +22,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.*;
 import ru.endlesscode.rpginventory.RPGInventory;
 import ru.endlesscode.rpginventory.event.PetUnequipEvent;
 import ru.endlesscode.rpginventory.inventory.slot.Slot;
@@ -44,7 +45,7 @@ public class InventorySaver {
     private static final Map<UUID, ItemStack[]> ARMORS = new HashMap<>();
     private static final Map<UUID, ItemStack> EXTRA = new HashMap<>();
 
-    public static void save(Player player, List<ItemStack> drops, boolean saveItems, boolean saveArmor, boolean saveRpgInv) {
+    public static void save(@NotNull Player player, @NotNull List<ItemStack> drops, boolean saveItems, boolean saveArmor, boolean saveRpgInv) {
         PlayerWrapper playerWrapper = InventoryManager.get(player);
         Inventory inventory = playerWrapper.getInventory();
         InventoryManager.syncArmor(playerWrapper);
@@ -56,7 +57,9 @@ public class InventorySaver {
         List<Slot> armorSlots = SlotManager.instance().getArmorSlots();
 
         for (ItemStack armor : player.getInventory().getArmorContents()) {
-            if (saveArmor || CustomItem.isCustomItem(armor) && !ItemManager.getCustomItem(armor).isDrop()) {
+            CustomItem armorItem = ItemManager.getCustomItem(armor);
+
+            if (saveArmor || armorItem != null && !armorItem.isDrop()) {
                 armorList.add(armor);
                 drops.remove(armor);
             } else {
@@ -79,7 +82,7 @@ public class InventorySaver {
                 }
             }
         }
-        ARMORS.put(player.getUniqueId(), armorList.toArray(new ItemStack[armorList.size()]));
+        ARMORS.put(player.getUniqueId(), armorList.toArray(new ItemStack[0]));
 
         List<ItemStack> contents = Arrays.asList(player.getInventory().getStorageContents());
         for (int i = 0; i < contents.size(); i++) {
@@ -127,9 +130,10 @@ public class InventorySaver {
             for (Slot slot : SlotManager.instance().getPassiveSlots()) {
                 for (int slotId : slot.getSlotIds()) {
                     ItemStack item = inventory.getItem(slotId);
+                    CustomItem customItem = ItemManager.getCustomItem(item);
 
                     if (!slot.isQuick() && !slot.isCup(item) && slot.isDrop()
-                            && (!CustomItem.isCustomItem(item) || ItemManager.getCustomItem(item).isDrop())) {
+                            && (customItem == null || customItem.isDrop())) {
                         additionalDrops.add(inventory.getItem(slotId));
                         inventory.setItem(slotId, slot.getCup());
                     }
@@ -139,13 +143,14 @@ public class InventorySaver {
 
         // Saving inventory
         for (ItemStack drop : new ArrayList<>(drops)) {
-            if (saveItems || CustomItem.isCustomItem(drop) && !ItemManager.getCustomItem(drop).isDrop()) {
+            CustomItem customItem = ItemManager.getCustomItem(drop);
+            if (saveItems || customItem != null && customItem.isDrop()) {
                 drops.remove(drop);
             } else {
                 contents.replaceAll(itemStack -> drop.equals(itemStack) ? null : itemStack);
             }
         }
-        INVENTORIES.put(player.getUniqueId(), contents.toArray(new ItemStack[contents.size()]));
+        INVENTORIES.put(player.getUniqueId(), contents.toArray(new ItemStack[0]));
 
         // Saving shield
         Slot shieldSlot = SlotManager.instance().getShieldSlot();

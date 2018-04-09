@@ -29,6 +29,7 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.jetbrains.annotations.*;
 import ru.endlesscode.rpginventory.RPGInventory;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
 import ru.endlesscode.rpginventory.misc.Config;
@@ -60,13 +61,11 @@ public class PlayerLoader extends PacketAdapter implements Listener {
     }
 
     static void removePlayer(Player player) {
-        if (loadList.containsKey(player.getUniqueId())) {
-            loadList.remove(player.getUniqueId());
-        }
+        loadList.remove(player.getUniqueId());
     }
 
     @Override
-    public void onPacketSending(PacketEvent event) {
+    public void onPacketSending(@NotNull PacketEvent event) {
         WrapperPlayServerResourcePackSend packet = new WrapperPlayServerResourcePackSend(event.getPacket());
         if (!packet.getUrl().equals(Config.getConfig().getString("resource-pack.url"))) {
             return;
@@ -86,7 +85,7 @@ public class PlayerLoader extends PacketAdapter implements Listener {
     }
 
     @Override
-    public void onPacketReceiving(PacketEvent event) {
+    public void onPacketReceiving(@NotNull PacketEvent event) {
         WrapperPlayClientResourcePackStatus packet = new WrapperPlayClientResourcePackStatus(event.getPacket());
 
         final Player player = event.getPlayer();
