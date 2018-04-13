@@ -164,14 +164,13 @@ public class ArmorEquipListener implements Listener {
             if (this.hasInventoryArmorByType(type, player)) {
                 continue;
             }
-            if (!InventoryManager.playerIsLoaded(player)) {
+            if (InventoryManager.playerIsLoaded(player)) {
+                Slot armorSlot = SlotManager.instance().getSlot(type.name());
+                event.setCancelled(armorSlot != null
+                        && !InventoryManager.validateArmor(player, InventoryAction.PLACE_ONE, armorSlot, event.getItem())
+                );
                 return;
             }
-
-            Slot armorSlot = SlotManager.instance().getSlot(type.name());
-            event.setCancelled(armorSlot != null
-                    && !InventoryManager.validateArmor(player, InventoryAction.PLACE_ONE, armorSlot, event.getItem()));
-            return;
         }
     }
 
