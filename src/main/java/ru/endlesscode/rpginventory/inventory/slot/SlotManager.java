@@ -22,7 +22,8 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.event.inventory.InventoryType;
-import org.jetbrains.annotations.*;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import ru.endlesscode.rpginventory.RPGInventory;
 
 import java.io.IOException;
@@ -30,6 +31,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Created by OsipXD on 05.09.2015
@@ -54,28 +56,28 @@ public class SlotManager {
         }
 
         this.slotsConfig = YamlConfiguration.loadConfiguration(slotsFile.toFile());
-
-        for (String key : this.slotsConfig.getConfigurationSection("slots").getKeys(false)) {
-            ConfigurationSection config = this.slotsConfig.getConfigurationSection("slots." + key);
+        final ConfigurationSection slots = this.slotsConfig.getConfigurationSection("slots");
+        for (String slotName : slots.getKeys(false)) {
+            ConfigurationSection slotConfiguration = slots.getConfigurationSection(slotName);
+            Slot.SlotType slotType = Slot.SlotType.valueOf(slotConfiguration.getString("type"));
             Slot slot;
-            Slot.SlotType slotType = Slot.SlotType.valueOf(config.getString("type"));
             if (slotType == Slot.SlotType.ACTION) {
-                slot = new ActionSlot(key, config);
+                slot = new ActionSlot(slotName, slotConfiguration);
             } else {
-                slot = new Slot(key, config);
+                slot = new Slot(slotName, slotConfiguration);
             }
 
             if (this.validateSlot(slot)) {
                 this.slots.add(slot);
             } else {
-                RPGInventory.getPluginLogger().warning("Slot " + slot.getName() + " not been added.");
+                RPGInventory.getPluginLogger().warning("Slot \"" + slot.getName() + "\" was not been added.");
             }
         }
     }
 
     public static boolean init() {
         try {
-            slotManager = new SlotManager();
+            SlotManager.slotManager = new SlotManager();
         } catch (Exception e) {
             e.printStackTrace();
             return false;
@@ -86,11 +88,7 @@ public class SlotManager {
 
     @NotNull
     public static SlotManager instance() {
-        if (slotManager == null) {
-            slotManager = new SlotManager();
-        }
-
-        return slotManager;
+        return Objects.requireNonNull(SlotManager.slotManager, "Plugin is not initialized yet.");
     }
 
     private boolean validateSlot(Slot slot) {
@@ -176,7 +174,8 @@ public class SlotManager {
     public List<Slot> getPassiveSlots() {
         List<Slot> passiveSlots = new ArrayList<>();
         for (Slot slot : this.slots) {
-            if (slot.getSlotType() == Slot.SlotType.PASSIVE || slot.getSlotType() == Slot.SlotType.BACKPACK || slot.getSlotType() == Slot.SlotType.ELYTRA) {
+            final Slot.SlotType type = slot.getSlotType();
+            if (type == Slot.SlotType.PASSIVE || type == Slot.SlotType.BACKPACK || type == Slot.SlotType.ELYTRA) {
                 passiveSlots.add(slot);
             }
         }
