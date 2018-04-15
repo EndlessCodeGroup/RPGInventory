@@ -20,6 +20,7 @@ package ru.endlesscode.rpginventory.inventory;
 
 import org.bukkit.GameMode;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -44,8 +45,8 @@ import java.util.List;
  */
 public class InventoryLocker {
 
-    private static ItemStack lockedSlot = null;
-    private static ItemStack buyableSlot = null;
+    private static ItemStack LOCKED_SLOT = null;
+    private static ItemStack BUYABLE_SLOT = null;
 
     private InventoryLocker() {
     }
@@ -57,24 +58,23 @@ public class InventoryLocker {
 
         try {
             // Setup locked slot
-            lockedSlot = ItemUtils.getTexturedItem(Config.getConfig().getString("slots.locked"));
-            ItemMeta meta = lockedSlot.getItemMeta();
+            InventoryLocker.LOCKED_SLOT = ItemUtils.getTexturedItem(Config.getConfig().getString("slots.locked"));
+            ItemMeta meta = InventoryLocker.LOCKED_SLOT.getItemMeta();
             meta.setDisplayName(RPGInventory.getLanguage().getMessage("locked.name"));
             meta.setLore(Collections.singletonList(RPGInventory.getLanguage().getMessage("locked.lore")));
 
-            lockedSlot.setItemMeta(meta);
-            lockedSlot = addId(lockedSlot);
+            InventoryLocker.LOCKED_SLOT.setItemMeta(meta);
+            InventoryLocker.LOCKED_SLOT = addId(InventoryLocker.LOCKED_SLOT);
 
             // Setup buyable slot
-            buyableSlot = ItemUtils.getTexturedItem(Config.getConfig().getString("slots.buyable"));
-            meta = buyableSlot.getItemMeta();
+            InventoryLocker.BUYABLE_SLOT = ItemUtils.getTexturedItem(Config.getConfig().getString("slots.buyable"));
+            meta = InventoryLocker.BUYABLE_SLOT.getItemMeta();
             meta.setDisplayName(RPGInventory.getLanguage().getMessage("buyable.name"));
             meta.setLore(Collections.singletonList(RPGInventory.getLanguage().getMessage("buyable.lore")));
 
-            buyableSlot.setItemMeta(meta);
-            buyableSlot = addId(buyableSlot);
+            InventoryLocker.BUYABLE_SLOT.setItemMeta(meta);
+            InventoryLocker.BUYABLE_SLOT = addId(InventoryLocker.BUYABLE_SLOT);
         } catch (Exception e) {
-
             e.printStackTrace();
             return false;
         }
@@ -88,14 +88,16 @@ public class InventoryLocker {
     }
 
     public static boolean buySlot(@NotNull Player player, int line) {
-        if (RPGInventory.economyConnected() && RPGInventory.getEconomy().withdrawPlayer(player, Config.getConfig().getDouble("slots.money.cost.line" + line)).transactionSuccess()) {
-            if (RPGInventory.getLevelSystem() == PlayerUtils.LevelSystem.EXP && Config.getConfig().getBoolean("slots.level.spend")) {
-                player.setLevel(player.getLevel() - Config.getConfig().getInt("slots.level.required.line" + line));
+        if (!RPGInventory.economyConnected()) {
+            return false;
+        }
+        final FileConfiguration config = Config.getConfig();
+        if (RPGInventory.getEconomy().withdrawPlayer(player, config.getDouble("slots.money.cost.line" + line)).transactionSuccess()) {
+            if (RPGInventory.getLevelSystem() == PlayerUtils.LevelSystem.EXP && config.getBoolean("slots.level.spend")) {
+                player.setLevel(player.getLevel() - config.getInt("slots.level.required.line" + line));
             }
-
             return true;
         }
-
         return false;
     }
 
@@ -106,17 +108,17 @@ public class InventoryLocker {
 
     @NotNull
     public static ItemStack getBuyableSlotForLine(int line) {
-        ItemStack slot = buyableSlot.clone();
+        ItemStack slot = InventoryLocker.BUYABLE_SLOT.clone();
         ItemMeta im = slot.getItemMeta();
         List<String> lore = im.getLore();
         FileLanguage lang = RPGInventory.getLanguage();
-
-        if (Config.getConfig().getBoolean("slots.money.enabled")) {
-            lore.add(lang.getMessage("buyable.money", StringUtils.doubleToString(Config.getConfig().getDouble("slots.money.cost.line" + line))));
+        final FileConfiguration config = Config.getConfig();
+        if (config.getBoolean("slots.money.enabled")) {
+            lore.add(lang.getMessage("buyable.money", StringUtils.doubleToString(config.getDouble("slots.money.cost.line" + line))));
         }
 
-        if (Config.getConfig().getBoolean("slots.level.enabled")) {
-            lore.add(lang.getMessage("buyable.level", Config.getConfig().getInt("slots.level.required.line" + line)));
+        if (config.getBoolean("slots.level.enabled")) {
+            lore.add(lang.getMessage("buyable.level", config.getInt("slots.level.required.line" + line)));
         }
         im.setLore(lore);
         slot.setItemMeta(im);
@@ -130,11 +132,11 @@ public class InventoryLocker {
     }
 
     public static boolean isLockedSlot(@Nullable ItemStack item) {
-        return isEnabled() && !ItemUtils.isEmpty(item) && ItemUtils.hasTag(item, "locked");
+        return InventoryLocker.isEnabled() && !ItemUtils.isEmpty(item) && ItemUtils.hasTag(item, "locked");
     }
 
     public static boolean isBuyableSlot(ItemStack currentItem, int line) {
-        return getBuyableSlotForLine(line).equals(currentItem);
+        return InventoryLocker.getBuyableSlotForLine(line).equals(currentItem);
     }
 
     public static void lockSlots(@NotNull Player player) {
@@ -146,10 +148,10 @@ public class InventoryLocker {
             return;
         }
 
-        if (isEnabled()) {
+        if (InventoryLocker.isEnabled()) {
             int maxSlot = getSlots(player) + 8;
             for (int i = 35; i > maxSlot; i--) {
-                player.getInventory().setItem(i, lockedSlot);
+                player.getInventory().setItem(i, InventoryLocker.LOCKED_SLOT);
             }
 
             if (maxSlot < 35) {
@@ -162,10 +164,10 @@ public class InventoryLocker {
     }
 
     public static void unlockSlots(@NotNull Player player) {
-        if (isEnabled()) {
+        if (InventoryLocker.isEnabled()) {
             for (int i = 8 + getSlots(player); i < 36; i++) {
                 ItemStack itemStack = player.getInventory().getItem(i);
-                if (isLockedSlot(itemStack)) {
+                if (InventoryLocker.isLockedSlot(itemStack)) {
                     player.getInventory().setItem(i, null);
                 }
             }
@@ -176,16 +178,17 @@ public class InventoryLocker {
     }
 
     public static boolean canBuySlot(@NotNull Player player, int line) {
-        if (Config.getConfig().getBoolean("slots.money.enabled")) {
-            double cost = Config.getConfig().getDouble("slots.money.cost.line" + line);
+        final FileConfiguration config = Config.getConfig();
+        if (config.getBoolean("slots.money.enabled")) {
+            double cost = config.getDouble("slots.money.cost.line" + line);
 
             if (!PlayerUtils.checkMoney(player, cost)) {
                 return false;
             }
         }
 
-        if (Config.getConfig().getBoolean("slots.level.enabled")) {
-            int requirement = Config.getConfig().getInt("slots.level.required.line" + line);
+        if (config.getBoolean("slots.level.enabled")) {
+            int requirement = config.getInt("slots.level.required.line" + line);
 
             if (!PlayerUtils.checkLevel(player, requirement)) {
                 PlayerUtils.sendMessage(player, RPGInventory.getLanguage().getMessage("error.level", requirement));

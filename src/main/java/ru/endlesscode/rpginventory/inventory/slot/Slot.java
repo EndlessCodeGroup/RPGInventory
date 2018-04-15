@@ -59,8 +59,8 @@ public class Slot {
     public Slot(String name, ConfigurationSection config) {
         this.name = name;
         this.slotType = SlotType.valueOf(config.getString("type"));
-        this.slotIds = config.getIntegerList("slot").size() == 0 ? Collections.singletonList(config.getInt("slot"))
-                : config.getIntegerList("slot");
+        final List<Integer> slotList = config.getIntegerList("slot");
+        this.slotIds = slotList.isEmpty() ? Collections.singletonList(config.getInt("slot")) : slotList;
         this.requiredLevel = config.getInt("cost.required-level", 0);
         this.cost = config.getInt("cost.money", 0);
         this.drop = config.getBoolean("drop", true);

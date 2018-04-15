@@ -98,7 +98,6 @@ public class PetType extends ClassedItem {
     }
 
     @Nullable
-    @Contract("null -> null")
     public static ItemStack clone(@NotNull ItemStack oldItem) {
         PetType petType = PetManager.getPetFromItem(oldItem);
 

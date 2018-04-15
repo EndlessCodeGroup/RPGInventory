@@ -62,17 +62,17 @@ public class InventoryManager {
     static final String TITLE = RPGInventory.getLanguage().getMessage("title");
     private static final Map<UUID, PlayerWrapper> INVENTORIES = new HashMap<>();
 
-    private static ItemStack fillSlot = null;
+    private static ItemStack FILL_SLOT = null;
 
     private InventoryManager() {
     }
 
     public static boolean init(@NotNull RPGInventory instance) {
         try {
-            fillSlot = ItemUtils.getTexturedItem(Config.getConfig().getString("fill"));
-            ItemMeta meta = fillSlot.getItemMeta();
+            InventoryManager.FILL_SLOT = ItemUtils.getTexturedItem(Config.getConfig().getString("fill"));
+            ItemMeta meta = InventoryManager.FILL_SLOT.getItemMeta();
             meta.setDisplayName(" ");
-            fillSlot.setItemMeta(meta);
+            InventoryManager.FILL_SLOT.setItemMeta(meta);
         } catch (Exception e) {
             e.printStackTrace();
             return false;
@@ -91,7 +91,7 @@ public class InventoryManager {
 
     @NotNull
     public static ItemStack getFillSlot() {
-        return fillSlot;
+        return InventoryManager.FILL_SLOT;
     }
 
     public static boolean validatePet(Player player, InventoryAction action, @Nullable ItemStack currentItem, @NotNull ItemStack cursor) {
@@ -401,7 +401,7 @@ public class InventoryManager {
         for (int i = 0; i < inventory.getSize(); i++) {
             Slot slot = SlotManager.instance().getSlot(i, InventoryType.SlotType.CONTAINER);
             if (slot == null) {
-                inventory.setItem(i, fillSlot);
+                inventory.setItem(i, FILL_SLOT);
             } else if (ItemUtils.isEmpty(inventory.getItem(i))) {
                 inventory.setItem(i, slot.getCup());
             }
@@ -475,7 +475,7 @@ public class InventoryManager {
 
     public static void loadPlayerInventory(Player player) {
         if (!InventoryManager.isAllowedWorld(player.getWorld())) {
-            INVENTORIES.remove(player.getUniqueId());
+            InventoryManager.INVENTORIES.remove(player.getUniqueId());
             return;
         }
 
@@ -502,7 +502,7 @@ public class InventoryManager {
                 return;
             }
 
-            INVENTORIES.put(player.getUniqueId(), playerWrapper);
+            InventoryManager.INVENTORIES.put(player.getUniqueId(), playerWrapper);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -520,11 +520,11 @@ public class InventoryManager {
 
         player.closeInventory();
 
-        INVENTORIES.get(player.getUniqueId()).onUnload();
+        InventoryManager.INVENTORIES.get(player.getUniqueId()).onUnload();
         savePlayerInventory(player);
         InventoryLocker.unlockSlots(player);
 
-        INVENTORIES.remove(player.getUniqueId());
+        InventoryManager.INVENTORIES.remove(player.getUniqueId());
 
         RPGInventory.getInstance().getServer().getPluginManager().callEvent(new PlayerInventoryUnloadEvent.Post(player));
     }
@@ -534,7 +534,7 @@ public class InventoryManager {
             return;
         }
 
-        PlayerWrapper playerWrapper = INVENTORIES.get(player.getUniqueId());
+        PlayerWrapper playerWrapper = InventoryManager.INVENTORIES.get(player.getUniqueId());
         try {
             Path dataFolder = RPGInventory.getInstance().getDataPath();
             Path folder = dataFolder.resolve("inventories");
@@ -553,7 +553,7 @@ public class InventoryManager {
         if (player == null) {
             throw new IllegalArgumentException("OfflinePlayer can not be null!");
         }
-        PlayerWrapper playerWrapper = INVENTORIES.get(player.getUniqueId());
+        PlayerWrapper playerWrapper = InventoryManager.INVENTORIES.get(player.getUniqueId());
         if (playerWrapper == null) {
             throw new IllegalArgumentException(player.getName() + "'s inventory is not loaded!");
         }
@@ -572,7 +572,7 @@ public class InventoryManager {
     }
 
     public static boolean isFilledSlot(@Nullable ItemStack item) {
-        return fillSlot.equals(item);
+        return InventoryManager.FILL_SLOT.equals(item);
     }
 
     public static boolean isEmptySlot(@Nullable ItemStack item) {
@@ -588,7 +588,7 @@ public class InventoryManager {
     @Contract("null -> false")
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public static boolean playerIsLoaded(@Nullable AnimalTamer player) {
-        return player != null && INVENTORIES.containsKey(player.getUniqueId());
+        return player != null && InventoryManager.INVENTORIES.containsKey(player.getUniqueId());
     }
 
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
