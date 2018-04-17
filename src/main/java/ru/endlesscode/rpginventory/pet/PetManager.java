@@ -71,6 +71,7 @@ public class PetManager {
     private static final Map<String, PetType> PETS = new HashMap<>();
     private static final Map<String, PetFood> PET_FOOD = new HashMap<>();
     private static final String DEATH_TIME_TAG = "pet.deathTime";
+    private static CooldownsTimer COOLDOWNS_TIMER;
     private static int SLOT_PET;
 
     private PetManager() {
@@ -114,6 +115,8 @@ public class PetManager {
 
         // Register events
         instance.getServer().getPluginManager().registerEvents(new PetListener(), instance);
+        PetManager.COOLDOWNS_TIMER = new CooldownsTimer(instance);
+        PetManager.COOLDOWNS_TIMER.runTaskTimer(instance,20, CooldownsTimer.TICK_PERIOD);
         return true;
     }
 
@@ -171,7 +174,7 @@ public class PetManager {
     }
 
     public static void startCooldownTimer(Player player, ItemStack petItem) {
-        new CooldownTimer(player, petItem).runTaskTimer(RPGInventory.getInstance(), 20, 20);
+        PetManager.COOLDOWNS_TIMER.addPetCooldown(player, petItem);
     }
 
     public static void spawnPet(@NotNull final Player player, @NotNull ItemStack petItem) {
