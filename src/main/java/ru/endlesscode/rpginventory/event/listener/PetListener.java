@@ -34,10 +34,7 @@ import org.bukkit.event.entity.EntityPortalEnterEvent;
 import org.bukkit.event.entity.EntityTargetLivingEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
-import org.bukkit.event.player.PlayerInteractEntityEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.event.player.PlayerRespawnEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.event.vehicle.VehicleEnterEvent;
 import org.bukkit.inventory.HorseInventory;
 import org.bukkit.inventory.Inventory;
@@ -107,6 +104,21 @@ public class PetListener implements Listener {
 
     @EventHandler
     public void onPlayerRespawn(@NotNull PlayerRespawnEvent event) {
+        Player player = event.getPlayer();
+
+        if (!InventoryManager.playerIsLoaded(player) || !PetManager.isEnabled()) {
+            return;
+        }
+
+        ItemStack petItem = InventoryManager.get(player).getInventory().getItem(PetManager.getPetSlotId());
+        if (!ItemUtils.isEmpty(petItem)) {
+            PetManager.spawnPet(player, petItem);
+        }
+    }
+
+    //Possible fix #110
+    @EventHandler
+    public void onPlayerTeleport(@NotNull PlayerTeleportEvent event) {
         Player player = event.getPlayer();
 
         if (!InventoryManager.playerIsLoaded(player) || !PetManager.isEnabled()) {
