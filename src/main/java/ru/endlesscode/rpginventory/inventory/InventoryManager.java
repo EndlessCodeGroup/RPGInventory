@@ -18,6 +18,7 @@
 
 package ru.endlesscode.rpginventory.inventory;
 
+import com.comphenix.protocol.*;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
@@ -52,10 +53,7 @@ import ru.endlesscode.rpginventory.utils.*;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 @SuppressWarnings("ResultOfMethodCallIgnored")
 public class InventoryManager {
@@ -549,14 +547,13 @@ public class InventoryManager {
         }
     }
 
-    public static PlayerWrapper get(@Nullable OfflinePlayer player) {
-        if (player == null) {
-            throw new IllegalArgumentException("OfflinePlayer can not be null!");
-        }
+    @NotNull
+    public static PlayerWrapper get(@NotNull OfflinePlayer player) {
         PlayerWrapper playerWrapper = InventoryManager.INVENTORIES.get(player.getUniqueId());
         if (playerWrapper == null) {
-            throw new IllegalArgumentException(player.getName() + "'s inventory is not loaded!");
+            throw new IllegalStateException("Player should be initialized!");
         }
+
         return playerWrapper;
     }
 
