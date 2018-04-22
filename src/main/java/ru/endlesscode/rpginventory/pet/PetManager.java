@@ -48,10 +48,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import ru.endlesscode.rpginventory.RPGInventory;
 import ru.endlesscode.rpginventory.event.listener.PetListener;
@@ -177,8 +174,23 @@ public class PetManager {
         PetManager.COOLDOWNS_TIMER.addPetCooldown(player, petItem);
     }
 
+    public static void teleportPet(@NotNull final Player player, @Nullable final Location to) {
+        if (!InventoryManager.playerIsLoaded(player) || !PetManager.isEnabled()) {
+            return;
+        }
+
+        final PlayerWrapper playerWrapper = InventoryManager.get(player);
+        if (!playerWrapper.hasPet()) {
+            return;
+        }
+
+        Location baseLocation = to != null ? to : player.getLocation();
+        Location newPetLoc = LocationUtils.getLocationNearPoint(baseLocation, 3);
+        playerWrapper.getPet().teleport(newPetLoc);
+    }
+
     public static void spawnPet(@NotNull final Player player, @NotNull ItemStack petItem) {
-        if (!InventoryManager.playerIsLoaded(player)) {
+        if (!InventoryManager.playerIsLoaded(player) || !PetManager.isEnabled()) {
             return;
         }
 
@@ -193,7 +205,7 @@ public class PetManager {
         }
 
         PetManager.despawnPet(player);
-        Location petLoc = LocationUtils.getLocationNearPlayer(player, 3);
+        Location petLoc = LocationUtils.getLocationNearPoint(player.getLocation(), 3);
         Animals pet = (Animals) player.getWorld().spawnEntity(petLoc, petType.getSkin());
         pet.teleport(petLoc);
         EffectUtils.playSpawnEffect(pet);

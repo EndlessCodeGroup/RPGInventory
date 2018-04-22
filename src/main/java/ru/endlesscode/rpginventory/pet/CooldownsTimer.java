@@ -80,10 +80,11 @@ public class CooldownsTimer extends BukkitRunnable {
             }
 
             //Future bug fix of multiple pets cooldown
-            if (!inventory.getItem(PetManager.getPetSlotId()).isSimilar(next.getValue().getItemStack())) {
+            //TODO: Improve that. If we need it, ofc.
+            /*if (!inventory.getItem(PetManager.getPetSlotId()).isSimilar(next.getValue().getItemStack())) {
                 iterator.remove();
                 continue;
-            }
+            }*/
 
             int cooldown = PetManager.getCooldown(next.getValue().getItemStack());
             if (1 > cooldown) {

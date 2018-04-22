@@ -26,7 +26,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
-import org.jetbrains.annotations.*;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,11 +38,18 @@ import java.util.Random;
  * All rights reserved 2014 - 2016 © «EndlessCode Group»
  */
 public class LocationUtils {
+    private static final Random RANDOM = new Random();
+
+    @Deprecated
     public static Location getLocationNearPlayer(Player player, int radius) {
-        Block playerBlock = player.getLocation().getBlock();
+        return LocationUtils.getLocationNearPoint(player.getLocation(), radius);
+    }
+
+    public static Location getLocationNearPoint(Location location, int radius) {
+        Block playerBlock = location.getBlock();
         List<Location> availableLocations = new ArrayList<>();
 
-        World world = player.getWorld();
+        World world = location.getWorld();
         for (int x = playerBlock.getX() - radius; x < playerBlock.getX() + radius; x++) {
             for (int y = playerBlock.getY() - radius; y < playerBlock.getY() + radius; y++) {
                 for (int z = playerBlock.getZ() - radius; z < playerBlock.getZ() + radius; z++) {
@@ -50,7 +57,7 @@ public class LocationUtils {
                     if (loc.getBlock().isEmpty()) {
                         Block underBlock = loc.clone().subtract(0, 1, 0).getBlock();
                         if (!underBlock.isEmpty() && !underBlock.isLiquid()) {
-                            loc.setYaw((float) (-180 + Math.random() * 360));
+                            loc.setYaw(-180 + LocationUtils.RANDOM.nextFloat() * 360);
                             availableLocations.add(loc);
                         }
                     }
@@ -62,7 +69,7 @@ public class LocationUtils {
             return getBlockCenter(playerBlock.getLocation().clone());
         }
 
-        return availableLocations.get(new Random().nextInt(availableLocations.size()));
+        return availableLocations.get(LocationUtils.RANDOM.nextInt(availableLocations.size()));
     }
 
     public static Location getBlockCenter(Location loc) {
