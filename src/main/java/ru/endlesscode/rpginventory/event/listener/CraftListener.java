@@ -116,7 +116,7 @@ public class CraftListener extends PacketAdapter implements Listener {
 
     /**
      * Checks that inventory extensions not needed there.
-     * It always used after `InventoryManager.playerIsLoaded(player)` check.
+     * It always should be used after `InventoryManager.playerIsLoaded(player)` check.
      *
      * @param player Player to check
      */

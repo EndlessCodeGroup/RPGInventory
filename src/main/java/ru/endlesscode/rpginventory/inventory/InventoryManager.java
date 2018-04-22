@@ -551,7 +551,7 @@ public class InventoryManager {
     public static PlayerWrapper get(@NotNull OfflinePlayer player) {
         PlayerWrapper playerWrapper = InventoryManager.INVENTORIES.get(player.getUniqueId());
         if (playerWrapper == null) {
-            throw new IllegalStateException("Player should be initialized!");
+            throw new IllegalStateException("" + player.getName() + "'s inventory should be initialized!");
         }
 
         return playerWrapper;
