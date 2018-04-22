@@ -60,7 +60,7 @@ public class CraftListener extends PacketAdapter implements Listener {
         Player player = event.getPlayer();
         //noinspection ConstantConditions
         if (event.isCancelled() || !InventoryManager.playerIsLoaded(player)
-                || isNotNeededHere(player)) {
+                || isExtensionsNotNeededHere(player)) {
             return;
         }
 
@@ -84,7 +84,7 @@ public class CraftListener extends PacketAdapter implements Listener {
         final Player player = (Player) event.getPlayer();
         if (!InventoryManager.playerIsLoaded(player)
                 || event.getInventory().getType() != InventoryType.WORKBENCH
-                || isNotNeededHere(player)) {
+                || isExtensionsNotNeededHere(player)) {
             return;
         }
 
@@ -98,7 +98,7 @@ public class CraftListener extends PacketAdapter implements Listener {
         //noinspection ConstantConditions
         if (!InventoryManager.playerIsLoaded(player)
                 || event.getInventory().getType() != InventoryType.WORKBENCH
-                || isNotNeededHere(player)) {
+                || isExtensionsNotNeededHere(player)) {
             return;
         }
 
@@ -114,7 +114,13 @@ public class CraftListener extends PacketAdapter implements Listener {
         }
     }
 
-    private boolean isNotNeededHere(Player player) {
+    /**
+     * Checks that inventory extensions not needed there.
+     * It always should be used after `InventoryManager.playerIsLoaded(player)` check.
+     *
+     * @param player Player to check
+     */
+    private boolean isExtensionsNotNeededHere(Player player) {
         return !InventoryManager.get(player).isPocketCraft()
                 && !Config.getConfig().getBoolean("craft.workbench", true);
     }
