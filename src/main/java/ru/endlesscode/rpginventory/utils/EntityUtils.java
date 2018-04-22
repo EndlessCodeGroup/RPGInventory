@@ -57,9 +57,17 @@ public class EntityUtils {
         }
 
         Location target = player.getLocation();
-        if (target.distance(entity.getLocation()) > 20) {
-            PetManager.respawnPet(player);
-        } else if (target.distance(entity.getLocation()) < 4) {
+
+        //Issue #120, by 12 Feb 18 : https://github.com/EndlessCodeGroup/RPGInventory/issues/120#issuecomment-364834420
+        if (!target.getWorld().getName().equals(entity.getLocation().getWorld().getName())) {
+            PetManager.teleportPet(player, null);
+            return;
+        }
+
+        final double distance = target.distance(entity.getLocation());
+        if (distance > 20D) {
+            PetManager.teleportPet(player, null);
+        } else if (distance < 4D) {
             return;
         }
 
