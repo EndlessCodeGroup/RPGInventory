@@ -109,7 +109,7 @@ public class PetListener implements Listener {
     }
 
     //Possible fix #110
-    @EventHandler
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void onPlayerTeleport(@NotNull PlayerTeleportEvent event) {
         Player player = event.getPlayer();
 
