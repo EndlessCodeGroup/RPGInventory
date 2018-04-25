@@ -124,10 +124,11 @@ public class PetListener implements Listener {
         //Ugly trick to avoid infinite pet spawning when player teleports from non-solid/non-cuboid block
         final Location from = event.getFrom();
         final Location to = event.getTo();
-        if (from.getBlockX() == to.getBlockX() && from.getBlockZ() == to.getBlockZ()) {
-            if (from.distance(to) < 0.775D) {
-                return;
-            }
+        if (from.getBlockX() != to.getBlockX() || from.getBlockZ() != to.getBlockZ()) {
+            return;
+        }
+        if (from.distance(to) < 0.775D) {
+            return;
         }
 
         final double maxDistance = (event.getPlayer().getServer().getViewDistance() / 2.0D) * 15.75D;
