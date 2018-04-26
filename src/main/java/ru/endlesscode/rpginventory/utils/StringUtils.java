@@ -23,8 +23,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import me.clip.placeholderapi.PlaceholderAPI;
 import me.clip.placeholderapi.external.EZPlaceholderHook;
@@ -76,9 +75,7 @@ public class StringUtils {
         line = line.replaceAll("%HP%", Utils.round(player.getHealth(), 1) + "");
         line = line.replaceAll("%MAX_HP%", player.getMaxHealth() + "");
 
-        PlayerWrapper playerWrapper = InventoryManager.get(player);
-        if (playerWrapper != null) {
-
+        if (InventoryManager.playerIsLoaded(player)) {
             // Modifiers
             line = line.replaceAll("%DAMAGE%", ItemManager.getModifier(player, ItemStat.StatType.DAMAGE).toString());
             line = line.replaceAll("%BOW_DAMAGE%", ItemManager.getModifier(player, ItemStat.StatType.BOW_DAMAGE).toString());
@@ -100,12 +97,7 @@ public class StringUtils {
 
         @Override
         public String onPlaceholderRequest(@Nullable Player player, @NotNull String identifier) {
-            if (player == null) {
-                return "";
-            }
-
-            PlayerWrapper playerWrapper = InventoryManager.get(player);
-            if (playerWrapper == null) {
+            if (!InventoryManager.playerIsLoaded(player)) {
                 return "";
             }
 

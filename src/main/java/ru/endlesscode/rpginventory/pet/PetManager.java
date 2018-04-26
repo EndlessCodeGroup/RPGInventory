@@ -48,10 +48,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import ru.endlesscode.rpginventory.RPGInventory;
 import ru.endlesscode.rpginventory.event.listener.PetListener;
@@ -71,6 +68,7 @@ public class PetManager {
     private static final Map<String, PetType> PETS = new HashMap<>();
     private static final Map<String, PetFood> PET_FOOD = new HashMap<>();
     private static final String DEATH_TIME_TAG = "pet.deathTime";
+    private static CooldownsTimer COOLDOWNS_TIMER;
     private static int SLOT_PET;
 
     private PetManager() {
@@ -114,6 +112,8 @@ public class PetManager {
 
         // Register events
         instance.getServer().getPluginManager().registerEvents(new PetListener(), instance);
+        PetManager.COOLDOWNS_TIMER = new CooldownsTimer(instance);
+        PetManager.COOLDOWNS_TIMER.runTaskTimer(instance,20, CooldownsTimer.TICK_PERIOD);
         return true;
     }
 
@@ -171,11 +171,26 @@ public class PetManager {
     }
 
     public static void startCooldownTimer(Player player, ItemStack petItem) {
-        new CooldownTimer(player, petItem).runTaskTimer(RPGInventory.getInstance(), 20, 20);
+        PetManager.COOLDOWNS_TIMER.addPetCooldown(player, petItem);
+    }
+
+    public static void teleportPet(@NotNull final Player player, @Nullable final Location to) {
+        if (!InventoryManager.playerIsLoaded(player) || !PetManager.isEnabled()) {
+            return;
+        }
+
+        final PlayerWrapper playerWrapper = InventoryManager.get(player);
+        if (!playerWrapper.hasPet()) {
+            return;
+        }
+
+        Location baseLocation = to != null ? to : player.getLocation();
+        Location newPetLoc = LocationUtils.getLocationNearPoint(baseLocation, 3);
+        playerWrapper.getPet().teleport(newPetLoc);
     }
 
     public static void spawnPet(@NotNull final Player player, @NotNull ItemStack petItem) {
-        if (!InventoryManager.playerIsLoaded(player)) {
+        if (!InventoryManager.playerIsLoaded(player) || !PetManager.isEnabled()) {
             return;
         }
 
@@ -190,7 +205,7 @@ public class PetManager {
         }
 
         PetManager.despawnPet(player);
-        Location petLoc = LocationUtils.getLocationNearPlayer(player, 3);
+        Location petLoc = LocationUtils.getLocationNearPoint(player.getLocation(), 3);
         Animals pet = (Animals) player.getWorld().spawnEntity(petLoc, petType.getSkin());
         pet.teleport(petLoc);
         EffectUtils.playSpawnEffect(pet);

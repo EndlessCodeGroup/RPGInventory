@@ -35,10 +35,12 @@ import java.util.*;
  * It is part of the RpgInventory.
  * All rights reserved 2014 - 2016 © «EndlessCode Group»
  */
+@Deprecated
 class CooldownTimer extends BukkitRunnable {
     private final Player player;
     private final ItemStack petItem;
 
+    @Deprecated
     public CooldownTimer(Player player, ItemStack petItem) {
         this.player = player;
         this.petItem = petItem;

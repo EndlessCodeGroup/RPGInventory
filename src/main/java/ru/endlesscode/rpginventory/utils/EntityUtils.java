@@ -19,18 +19,16 @@
 package ru.endlesscode.rpginventory.utils;
 
 import com.comphenix.protocol.utility.MinecraftReflection;
-
 import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-
-import org.jetbrains.annotations.*;
+import org.jetbrains.annotations.NotNull;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
 import ru.endlesscode.rpginventory.pet.PetManager;
 import ru.endlesscode.rpginventory.pet.PetType;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 /**
  * Created by OsipXD on 02.12.2015
@@ -38,31 +36,49 @@ import ru.endlesscode.rpginventory.pet.PetType;
  * All rights reserved 2014 - 2016 © «EndlessCode Group»
  */
 public class EntityUtils {
+
+    private static Method craftEntity_getHandle, navigationAbstract_a, entityInsentient_getNavigation;
+    private static Class<?> entityInsentientClass = MinecraftReflection.getMinecraftClass("EntityInsentient");
+
+    static {
+        try {
+            craftEntity_getHandle = MinecraftReflection.getCraftEntityClass().getDeclaredMethod("getHandle");
+            entityInsentient_getNavigation = entityInsentientClass.getDeclaredMethod("getNavigation");
+            navigationAbstract_a = MinecraftReflection.getMinecraftClass("NavigationAbstract")
+                    .getDeclaredMethod("a", double.class, double.class, double.class, double.class);
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        }
+    }
+
     public static void goPetToPlayer(@NotNull final Player player, @NotNull final LivingEntity entity) {
         if (!InventoryManager.playerIsLoaded(player) || !player.isOnline() || entity.isDead()) {
             return;
         }
 
         Location target = player.getLocation();
-        if (target.distance(entity.getLocation()) > 20) {
-            PetManager.respawnPet(player);
-        } else if (target.distance(entity.getLocation()) < 4) {
+
+        //Issue #120, by 12 Feb 18 : https://github.com/EndlessCodeGroup/RPGInventory/issues/120#issuecomment-364834420
+        if (!target.getWorld().getName().equals(entity.getLocation().getWorld().getName())) {
+            PetManager.teleportPet(player, null);
+            return;
+        }
+
+        final double distance = target.distance(entity.getLocation());
+        if (distance > 20D) {
+            PetManager.teleportPet(player, null);
+        } else if (distance < 4D) {
             return;
         }
 
         PetType petType = PetManager.getPetFromEntity(entity, player);
         double speedModifier = petType == null ? 1.0 : 0.4 / petType.getSpeed();
 
-        Class<?> entityInsentientClass = MinecraftReflection.getMinecraftClass("EntityInsentient");
-        Class<?> navigationAbstractClass = MinecraftReflection.getMinecraftClass("NavigationAbstract");
-
         try {
-            Method getHandle = MinecraftReflection.getCraftEntityClass().getDeclaredMethod("getHandle");
-            Object insentient = entityInsentientClass.cast(getHandle.invoke(entity));
-            Object navigation = entityInsentientClass.getDeclaredMethod("getNavigation").invoke(insentient);
-            navigationAbstractClass.getDeclaredMethod("a", double.class, double.class, double.class, double.class)
-                    .invoke(navigation, target.getX(), target.getY(), target.getZ(), speedModifier);
-        } catch (@NotNull IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+            Object insentient = entityInsentientClass.cast(craftEntity_getHandle.invoke(entity));
+            Object navigation = entityInsentient_getNavigation.invoke(insentient);
+            navigationAbstract_a.invoke(navigation, target.getX(), target.getY(), target.getZ(), speedModifier);
+        } catch (@NotNull IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
         }
     }

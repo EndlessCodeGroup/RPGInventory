@@ -35,21 +35,25 @@ import ru.endlesscode.rpginventory.utils.ItemUtils;
 @SuppressWarnings({"unused", "WeakerAccess"})
 public class PetAPI {
     /**
-     * Get pet spawn item from RPGInventory of specific player
+     * Get pet spawn item from RPGInventory of specific player.
      *
      * @param player - not null player
      * @return ItemStack if player have pet spawn item, null - otherwise
      */
     @Nullable
     public static ItemStack getPetItem(Player player) {
+        if (!InventoryManager.playerIsLoaded(player) || !PetManager.isEnabled()) {
+            return null;
+        }
+
         PlayerWrapper playerWrapper = InventoryManager.get(player);
-        ItemStack petItem = PetManager.isEnabled() && playerWrapper != null ? playerWrapper.getInventory().getItem(PetManager.getPetSlotId()) : null;
+        ItemStack petItem = playerWrapper.getInventory().getItem(PetManager.getPetSlotId());
 
         return ItemUtils.isEmpty(petItem) ? null : petItem;
     }
 
     /**
-     * Get Pet of specific player
+     * Get Pet of specific player.
      *
      * @param player - not null player
      * @return Pet if player have pet, null - otherwise

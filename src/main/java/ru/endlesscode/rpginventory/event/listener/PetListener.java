@@ -18,32 +18,21 @@
 
 package ru.endlesscode.rpginventory.event.listener;
 
-import org.bukkit.GameMode;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.Sound;
+import org.bukkit.*;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.event.entity.EntityPortalEnterEvent;
-import org.bukkit.event.entity.EntityTargetLivingEntityEvent;
-import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.entity.*;
 import org.bukkit.event.inventory.InventoryOpenEvent;
-import org.bukkit.event.player.PlayerInteractEntityEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.event.player.PlayerRespawnEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.event.vehicle.VehicleEnterEvent;
 import org.bukkit.inventory.HorseInventory;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.jetbrains.annotations.*;
+import org.jetbrains.annotations.NotNull;
 import ru.endlesscode.rpginventory.RPGInventory;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
 import ru.endlesscode.rpginventory.inventory.PlayerWrapper;
@@ -117,6 +106,39 @@ public class PetListener implements Listener {
         if (!ItemUtils.isEmpty(petItem)) {
             PetManager.spawnPet(player, petItem);
         }
+    }
+
+    //Possible fix #110
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
+    public void onPlayerTeleport(@NotNull PlayerTeleportEvent event) {
+        Player player = event.getPlayer();
+
+        if (!InventoryManager.playerIsLoaded(player) || !PetManager.isEnabled()) {
+            return;
+        }
+
+        if (!InventoryManager.get(player).hasPet()) {
+            return;
+        }
+
+        //Ugly trick to avoid infinite pet spawning when player teleports from non-solid/non-cuboid block
+        final Location from = event.getFrom();
+        final Location to = event.getTo();
+        if (from.getBlockX() != to.getBlockX() || from.getBlockZ() != to.getBlockZ()) {
+            return;
+        }
+        if (from.distance(to) < 0.775D) {
+            return;
+        }
+
+        final double maxDistance = (event.getPlayer().getServer().getViewDistance() / 2.0D) * 15.75D;
+        final ItemStack item = InventoryManager.get(player).getInventory().getItem(PetManager.getPetSlotId());
+        if (from.distance(to) > maxDistance && item != null) {
+            PetManager.spawnPet(player, item);
+        } else {
+            PetManager.teleportPet(player, to);
+        }
+
     }
 
     @EventHandler

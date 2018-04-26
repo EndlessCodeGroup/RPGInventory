@@ -262,13 +262,15 @@ public class InventoryListener implements Listener {
 
         // Crafting area
         if (inventory.getType() == InventoryType.CRAFTING) {
-            if (InventoryManager.get(player).isOpened()) {
+            PlayerWrapper playerWrapper = InventoryManager.get(player);
+
+            if (playerWrapper.isOpened()) {
                 return;
             }
 
             switch (event.getSlotType()) {
                 case CRAFTING:
-                    InventoryManager.get(player).openInventory(true);
+                    playerWrapper.openInventory(true);
                 case QUICKBAR:
                     // Shield slot is QUICKBAR and has rawId - 45 o.O
                     if (rawSlot != 45) {
@@ -491,10 +493,8 @@ public class InventoryListener implements Listener {
 
         if (!InventoryManager.isAllowedWorld(player.getWorld())) {
             InventoryManager.unloadPlayerInventory(player);
-        } else {
-            if (InventoryManager.get(player).hasPet()) {
-                PetManager.respawnPet(player);
-            }
+        } else if (InventoryManager.get(player).hasPet()) {
+            PetManager.respawnPet(player);
         }
     }
 }

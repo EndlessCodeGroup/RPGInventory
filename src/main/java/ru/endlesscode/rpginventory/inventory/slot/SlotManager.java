@@ -32,6 +32,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.logging.Level;
 
 /**
  * Created by OsipXD on 05.09.2015
@@ -79,7 +80,7 @@ public class SlotManager {
         try {
             SlotManager.slotManager = new SlotManager();
         } catch (Exception e) {
-            e.printStackTrace();
+            RPGInventory.getPluginLogger().log(Level.WARNING, "Failed to initialize SlotManager", e);
             return false;
         }
 
