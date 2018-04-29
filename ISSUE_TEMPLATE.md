@@ -25,7 +25,7 @@
 
 **Server Core:** [Spigot/Paper/etc.]\
 **Server Version:** [e.g. 1.12.2]\
-**Plugin Version:** [e.g. 2.1.4-PRE]
+**Plugin Version:** [e.g. 2.1.4-PRE] ***(YOU SHOULD WRITE VERSION NUMBER, NOT JUST "LATEST")***
 
 
 ***HIGHLY RECOMMENDED TO ATTACH SERVER LOGS TO THE ISSUE!***
