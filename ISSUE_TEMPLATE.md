@@ -1,3 +1,10 @@
+
+# WARNING!
+DON'T JUST DELETE THIS TEMPLATE \
+WITHOUT IT I'LL JUST MARK YOUR ISSUE AS `INVALID`\
+(you can skip only `Steps to Reproduce` and `Environment` if it is feature request)
+
+
 ### Prerequisites
 
 * [ ] Are you running the latest version?
@@ -5,7 +12,7 @@
 * [ ] Did you check the [Wiki](http://rpginventory.endlesscode.ru/)?
 * [ ] Did you configure [config.yml](https://github.com/EndlessCodeGroup/RPGInventory/blob/master/src/main/resources/config.yml)?
 * [ ] Did you perform a cursory search?
-* [ ] Can you reproduce the problem in clean server (with installed only the plugin and dependencies)?
+* [ ] Can you reproduce the problem on clean server (with installed only the plugin and dependencies)?
 
 ### Description
 
