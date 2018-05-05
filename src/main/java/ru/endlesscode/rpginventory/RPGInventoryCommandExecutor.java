@@ -104,8 +104,12 @@ class RPGInventoryCommandExecutor implements CommandExecutor {
             Player player = RPGInventory.getInstance().getServer().getPlayer(playerName);
             ItemStack bpItem = BackpackManager.getItem(id);
 
-            if (bpItem.getType() == Material.AIR) {
-                player.getInventory().addItem(bpItem);
+            if (bpItem.getType() != Material.AIR) {
+                if (!player.getInventory().addItem(bpItem).isEmpty()) {
+                    sender.sendMessage(StringUtils.coloredLine("&c" + player.getName() + " has no empty slots in the inventory."));
+                } else {
+                    sender.sendMessage(StringUtils.coloredLine("&3Backpack '" + id + "' has been given to " + player.getName()));
+                }
                 return;
             } else {
                 sender.sendMessage(StringUtils.coloredLine("&cBackpack '" + id + "' not found!"));
