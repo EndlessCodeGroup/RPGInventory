@@ -141,6 +141,9 @@ public class ItemManager {
 
     @Nullable
     public static CustomItem getCustomItem(ItemStack item) {
+        if (item == null) {
+            return null;
+        }
         String tag = ItemUtils.getTag(item, ItemUtils.ITEM_TAG);
         if (tag == null) {
             return null;
@@ -160,7 +163,7 @@ public class ItemManager {
         }
 
         if (classedItem == null) {
-            return true; //Or false?
+            return true;
         }
 
         if (!PlayerUtils.checkLevel(player, classedItem.getLevel())) {

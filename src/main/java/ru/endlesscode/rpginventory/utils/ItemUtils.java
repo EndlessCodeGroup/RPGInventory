@@ -87,6 +87,9 @@ public class ItemUtils {
     @Nullable
     @SuppressWarnings("WeakerAccess")
     public static String getTag(ItemStack item, String tag, @Nullable String defaultValue) {
+        if (item == null) {
+            return defaultValue;
+        }
         item = toBukkitItemStack(item);
         NbtCompound nbt = NbtFactory.asCompound(NbtFactory.fromItemTag(item));
 
@@ -251,6 +254,9 @@ public class ItemUtils {
 
     @NotNull
     private static ItemStack toBukkitItemStack(ItemStack item) {
+        if (item == null) {
+            return new ItemStack(Material.AIR);
+        }
         return !item.getClass().getName().endsWith("CraftItemStack") ? MinecraftReflection.getBukkitItemStack(item) : item;
     }
 }
