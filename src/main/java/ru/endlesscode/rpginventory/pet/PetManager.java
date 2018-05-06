@@ -308,7 +308,7 @@ public class PetManager {
         playerWrapper.setPet(null);
     }
 
-    public static void respawnPet(OfflinePlayer player) {
+    public static void respawnPet(@Nullable OfflinePlayer player) {
         if (!InventoryManager.playerIsLoaded(player) || !PetManager.isEnabled()) {
             return;
         }
@@ -319,11 +319,11 @@ public class PetManager {
     }
 
     @Nullable
-    @Contract("null - > null")
+    @Contract("null -> null")
     public static PetFood getFoodFromItem(@Nullable ItemStack item) {
         String id;
 
-        if (ItemUtils.isEmpty(item) || (id = ItemUtils.getTag(item, ItemUtils.FOOD_TAG)) == null) {
+        if (ItemUtils.isEmpty(item) || (id = ItemUtils.getTag(item, ItemUtils.FOOD_TAG)).isEmpty()) {
             return null;
         }
 
@@ -331,11 +331,11 @@ public class PetManager {
     }
 
     @Nullable
-    @Contract("null - > null")
+    @Contract("null -> null")
     public static PetType getPetFromItem(@Nullable ItemStack item) {
         String id;
 
-        if (ItemUtils.isEmpty(item) || (id = ItemUtils.getTag(item, ItemUtils.PET_TAG)) == null) {
+        if (ItemUtils.isEmpty(item) || (id = ItemUtils.getTag(item, ItemUtils.PET_TAG)).isEmpty()) {
             return null;
         }
 

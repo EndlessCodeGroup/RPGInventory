@@ -68,7 +68,7 @@ public class CooldownsTimer extends BukkitRunnable {
             }
 
             final Player player = this.plugin.getServer().getPlayer(next.getKey());
-            if (player == null || !InventoryManager.playerIsLoaded(player)) {
+            if (!InventoryManager.playerIsLoaded(player)) {
                 iterator.remove();
                 continue;
             }
@@ -102,7 +102,7 @@ public class CooldownsTimer extends BukkitRunnable {
                 PetManager.addGlow(item);
 
                 String itemTag = ItemUtils.getTag(item, ItemUtils.PET_TAG);
-                if (itemTag != null) {
+                if (!itemTag.isEmpty()) {
                     ItemUtils.setTag(item, ItemUtils.PET_TAG, itemTag);
                     inventory.setItem(PetManager.getPetSlotId(), item);
                 } else {

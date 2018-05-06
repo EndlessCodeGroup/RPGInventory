@@ -140,12 +140,13 @@ public class ItemManager {
     }
 
     @Nullable
-    public static CustomItem getCustomItem(ItemStack item) {
-        if (item == null) {
+    public static CustomItem getCustomItem(@Nullable ItemStack item) {
+        if (ItemUtils.isEmpty(item)) {
             return null;
         }
+
         String tag = ItemUtils.getTag(item, ItemUtils.ITEM_TAG);
-        if (tag == null) {
+        if (tag.isEmpty()) {
             return null;
         }
 
