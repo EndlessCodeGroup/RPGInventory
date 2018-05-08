@@ -27,28 +27,14 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.ClickType;
-import org.bukkit.event.inventory.InventoryAction;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.event.inventory.InventoryDragEvent;
-import org.bukkit.event.inventory.InventoryOpenEvent;
-import org.bukkit.event.inventory.InventoryType;
-import org.bukkit.event.player.PlayerChangedWorldEvent;
-import org.bukkit.event.player.PlayerDropItemEvent;
-import org.bukkit.event.player.PlayerEvent;
-import org.bukkit.event.player.PlayerItemBreakEvent;
-import org.bukkit.event.player.PlayerItemHeldEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerPickupItemEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.event.player.PlayerRespawnEvent;
+import org.bukkit.event.inventory.*;
+import org.bukkit.event.player.*;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.scheduler.BukkitRunnable;
-
-import org.jetbrains.annotations.*;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import ru.endlesscode.rpginventory.RPGInventory;
 import ru.endlesscode.rpginventory.api.InventoryAPI;
 import ru.endlesscode.rpginventory.event.PlayerInventoryLoadEvent;
@@ -270,7 +256,15 @@ public class InventoryListener implements Listener {
 
             switch (event.getSlotType()) {
                 case CRAFTING:
-                    playerWrapper.openInventory(true);
+                    //Without this stupid shit we already get click in the our inventory on bukkit 1.9.4
+                    //Ofc, player picking up item in the clicked slot (1, 2, 3, 4, depends on clicked slot in the small crafting grid)
+                    //Fixes #142.
+                    new BukkitRunnable() {
+                        @Override
+                        public void run() {
+                            playerWrapper.openInventory(true);
+                        }
+                    }.runTaskLater(RPGInventory.getInstance(), 0);
                 case QUICKBAR:
                     // Shield slot is QUICKBAR and has rawId - 45 o.O
                     if (rawSlot != 45) {

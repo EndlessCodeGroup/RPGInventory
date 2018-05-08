@@ -54,7 +54,9 @@ class CooldownTimer extends BukkitRunnable {
         }
 
         Inventory inventory = InventoryManager.get(this.player).getInventory();
-        if (!this.player.isOnline() || this.player.isDead() || !PetManager.isEnabled() || inventory == null || inventory.getItem(PetManager.getPetSlotId()) == null) {
+        final boolean playerIsAlive = !this.player.isOnline() || this.player.isDead();
+        final boolean playerHasPetItem = inventory == null || inventory.getItem(PetManager.getPetSlotId()) == null;
+        if (playerIsAlive || !PetManager.isEnabled() || playerHasPetItem) {
             this.cancel();
             return;
         }
@@ -74,7 +76,7 @@ class CooldownTimer extends BukkitRunnable {
             PetManager.addGlow(item);
             String itemTag = ItemUtils.getTag(this.petItem, ItemUtils.PET_TAG);
 
-            if (itemTag == null) {
+            if (itemTag.isEmpty()) {
                 Slot petSlot = Objects.requireNonNull(SlotManager.instance().getPetSlot(), "Pet slot can't be null!");
                 inventory.setItem(PetManager.getPetSlotId(), petSlot.getCup());
                 this.cancel();
