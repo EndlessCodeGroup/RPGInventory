@@ -142,24 +142,22 @@ class RPGInventoryCommandExecutor implements CommandExecutor {
     }
 
     private static void printList(@NotNull CommandSender sender, String type) {
-        switch (type) {
-            case "pet":
-            case "pets":
+        char firstLetter = type.isEmpty() ? ' ' : type.charAt(0);
+
+        switch (firstLetter) {
+            case 'p': // pets
                 List<String> petList = PetManager.getPetList();
                 sender.sendMessage(StringUtils.coloredLine(petList.size() == 0 ? "&cPets not found..." : "&3Pets list: &6" + petList));
                 break;
-            case "food":
+            case 'f': // food
                 List<String> foodList = PetManager.getFoodList();
                 sender.sendMessage(StringUtils.coloredLine(foodList.size() == 0 ? "&cFood not found..." : "&3Food list: &6" + foodList));
                 break;
-            case "item":
-            case "items":
+            case 'i': // items
                 List<String> itemList = ItemManager.getItemList();
                 sender.sendMessage(StringUtils.coloredLine(itemList.size() == 0 ? "&cItems not found..." : "&3Items list: &6" + itemList));
                 break;
-            case "bp":
-            case "backpack":
-            case "backpacks":
+            case 'b': // backpacks
                 List<String> bpList = BackpackManager.getBackpackList();
                 sender.sendMessage(StringUtils.coloredLine(bpList.size() == 0 ? "&cBackpacks not found..." : "&3Backpacks list: &6" + bpList));
                 break;
@@ -239,29 +237,36 @@ class RPGInventoryCommandExecutor implements CommandExecutor {
             String subCommand = args[0].toLowerCase();
 
             if (perms.has(sender, "rpginventory.admin")) {
-                if (subCommand.equals("pet") && args.length >= 3) {
+                if (subCommand.startsWith("p") && args.length >= 3) {
+                    // pets
                     RPGInventoryCommandExecutor.givePet(sender, args[1], args[2]);
                     return true;
-                } else if (subCommand.equals("food") && args.length >= 3) {
+                } else if (subCommand.startsWith("f") && args.length >= 3) {
+                    // food
                     RPGInventoryCommandExecutor.giveFood(sender, args[1], args[2], args.length > 3 ? args[3] : "1");
                     return true;
-                } else if (subCommand.equals("item") && args.length >= 3) {
+                } else if (subCommand.startsWith("i") && args.length >= 3) {
+                    // items
                     RPGInventoryCommandExecutor.giveItem(sender, args[1], args[2]);
                     return true;
-                } else if (subCommand.equals("bp") && args.length >= 3) {
+                } else if (subCommand.startsWith("b") && args.length >= 3) {
+                    // backpacks
                     RPGInventoryCommandExecutor.giveBackpack(sender, args[1], args[2]);
                     return true;
-                } else if (subCommand.equals("list") && args.length >= 2) {
+                } else if (subCommand.startsWith("l") && args.length >= 2) {
+                    // list
                     RPGInventoryCommandExecutor.printList(sender, args[1]);
                     return true;
-                } else if (subCommand.equals("reload")) {
+                } else if (subCommand.startsWith("r")) {
+                    // reload
                     RPGInventoryCommandExecutor.reloadPlugin(sender);
                     return true;
                 }
             }
 
-            switch (subCommand) {
-                case "open":
+            switch (subCommand.charAt(0)) {
+                // open
+                case 'o':
                     if (args.length == 1) {
                         if (perms.has(sender, "rpginventory.open")) {
                             RPGInventoryCommandExecutor.openInventory(sender);
