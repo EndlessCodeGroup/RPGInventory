@@ -58,7 +58,7 @@ public final class ResourcePackUtils {
             throw new IllegalArgumentException(
                     String.format("Link isn't direct. Redirect found!\n"
                             + "Try to replace your link: %s\n"
-                            + "By this link: %s"
+                            + "By this link: %s\n"
                             + "If your link works normally, just ignore this message.", address, realUrl)
             );
         }
@@ -71,7 +71,7 @@ public final class ResourcePackUtils {
         String contentType = conn.getContentType();
         if (!contentType.equals(MIME_ZIP)) {
             throw new IllegalArgumentException(
-                    String.format("MIME type should be '%s' but given '%s'/\n"
+                    String.format("MIME type should be '%s' but given '%s'\n"
                             + "Please provide link to resource pack file, not to download page.", MIME_ZIP, contentType)
             );
         }
