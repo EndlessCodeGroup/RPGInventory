@@ -33,8 +33,8 @@ import java.net.UnknownHostException;
  */
 public final class ResourcePackUtils {
 
-    private final static String HEADER_LOCATION = "Location";
-    private final static String MIME_ZIP = "application/zip";
+    private static final String HEADER_LOCATION = "Location";
+    private static final String MIME_ZIP = "application/zip";
 
     private ResourcePackUtils() {
         // Utility class
@@ -56,8 +56,10 @@ public final class ResourcePackUtils {
         String realUrl = conn.getURL().toString();
         if (!realUrl.equals(address)) {
             throw new IllegalArgumentException(
-                    String.format("Link isn't direct. Redirect found!\n" +
-                            "Your link: %s\nDirect link: %s", address, realUrl)
+                    String.format("Link isn't direct. Redirect found!\n"
+                            + "Try to replace your link: %s\n"
+                            + "By this link: %s\n"
+                            + "If your link works normally, just ignore this message.", address, realUrl)
             );
         }
 
@@ -69,7 +71,8 @@ public final class ResourcePackUtils {
         String contentType = conn.getContentType();
         if (!contentType.equals(MIME_ZIP)) {
             throw new IllegalArgumentException(
-                    String.format("MIME type should be '%s' but given '%s'", MIME_ZIP, contentType)
+                    String.format("MIME type should be '%s' but given '%s'\n"
+                            + "Please provide link to resource pack file, not to download page.", MIME_ZIP, contentType)
             );
         }
     }

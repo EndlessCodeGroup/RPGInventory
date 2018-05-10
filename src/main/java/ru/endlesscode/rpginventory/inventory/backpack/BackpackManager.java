@@ -125,13 +125,13 @@ public class BackpackManager {
 
         BackpackType type;
         String bpId = ItemUtils.getTag(bpItem, ItemUtils.BACKPACK_TAG);
-        if (bpId == null || (type = BackpackManager.getBackpackType(bpId)) == null) {
+        if (bpId.isEmpty() || (type = BackpackManager.getBackpackType(bpId)) == null) {
             return false;
         }
 
         Backpack backpack;
         String bpUid = ItemUtils.getTag(bpItem, ItemUtils.BACKPACK_UID_TAG);
-        UUID uuid = bpUid == null ? null : UUID.fromString(bpUid);
+        UUID uuid = bpUid.isEmpty() ? null : UUID.fromString(bpUid);
         if (!BACKPACKS.containsKey(uuid)) {
             if (uuid == null) {
                 backpack = type.createBackpack();

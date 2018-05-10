@@ -79,14 +79,14 @@ public class ItemUtils {
         return item;
     }
 
-    @Nullable
-    public static String getTag(ItemStack item, String tag) {
-        return getTag(item, tag, null);
+    @NotNull
+    public static String getTag(@NotNull ItemStack item, @NotNull String tag) {
+        return getTag(item, tag, "");
     }
 
-    @Nullable
+    @NotNull
     @SuppressWarnings("WeakerAccess")
-    public static String getTag(ItemStack item, String tag, @Nullable String defaultValue) {
+    public static String getTag(@NotNull ItemStack item, @NotNull String tag, @NotNull String defaultValue) {
         item = toBukkitItemStack(item);
         NbtCompound nbt = NbtFactory.asCompound(NbtFactory.fromItemTag(item));
 
@@ -202,7 +202,6 @@ public class ItemUtils {
             textureDurability = custom.getTextureDurability();
             item = ItemManager.getItem(ItemUtils.getTag(item, ItemUtils.ITEM_TAG));
         } else if (BackpackManager.isBackpack(item)) {
-            String bpUID = ItemUtils.getTag(item, ItemUtils.BACKPACK_UID_TAG);
             BackpackType type = BackpackManager.getBackpackType(ItemUtils.getTag(item, ItemUtils.BACKPACK_TAG));
 
             if (type == null) {
@@ -211,7 +210,9 @@ public class ItemUtils {
 
             textureDurability = type.getTextureDurability();
             item = type.getItem();
-            if (bpUID != null) {
+
+            String bpUID = ItemUtils.getTag(item, ItemUtils.BACKPACK_UID_TAG);
+            if (!bpUID.isEmpty()) {
                 ItemUtils.setTag(item, ItemUtils.BACKPACK_UID_TAG, bpUID);
             }
         } else if (PetType.isPetItem(item)) {
@@ -251,6 +252,9 @@ public class ItemUtils {
 
     @NotNull
     private static ItemStack toBukkitItemStack(ItemStack item) {
+        if (item == null) {
+            return new ItemStack(Material.AIR);
+        }
         return !item.getClass().getName().endsWith("CraftItemStack") ? MinecraftReflection.getBukkitItemStack(item) : item;
     }
 }

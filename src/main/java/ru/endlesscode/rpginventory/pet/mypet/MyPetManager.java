@@ -92,7 +92,7 @@ public class MyPetManager implements Listener {
             if (isMyPetItem(currentPet)) {
                 MyPet pet = mpPlayer.getMyPet();
                 String petId = ItemUtils.getTag(currentPet, MYPET_TAG);
-                if (petId == null) {
+                if (petId.isEmpty()) {
                     return;
                 }
 
@@ -154,7 +154,7 @@ public class MyPetManager implements Listener {
         }
 
         String petId = ItemUtils.getTag(newPet, MYPET_TAG);
-        if (petId == null) {
+        if (petId.isEmpty()) {
             return false;
         }
 
@@ -169,7 +169,8 @@ public class MyPetManager implements Listener {
         return true;
     }
 
-    private static boolean isMyPetItem(ItemStack item) {
+    @Contract("null -> false")
+    private static boolean isMyPetItem(@Nullable ItemStack item) {
         return !ItemUtils.isEmpty(item) && ItemUtils.hasTag(item, MYPET_TAG);
     }
 
@@ -280,7 +281,7 @@ public class MyPetManager implements Listener {
             keepPet = false;
         } else {
             String petTag = ItemUtils.getTag(currentPet, MYPET_TAG);
-            if (petTag == null) {
+            if (petTag.isEmpty()) {
                 keepPet = false;
             } else {
                 UUID petUUID = UUID.fromString(petTag);
@@ -309,7 +310,7 @@ public class MyPetManager implements Listener {
 
         if (isMyPetItem(currentPetItem)) {
             String petTag = ItemUtils.getTag(currentPetItem, MYPET_TAG);
-            if (petTag == null) {
+            if (petTag.isEmpty()) {
                 inventory.setItem(petSlot.getSlotId(), petSlot.getCup());
                 return;
             }

@@ -88,7 +88,7 @@ public class CustomItem extends ClassedItem {
     }
 
     @Contract("null -> false")
-    public static boolean isCustomItem(ItemStack itemStack) {
+    public static boolean isCustomItem(@Nullable ItemStack itemStack) {
         return !ItemUtils.isEmpty(itemStack) && ItemUtils.hasTag(itemStack, ItemUtils.ITEM_TAG);
     }
 
