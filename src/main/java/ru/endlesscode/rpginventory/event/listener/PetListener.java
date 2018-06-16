@@ -245,10 +245,10 @@ public class PetListener implements Listener {
         Player player = null;
         if (event.getDamager().getType() == EntityType.PLAYER) {
             player = (Player) event.getDamager();
-        } else if (event.getDamager().getType() == EntityType.ARROW) {
-            Arrow arrow = (Arrow) event.getDamager();
-            if (arrow.getShooter() instanceof Player) {
-                player = (Player) arrow.getShooter();
+        } else if (event.getDamager() instanceof Projectile) {
+            Projectile projectile = (Projectile) event.getDamager();
+            if (projectile.getShooter() instanceof Player) {
+                player = (Player) projectile.getShooter();
             }
         }
 
@@ -256,21 +256,23 @@ public class PetListener implements Listener {
             return;
         }
 
-        LivingEntity petEntity;
-        if (event.getDamager() instanceof LivingEntity
-                && (petEntity = (LivingEntity) event.getDamager()) instanceof Tameable) {
-            Player owner = (Player) ((Tameable) petEntity).getOwner();
-            PetType petType = PetManager.getPetFromEntity(petEntity, owner);
-
-            if (petType != null) {
-                event.setDamage(petType.getDamage());
+        //Trying to get a pet as damager
+        if (event.getDamager() instanceof LivingEntity && event.getDamager() instanceof Tameable) {
+            //Casting to Tameable because we don't need in LivingEntity
+            final Tameable petEntity = (Tameable) event.getDamager();
+            final AnimalTamer petOwner = petEntity.getOwner();
+            if (petOwner != null) {
+                PetType petType = PetManager.getPetFromEntity((LivingEntity) petEntity, (Player) petOwner);
+                if (petType != null) {
+                    event.setDamage(petType.getDamage());
+                }
             }
-        } else if (event.getEntity() instanceof LivingEntity
-                && (petEntity = (LivingEntity) event.getEntity()) instanceof Tameable
+            //or as damage reciever
+        } else if (event.getEntity() instanceof LivingEntity && event.getEntity() instanceof Tameable
                 && !Config.getConfig().getBoolean("attack.own-pet") && player != null) {
-            Tameable ownedEntity = (Tameable) petEntity;
-            AnimalTamer owner = ownedEntity.getOwner();
-            if (owner != null && owner.getUniqueId().equals(player.getUniqueId())) {
+            final Tameable petEntity = (Tameable) event.getEntity();
+            final AnimalTamer petOwner = petEntity.getOwner();
+            if (petOwner != null && player.getUniqueId().equals(petOwner.getUniqueId())) {
                 event.setCancelled(true);
             }
         } else if (player != null) {
