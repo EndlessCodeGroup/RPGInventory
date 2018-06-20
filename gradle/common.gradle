@@ -1,0 +1,19 @@
+// Shared Gradle configuration for all subprojects
+
+apply from: rootProject.file("gradle/dependencies.gradle")
+
+group = "ru.endlesscode.${rootProject.name}"
+description = rootProject.description
+archivesBaseName = "$pluginName-$name"
+
+// Java version
+sourceCompatibility = targetCompatibility = "1.8"
+
+afterEvaluate {
+    // Set it again in case ForgeGradle or BukkitGradle resets it
+    sourceCompatibility = targetCompatibility = "1.8"
+}
+
+repositories {
+    mavenCentral()
+}

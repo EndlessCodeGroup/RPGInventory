@@ -1,0 +1,50 @@
+// Dependencies configurations
+
+// Versions
+def junitVersion = "4.12"
+def mockitoVersion = "2.8.+"
+def powermockVersion = "1.7.+"
+
+// Groups
+def powermockGroup = "org.powermock"
+
+ext {
+    // All these dependencies will be used with scope `implementation`
+    commonDeps = [
+            // Dependencies used in all subprojects
+            kotlinStdlib : kotlin("stdlib-jdk8")
+    ]
+
+    apiDeps = [
+            // Dependencies used only in API
+    ]
+
+    // These dependencies will be used with scope `compileOnly`
+    bukkitDeps = [
+            // Dependencies (except Bukkit API) used only in Bukkit implementation
+    ]
+
+    // These dependencies will be used with scope `testImplementation`
+    testingDeps = [
+            junit               : dep("junit", "junit", junitVersion),
+            mockito             : dep("org.mockito", "mockito-core", mockitoVersion),
+            powermockJunit      : dep(powermockGroup, "powermock-module-junit4", powermockVersion),
+            powermockMockito    : dep(powermockGroup, "powermock-api-mockito2", powermockVersion)
+    ]
+
+    // Apply all dependencies from map
+    applyDeps = { deps, block ->
+        deps.each { _, v -> block(v) }
+    }
+}
+
+// Helping
+
+private static def kotlin(name) {
+    return "org.jetbrains.kotlin:kotlin-$name"
+}
+
+private static def dep(group, module, version) {
+    return "$group:$module:$version"
+}
+

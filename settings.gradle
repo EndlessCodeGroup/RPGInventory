@@ -1,0 +1,3 @@
+include(":api", ":bukkit")
+
+rootProject.name = "inspector"

@@ -1,0 +1,21 @@
+# Created by .ignore support plugin (hsz.mobi)
+### JetBrains template
+
+## Directory-based project format:
+.idea/**
+*.iml
+
+# Keep scopes and copyrights
+!.idea/copyright/
+!.idea/copyright/*
+
+## Ignore all jars
+*.jar
+
+### Gradle template
+.gradle/
+build/
+local.properties
+
+# Avoid ignoring Gradle wrapper jar file (.jar files are usually ignored)
+!gradle-wrapper.jar

@@ -1,0 +1,36 @@
+// Bukkit implementation build config
+
+plugins {
+    id "com.github.johnrengelman.shadow" version "2.0.4"
+    id "ru.endlesscode.bukkitgradle" version "0.8.0"
+}
+
+def minorVersion = 0
+version = "${apiProject.version}.$minorVersion"
+
+bukkit {
+    version = "1.12.2"
+
+    meta {
+        name = pluginName
+        main = "$group.$name.$pluginName"
+        authors = ["OsipXD", "EndlessCodeGroup"]
+    }
+
+    run {
+        core = "paper"
+        eula = true
+    }
+}
+
+dependencies {
+    compileOnly(bukkit())
+    applyDeps(commonDeps) { implementation(it) }
+    applyDeps(bukkitDeps) { compileOnly(it) }
+}
+
+shadowJar {
+    // Relocates here
+}
+
+build.dependsOn shadowJar

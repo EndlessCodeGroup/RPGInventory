@@ -1,0 +1,50 @@
+// Root project build config
+
+buildscript {
+    ext.kotlinVersion = '1.2.50'
+
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
+    }
+}
+
+plugins {
+    id "base"
+}
+
+description = "Catch and report all exceptions"
+
+allprojects {
+    ext.pluginName = "Inspector"
+    ext.apiProject = project(":api")
+}
+
+// Common configurations for all subprojects
+subprojects {
+    apply plugin: "kotlin"
+    apply from: rootProject.file("gradle/common.gradle")
+
+    tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
+        kotlinOptions {
+            jvmTarget = "1.8"
+            apiVersion = "1.2"
+            languageVersion = "1.2"
+            freeCompilerArgs = ["-Xenable-jvm-default"]
+        }
+    }
+}
+
+// Configuration for API implementations
+configure(subprojects - apiProject) {
+    // Finish configuring API first
+    evaluationDependsOn(apiProject.path)
+
+    // Use api as dependency
+    dependencies {
+        compile(apiProject)
+    }
+}
