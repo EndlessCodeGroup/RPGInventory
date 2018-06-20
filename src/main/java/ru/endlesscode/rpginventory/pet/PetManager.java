@@ -325,6 +325,7 @@ public class PetManager {
 
     /**
      * Gets the owner of present LivingEntity, if he is exists.
+     * @since 2.1.7
      * @param entity LivingEntity
      * @return if exists, the UUID of the Player that owning that entity, otherwise null
      */
