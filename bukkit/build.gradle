@@ -13,7 +13,7 @@ bukkit {
 
     meta {
         name = pluginName
-        main = "$group.$name.$pluginName"
+        main = "$group.${project.name}.$pluginName"
         authors = ["OsipXD", "EndlessCodeGroup"]
     }
 
@@ -24,13 +24,13 @@ bukkit {
 }
 
 dependencies {
-    compileOnly(bukkit())
+    compileOnly(spigot())
     applyDeps(commonDeps) { implementation(it) }
     applyDeps(bukkitDeps) { compileOnly(it) }
 }
 
 shadowJar {
-    // Relocates here
+    relocate("kotlin", "ru.endlesscode.inspector.shade.kotlin")
 }
 
 build.dependsOn shadowJar

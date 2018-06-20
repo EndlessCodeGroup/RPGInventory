@@ -1,14 +1,5 @@
 package ru.endlesscode.inspector.bukkit
 
-import org.bukkit.plugin.java.JavaPlugin
+import ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin
 
-class Inspector : JavaPlugin() {
-
-    override fun onEnable() {
-        // Plugin startup logic
-    }
-
-    override fun onDisable() {
-        // Plugin shutdown logic
-    }
-}
+class Inspector : TrackedPlugin(InspectorPlugin::class.java)
