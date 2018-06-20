@@ -45,7 +45,10 @@ import ru.endlesscode.rpginventory.pet.PetManager;
 import ru.endlesscode.rpginventory.pet.PetType;
 import ru.endlesscode.rpginventory.utils.EntityUtils;
 import ru.endlesscode.rpginventory.utils.ItemUtils;
+import ru.endlesscode.rpginventory.utils.LocationUtils;
 import ru.endlesscode.rpginventory.utils.PlayerUtils;
+
+import java.util.UUID;
 
 /**
  * Created by OsipXD on 18.09.2015
@@ -53,6 +56,24 @@ import ru.endlesscode.rpginventory.utils.PlayerUtils;
  * All rights reserved 2014 - 2016 © «EndlessCode Group»
  */
 public class PetListener implements Listener {
+
+    @EventHandler(ignoreCancelled = true)
+    public void onPlayerInteractEntity(PlayerInteractEntityEvent event) {
+        if (event.getRightClicked() == null || !(event.getRightClicked() instanceof LivingEntity)) {
+            return;
+        }
+
+        //Avoid using owner's pet by other players
+        final LivingEntity rightClicked = (LivingEntity) event.getRightClicked();
+        final UUID petOwner = PetManager.getPetOwner(rightClicked);
+        if (petOwner == null) {
+            return;
+        }
+        if (!event.getPlayer().getUniqueId().equals(petOwner)) {
+            event.setCancelled(true);
+        }
+    }
+
     @EventHandler
     public void onItemUse(@NotNull PlayerInteractEvent event) {
         Player player = event.getPlayer();
@@ -135,7 +156,7 @@ public class PetListener implements Listener {
         final ItemStack item = InventoryManager.get(player).getInventory().getItem(PetManager.getPetSlotId());
         if (from.distance(to) > maxDistance && item != null) {
             PetManager.spawnPet(player, item);
-        } else {
+        } else if (LocationUtils.isSafeLocation(player.getLocation())){
             PetManager.teleportPet(player, to);
         }
 

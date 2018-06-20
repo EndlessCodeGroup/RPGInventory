@@ -42,6 +42,8 @@ import org.bukkit.entity.Wolf;
 import org.bukkit.inventory.HorseInventory;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.metadata.FixedMetadataValue;
+import org.bukkit.metadata.MetadataValue;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -65,6 +67,7 @@ import ru.endlesscode.rpginventory.utils.LocationUtils;
  * All rights reserved 2014 - 2016 © «EndlessCode Group»
  */
 public class PetManager {
+    private static final String METADATA_KEY_PET_OWNER = "rpginventory:petowner";
     private static final Map<String, PetType> PETS = new HashMap<>();
     private static final Map<String, PetFood> PET_FOOD = new HashMap<>();
     private static final String DEATH_TIME_TAG = "pet.deathTime";
@@ -280,6 +283,8 @@ public class PetManager {
         AttributeInstance speedAttribute = pet.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED);
         speedAttribute.setBaseValue(petType.getSpeed());
 
+        pet.setMetadata(PetManager.METADATA_KEY_PET_OWNER, new FixedMetadataValue(RPGInventory.getInstance(), player.getUniqueId()));
+
         InventoryManager.get(player).setPet(pet);
     }
 
@@ -316,6 +321,23 @@ public class PetManager {
         Inventory inventory = InventoryManager.get(player).getInventory();
         despawnPet(player);
         spawnPet((Player) player, inventory.getItem(SLOT_PET));
+    }
+
+    /**
+     * Gets the owner of present LivingEntity, if he is exists.
+     * @param entity LivingEntity
+     * @return if exists, the UUID of the Player that owning that entity, otherwise null
+     */
+    @Nullable
+    public static UUID getPetOwner(@NotNull LivingEntity entity) {
+        if (!entity.hasMetadata(PetManager.METADATA_KEY_PET_OWNER)) {
+            return null;
+        }
+
+        final List<MetadataValue> metadata = entity.getMetadata(PetManager.METADATA_KEY_PET_OWNER);
+        final Optional<MetadataValue> metadataValue = metadata.stream()
+                .filter(value -> value.getOwningPlugin().equals(RPGInventory.getInstance())).findFirst();
+        return metadataValue.isPresent() ? (UUID) metadataValue.get().value() : null;
     }
 
     @Nullable
