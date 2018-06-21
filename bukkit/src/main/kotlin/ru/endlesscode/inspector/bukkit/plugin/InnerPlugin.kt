@@ -19,6 +19,8 @@ open class InnerPlugin : PluginBase() {
 
     internal lateinit var holder: JavaPlugin
 
+    private val trackedServer by lazy { TrackedServer(holder) }
+
     final override fun getDataFolder(): File {
         return holder.dataFolder
     }
@@ -28,7 +30,7 @@ open class InnerPlugin : PluginBase() {
     }
 
     final override fun getServer(): Server {
-        return holder.server
+        return trackedServer
     }
 
     final override fun isEnabled(): Boolean {

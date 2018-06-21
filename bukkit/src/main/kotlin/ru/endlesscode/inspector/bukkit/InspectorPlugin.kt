@@ -9,9 +9,7 @@ class InspectorPlugin : InnerPlugin(), Listener {
 
     override fun onEnable() {
         logger.info("onEnable")
-
         server.pluginManager.registerEvents(this, this)
-        error("!")
     }
 
     override fun onDisable() {
