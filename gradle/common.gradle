@@ -9,6 +9,13 @@ archivesBaseName = "$pluginName-$name"
 // Java version
 sourceCompatibility = targetCompatibility = "1.8"
 
+// Enable coroutines
+kotlin {
+    experimental {
+        coroutines 'enable'
+    }
+}
+
 afterEvaluate {
     // Set it again in case ForgeGradle or BukkitGradle resets it
     sourceCompatibility = targetCompatibility = "1.8"
@@ -16,5 +23,6 @@ afterEvaluate {
 
 repositories {
     mavenCentral()
+    jcenter()
     maven { url = "https://jitpack.io" }
 }

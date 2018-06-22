@@ -1,0 +1,6 @@
+POST https://hastebin.com/documents
+Content-type: text/plain
+
+Test content
+
+###

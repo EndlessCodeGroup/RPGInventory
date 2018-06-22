@@ -1,7 +1,11 @@
 package ru.endlesscode.inspector.api.report
 
+import kotlinx.coroutines.experimental.launch
 import ru.endlesscode.inspector.api.dsl.markdown
+import ru.endlesscode.inspector.api.service.HastebinStorage
+import ru.endlesscode.inspector.api.service.TextStorage
 import ru.endlesscode.inspector.util.getFocusedStackTrace
+import ru.endlesscode.inspector.util.stackTraceText
 
 
 /**
@@ -14,6 +18,7 @@ class DiscordReporter @JvmOverloads constructor(
         private val focus: ReporterFocus,
         id: String,
         token: String,
+        private val textStorage: TextStorage = HastebinStorage(),
         private val username: String = "Inspector",
         private val avatarUrl: String = "https://gitlab.com/endlesscodegroup/inspector/raw/master/images/inspector_icon_256.png"
 ) : Reporter {
@@ -22,21 +27,25 @@ class DiscordReporter @JvmOverloads constructor(
     override fun report(env: Environment, exceptionData: ExceptionData, onError: (Throwable) -> Unit) {
         val title = "${env.title} [x${exceptionData.times}]"
         val exception = exceptionData.throwable
-        val message = buildMessage(
-                title = title,
-                fields = env.fields,
-                shortStackTrace = exception.getFocusedStackTrace(focus.focusedPackage),
-                fullExceptionUrl = ""
-        )
 
-        sendMessage(message, onError)
+        launch {
+            val stackTraceUrl = textStorage.storeText(exception.stackTraceText)
+            val message = buildMessage(
+                    title = title,
+                    fields = env.fields,
+                    shortStackTrace = exception.getFocusedStackTrace(focus.focusedPackage),
+                    fullStackTraceUrl = stackTraceUrl
+            )
+
+            sendMessage(message, onError)
+        }
     }
 
     private fun buildMessage(
             title: String,
             fields: List<Pair<String, String>>,
             shortStackTrace: String,
-            fullExceptionUrl: String
+            fullStackTraceUrl: String
     ): String {
         return markdown {
             +b(title)

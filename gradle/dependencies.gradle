@@ -4,15 +4,18 @@
 def junitVersion = "4.12"
 def mockitoVersion = "2.8.+"
 def powermockVersion = "1.7.+"
+def coroutinesVersion = "0.21"
 
 // Groups
 def powermockGroup = "org.powermock"
+def kotlinxGroup = "org.jetbrains.kotlinx"
 
 ext {
     // All these dependencies will be used with scope `implementation`
     commonDeps = [
             // Dependencies used in all subprojects
-            kotlinStdlib : kotlin("stdlib-jdk8")
+            kotlinStdlib : kotlin("stdlib-jdk8"),
+            coroutines : dep(kotlinxGroup, "kotlinx-coroutines-core", coroutinesVersion)
     ]
 
     apiDeps = [
