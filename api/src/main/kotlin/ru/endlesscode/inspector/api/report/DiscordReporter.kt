@@ -29,15 +29,19 @@ class DiscordReporter @JvmOverloads constructor(
         val exception = exceptionData.throwable
 
         launch {
-            val stackTraceUrl = textStorage.storeText(exception.stackTraceText)
-            val message = buildMessage(
-                    title = title,
-                    fields = env.fields,
-                    shortStackTrace = exception.getFocusedStackTrace(focus.focusedPackage),
-                    fullStackTraceUrl = stackTraceUrl
-            )
+            try {
+                val stackTraceUrl = textStorage.storeText(exception.stackTraceText)
+                val message = buildMessage(
+                        title = title,
+                        fields = env.fields,
+                        shortStackTrace = exception.getFocusedStackTrace(focus.focusedPackage),
+                        fullStackTraceUrl = stackTraceUrl
+                )
 
-            sendMessage(message, onError)
+                sendMessage(message, onError)
+            } catch (e: Exception) {
+                onError(e)
+            }
         }
     }
 
@@ -53,7 +57,11 @@ class DiscordReporter @JvmOverloads constructor(
             for ((name, value) in fields) {
                 +"${b("$name:")} $value"
             }
-
+            +b("Short stacktrace:")
+            code("java") {
+                +shortStackTrace
+            }
+            +"${b("Full stacktrace:")} $fullStackTraceUrl"
         }.toString()
     }
 

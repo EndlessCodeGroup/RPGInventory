@@ -1,5 +1,6 @@
 package ru.endlesscode.inspector.api.dsl
 
+
 interface Element {
     fun render(builder: StringBuilder, indent: String = "")
 }
@@ -65,7 +66,11 @@ abstract class TextGroup : Group(indent = "", firstLine = null) {
     }
 }
 
-class Markdown : TextGroup()
+class Markdown : TextGroup() {
+    fun code(lang: String = "", init: Code.() -> Unit) = initGroup(Code(lang), init)
+}
+
+class Code(lang: String) : Group(indent = "", firstLine = "```$lang", lastLine = "```")
 
 fun markdown(init: Markdown.() -> Unit): Markdown {
     return Markdown().also(init)
