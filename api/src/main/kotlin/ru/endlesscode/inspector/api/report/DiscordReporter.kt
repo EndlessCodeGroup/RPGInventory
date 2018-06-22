@@ -1,6 +1,7 @@
 package ru.endlesscode.inspector.api.report
 
 import ru.endlesscode.inspector.api.dsl.markdown
+import ru.endlesscode.inspector.util.getFocusedStackTrace
 
 
 /**
@@ -10,6 +11,7 @@ import ru.endlesscode.inspector.api.dsl.markdown
  * @param token webhook token
  */
 class DiscordReporter @JvmOverloads constructor(
+        private val focus: ReporterFocus,
         id: String,
         token: String,
         private val username: String = "Inspector",
@@ -18,16 +20,31 @@ class DiscordReporter @JvmOverloads constructor(
     private val url = "https://discordapp.com/api/webhooks/$id/$token"
 
     override fun report(env: Environment, exceptionData: ExceptionData, onError: (Throwable) -> Unit) {
+        val title = "${env.title} [x${exceptionData.times}]"
+        val exception = exceptionData.throwable
+        val message = buildMessage(
+                title = title,
+                fields = env.fields,
+                shortStackTrace = exception.getFocusedStackTrace(focus.focusedPackage),
+                fullExceptionUrl = ""
+        )
 
+        sendMessage(message, onError)
     }
 
-    private fun buildMessage(env: Environment): String {
+    private fun buildMessage(
+            title: String,
+            fields: List<Pair<String, String>>,
+            shortStackTrace: String,
+            fullExceptionUrl: String
+    ): String {
         return markdown {
-            +b(env.title)
+            +b(title)
             +""
-            for ((name, value) in env.fields) {
+            for ((name, value) in fields) {
                 +"${b("$name:")} $value"
             }
+
         }.toString()
     }
 

@@ -6,6 +6,7 @@ import org.bukkit.command.PluginCommand
 import org.bukkit.configuration.file.FileConfiguration
 import org.bukkit.generator.ChunkGenerator
 import org.bukkit.plugin.java.JavaPlugin
+import ru.endlesscode.inspector.api.report.ReporterFocus
 import java.io.InputStream
 
 
@@ -14,7 +15,9 @@ import java.io.InputStream
  *
  * @param pluginClass class of plugin to track
  */
-open class TrackedPlugin(pluginClass: Class<out InnerPlugin>) : JavaPlugin() {
+open class TrackedPlugin(pluginClass: Class<out InnerPlugin>) : JavaPlugin(), ReporterFocus {
+
+    override val focusedPackage: String = javaClass.`package`.name
 
     val plugin: InnerPlugin = pluginClass.newInstance()
 

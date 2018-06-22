@@ -2,10 +2,6 @@
 
 version = "0.1"
 
-repositories {
-    maven { url = "https://jitpack.io" }
-}
-
 dependencies {
     applyDeps(commonDeps) { implementation(it) }
     applyDeps(apiDeps) { implementation(it) }
