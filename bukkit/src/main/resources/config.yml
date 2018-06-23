@@ -1,0 +1,5 @@
+# When enable you agree to send your environment data to plugin authors
+enabled: true
+data:
+  core: true
+  plugins: true
