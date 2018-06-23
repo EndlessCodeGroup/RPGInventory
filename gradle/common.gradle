@@ -16,6 +16,13 @@ kotlin {
     }
 }
 
+task sourcesJar(type: Jar, dependsOn: classes) {
+    from sourceSets.main.allSource
+    classifier = "sources"
+}
+
+jar.dependsOn sourcesJar
+
 afterEvaluate {
     // Set it again in case ForgeGradle or BukkitGradle resets it
     sourceCompatibility = targetCompatibility = "1.8"

@@ -64,6 +64,10 @@ abstract class TextGroup : Group(indent = "", firstLine = null) {
     fun code (text: String): String {
         return "`$text`"
     }
+
+    fun st(text: String): String {
+        return "~~$text~~"
+    }
 }
 
 class Markdown : TextGroup() {

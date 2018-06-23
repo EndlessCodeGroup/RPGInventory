@@ -11,7 +11,7 @@ import org.bukkit.plugin.PluginDescriptionFile
 import org.bukkit.plugin.PluginLoader
 import java.io.File
 import java.io.InputStream
-import java.util.*
+import java.io.Reader
 import java.util.logging.Logger
 
 open class PluginLifecycle : PluginBase() {
@@ -82,17 +82,6 @@ open class PluginLifecycle : PluginBase() {
         return null
     }
 
-    fun getCommand(name: String): PluginCommand? {
-        // Default implementation from JavaPlugin
-        val alias = name.toLowerCase(Locale.ENGLISH)
-        var command: PluginCommand? = this.server.getPluginCommand(alias)
-        if (command == null || command.plugin !== this) {
-            command = this.server.getPluginCommand(this.description.name.toLowerCase(Locale.ENGLISH) + ":" + alias)
-        }
-
-        return if (command != null && command.plugin === this) command else null
-    }
-
     override fun onLoad() {}
 
     override fun onEnable() {}
@@ -117,5 +106,19 @@ open class PluginLifecycle : PluginBase() {
 
     override fun toString(): String {
         return this.description.fullName
+    }
+
+    // For compatibility with JavaPlugin
+
+    fun getCommand(name: String): PluginCommand? = holder._getCommand(name)
+
+    protected fun getTextResource(file: String): Reader? = holder._getTextResource(file)
+
+    protected fun getFile(): File = holder._getFile()
+
+    protected fun getClassLoader(): ClassLoader = holder._getClassLoader()
+
+    protected fun setEnabled(enabled: Boolean) {
+        holder._setEnabled(enabled)
     }
 }
