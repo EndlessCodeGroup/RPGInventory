@@ -13,13 +13,23 @@ val minorVersion = 0
 version = "${apiProject.version}.$minorVersion"
 
 buildConfigKotlin {
-    val secretProps = Properties()
-    secretProps.load(file("secret.properties").inputStream())
+    val discordId: String
+    val discordToken: String
+
+    if (System.getenv("CI") == "true") {
+        discordId = System.getenv("DISCORD_ID")
+        discordToken = System.getenv("DISCORD_TOKEN")
+    } else {
+        val secretProps = Properties()
+        secretProps.load(file("secret.properties").inputStream())
+        discordId = secretProps.getProperty("discord.id", "SPECIFY_DISCORD_ID")
+        discordToken = secretProps.getProperty("discord.token", "SPECIFY_DISCORD_TOKEN")
+    }
 
     sourceSet("main") {
         packageName = "$group.${project.name}"
-        buildConfig(name = "DISCORD_ID", value = secretProps.getProperty("discord.id", "SPECIFY_ID"))
-        buildConfig(name = "DISCORD_TOKEN", value = secretProps.getProperty("discord.token", "SPECIFY_TOKEN"))
+        buildConfig(name = "DISCORD_ID", value = discordId)
+        buildConfig(name = "DISCORD_TOKEN", value = discordToken)
     }
 }
 
