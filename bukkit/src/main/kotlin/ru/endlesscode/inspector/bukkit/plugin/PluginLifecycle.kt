@@ -19,13 +19,14 @@ abstract class PluginLifecycle : PluginBase() {
     internal lateinit var holder: TrackedPlugin
 
     private val trackedServer by lazy { TrackedServer(holder) }
+    private val trackedPluginLoader by lazy { TrackedPluginLoader(holder.pluginLoader) }
 
     final override fun getDataFolder(): File {
         return holder.dataFolder
     }
 
     final override fun getPluginLoader(): PluginLoader {
-        return holder.pluginLoader
+        return trackedPluginLoader
     }
 
     final override fun getServer(): Server {

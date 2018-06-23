@@ -11,6 +11,7 @@ import org.bukkit.plugin.Plugin
 import org.bukkit.plugin.PluginManager
 import org.bukkit.plugin.RegisteredListener
 import ru.endlesscode.inspector.api.report.Reporter
+import ru.endlesscode.inspector.bukkit.util.realPlugin
 
 
 class TrackedPluginManager(
@@ -32,11 +33,12 @@ class TrackedPluginManager(
      * @param plugin a plugin to register
      */
     override fun registerEvents(listener: Listener, plugin: Plugin) {
-        if (!plugin.isEnabled) {
+        val realPlugin = plugin.realPlugin
+        if (!realPlugin.isEnabled) {
             throw IllegalPluginAccessException("Plugin attempted to register $listener while not enabled")
         }
 
-        val registeredListeners = plugin.pluginLoader.createRegisteredListeners(listener, plugin)
+        val registeredListeners = realPlugin.pluginLoader.createRegisteredListeners(listener, realPlugin)
         for ((key, listeners) in registeredListeners) {
             val wrapped = wrapAllListeners(listeners)
             getEventListeners(getRegistrationClass(key)).registerAll(wrapped)
@@ -61,7 +63,19 @@ class TrackedPluginManager(
             plugin: Plugin,
             ignoreCanceled: Boolean
     ) {
-        delegate.registerEvent(event, listener, priority, wrapExecutor(executor), plugin, ignoreCanceled)
+        delegate.registerEvent(event, listener, priority, wrapExecutor(executor), plugin.realPlugin, ignoreCanceled)
+    }
+
+    override fun isPluginEnabled(plugin: Plugin?): Boolean {
+        return delegate.isPluginEnabled(plugin?.realPlugin)
+    }
+
+    override fun enablePlugin(plugin: Plugin) {
+        delegate.enablePlugin(plugin.realPlugin)
+    }
+
+    override fun disablePlugin(plugin: Plugin) {
+        delegate.enablePlugin(plugin.realPlugin)
     }
 
     private fun wrapAllListeners(listeners: Iterable<RegisteredListener>): List<RegisteredListener> {
