@@ -23,15 +23,24 @@ build:
     paths:
       - build
       - .gradle
-      
+  artifacts:
+    paths:
+      - bukkit/build/libs/*.jar
+      - api/build/libs/*.jar
 
-test:
-  stage: test
-  script: gradle check
+release:
+  stage: deploy
+  script: gradle assemble
+  artifacts:
+    name: "$CI_PROJECT_NAME-$CI_COMMIT_TAG"
+    paths:
+      - bukkit/build/libs/*.jar
+      - api/build/libs/*.jar
   cache:
     key: "$CI_COMMIT_REF_NAME"
     policy: pull
     paths:
       - build
       - .gradle
-
+  only:
+    - tag
