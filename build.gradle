@@ -12,6 +12,7 @@ bukkit {
     version = "1.12.2"
 
     meta {
+        main = "${main}Plugin"
         authors = ["OsipXD", "EndlessCode Group"]
     }
 
@@ -74,6 +75,7 @@ dependencies {
     compileOnly('me.baks:RPGPlayerLeveling:3.7.2')
     compileOnly('com.sucy:SkillAPI:3.102')
     compileOnly('me.leothepro555:Skills')
+    compileOnly('ru.endlesscode.inspector:Inspector:0.1.0')
     testImplementation('junit:junit:4.12')
 }
 
