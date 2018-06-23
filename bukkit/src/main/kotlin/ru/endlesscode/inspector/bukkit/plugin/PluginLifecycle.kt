@@ -14,7 +14,7 @@ import java.io.InputStream
 import java.io.Reader
 import java.util.logging.Logger
 
-open class PluginLifecycle : PluginBase() {
+abstract class PluginLifecycle : PluginBase() {
 
     internal lateinit var holder: TrackedPlugin
 
