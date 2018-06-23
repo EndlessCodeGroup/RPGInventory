@@ -5,4 +5,8 @@ version = "0.1"
 dependencies {
     applyDeps(commonDeps) { implementation(it) }
     applyDeps(apiDeps) { implementation(it) }
+
+    implementation("com.github.jkcclemens:khttp:master-SNAPSHOT") {
+        exclude(group: "org.jetbrains.spek")
+    }
 }

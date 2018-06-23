@@ -21,6 +21,8 @@ dependencies {
 
 shadowJar {
     relocate("kotlin", "ru.endlesscode.inspector.shade.kotlin")
+    relocate("khttp", "ru.endlesscode.inspector.shade.khttp")
+    relocate("org", "ru.endlesscode.inspector.shade.org")
 }
 
 build.dependsOn shadowJar

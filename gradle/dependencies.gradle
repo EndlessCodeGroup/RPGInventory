@@ -20,7 +20,6 @@ ext {
 
     apiDeps = [
             // Dependencies used only in API
-            khttp : dep("com.github.jkcclemens", "khttp", "master-SNAPSHOT")
     ]
 
     // These dependencies will be used with scope `compileOnly`
