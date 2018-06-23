@@ -106,7 +106,7 @@ class TrackedPluginManager(
         } catch (e: AuthorNagException) {
             throw e
         } catch (e: Exception) {
-            reporter.report("Exception occurred on ${event.eventName}", e)
+            reporter.report("Error occurred on ${event.eventName}", e)
         }
     }
 

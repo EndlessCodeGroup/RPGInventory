@@ -1,5 +1,6 @@
 package ru.endlesscode.inspector.bukkit.plugin
 
+import kotlinx.coroutines.experimental.runBlocking
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
 import org.bukkit.command.PluginCommand
@@ -87,7 +88,7 @@ abstract class TrackedPlugin(pluginClass: Class<out PluginLifecycle>) : JavaPlug
             label: String?,
             args: Array<out String>?
     ): Boolean {
-        return track("Exception occurred during command execution") {
+        return track("Error occurred during command execution") {
             plugin.onCommand(sender, command, label, args)
         }
     }
@@ -104,19 +105,19 @@ abstract class TrackedPlugin(pluginClass: Class<out PluginLifecycle>) : JavaPlug
     }
 
     final override fun onLoad() {
-        track("Exception occurred during plugin load") {
+        track("Error occurred during plugin load") {
             plugin.onLoad()
         }
     }
 
     final override fun onEnable() {
-        track("Exception occurred during plugin enable") {
+        track("Error occurred during plugin enable") {
             plugin.onEnable()
         }
     }
 
     final override fun onDisable() {
-        track("Exception occurred during plugin disable") {
+        track("Error occurred during plugin disable") {
             plugin.onDisable()
         }
     }
@@ -131,11 +132,13 @@ abstract class TrackedPlugin(pluginClass: Class<out PluginLifecycle>) : JavaPlug
         return "$plugin [Tracked]"
     }
 
-    private fun <T> track(message: String = "Exception occurred on plugin lifecycle", block: () -> T): T {
+    private fun <T> track(message: String = "Error occurred on plugin lifecycle", block: () -> T): T {
         try {
             return block.invoke()
         } catch (e: Exception) {
-            reporter.report(message, e)
+            runBlocking {
+                reporter.report(message, e).join()
+            }
             throw ReportedException(e)
         }
     }
