@@ -24,6 +24,7 @@ build:
       - build
       - .gradle
   artifacts:
+    expire_in: 1 week
     paths:
       - bukkit/build/libs/*.jar
       - api/build/libs/*.jar

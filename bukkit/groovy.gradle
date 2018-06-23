@@ -28,7 +28,7 @@ shadowJar {
     relocate("org", "ru.endlesscode.inspector.shade.org")
 }
 
-build.dependsOn shadowJar
+assemble.dependsOn shadowJar
 
 def pomConfig = {
     licenses {
