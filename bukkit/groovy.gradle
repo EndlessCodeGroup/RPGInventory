@@ -17,7 +17,7 @@ bukkit {
 }
 
 dependencies {
-    compileOnly(spigot())
+    compileOnly(bukkit())
     applyDeps(commonDeps) { implementation(it) }
     applyDeps(bukkitDeps) { compileOnly(it) }
 }
