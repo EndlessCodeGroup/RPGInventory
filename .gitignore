@@ -15,6 +15,7 @@
 ### Gradle template
 .gradle/
 build/
+out/
 local.properties
 secret.properties
 
