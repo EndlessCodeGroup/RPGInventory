@@ -56,5 +56,6 @@ public class MyTrackedPlugin extends TrackedPlugin {
     }
 }
 ```
+You can see example of plugin migration here: endlesscodegroup/rpginventory/rpginventory@0270322f
 
-  **NOTE:** At this moment available only Discord Reporter, but will be added more soon.
+> **NOTE:** At this moment available only Discord Reporter, but will be added more reporters soon.
