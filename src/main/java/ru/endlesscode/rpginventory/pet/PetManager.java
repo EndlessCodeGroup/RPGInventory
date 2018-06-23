@@ -67,7 +67,7 @@ import ru.endlesscode.rpginventory.utils.LocationUtils;
  * All rights reserved 2014 - 2016 © «EndlessCode Group»
  */
 public class PetManager {
-    private static final String METADATA_KEY_PET_OWNER = "rpginventory:petowner";
+    public static final String METADATA_KEY_PET_OWNER = "rpginventory:petowner";
     private static final Map<String, PetType> PETS = new HashMap<>();
     private static final Map<String, PetFood> PET_FOOD = new HashMap<>();
     private static final String DEATH_TIME_TAG = "pet.deathTime";
@@ -203,7 +203,7 @@ public class PetManager {
         }
 
         if (PetManager.getDeathTime(petItem) > 0) {
-            PetManager.startCooldownTimer(player, petItem);
+            //PetManager.startCooldownTimer(player, petItem);
             return;
         }
 

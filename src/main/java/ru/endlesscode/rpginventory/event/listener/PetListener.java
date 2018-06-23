@@ -193,24 +193,21 @@ public class PetListener implements Listener {
 
     @EventHandler
     public void onPetDeath(@NotNull EntityDeathEvent event) {
-        if (!(event.getEntity() instanceof Tameable)) {
+        if (PetManager.getPetOwner(event.getEntity()) == null) {
             return;
         }
 
-        Tameable petEntity = (Tameable) event.getEntity();
-        final OfflinePlayer player;
-        if (!petEntity.isTamed() || (player = (OfflinePlayer) petEntity.getOwner()) == null || !player.isOnline()) {
+        LivingEntity petEntity = event.getEntity();
+        final Player player = Bukkit.getPlayer(PetManager.getPetOwner(petEntity));
+
+        if (player == null || !InventoryManager.playerIsLoaded(player)) {
             return;
         }
 
-        if (!InventoryManager.playerIsLoaded(player)) {
-            return;
-        }
-
-        PlayerWrapper playerWrapper = InventoryManager.get(player);
+        final PlayerWrapper playerWrapper = InventoryManager.get(player);
         if (petEntity == playerWrapper.getPet()) {
             Inventory inventory = playerWrapper.getInventory();
-            final ItemStack petItem = inventory.getItem(PetManager.getPetSlotId());
+            ItemStack petItem = inventory.getItem(PetManager.getPetSlotId());
             PetType petType = PetManager.getPetFromItem(petItem);
 
             if (petType != null && petType.isRevival()) {
