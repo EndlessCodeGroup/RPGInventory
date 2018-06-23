@@ -26,13 +26,23 @@ First of all your current main plugin class should extend `PluginLifecycle` inst
 For example, this code:
 ```java
 public class MyPlugin extends JavaPlugin {
+    // ...
     // onEnable, onDisable, etc.
+    // ...
 }
 ```
 should be:
 ```java
 public class MyPlugin extends PluginLifecycle {
+    // ...
     // onEnable, onDisable, etc.
+    // ...
+    
+    // If you target on server version lower than 1.12, you should 
+    // override method getDatabase()
+    public EbeanServer getDatabase() {
+        return holder.getDatabase();
+    }
 }
 ```
 
