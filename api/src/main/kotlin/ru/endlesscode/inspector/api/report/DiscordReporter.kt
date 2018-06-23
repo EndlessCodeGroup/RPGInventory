@@ -32,16 +32,17 @@ class DiscordReporter @JvmOverloads constructor(
             onSuccess: (String, ExceptionData) -> Unit,
             onError: (Throwable) -> Unit
     ): Job {
-        val exception = exceptionData.throwable
+        val exception = exceptionData.exception
 
         return launch {
             try {
-                val stackTraceUrl = textStorage.storeText(exception.stackTraceText)
-                val message = buildMessage(
+                val fullReport = buildFullMessage(title, focus.environment.fields, exception)
+                val fullReportUrl = textStorage.storeText(fullReport)
+                val message = buildShortMessage(
                         title = title,
                         fields = focus.environment.fields,
                         shortStackTrace = exception.getFocusedRootStackTrace(focus.focusedPackage),
-                        fullStackTraceUrl = stackTraceUrl
+                        fullReportUrl = fullReportUrl
                 )
 
                 sendMessage(message, onError)
@@ -52,23 +53,44 @@ class DiscordReporter @JvmOverloads constructor(
         }
     }
 
-    private fun buildMessage(
+    private fun buildFullMessage(
             title: String,
-            fields: List<Pair<String, String>>,
+            fields: List<Pair<String, ReportField>>,
+            exception: Exception
+    ): String {
+        return buildString {
+            append(title)
+            append("\n\n")
+            for ((name, field) in fields) {
+                append(name)
+                append(": ")
+                append(field.value)
+                append("\n")
+            }
+            append("\nStacktrace:\n")
+            append(exception.stackTraceText)
+            append("\n")
+        }
+    }
+
+    private fun buildShortMessage(
+            title: String,
+            fields: List<Pair<String, ReportField>>,
             shortStackTrace: String,
-            fullStackTraceUrl: String
+            fullReportUrl: String
     ): String {
         return markdown {
+            +it("______________________")
             +b(title)
             +""
-            for ((name, value) in fields) {
-                +"${b("$name:")} $value"
+            for ((name, field) in fields) {
+                +"${b("$name:")} ${field.shortValue}"
             }
             +b("Short stacktrace:")
             code("java") {
                 +shortStackTrace
             }
-            +"${b("Full stacktrace:")} $fullStackTraceUrl"
+            +"${b("Full report:")} $fullReportUrl"
         }.toString()
     }
 

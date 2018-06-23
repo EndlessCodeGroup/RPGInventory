@@ -1,6 +1,6 @@
 package ru.endlesscode.inspector.api.report
 
 class ExceptionData(
-        val throwable: Throwable,
+        val exception: Exception,
         var times: Int = 1
 )

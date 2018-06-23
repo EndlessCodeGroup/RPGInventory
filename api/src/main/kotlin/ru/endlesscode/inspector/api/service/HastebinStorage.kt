@@ -12,6 +12,6 @@ class HastebinStorage : TextStorage {
                 data = text
         )
         val key = response.jsonObject["key"]
-        return "$HOST/$key"
+        return "$HOST/$key.txt"
     }
 }
