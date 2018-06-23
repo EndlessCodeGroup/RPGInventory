@@ -80,7 +80,6 @@ class DiscordReporter @JvmOverloads constructor(
             fullReportUrl: String
     ): String {
         return markdown {
-            +it("______________________")
             +b(title)
             +""
             for ((name, field) in fields) {
@@ -91,6 +90,8 @@ class DiscordReporter @JvmOverloads constructor(
                 +shortStackTrace
             }
             +"${b("Full report:")} $fullReportUrl"
+            // Separator
+            +st("                                                                                                 ")
         }.toString()
     }
 

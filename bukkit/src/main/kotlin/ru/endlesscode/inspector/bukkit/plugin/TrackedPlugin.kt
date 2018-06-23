@@ -12,7 +12,9 @@ import ru.endlesscode.inspector.api.report.ReportedException
 import ru.endlesscode.inspector.api.report.Reporter
 import ru.endlesscode.inspector.api.report.ReporterFocus
 import ru.endlesscode.inspector.bukkit.report.BukkitEnvironment
+import java.io.File
 import java.io.InputStream
+import java.io.Reader
 
 
 /**
@@ -141,5 +143,19 @@ abstract class TrackedPlugin(pluginClass: Class<out PluginLifecycle>) : JavaPlug
             }
             throw ReportedException(e)
         }
+    }
+
+    // Methods to make visible for PluginLifecycle
+
+    internal fun _getFile(): File = file
+
+    internal fun _getClassLoader(): ClassLoader = classLoader
+
+    internal fun _getTextResource(file: String): Reader? = super.getTextResource(file)
+
+    internal fun _getCommand(name: String): PluginCommand? = super.getCommand(name)
+
+    internal fun _setEnabled(enabled: Boolean) {
+        isEnabled = enabled
     }
 }

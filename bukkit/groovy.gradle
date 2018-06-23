@@ -25,7 +25,12 @@ dependencies {
 shadowJar {
     relocate("kotlin", "ru.endlesscode.inspector.shade.kotlin")
     relocate("khttp", "ru.endlesscode.inspector.shade.khttp")
-    relocate("org", "ru.endlesscode.inspector.shade.org")
+    relocate("org.json", "ru.endlesscode.inspector.shade.org.json")
+
+    dependencies {
+        // Exclude annotations from final jar
+        exclude(dependency("org.jetbrains:annotations:13.0"))
+    }
 }
 
 assemble.dependsOn shadowJar
