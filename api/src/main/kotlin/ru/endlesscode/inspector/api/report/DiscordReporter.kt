@@ -1,10 +1,11 @@
 package ru.endlesscode.inspector.api.report
 
+import kotlinx.coroutines.experimental.Job
 import kotlinx.coroutines.experimental.launch
 import ru.endlesscode.inspector.api.dsl.markdown
 import ru.endlesscode.inspector.api.service.HastebinStorage
 import ru.endlesscode.inspector.api.service.TextStorage
-import ru.endlesscode.inspector.util.getFocusedStackTrace
+import ru.endlesscode.inspector.util.getFocusedRootStackTrace
 import ru.endlesscode.inspector.util.stackTraceText
 
 
@@ -15,30 +16,36 @@ import ru.endlesscode.inspector.util.stackTraceText
  * @param token webhook token
  */
 class DiscordReporter @JvmOverloads constructor(
-        private val focus: ReporterFocus,
+        override val focus: ReporterFocus,
         id: String,
         token: String,
         private val textStorage: TextStorage = HastebinStorage(),
         private val username: String = "Inspector",
         private val avatarUrl: String = "https://gitlab.com/endlesscodegroup/inspector/raw/master/images/inspector_icon_256.png"
-) : Reporter {
+) : FilteringReporter() {
+
     private val url = "https://discordapp.com/api/webhooks/$id/$token"
 
-    override fun report(env: Environment, exceptionData: ExceptionData, onError: (Throwable) -> Unit) {
-        val title = "${env.title} [x${exceptionData.times}]"
+    override fun reportFiltered(
+            title: String,
+            exceptionData: ExceptionData,
+            onSuccess: (String, ExceptionData) -> Unit,
+            onError: (Throwable) -> Unit
+    ): Job {
         val exception = exceptionData.throwable
 
-        launch {
+        return launch {
             try {
                 val stackTraceUrl = textStorage.storeText(exception.stackTraceText)
                 val message = buildMessage(
                         title = title,
-                        fields = env.fields,
-                        shortStackTrace = exception.getFocusedStackTrace(focus.focusedPackage),
+                        fields = focus.environment.fields,
+                        shortStackTrace = exception.getFocusedRootStackTrace(focus.focusedPackage),
                         fullStackTraceUrl = stackTraceUrl
                 )
 
                 sendMessage(message, onError)
+                onSuccess(title, exceptionData)
             } catch (e: Exception) {
                 onError(e)
             }

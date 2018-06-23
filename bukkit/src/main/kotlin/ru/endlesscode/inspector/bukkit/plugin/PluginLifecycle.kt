@@ -9,15 +9,14 @@ import org.bukkit.generator.ChunkGenerator
 import org.bukkit.plugin.PluginBase
 import org.bukkit.plugin.PluginDescriptionFile
 import org.bukkit.plugin.PluginLoader
-import org.bukkit.plugin.java.JavaPlugin
 import java.io.File
 import java.io.InputStream
 import java.util.*
 import java.util.logging.Logger
 
-open class InnerPlugin : PluginBase() {
+open class PluginLifecycle : PluginBase() {
 
-    internal lateinit var holder: JavaPlugin
+    internal lateinit var holder: TrackedPlugin
 
     private val trackedServer by lazy { TrackedServer(holder) }
 

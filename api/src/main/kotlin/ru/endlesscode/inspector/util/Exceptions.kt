@@ -11,6 +11,17 @@ val Throwable.stackTraceText: String
         return sw.toString()
     }
 
+fun Throwable.getFocusedRootStackTrace(focusedPackage: String): String {
+    return rootCause.getFocusedStackTrace(focusedPackage)
+}
+
+val Throwable.rootCause: Throwable
+    get() = this.cause?.rootCause ?: this
+
+fun Throwable.similarTo(other: Throwable): Boolean {
+    return stackTrace?.contentEquals(other.stackTrace) ?: false
+}
+
 fun Throwable.getFocusedStackTrace(focusedPackage: String): String {
     return buildString {
         append(this@getFocusedStackTrace.javaClass.name)
@@ -33,10 +44,13 @@ fun Throwable.getFocusedStackTrace(focusedPackage: String): String {
         cause?.let {
             append(it.getFocusedStackTrace(focusedPackage))
         }
+
+        // Remove last empty line
+        setLength(length - 1)
     }
 }
 
-private fun StringBuilder.appendLine(text: String, prefix: String = "") {
+private fun StringBuilder.appendLine(text: String?, prefix: String = "") {
     if (prefix.isNotEmpty()) append(prefix)
     append(text)
     append("\n")

@@ -6,7 +6,11 @@ import org.bukkit.command.PluginCommand
 import org.bukkit.configuration.file.FileConfiguration
 import org.bukkit.generator.ChunkGenerator
 import org.bukkit.plugin.java.JavaPlugin
+import ru.endlesscode.inspector.api.report.ReportEnvironment
+import ru.endlesscode.inspector.api.report.ReportedException
+import ru.endlesscode.inspector.api.report.Reporter
 import ru.endlesscode.inspector.api.report.ReporterFocus
+import ru.endlesscode.inspector.bukkit.report.BukkitEnvironment
 import java.io.InputStream
 
 
@@ -15,15 +19,37 @@ import java.io.InputStream
  *
  * @param pluginClass class of plugin to track
  */
-open class TrackedPlugin(pluginClass: Class<out InnerPlugin>) : JavaPlugin(), ReporterFocus {
+@Suppress("LeakingThis")
+abstract class TrackedPlugin(pluginClass: Class<out PluginLifecycle>) : JavaPlugin(), ReporterFocus {
+
+    companion object {
+        const val INSPECTOR_TAG = "[Inspector]"
+    }
 
     override val focusedPackage: String = javaClass.`package`.name
+    override val environment: ReportEnvironment = BukkitEnvironment(this)
 
-    val plugin: InnerPlugin = pluginClass.newInstance()
+    val reporter: Reporter
+    val plugin: PluginLifecycle = pluginClass.newInstance()
 
     init {
         plugin.holder = this
+
+        reporter = createReporter()
+        reporter.addHandler(
+                beforeReport = { message, _ ->
+                    logger.warning("$INSPECTOR_TAG $message")
+                },
+                onSuccess = { _, _ ->
+                    logger.warning("$INSPECTOR_TAG Error was reported to author!")
+                },
+                onError = {
+                    logger.severe("$INSPECTOR_TAG Error on report: ${it.localizedMessage}")
+                }
+        )
     }
+
+    protected abstract fun createReporter(): Reporter
 
     final override fun getConfig(): FileConfiguration {
         return super.getConfig()
@@ -61,7 +87,7 @@ open class TrackedPlugin(pluginClass: Class<out InnerPlugin>) : JavaPlugin(), Re
             label: String?,
             args: Array<out String>?
     ): Boolean {
-        return track {
+        return track("Exception occurred during command execution") {
             plugin.onCommand(sender, command, label, args)
         }
     }
@@ -78,19 +104,19 @@ open class TrackedPlugin(pluginClass: Class<out InnerPlugin>) : JavaPlugin(), Re
     }
 
     final override fun onLoad() {
-        track {
+        track("Exception occurred during plugin load") {
             plugin.onLoad()
         }
     }
 
     final override fun onEnable() {
-        track {
+        track("Exception occurred during plugin enable") {
             plugin.onEnable()
         }
     }
 
     final override fun onDisable() {
-        track {
+        track("Exception occurred during plugin disable") {
             plugin.onDisable()
         }
     }
@@ -105,12 +131,12 @@ open class TrackedPlugin(pluginClass: Class<out InnerPlugin>) : JavaPlugin(), Re
         return "$plugin [Tracked]"
     }
 
-    private fun <T> track(block: () -> T): T {
+    private fun <T> track(message: String = "Exception occurred on plugin lifecycle", block: () -> T): T {
         try {
             return block.invoke()
         } catch (e: Exception) {
-            logger.warning("Inspector tracked exception!")
-            throw e
+            reporter.report(message, e)
+            throw ReportedException(e)
         }
     }
 }

@@ -36,8 +36,8 @@ abstract class Group(
         lastLine?.let { builder.append("$it\n") }
     }
 
-    operator fun String.unaryPlus() {
-        children.add(Line(this))
+    operator fun String?.unaryPlus() {
+        children.add(Line(this ?: ""))
     }
 
     override fun toString(): String {

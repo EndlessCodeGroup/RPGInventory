@@ -1,13 +1,3 @@
-// Bukkit implementation build config
-
-plugins {
-    id "com.github.johnrengelman.shadow" version "2.0.4"
-    id "ru.endlesscode.bukkitgradle" version "0.8.0"
-}
-
-def minorVersion = 0
-version = "${apiProject.version}.$minorVersion"
-
 bukkit {
     version = "1.12.2"
 

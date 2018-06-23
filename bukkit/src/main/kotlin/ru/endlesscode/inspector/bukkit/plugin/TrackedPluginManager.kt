@@ -10,13 +10,12 @@ import org.bukkit.plugin.IllegalPluginAccessException
 import org.bukkit.plugin.Plugin
 import org.bukkit.plugin.PluginManager
 import org.bukkit.plugin.RegisteredListener
-import java.util.logging.Level
-import java.util.logging.Logger
+import ru.endlesscode.inspector.api.report.Reporter
 
 
 class TrackedPluginManager(
         private val delegate: PluginManager,
-        private val logger: Logger
+        private val reporter: Reporter
 ) : PluginManager by delegate {
 
     companion object {
@@ -24,7 +23,7 @@ class TrackedPluginManager(
         private val NULL_EXECUTOR = EventExecutor { _, _ -> error("This method should never be called!") }
     }
 
-    constructor(owner: Plugin) : this(owner.server.pluginManager, owner.logger)
+    constructor(plugin: TrackedPlugin) : this(plugin.server.pluginManager, plugin.reporter)
 
     /**
      * Registers all the events in the given listener class.
@@ -106,8 +105,8 @@ class TrackedPluginManager(
             block.invoke()
         } catch (e: AuthorNagException) {
             throw e
-        } catch (e: Throwable) {
-            logger.log(Level.SEVERE, "Inspector tracked exception in ${event.eventName}", e)
+        } catch (e: Exception) {
+            reporter.report("Exception occurred on ${event.eventName}", e)
         }
     }
 

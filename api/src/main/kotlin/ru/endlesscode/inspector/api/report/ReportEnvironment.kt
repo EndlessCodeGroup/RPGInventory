@@ -1,6 +1,5 @@
 package ru.endlesscode.inspector.api.report
 
-interface Environment {
-    val title: String
+interface ReportEnvironment {
     val fields: List<Pair<String, String>>
 }

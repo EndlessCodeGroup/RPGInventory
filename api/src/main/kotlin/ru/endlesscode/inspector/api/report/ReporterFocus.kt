@@ -5,4 +5,5 @@ package ru.endlesscode.inspector.api.report
  */
 interface ReporterFocus {
     val focusedPackage: String
+    val environment: ReportEnvironment
 }
