@@ -5,6 +5,7 @@ plugins {
     id("com.github.johnrengelman.shadow") version "2.0.4"
     id("ru.endlesscode.bukkitgradle") version "0.8.0"
     id("com.github.kukuhyoniatmoko.buildconfigkotlin") version "1.0.1"
+    id("maven-publish")
 }
 
 val apiProject: Project by extra

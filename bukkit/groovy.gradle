@@ -1,3 +1,5 @@
+def repoUrl = "https://gitlab.com/endlesscodegroup/inspector"
+
 bukkit {
     version = "1.12.2"
 
@@ -5,6 +7,7 @@ bukkit {
         name = pluginName
         main = "$group.${project.name}.$pluginName"
         authors = ["OsipXD", "EndlessCodeGroup"]
+        url = repoUrl
     }
 
     run {
@@ -26,3 +29,50 @@ shadowJar {
 }
 
 build.dependsOn shadowJar
+
+def pomConfig = {
+    licenses {
+        license {
+            name "GNU Affero General Public License v3.0"
+            url "https://www.gnu.org/licenses/agpl-3.0.html"
+        }
+    }
+
+    developers {
+        developer {
+            id "endlesscodegroup"
+            name "Endless Code Group"
+        }
+        developer {
+            id "osipxd"
+            name "Osip Fatkullin"
+            email "osip.fatkullin@gmail.com"
+        }
+    }
+}
+
+publishing {
+    publications {
+        bukkit(MavenPublication) {
+            artifactId "$rootProject.name-$name"
+
+            artifact shadowJar
+
+            pom.withXml {
+                def root = asNode()
+                root.appendNode("description", project.description)
+                root.children().last() + pomConfig
+            }
+        }
+        api(MavenPublication) {
+            artifactId "$rootProject.name-$apiProject.name"
+
+            artifact apiProject.jar
+            pom.withXml {
+                def root = asNode()
+                root.appendNode("description", apiProject.description)
+                root.children().last() + pomConfig
+            }
+        }
+    }
+}
