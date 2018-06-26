@@ -20,7 +20,6 @@ package ru.endlesscode.rpginventory.pet;
 
 import com.comphenix.protocol.wrappers.nbt.NbtCompound;
 import com.comphenix.protocol.wrappers.nbt.NbtFactory;
-
 import org.bukkit.DyeColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -31,14 +30,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.Animals;
-import org.bukkit.entity.Horse;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Ocelot;
-import org.bukkit.entity.Pig;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Tameable;
-import org.bukkit.entity.Wolf;
+import org.bukkit.entity.*;
 import org.bukkit.inventory.HorseInventory;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -47,11 +39,6 @@ import org.bukkit.metadata.MetadataValue;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.*;
-
 import ru.endlesscode.rpginventory.RPGInventory;
 import ru.endlesscode.rpginventory.event.listener.PetListener;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
@@ -60,6 +47,10 @@ import ru.endlesscode.rpginventory.inventory.slot.SlotManager;
 import ru.endlesscode.rpginventory.utils.EffectUtils;
 import ru.endlesscode.rpginventory.utils.ItemUtils;
 import ru.endlesscode.rpginventory.utils.LocationUtils;
+
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.*;
 
 /**
  * Created by OsipXD on 26.08.2015
@@ -81,7 +72,7 @@ public class PetManager {
         //noinspection ConstantConditions
         SLOT_PET = SlotManager.instance().getPetSlot() != null ? SlotManager.instance().getPetSlot().getSlotId() : -1;
 
-        if (!isEnabled()) {
+        if (!PetManager.isEnabled()) {
             return false;
         }
 
@@ -97,26 +88,27 @@ public class PetManager {
             for (String key : petsConfig.getConfigurationSection("pets").getKeys(false)) {
                 tryToAddPet(key, petsConfig.getConfigurationSection("pets." + key));
             }
-            RPGInventory.getPluginLogger().info(PetManager.PETS.size() + " pet(s) has been loaded");
 
             PetManager.PET_FOOD.clear();
             for (String key : petsConfig.getConfigurationSection("food").getKeys(false)) {
                 tryToAddPetFood(key, petsConfig.getConfigurationSection("food." + key));
             }
-            RPGInventory.getPluginLogger().info(PetManager.PET_FOOD.size() + " food(s) has been loaded");
         } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
 
-        if (PETS.size() == 0 && PET_FOOD.size() == 0) {
+        if (PETS.isEmpty() && PET_FOOD.isEmpty()) {
             return false;
         }
+
+        RPGInventory.getPluginLogger().info(PetManager.PETS.size() + " pet(s) has been loaded");
+        RPGInventory.getPluginLogger().info(PetManager.PET_FOOD.size() + " food(s) has been loaded");
 
         // Register events
         instance.getServer().getPluginManager().registerEvents(new PetListener(), instance);
         PetManager.COOLDOWNS_TIMER = new CooldownsTimer(instance);
-        PetManager.COOLDOWNS_TIMER.runTaskTimer(instance,20, CooldownsTimer.TICK_PERIOD);
+        PetManager.COOLDOWNS_TIMER.runTaskTimer(instance, 20, CooldownsTimer.TICK_PERIOD);
         return true;
     }
 
@@ -223,8 +215,13 @@ public class PetManager {
                         horseInv.setSaddle(new ItemStack(Material.SADDLE));
 
                         if (features.containsKey("CHEST") && features.get("CHEST").equals("TRUE")) {
-                            //noinspection deprecation
-                            horsePet.setCarryingChest(true);
+                            try {
+                                //noinspection deprecation
+                                horsePet.setCarryingChest(true);
+                            } catch (UnsupportedOperationException ignored) {
+                                //org.bukkit.craftbukkit.entity.CraftHorse.setCarryingChest (CraftHorse.class:56)
+                                RPGInventory.getInstance().getLogger().warning("Failed to add a chest to the horse.");
+                            }
                         }
 
                         if (features.containsKey("ARMOR")) {
@@ -325,9 +322,10 @@ public class PetManager {
 
     /**
      * Gets the owner of present LivingEntity, if he is exists.
-     * @since 2.1.7
+     *
      * @param entity LivingEntity
      * @return if exists, the UUID of the Player that owning that entity, otherwise null
+     * @since 2.1.7
      */
     @Nullable
     public static UUID getPetOwner(@NotNull LivingEntity entity) {

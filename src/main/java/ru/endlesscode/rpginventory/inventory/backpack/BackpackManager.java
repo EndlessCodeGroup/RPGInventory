@@ -73,16 +73,17 @@ public class BackpackManager {
             }
 
             BackpackManager.loadBackpacks();
-            RPGInventory.getPluginLogger().info(BACKPACK_TYPES.size() + " backpack type(s) has been loaded");
-            RPGInventory.getPluginLogger().info(BACKPACKS.size() + " backpack(s) has been loaded");
         } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
 
-        if (BACKPACK_TYPES.size() == 0) {
+        if (BACKPACK_TYPES.isEmpty()) {
             return false;
         }
+
+        RPGInventory.getPluginLogger().info(BACKPACK_TYPES.size() + " backpack type(s) has been loaded");
+        RPGInventory.getPluginLogger().info(BACKPACKS.size() + " backpack(s) has been loaded");
 
         BACKPACK_LIMIT = Config.getConfig().getInt("backpacks.limit", 0);
 
