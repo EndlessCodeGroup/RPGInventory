@@ -18,7 +18,6 @@
 
 package ru.endlesscode.rpginventory.inventory;
 
-import com.comphenix.protocol.*;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
@@ -53,7 +52,10 @@ import ru.endlesscode.rpginventory.utils.*;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 @SuppressWarnings("ResultOfMethodCallIgnored")
 public class InventoryManager {
@@ -621,6 +623,7 @@ public class InventoryManager {
         return true;
     }
 
+    //TODO: Rewrite that
     public static void initPlayer(@NotNull final Player player, boolean skipJoinMessage) {
         boolean rpEnabled = Config.getConfig().getBoolean("resource-pack.enabled", true);
         if (rpEnabled) {
@@ -639,13 +642,11 @@ public class InventoryManager {
                 InventoryManager.sendResourcePack(player);
             }
         } else {
-            if (Config.getConfig().getBoolean("join-messages.default.enabled", true)) {
-                if (!skipJoinMessage) {
-                    EffectUtils.sendTitle(player,
-                            Config.getConfig().getInt("join-messages.delay"),
-                            Config.getConfig().getString("join-messages.default.title"),
-                            Config.getConfig().getStringList("join-messages.default.text"), null);
-                }
+            if (Config.getConfig().getBoolean("join-messages.default.enabled", true) && !skipJoinMessage) {
+                EffectUtils.sendTitle(player,
+                        Config.getConfig().getInt("join-messages.delay"),
+                        Config.getConfig().getString("join-messages.default.title"),
+                        Config.getConfig().getStringList("join-messages.default.text"), null);
             }
 
             if (rpEnabled) {

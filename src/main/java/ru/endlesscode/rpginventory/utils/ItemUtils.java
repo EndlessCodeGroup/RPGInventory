@@ -184,7 +184,7 @@ public class ItemUtils {
 
     @NotNull
     @Contract("null -> !null")
-    private static ItemStack syncItem(@NotNull ItemStack item) {
+    private static ItemStack syncItem(@Nullable ItemStack item) {
         if (ItemUtils.isEmpty(item)) {
             return new ItemStack(Material.AIR);
         }
@@ -209,7 +209,6 @@ public class ItemUtils {
             }
 
             textureDurability = type.getTextureDurability();
-            item = type.getItem();
 
             String bpUID = ItemUtils.getTag(item, ItemUtils.BACKPACK_UID_TAG);
             if (!bpUID.isEmpty()) {
