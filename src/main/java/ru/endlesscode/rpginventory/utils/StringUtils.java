@@ -18,20 +18,23 @@
 
 package ru.endlesscode.rpginventory.utils;
 
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.entity.Player;
-import org.jetbrains.annotations.*;
-
-import java.util.*;
-
 import me.clip.placeholderapi.PlaceholderAPI;
 import me.clip.placeholderapi.external.EZPlaceholderHook;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeInstance;
+import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import ru.endlesscode.rpginventory.RPGInventory;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
-import ru.endlesscode.rpginventory.inventory.PlayerWrapper;
 import ru.endlesscode.rpginventory.item.ItemManager;
 import ru.endlesscode.rpginventory.item.ItemStat;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by OsipXD on 29.08.2015
@@ -70,21 +73,44 @@ public class StringUtils {
         }
 
         // Player
-        line = line.replaceAll("%WORLD%", player.getWorld().getName());
-        line = line.replaceAll("%PLAYER%", player.getName());
-        line = line.replaceAll("%HP%", Utils.round(player.getHealth(), 1) + "");
-        line = line.replaceAll("%MAX_HP%", player.getMaxHealth() + "");
+        final AttributeInstance attribute = player.getAttribute(Attribute.GENERIC_MAX_HEALTH);
+        line = org.apache.commons.lang.StringUtils.replaceEach(line,
+                new String[]{
+                        "%WORLD%", "%PLAYER%",
+                        "%HP%",
+                        "%MAX_HP%"
+                },
+                new String[]{
+                        player.getWorld().getName(), player.getName(),
+                        String.valueOf(Utils.round(player.getHealth(), 1)),
+                        String.valueOf(Utils.round(attribute.getValue(), 1)),
+                }
+        );
 
         if (InventoryManager.playerIsLoaded(player)) {
             // Modifiers
-            line = line.replaceAll("%DAMAGE%", ItemManager.getModifier(player, ItemStat.StatType.DAMAGE).toString());
-            line = line.replaceAll("%BOW_DAMAGE%", ItemManager.getModifier(player, ItemStat.StatType.BOW_DAMAGE).toString());
-            line = line.replaceAll("%HAND_DAMAGE%", ItemManager.getModifier(player, ItemStat.StatType.HAND_DAMAGE).toString());
-            line = line.replaceAll("%CRIT_DAMAGE%", ItemManager.getModifier(player, ItemStat.StatType.CRIT_DAMAGE).toString());
-            line = line.replaceAll("%CRIT_CHANCE%", ItemManager.getModifier(player, ItemStat.StatType.CRIT_CHANCE).toString());
-            line = line.replaceAll("%ARMOR%", ItemManager.getModifier(player, ItemStat.StatType.ARMOR).toString());
-            line = line.replaceAll("%SPEED%", ItemManager.getModifier(player, ItemStat.StatType.SPEED).toString());
-            line = line.replaceAll("%JUMP%", ItemManager.getModifier(player, ItemStat.StatType.JUMP).toString());
+            line = org.apache.commons.lang.StringUtils.replaceEach(line,
+                    new String[]{
+                            "%DAMAGE%",
+                            "%BOW_DAMAGE%",
+                            "%HAND_DAMAGE%",
+                            "%CRIT_DAMAGE%",
+                            "%CRIT_CHANCE%",
+                            "%ARMOR%",
+                            "%SPEED%",
+                            "%JUMP%"
+                    },
+                    new String[]{
+                            ItemManager.getModifier(player, ItemStat.StatType.DAMAGE).toString(),
+                            ItemManager.getModifier(player, ItemStat.StatType.BOW_DAMAGE).toString(),
+                            ItemManager.getModifier(player, ItemStat.StatType.HAND_DAMAGE).toString(),
+                            ItemManager.getModifier(player, ItemStat.StatType.CRIT_DAMAGE).toString(),
+                            ItemManager.getModifier(player, ItemStat.StatType.CRIT_CHANCE).toString(),
+                            ItemManager.getModifier(player, ItemStat.StatType.ARMOR).toString(),
+                            ItemManager.getModifier(player, ItemStat.StatType.SPEED).toString(),
+                            ItemManager.getModifier(player, ItemStat.StatType.JUMP).toString()
+                    }
+            );
         }
 
         return line;
@@ -101,7 +127,7 @@ public class StringUtils {
                 return "";
             }
 
-            switch (identifier) {
+            switch (identifier.toLowerCase(Locale.ENGLISH)) {
                 case "damage_bonus":
                     return ItemManager.getModifier(player, ItemStat.StatType.DAMAGE).toString();
                 case "bow_damage_bonus":
