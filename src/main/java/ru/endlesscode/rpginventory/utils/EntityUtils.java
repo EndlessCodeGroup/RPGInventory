@@ -65,7 +65,7 @@ public class EntityUtils {
         }
 
         final double distance = target.distance(entity.getLocation());
-        if (distance > 20D) {
+        if (distance > 20D && LocationUtils.isSafeLocation(target)) {
             PetManager.teleportPet(player, null);
         } else if (distance < 4D) {
             return;

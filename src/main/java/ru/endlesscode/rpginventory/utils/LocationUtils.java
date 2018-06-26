@@ -19,6 +19,7 @@
 package ru.endlesscode.rpginventory.utils;
 
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -27,8 +28,10 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -38,6 +41,9 @@ import java.util.Random;
  * All rights reserved 2014 - 2016 © «EndlessCode Group»
  */
 public class LocationUtils {
+    private static final List<Material> UNSAFE_BLOCK_MATERIALS = Arrays.asList(
+            Material.LADDER, Material.LAVA, Material.STATIONARY_LAVA, Material.CACTUS, Material.FIRE
+    );
     private static final Random RANDOM = new Random();
 
     @Deprecated
@@ -54,12 +60,13 @@ public class LocationUtils {
             for (int y = playerBlock.getY() - radius; y < playerBlock.getY() + radius; y++) {
                 for (int z = playerBlock.getZ() - radius; z < playerBlock.getZ() + radius; z++) {
                     Location loc = getBlockCenter(new Location(world, x, y, z));
-                    if (loc.getBlock().isEmpty()) {
-                        Block underBlock = loc.clone().subtract(0, 1, 0).getBlock();
-                        if (!underBlock.isEmpty() && !underBlock.isLiquid()) {
-                            loc.setYaw(-180 + LocationUtils.RANDOM.nextFloat() * 360);
-                            availableLocations.add(loc);
-                        }
+                    if (!loc.getBlock().isEmpty()) {
+                        continue;
+                    }
+                    Block underBlock = loc.clone().subtract(0, 1, 0).getBlock();
+                    if (!underBlock.isEmpty() && !underBlock.isLiquid() && LocationUtils.isSafeLocation(underBlock.getLocation())) {
+                        loc.setYaw(-180 + LocationUtils.RANDOM.nextFloat() * 360);
+                        availableLocations.add(loc);
                     }
                 }
             }
@@ -135,5 +142,9 @@ public class LocationUtils {
         vector.setZ(0.0D + Math.random() - Math.random());
 
         return vector;
+    }
+
+    public static boolean isSafeLocation(@Nullable Location location) {
+        return location != null && !LocationUtils.UNSAFE_BLOCK_MATERIALS.contains(location.getBlock().getType());
     }
 }

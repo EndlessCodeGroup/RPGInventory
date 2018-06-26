@@ -18,6 +18,7 @@
 
 package ru.endlesscode.rpginventory.inventory;
 
+import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.GameMode;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -88,17 +89,28 @@ public class InventoryLocker {
     }
 
     public static boolean buySlot(@NotNull Player player, int line) {
-        if (!RPGInventory.economyConnected()) {
-            return false;
-        }
         final FileConfiguration config = Config.getConfig();
-        if (RPGInventory.getEconomy().withdrawPlayer(player, config.getDouble("slots.money.cost.line" + line)).transactionSuccess()) {
-            if (RPGInventory.getLevelSystem() == PlayerUtils.LevelSystem.EXP && config.getBoolean("slots.level.spend")) {
-                player.setLevel(player.getLevel() - config.getInt("slots.level.required.line" + line));
+        if (config.getBoolean("slots.money.enabled")) {
+            if (!RPGInventory.economyConnected()) {
+                return false;
             }
-            return true;
+            final EconomyResponse economyResponse = RPGInventory.getEconomy().withdrawPlayer(
+                    player, config.getDouble("slots.money.cost.line" + line)
+            );
+            if (!economyResponse.transactionSuccess()) {
+                return false;
+            }
         }
-        return false;
+        if (config.getBoolean("slots.level.enabled") && config.getBoolean("slots.level.spend")) {
+            if (RPGInventory.getLevelSystem() == PlayerUtils.LevelSystem.EXP) {
+                final int level = player.getLevel() - config.getInt("slots.level.required.line" + line);
+                if (0 > level) {
+                    return false;
+                }
+                player.setLevel(level);
+            }
+        }
+        return true;
     }
 
     @Contract(pure = true)

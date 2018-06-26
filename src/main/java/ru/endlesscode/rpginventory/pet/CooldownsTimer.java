@@ -47,7 +47,6 @@ public class CooldownsTimer extends BukkitRunnable {
         }
 
         this.temporaryMap.put(player.getUniqueId(), new ValuePair(itemStack, new AtomicInteger(0)));
-
     }
 
     @Override
@@ -79,24 +78,19 @@ public class CooldownsTimer extends BukkitRunnable {
                 continue;
             }
 
-            //Future bug fix of multiple pets cooldown
-            //TODO: Improve that. If we need it, ofc.
-            /*if (!inventory.getItem(PetManager.getPetSlotId()).isSimilar(next.getValue().getItemStack())) {
-                iterator.remove();
-                continue;
-            }*/
-
-            int cooldown = PetManager.getCooldown(next.getValue().getItemStack());
+            final ItemStack originalItemStack = next.getValue().getItemStack();
+            int cooldown = PetManager.getCooldown(originalItemStack);
             if (1 > cooldown) {
-                PetManager.saveDeathTime(next.getValue().getItemStack(), 0);
-                PetManager.spawnPet(player, next.getValue().getItemStack());
-                inventory.setItem(PetManager.getPetSlotId(), next.getValue().getItemStack());
+                PetManager.saveDeathTime(originalItemStack, 0);
+                PetManager.spawnPet(player, originalItemStack);
+                inventory.setItem(PetManager.getPetSlotId(), originalItemStack);
                 iterator.remove();
             } else if (60 >= cooldown) {
-                final ItemStack item = next.getValue().getItemStack().clone();
+                final ItemStack item = originalItemStack.clone();
+                final String displayName = next.getValue().getDisplayName();
                 final ItemMeta itemMeta = item.getItemMeta();
                 itemMeta.setDisplayName(
-                        itemMeta.getDisplayName() + RPGInventory.getLanguage().getMessage("pet.cooldown", cooldown)
+                        displayName + RPGInventory.getLanguage().getMessage("pet.cooldown", cooldown)
                 );
                 item.setItemMeta(itemMeta);
                 PetManager.addGlow(item);
@@ -116,14 +110,21 @@ public class CooldownsTimer extends BukkitRunnable {
     private class ValuePair {
         private final ItemStack itemStack;
         private final AtomicInteger timer;
+        private final String displayName;
 
         private ValuePair(ItemStack itemStack, AtomicInteger timer) {
             this.itemStack = itemStack;
+            //I have no idea why displayName with countdown applies to the original ItemStack after restoring inventory.
+            this.displayName = itemStack.getItemMeta().getDisplayName();
             this.timer = timer;
         }
 
         private ItemStack getItemStack() {
             return itemStack;
+        }
+
+        private String getDisplayName() {
+            return displayName;
         }
 
         private AtomicInteger getTimer() {
