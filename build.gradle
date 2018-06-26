@@ -1,5 +1,5 @@
 plugins {
-    id 'ru.endlesscode.bukkitgradle' version '0.8.0'
+    id 'ru.endlesscode.bukkitgradle' version '0.7.0'
     id 'com.github.johnrengelman.shadow' version '2.0.1'
     id 'jacoco'
 }
@@ -9,16 +9,13 @@ version = pluginVersion
 description = pluginDesc
 
 bukkit {
-    version = "1.12.2"
-
-    meta {
-        main = "${main}Plugin"
-        authors = ["OsipXD", "EndlessCode Group"]
-    }
+    version = '1.12.2'
+    buildtools = 'build/buildtools/BuildTools.jar'
+    meta.authors = ["OsipXD", "EndlessCode Group"]
 
     run {
-        core = "paper"
         eula = true
+        dir = '../DevServer/'
     }
 }
 
@@ -75,7 +72,6 @@ dependencies {
     compileOnly('me.baks:RPGPlayerLeveling:3.7.2')
     compileOnly('com.sucy:SkillAPI:3.102')
     compileOnly('me.leothepro555:Skills')
-    compileOnly('ru.endlesscode.inspector:Inspector:0.1.0')
     testImplementation('junit:junit:4.12')
 }
 
