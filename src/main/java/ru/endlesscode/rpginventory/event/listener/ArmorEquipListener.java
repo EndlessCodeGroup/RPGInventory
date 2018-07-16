@@ -152,6 +152,10 @@ public class ArmorEquipListener implements Listener {
         ArmorType type = ArmorType.matchType(event.getItem());
         Location blockLoc = event.getBlock().getLocation();
         Collection<Entity> nearbyEntities = blockLoc.getWorld().getNearbyEntities(blockLoc, 3D, 1.2D, 3D);
+        if (nearbyEntities.isEmpty()) {
+            return;
+        }
+
         for (Entity entity : nearbyEntities) {
             if (entity.getType() != EntityType.PLAYER) {
                 continue;
@@ -192,6 +196,9 @@ public class ArmorEquipListener implements Listener {
     }
 
     private boolean isPlayerInRightPosition(Block block, Player player) {
+        if (!(block.getState() instanceof org.bukkit.block.Dispenser)) {
+            return false;
+        }
         final Location blockLoc = block.getLocation();
         final Location playerLoc = player.getLocation();
         org.bukkit.block.Dispenser dispenser = (org.bukkit.block.Dispenser) block.getState();
