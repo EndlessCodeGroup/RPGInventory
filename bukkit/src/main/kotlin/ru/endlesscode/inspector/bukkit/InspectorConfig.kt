@@ -1,16 +1,14 @@
 package ru.endlesscode.inspector.bukkit
 
+import ru.endlesscode.inspector.bukkit.report.DataType
+
 object InspectorConfig {
-
-    // Constants
-
-    const val CORE = "core"
-    const val PLUGINS = "plugins"
-
 
     var isEnabled: Boolean = true
     var sendData = mutableMapOf(
-            "core" to true,
-            "plugins" to true
+            DataType.CORE to true,
+            DataType.PLUGINS to true
     )
+
+    fun shouldSendData(dataType: DataType) = sendData.getValue(dataType)
 }

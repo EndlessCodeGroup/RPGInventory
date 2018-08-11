@@ -3,18 +3,56 @@ package ru.endlesscode.inspector.api.report
 interface ReportField {
     val shortValue: String
     val value: String
+    val show: Boolean
 }
 
-class TextField(
+open class TextField(
         override val shortValue: String,
         override val value: String = shortValue
-) : ReportField
+) : ReportField {
 
-class ListField<T>(private val getList: () -> List<T>, private val getShortValue: (List<T>) -> String) : ReportField {
+    override val show: Boolean
+        get() = value.isNotBlank()
+}
+
+open class ListField<T>(
+        private val produceList: () -> List<T>,
+        private val getSummary: (List<T>) -> String
+) : ReportField {
 
     override val shortValue: String
-        get() = getShortValue(getList())
+        get() = getSummary(list)
 
     override val value: String
-        get() = getList().joinToString("\n", prefix = "\n") { "- $it" }
+        get() = list.joinToString("\n", prefix = "\n") { "- $it" }
+
+    override val show: Boolean
+        get() = list.isNotEmpty()
+
+    open protected val list
+        get() = produceList()
+}
+
+open class FilterableListField<T>(
+        produceList: () -> List<T>,
+        getSummary: (List<T>) -> String
+) : ListField<T>(produceList, getSummary) {
+
+    private val filters = arrayListOf<(T) -> Boolean>()
+
+    override val list: List<T>
+        get() = getFilteredList()
+
+    fun addFilter(filter: (T) -> Boolean) {
+        this.filters += filter
+    }
+
+    fun getFilteredList(): List<T> {
+        var list = super.list
+        for (predicate in filters) {
+            list = list.filter(predicate)
+        }
+
+        return list
+    }
 }

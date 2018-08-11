@@ -1,6 +1,7 @@
 package ru.endlesscode.inspector.bukkit
 
 import org.bukkit.plugin.java.JavaPlugin
+import ru.endlesscode.inspector.bukkit.report.DataType
 
 class Inspector : JavaPlugin() {
 
@@ -14,8 +15,8 @@ class Inspector : JavaPlugin() {
 
         with (InspectorConfig) {
             isEnabled = config.getBoolean("enabled", true)
-            sendData[CORE] = config.getBoolean("data.core", true)
-            sendData[PLUGINS] = config.getBoolean("data.plugins", true)
+            sendData[DataType.CORE] = config.getBoolean("data.core", true)
+            sendData[DataType.PLUGINS] = config.getBoolean("data.plugins", true)
         }
     }
 }
