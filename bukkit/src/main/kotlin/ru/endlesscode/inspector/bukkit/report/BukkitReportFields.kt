@@ -11,7 +11,5 @@ class PluginListField(plugins: Array<Plugin>) : FilterableListField<String>(
 ) {
 
     override val show: Boolean
-        get() {
-            return InspectorConfig.shouldSendData(DataType.PLUGINS)
-        }
+        get() = InspectorConfig.shouldSendData(DataType.PLUGINS)
 }

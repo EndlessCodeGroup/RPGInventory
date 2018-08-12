@@ -1,12 +1,14 @@
 package ru.endlesscode.inspector.api.report
 
 interface ReportField {
+    val tag: String
     val shortValue: String
     val value: String
     val show: Boolean
 }
 
 open class TextField(
+        override val tag: String,
         override val shortValue: String,
         override val value: String = shortValue
 ) : ReportField {
@@ -16,6 +18,7 @@ open class TextField(
 }
 
 open class ListField<T>(
+        override val tag: String,
         private val produceList: () -> List<T>,
         private val getSummary: (List<T>) -> String
 ) : ReportField {
@@ -34,9 +37,10 @@ open class ListField<T>(
 }
 
 open class FilterableListField<T>(
+        tag: String,
         produceList: () -> List<T>,
         getSummary: (List<T>) -> String
-) : ListField<T>(produceList, getSummary) {
+) : ListField<T>(tag, produceList, getSummary) {
 
     private val filters = arrayListOf<(T) -> Boolean>()
 

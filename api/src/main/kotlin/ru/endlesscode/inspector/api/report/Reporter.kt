@@ -33,4 +33,15 @@ interface Reporter {
             message: String,
             exception: Exception
     ): Job
+
+    abstract class Builder {
+
+        protected var focus: ReporterFocus = ReporterFocus.NO_FOCUS
+
+        fun focusOn(focus: ReporterFocus) {
+            this.focus = focus
+        }
+
+        abstract fun build(): Reporter
+    }
 }

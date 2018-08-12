@@ -15,14 +15,20 @@ import ru.endlesscode.inspector.util.stackTraceText
  * @param id webhook id
  * @param token webhook token
  */
-class DiscordReporter @JvmOverloads constructor(
+class DiscordReporter private constructor(
         override val focus: ReporterFocus,
         id: String,
         token: String,
-        private val textStorage: TextStorage = HastebinStorage(),
-        private val username: String = "Inspector",
-        private val avatarUrl: String = "https://gitlab.com/endlesscodegroup/inspector/raw/master/images/inspector_icon_256.png"
+        private val textStorage: TextStorage,
+        private val username: String,
+        private val avatarUrl: String
 ) : FilteringReporter() {
+
+    companion object {
+        const val DEFAULT_AVATAR_URL = "https://gitlab.com/endlesscodegroup/inspector/raw/master/images/inspector_icon_256.png"
+
+        val defaultTextStorage = HastebinStorage()
+    }
 
     private val url = "https://discordapp.com/api/webhooks/$id/$token"
 
@@ -101,5 +107,42 @@ class DiscordReporter @JvmOverloads constructor(
                 json = mapOf("username" to username, "avatar_url" to avatarUrl, "content" to content),
                 onError = onError
         )
+    }
+
+    class Builder : Reporter.Builder() {
+
+        private val textStorage: TextStorage = defaultTextStorage
+        private var id: String = ""
+        private var token: String = ""
+        private var username: String = "Inspector"
+        private var avatarUrl: String = DEFAULT_AVATAR_URL
+
+        override fun build(): Reporter {
+            if (id.isBlank() || token.isBlank()) {
+                error("You should specify Discord id and token with method `auth(...)` and it shouldn't be blank.")
+            }
+
+            return DiscordReporter(
+                    focus = focus,
+                    id = id,
+                    textStorage = textStorage,
+                    token = token,
+                    username = username,
+                    avatarUrl = avatarUrl
+            )
+        }
+
+        fun auth(id: String, token: String) {
+            this.id = id
+            this.token = token
+        }
+
+        fun setUsername(username: String) {
+            this.username = username
+        }
+
+        fun setAvatar(avatarUrl: String) {
+            this.avatarUrl = avatarUrl
+        }
     }
 }
