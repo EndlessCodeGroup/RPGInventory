@@ -20,4 +20,6 @@ class BukkitEnvironment(plugin: Plugin) : ReportEnvironment {
             TAG_CORE to TextField(TAG_CORE,"${plugin.server.name} (${plugin.server.version})") { InspectorConfig.shouldSendData(DataType.CORE) },
             TAG_PLUGIN_LIST to PluginListField(plugin.server.pluginManager.plugins)
     )
+
+    override val defaultFieldsTags: List<String> = listOf(TAG_PLUGIN, TAG_CORE, TAG_PLUGIN_LIST)
 }

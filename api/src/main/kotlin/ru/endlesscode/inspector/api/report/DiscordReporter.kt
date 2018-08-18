@@ -18,7 +18,8 @@ class DiscordReporter private constructor(
         token: String,
         private val textStorage: TextStorage,
         private val username: String,
-        private val avatarUrl: String
+        private val avatarUrl: String,
+        private val fields: Set<ReportField>
 ) : FilteringReporter() {
 
     companion object {
@@ -39,11 +40,11 @@ class DiscordReporter private constructor(
 
         return launch {
             try {
-                val fullReport = buildFullMessage(title, focus.environment.fields, exception)
+                val fullReport = buildFullMessage(title, fields, exception)
                 val fullReportUrl = textStorage.storeText(fullReport)
                 val message = buildShortMessage(
                         title = title,
-                        fields = focus.environment.fields,
+                        fields = fields,
                         shortStackTrace = exception.getFocusedRootStackTrace(focus.focusedPackage),
                         fullReportUrl = fullReportUrl
                 )
@@ -58,13 +59,13 @@ class DiscordReporter private constructor(
 
     private fun buildFullMessage(
             title: String,
-            fields: Map<String, ReportField>,
+            fields: Set<ReportField>,
             exception: Exception
     ): String {
         return buildString {
             append(title)
             append("\n\n")
-            for ((name, field) in fields) {
+            for (field in fields) {
                 append(field.render(short = false))
                 append("\n")
             }
@@ -76,14 +77,14 @@ class DiscordReporter private constructor(
 
     private fun buildShortMessage(
             title: String,
-            fields: Map<String, ReportField>,
+            fields: Set<ReportField>,
             shortStackTrace: String,
             fullReportUrl: String
     ): String {
         return markdown {
             +b(title)
             +""
-            for (field in fields.values) {
+            for (field in fields) {
                 +field.render(prepareTag = { b(it) })
             }
             +b("Short stacktrace:")
@@ -132,7 +133,8 @@ class DiscordReporter private constructor(
                     textStorage = textStorage,
                     token = token,
                     username = username,
-                    avatarUrl = avatarUrl
+                    avatarUrl = avatarUrl,
+                    fields = fields
             )
         }
 
