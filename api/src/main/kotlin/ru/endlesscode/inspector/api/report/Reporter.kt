@@ -76,38 +76,43 @@ interface Reporter {
          *
          * @param focus The focus
          */
-        fun focusOn(focus: ReporterFocus) {
+        fun focusOn(focus: ReporterFocus) : Builder {
             this.focus = focus
             fieldsTags.addAll(focus.environment.defaultFieldsTags)
+            return this
         }
 
         /**
          * Set fields tags to report.
          */
-        fun setFields(vararg newFields: String) {
+        fun setFields(vararg newFields: String) : Builder {
             // TODO: Add check of tag existence may be
             fieldsTags = newFields.toMutableList()
+            return this
         }
 
         /**
          * Add fields tags to report.
          */
-        fun addFields(vararg newFields: String) {
+        fun addFields(vararg newFields: String) : Builder {
             fieldsTags.addAll(newFields)
+            return this
         }
 
         /**
          * Remove fields tags from report.
          */
-        fun removeFields(vararg fieldsToRemove: String) {
+        fun removeFields(vararg fieldsToRemove: String) : Builder {
             fieldsTags.removeAll(fieldsToRemove)
+            return this
         }
 
         /**
          * Add custom fields to report.
          */
-        fun addCustomFields(vararg customFields: ReportField) {
+        fun addCustomFields(vararg customFields: ReportField) : Builder {
             this.customFields.addAll(customFields)
+            return this
         }
 
         abstract fun build(): Reporter

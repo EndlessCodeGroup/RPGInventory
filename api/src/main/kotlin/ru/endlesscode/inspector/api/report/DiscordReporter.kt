@@ -85,7 +85,7 @@ class DiscordReporter private constructor(
             +b(title)
             +""
             for (field in fields) {
-                +field.render(prepareTag = { b(it) })
+                +field.render(prepareTag = { b("$it:") }, separator = " ")
             }
             +b("Short stacktrace:")
             code("java") {
@@ -144,9 +144,10 @@ class DiscordReporter private constructor(
          * @param id Webhook id (it contains only digits).
          * @param token Token for webhook (contains digits and small latin letters).
          */
-        fun hook(id: String, token: String) {
+        fun hook(id: String, token: String) : Builder {
             this.id = id
             this.token = token
+            return this
         }
 
         /**
@@ -154,8 +155,9 @@ class DiscordReporter private constructor(
          *
          * @param username The username.
          */
-        fun setUsername(username: String) {
+        fun setUsername(username: String) : Builder {
             this.username = username
+            return this
         }
 
         /**
@@ -163,8 +165,9 @@ class DiscordReporter private constructor(
          *
          * @param avatarUrl The avatar url. Starting with protocol and including all slashes.
          */
-        fun setAvatar(avatarUrl: String) {
+        fun setAvatar(avatarUrl: String) : Builder {
             this.avatarUrl = avatarUrl
+            return this
         }
     }
 }
