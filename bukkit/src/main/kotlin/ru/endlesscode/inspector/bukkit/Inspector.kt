@@ -7,10 +7,11 @@ class Inspector : JavaPlugin() {
 
     companion object {
         @JvmStatic
-        val GLOBAL = InspectorConfig()
+        lateinit var GLOBAL: InspectorConfig
     }
 
-    override fun onEnable() {
+    init {
+        GLOBAL = InspectorConfig(description.version)
         loadConfig()
     }
 

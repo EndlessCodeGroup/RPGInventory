@@ -40,7 +40,7 @@ abstract class TrackedPlugin(pluginClass: Class<out PluginLifecycle>) : JavaPlug
     init {
         plugin.holder = this
 
-        reporter = if (Inspector.GLOBAL.isEnabled) createReporter() else SilentReporter()
+        reporter = if (Inspector.GLOBAL.isEnabled) createReporter() else SilentReporter
         reporter.addHandler(
                 beforeReport = { message, _ ->
                     logger.warning("$INSPECTOR_TAG $message")

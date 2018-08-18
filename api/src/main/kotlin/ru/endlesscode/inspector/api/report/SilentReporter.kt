@@ -7,7 +7,7 @@ import kotlinx.coroutines.experimental.launch
  * Reporter that reports nothing.
  * Used to disable reporting.
  */
-class SilentReporter : Reporter {
+object SilentReporter : Reporter {
 
     override val focus: ReporterFocus = ReporterFocus.NO_FOCUS
 
