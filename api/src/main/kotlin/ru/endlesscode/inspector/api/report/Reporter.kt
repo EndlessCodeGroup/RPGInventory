@@ -85,6 +85,7 @@ interface Reporter {
          * Set fields tags to report.
          */
         fun setFields(vararg newFields: String) {
+            // TODO: Add check of tag existence may be
             fieldsTags = newFields.toMutableList()
         }
 
