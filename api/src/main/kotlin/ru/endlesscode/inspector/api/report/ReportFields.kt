@@ -1,6 +1,11 @@
 package ru.endlesscode.inspector.api.report
 
 interface ReportField {
+
+    companion object {
+        private const val HIDDEN_FIELD_VALUE = "<value hidden by user>"
+    }
+
     val tag: String
     val shortValue: String
     val value: String
@@ -12,7 +17,12 @@ interface ReportField {
             prepareTag: (String) -> String = { it },
             prepareValue: (String) -> String = { it }
     ): String {
-        val selectedValue = if (short) shortValue else value
+        val selectedValue = if (show) {
+            if (short) shortValue else value
+        } else {
+            HIDDEN_FIELD_VALUE
+        }
+
         return "${prepareTag(tag)}$separator${prepareValue(selectedValue)}"
     }
 }
@@ -20,11 +30,12 @@ interface ReportField {
 open class TextField(
         override val tag: String,
         override val shortValue: String,
-        override val value: String = shortValue
+        override val value: String = shortValue,
+        val shouldShow: TextField.() -> Boolean = { value.isNotBlank() }
 ) : ReportField {
 
     override val show: Boolean
-        get() = value.isNotBlank()
+        get() = shouldShow()
 }
 
 open class ListField<T>(

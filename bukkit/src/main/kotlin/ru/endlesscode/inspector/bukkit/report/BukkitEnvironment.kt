@@ -3,6 +3,7 @@ package ru.endlesscode.inspector.bukkit.report
 import org.bukkit.plugin.Plugin
 import ru.endlesscode.inspector.api.report.ReportEnvironment
 import ru.endlesscode.inspector.api.report.TextField
+import ru.endlesscode.inspector.bukkit.InspectorConfig
 import ru.endlesscode.inspector.bukkit.util.printableForm
 
 class BukkitEnvironment(plugin: Plugin) : ReportEnvironment {
@@ -16,7 +17,7 @@ class BukkitEnvironment(plugin: Plugin) : ReportEnvironment {
 
     override val fields = mapOf(
             TAG_PLUGIN to TextField(TAG_PLUGIN, plugin.printableForm),
-            TAG_CORE to TextField(TAG_CORE,"${plugin.server.name} (${plugin.server.version})"),
+            TAG_CORE to TextField(TAG_CORE,"${plugin.server.name} (${plugin.server.version})") { InspectorConfig.shouldSendData(DataType.CORE) },
             TAG_PLUGIN_LIST to PluginListField(plugin.server.pluginManager.plugins)
     )
 }
