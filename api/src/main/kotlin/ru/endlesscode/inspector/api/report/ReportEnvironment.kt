@@ -4,9 +4,9 @@ interface ReportEnvironment {
 
     companion object {
         val EMPTY = object : ReportEnvironment {
-            override val fields: List<Pair<String, ReportField>> = emptyList()
+            override val fields: Map<String, ReportField> = emptyMap()
         }
     }
 
-    val fields: List<Pair<String, ReportField>>
+    val fields: Map<String, ReportField>
 }

@@ -6,6 +6,7 @@ import ru.endlesscode.inspector.bukkit.InspectorConfig
 import ru.endlesscode.inspector.bukkit.util.printableForm
 
 class PluginListField(plugins: Array<Plugin>) : FilterableListField<String>(
+        BukkitEnvironment.TAG_PLUGIN_LIST,
         produceList = { plugins.map { it.printableForm } },
         getSummary = { "<${it.size} plugins>" }
 ) {

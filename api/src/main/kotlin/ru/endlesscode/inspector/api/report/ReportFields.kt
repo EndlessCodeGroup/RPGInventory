@@ -5,6 +5,16 @@ interface ReportField {
     val shortValue: String
     val value: String
     val show: Boolean
+
+    fun render(
+            short: Boolean = true,
+            separator: String = ": ",
+            prepareTag: (String) -> String = { it },
+            prepareValue: (String) -> String = { it }
+    ): String {
+        val selectedValue = if (short) shortValue else value
+        return "${prepareTag(tag)}$separator${prepareValue(selectedValue)}"
+    }
 }
 
 open class TextField(

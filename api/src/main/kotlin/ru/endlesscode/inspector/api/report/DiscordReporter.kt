@@ -61,7 +61,7 @@ class DiscordReporter private constructor(
 
     private fun buildFullMessage(
             title: String,
-            fields: List<Pair<String, ReportField>>,
+            fields: Map<String, ReportField>,
             exception: Exception
     ): String {
         return buildString {
@@ -81,7 +81,7 @@ class DiscordReporter private constructor(
 
     private fun buildShortMessage(
             title: String,
-            fields: List<Pair<String, ReportField>>,
+            fields: Map<String, ReportField>,
             shortStackTrace: String,
             fullReportUrl: String
     ): String {
