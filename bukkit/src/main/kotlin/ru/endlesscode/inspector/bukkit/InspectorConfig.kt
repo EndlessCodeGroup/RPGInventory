@@ -2,10 +2,10 @@ package ru.endlesscode.inspector.bukkit
 
 import ru.endlesscode.inspector.bukkit.report.DataType
 
-object InspectorConfig {
+class InspectorConfig {
 
-    var isEnabled: Boolean = true
-    var sendData = mutableMapOf(
+    internal var isEnabled: Boolean = true
+    internal var sendData = mutableMapOf(
             DataType.CORE to true,
             DataType.PLUGINS to true
     )

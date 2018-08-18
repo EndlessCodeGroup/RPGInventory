@@ -5,6 +5,11 @@ import ru.endlesscode.inspector.bukkit.report.DataType
 
 class Inspector : JavaPlugin() {
 
+    companion object {
+        @JvmStatic
+        val GLOBAL = InspectorConfig()
+    }
+
     override fun onEnable() {
         loadConfig()
     }
@@ -13,7 +18,7 @@ class Inspector : JavaPlugin() {
         config.options().copyDefaults(true)
         saveConfig()
 
-        with (InspectorConfig) {
+        with (GLOBAL) {
             isEnabled = config.getBoolean("enabled", true)
             sendData[DataType.CORE] = config.getBoolean("data.core", true)
             sendData[DataType.PLUGINS] = config.getBoolean("data.plugins", true)

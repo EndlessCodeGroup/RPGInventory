@@ -12,7 +12,7 @@ import ru.endlesscode.inspector.api.report.ReportedException
 import ru.endlesscode.inspector.api.report.Reporter
 import ru.endlesscode.inspector.api.report.ReporterFocus
 import ru.endlesscode.inspector.api.report.SilentReporter
-import ru.endlesscode.inspector.bukkit.InspectorConfig
+import ru.endlesscode.inspector.bukkit.Inspector
 import ru.endlesscode.inspector.bukkit.report.BukkitEnvironment
 import java.io.File
 import java.io.InputStream
@@ -40,7 +40,7 @@ abstract class TrackedPlugin(pluginClass: Class<out PluginLifecycle>) : JavaPlug
     init {
         plugin.holder = this
 
-        reporter = if (InspectorConfig.isEnabled) createReporter() else SilentReporter()
+        reporter = if (Inspector.GLOBAL.isEnabled) createReporter() else SilentReporter()
         reporter.addHandler(
                 beforeReport = { message, _ ->
                     logger.warning("$INSPECTOR_TAG $message")
