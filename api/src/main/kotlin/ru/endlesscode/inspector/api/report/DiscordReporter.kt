@@ -65,9 +65,7 @@ class DiscordReporter private constructor(
             append(title)
             append("\n\n")
             for ((name, field) in fields) {
-                append(name)
-                append(": ")
-                append(field.value)
+                append(field.render(short = false))
                 append("\n")
             }
             append("\nStacktrace:\n")
@@ -85,15 +83,15 @@ class DiscordReporter private constructor(
         return markdown {
             +b(title)
             +""
-            for ((name, field) in fields) {
-                +"${b("$name:")} ${field.shortValue}"
+            for (field in fields.values) {
+                +field.render(prepareTag = { b(it) })
             }
             +b("Short stacktrace:")
             code("java") {
                 +shortStackTrace
             }
             +"${b("Full report:")} $fullReportUrl"
-            // Separator
+            // Separator (yes I know that it's ugly)
             +st("                                                                                                 ")
         }.toString()
     }
@@ -110,7 +108,7 @@ class DiscordReporter private constructor(
      * Builder that should be used to build [DiscordReporter].
      *
      * You should specify Webhook data with method [hook].
-     * Also here you can configure reporter username and avatar.
+     * Also here you can configure reporter username ([setUsername]) and avatar ([setAvatar]).
      */
     class Builder : Reporter.Builder() {
 

@@ -32,8 +32,8 @@ abstract class FilteringReporter : Reporter {
         handlers.forEach { it.onSuccess(message, exceptionData) }
     }
 
-    private fun onError(throwable: Throwable) {
-        handlers.forEach { it.onError(throwable) }
+    private fun onError(exception: Throwable) {
+        handlers.forEach { it.onError(exception) }
     }
 
     abstract fun reportFiltered(

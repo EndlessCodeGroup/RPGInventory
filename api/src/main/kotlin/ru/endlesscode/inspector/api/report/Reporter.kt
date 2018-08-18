@@ -7,10 +7,13 @@ interface Reporter {
 
     val focus: ReporterFocus
 
+    /**
+     * Alias for [addHandler] method.
+     */
     fun addHandler(
             beforeReport: (String, ExceptionData) -> Unit = { _, _ -> },
             onSuccess: (String, ExceptionData) -> Unit = { _, _ -> },
-            onError: (Throwable) -> Unit = { throw it }
+            onError: (Exception) -> Unit = { throw it }
     ) {
         addHandler(object : ReportHandler {
             override fun beforeReport(message: String, exceptionData: ExceptionData) {
@@ -21,14 +24,28 @@ interface Reporter {
                 onSuccess.invoke(message, exceptionData)
             }
 
-            override fun onError(throwable: Throwable) {
-                onError.invoke(throwable)
+            override fun onError(exception: Exception) {
+                onError.invoke(exception)
             }
         })
     }
 
+
+    /**
+     * Add handler to reporter.
+     *
+     * @param handler The handler
+     * @see [ReportHandler]
+     */
     fun addHandler(handler: ReportHandler)
 
+    /**
+     * Report about exception with message.
+     *
+     * @param message The message that describes when exception thrown
+     * @param exception The exception
+     * @return [Job] that can be used to track when report done,
+     */
     fun report(
             message: String,
             exception: Exception
@@ -38,6 +55,11 @@ interface Reporter {
 
         protected var focus: ReporterFocus = ReporterFocus.NO_FOCUS
 
+        /**
+         * Assign focus.
+         *
+         * @param focus The focus
+         */
         fun focusOn(focus: ReporterFocus) {
             this.focus = focus
         }
