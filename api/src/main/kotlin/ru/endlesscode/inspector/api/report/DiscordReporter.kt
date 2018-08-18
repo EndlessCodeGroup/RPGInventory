@@ -11,9 +11,6 @@ import ru.endlesscode.inspector.util.stackTraceText
 
 /**
  * Reporter that uses Discord Webhook to write reports.
- *
- * @param id webhook id
- * @param token webhook token
  */
 class DiscordReporter private constructor(
         override val focus: ReporterFocus,
@@ -109,6 +106,12 @@ class DiscordReporter private constructor(
         )
     }
 
+    /**
+     * Builder that should be used to build [DiscordReporter].
+     *
+     * You should specify Webhook data with method [hook].
+     * Also here you can configure reporter username and avatar.
+     */
     class Builder : Reporter.Builder() {
 
         private val textStorage: TextStorage = defaultTextStorage
@@ -117,9 +120,12 @@ class DiscordReporter private constructor(
         private var username: String = "Inspector"
         private var avatarUrl: String = DEFAULT_AVATAR_URL
 
+        /**
+         * Build configured [DiscordReporter].
+         */
         override fun build(): Reporter {
             if (id.isBlank() || token.isBlank()) {
-                error("You should specify Discord id and token with method `auth(...)` and it shouldn't be blank.")
+                error("You should specify Discord id and token with method `hook(...)` and it shouldn't be blank.")
             }
 
             return DiscordReporter(
@@ -132,15 +138,31 @@ class DiscordReporter private constructor(
             )
         }
 
-        fun auth(id: String, token: String) {
+        /**
+         * Assign Discord Webhook data.
+         *
+         * @param id Webhook id (it contains only digits).
+         * @param token Token for webhook (contains digits and small latin letters).
+         */
+        fun hook(id: String, token: String) {
             this.id = id
             this.token = token
         }
 
+        /**
+         * Set username that will be used as reporter username in Discord.
+         *
+         * @param username The username.
+         */
         fun setUsername(username: String) {
             this.username = username
         }
 
+        /**
+         * Set URL of avatar that will be used as reporter avatar in Discord.
+         *
+         * @param avatarUrl The avatar url. Starting with protocol and including all slashes.
+         */
         fun setAvatar(avatarUrl: String) {
             this.avatarUrl = avatarUrl
         }
