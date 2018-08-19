@@ -11,18 +11,22 @@ import ru.endlesscode.inspector.util.stackTraceText
 
 /**
  * Reporter that uses Discord Webhook to write reports.
- *
- * @param id webhook id
- * @param token webhook token
  */
-class DiscordReporter @JvmOverloads constructor(
+class DiscordReporter private constructor(
         override val focus: ReporterFocus,
         id: String,
         token: String,
-        private val textStorage: TextStorage = HastebinStorage(),
-        private val username: String = "Inspector",
-        private val avatarUrl: String = "https://gitlab.com/endlesscodegroup/inspector/raw/master/images/inspector_icon_256.png"
+        private val textStorage: TextStorage,
+        private val username: String,
+        private val avatarUrl: String,
+        private val fields: Set<ReportField>
 ) : FilteringReporter() {
+
+    companion object {
+        const val DEFAULT_AVATAR_URL = "https://gitlab.com/endlesscodegroup/inspector/raw/master/images/inspector_icon_256.png"
+
+        val defaultTextStorage = HastebinStorage()
+    }
 
     private val url = "https://discordapp.com/api/webhooks/$id/$token"
 
@@ -36,11 +40,11 @@ class DiscordReporter @JvmOverloads constructor(
 
         return launch {
             try {
-                val fullReport = buildFullMessage(title, focus.environment.fields, exception)
+                val fullReport = buildFullMessage(title, fields, exception)
                 val fullReportUrl = textStorage.storeText(fullReport)
                 val message = buildShortMessage(
                         title = title,
-                        fields = focus.environment.fields,
+                        fields = fields,
                         shortStackTrace = exception.getFocusedRootStackTrace(focus.focusedPackage),
                         fullReportUrl = fullReportUrl
                 )
@@ -55,16 +59,14 @@ class DiscordReporter @JvmOverloads constructor(
 
     private fun buildFullMessage(
             title: String,
-            fields: List<Pair<String, ReportField>>,
+            fields: Set<ReportField>,
             exception: Exception
     ): String {
         return buildString {
             append(title)
             append("\n\n")
-            for ((name, field) in fields) {
-                append(name)
-                append(": ")
-                append(field.value)
+            for (field in fields) {
+                append(field.render(short = false))
                 append("\n")
             }
             append("\nStacktrace:\n")
@@ -75,22 +77,22 @@ class DiscordReporter @JvmOverloads constructor(
 
     private fun buildShortMessage(
             title: String,
-            fields: List<Pair<String, ReportField>>,
+            fields: Set<ReportField>,
             shortStackTrace: String,
             fullReportUrl: String
     ): String {
         return markdown {
             +b(title)
             +""
-            for ((name, field) in fields) {
-                +"${b("$name:")} ${field.shortValue}"
+            for (field in fields) {
+                +field.render(prepareTag = { b("$it:") }, separator = " ")
             }
             +b("Short stacktrace:")
             code("java") {
                 +shortStackTrace
             }
             +"${b("Full report:")} $fullReportUrl"
-            // Separator
+            // Separator (yes I know that it's ugly)
             +st("                                                                                                 ")
         }.toString()
     }
@@ -101,5 +103,71 @@ class DiscordReporter @JvmOverloads constructor(
                 json = mapOf("username" to username, "avatar_url" to avatarUrl, "content" to content),
                 onError = onError
         )
+    }
+
+    /**
+     * Builder that should be used to build [DiscordReporter].
+     *
+     * You should specify Webhook data with method [hook].
+     * Also here you can configure reporter username ([setUsername]) and avatar ([setAvatar]).
+     */
+    class Builder : Reporter.Builder() {
+
+        private val textStorage: TextStorage = defaultTextStorage
+        private var id: String = ""
+        private var token: String = ""
+        private var username: String = "Inspector"
+        private var avatarUrl: String = DEFAULT_AVATAR_URL
+
+        /**
+         * Build configured [DiscordReporter].
+         */
+        override fun build(): Reporter {
+            if (id.isBlank() || token.isBlank()) {
+                error("You should specify Discord id and token with method `hook(...)` and it shouldn't be blank.")
+            }
+
+            return DiscordReporter(
+                    focus = focus,
+                    id = id,
+                    textStorage = textStorage,
+                    token = token,
+                    username = username,
+                    avatarUrl = avatarUrl,
+                    fields = fields
+            )
+        }
+
+        /**
+         * Assign Discord Webhook data.
+         *
+         * @param id Webhook id (it contains only digits).
+         * @param token Token for webhook (contains digits and small latin letters).
+         */
+        fun hook(id: String, token: String) : Builder {
+            this.id = id
+            this.token = token
+            return this
+        }
+
+        /**
+         * Set username that will be used as reporter username in Discord.
+         *
+         * @param username The username.
+         */
+        fun setUsername(username: String) : Builder {
+            this.username = username
+            return this
+        }
+
+        /**
+         * Set URL of avatar that will be used as reporter avatar in Discord.
+         *
+         * @param avatarUrl The avatar url. Starting with protocol and including all slashes.
+         */
+        fun setAvatar(avatarUrl: String) : Builder {
+            this.avatarUrl = avatarUrl
+            return this
+        }
     }
 }
