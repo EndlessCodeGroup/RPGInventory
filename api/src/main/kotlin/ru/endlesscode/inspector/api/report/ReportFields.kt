@@ -31,17 +31,18 @@ open class TextField(
         override val tag: String,
         override val shortValue: String,
         override val value: String = shortValue,
-        val shouldShow: TextField.() -> Boolean = { value.isNotBlank() }
+        private val shouldShow: TextField.() -> Boolean = { true }
 ) : ReportField {
 
-    override val show: Boolean
+    final override val show: Boolean
         get() = shouldShow()
 }
 
 open class ListField<T>(
         override val tag: String,
         private val produceList: () -> List<T>,
-        private val getSummary: (List<T>) -> String
+        private val getSummary: (List<T>) -> String,
+        private val shouldShow: ListField<T>.() -> Boolean = { true }
 ) : ReportField {
 
     override val shortValue: String
@@ -50,34 +51,9 @@ open class ListField<T>(
     override val value: String
         get() = list.joinToString("\n", prefix = "\n") { "- $it" }
 
-    override val show: Boolean
-        get() = list.isNotEmpty()
+    final override val show: Boolean
+        get() = shouldShow()
 
     open protected val list
         get() = produceList()
-}
-
-open class FilterableListField<T>(
-        tag: String,
-        produceList: () -> List<T>,
-        getSummary: (List<T>) -> String
-) : ListField<T>(tag, produceList, getSummary) {
-
-    private val filters = arrayListOf<(T) -> Boolean>()
-
-    override val list: List<T>
-        get() = getFilteredList()
-
-    fun addFilter(filter: (T) -> Boolean) {
-        this.filters += filter
-    }
-
-    fun getFilteredList(): List<T> {
-        var list = super.list
-        for (predicate in filters) {
-            list = list.filter(predicate)
-        }
-
-        return list
-    }
 }
