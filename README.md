@@ -13,10 +13,11 @@ It sends:
 
 ## For server owners
 Just copy plugin to `plugins/` folder.
+Also you can disable sending of information about server core and installed plugins in the Inspector's config.
 
 ## For plugin developers
 
-To add support of Inspector to the plugin you should:
+To add Inspector to the plugin you should:
 - Add Inspector as a dependency to the project
 - Add Inspector to plugin.yml to `depend` section
 - Modify main plugin class
@@ -33,18 +34,12 @@ public class MyPlugin extends JavaPlugin {
     // ...
 }
 ```
-should be:
+should become:
 ```java
 public class MyPlugin extends PluginLifecycle {
     // ...
     // onEnable, onDisable, etc.
     // ...
-    
-    // If you target on server version lower than 1.12, you should 
-    // override method getDatabase()
-    public EbeanServer getDatabase() {
-        return holder.getDatabase();
-    }
 }
 ```
 
@@ -55,19 +50,19 @@ Example:
 public class MyTrackedPlugin extends TrackedPlugin {
     
     public MyTrackedPlugin() {
-        super(MyPlugin.class);
+        super(MyPlugin.class); // Pass here lifecycle class
     }
     
     @Override
     public Reporter createReporter() {
-        return DiscordReporter(
-                this, // Reporter will be focused on this plugin
-                "<DISCORD_WEBHOOK_ID>",
-                "<DISCORD_WEBHOOK_TOKEN>"
-        );
+        return new DiscordReporter.Builder()
+                .hook("<DISCORD_WEBHOOK_ID>", "<DISCORD_WEBHOOK_TOKEN>")
+                .focusOn(this) // Reporter will be focused on this plugin
+                .build();
+        // For more reporter customization see DiscordReporter.Builder and Reporter.Builder classes
     }
 }
 ```
-You can see example of plugin migration here: endlesscodegroup/rpginventory/rpginventory@0270322f
+You can see example of plugin migration here: endlesscodegroup/rpginventory/rpginventory@33bca425
 
 > **NOTE:** At this moment available only Discord Reporter, but will be added more reporters soon.
