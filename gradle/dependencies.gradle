@@ -4,7 +4,7 @@
 def junitVersion = "4.12"
 def mockitoVersion = "2.8.+"
 def powermockVersion = "1.7.+"
-def coroutinesVersion = "0.21"
+def coroutinesVersion = "0.24.0"
 
 // Groups
 def powermockGroup = "org.powermock"
