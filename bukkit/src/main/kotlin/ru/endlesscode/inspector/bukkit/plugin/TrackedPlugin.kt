@@ -34,6 +34,8 @@ abstract class TrackedPlugin(pluginClass: Class<out PluginLifecycle>) : JavaPlug
     override val focusedPackage: String = javaClass.`package`.name
     override val environment: ReportEnvironment = BukkitEnvironment(this)
 
+    open val interestPluginsNames: List<String> = emptyList()
+
     val reporter: Reporter
     val plugin: PluginLifecycle = pluginClass.newInstance()
 

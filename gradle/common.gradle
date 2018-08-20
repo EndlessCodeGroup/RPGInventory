@@ -33,3 +33,7 @@ repositories {
     jcenter()
     maven { url = "https://jitpack.io" }
 }
+
+dependencies {
+    applyDeps(commonDeps) { compileOnly(it) }
+}

@@ -3,10 +3,8 @@
 version = "0.3"
 
 dependencies {
-    applyDeps(commonDeps) { implementation(it) }
-    applyDeps(apiDeps) { implementation(it) }
-
-    implementation("com.github.jkcclemens:khttp:master-SNAPSHOT") {
+    implementation(apiDeps.khttp) {
         exclude(group: "org.jetbrains.spek")
+        exclude(group: "org.jetbrains.kotlin")
     }
 }

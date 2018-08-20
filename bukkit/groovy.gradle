@@ -17,8 +17,8 @@ bukkit {
 }
 
 dependencies {
+    runtimeOnly(kotlinRuntime)
     compileOnly(bukkit())
-    applyDeps(commonDeps) { implementation(it) }
     applyDeps(bukkitDeps) { compileOnly(it) }
 }
 
@@ -26,11 +26,8 @@ shadowJar {
     relocate("kotlin", "ru.endlesscode.inspector.shade.kotlin")
     relocate("khttp", "ru.endlesscode.inspector.shade.khttp")
     relocate("org.json", "ru.endlesscode.inspector.shade.org.json")
-
-    dependencies {
-        // Exclude annotations from final jar
-        exclude(dependency("org.jetbrains:annotations:13.0"))
-    }
+    relocate("org.intellij", "ru.endlesscode.inspector.shade.org.intellij")
+    relocate("org.jetbrains", "ru.endlesscode.inspector.shade.org.jetbrains")
 }
 
 assemble.dependsOn shadowJar
