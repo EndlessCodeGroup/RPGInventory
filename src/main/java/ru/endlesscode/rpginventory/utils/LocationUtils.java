@@ -23,12 +23,12 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import ru.endlesscode.rpginventory.RPGInventory;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -125,9 +125,14 @@ public class LocationUtils {
     @NotNull
     public static List<Player> getNearbyPlayers(Location location, double distance) {
         List<Player> nearbyPlayers = new ArrayList<>();
-        for (LivingEntity entity : location.getWorld().getLivingEntities()) {
-            if (entity.getType() == EntityType.PLAYER && entity.getLocation().distance(location) <= distance) {
-                nearbyPlayers.add((Player) entity);
+        for (Player entity : location.getWorld().getPlayers()) {
+            try {
+                if (entity.getLocation().distance(location) <= distance) {
+                    nearbyPlayers.add(entity);
+                }
+            } catch (IllegalArgumentException ignore) {
+                // https://gitlab.com/endlesscodegroup/rpginventory/rpginventory/issues/162
+                // Is it magic?
             }
         }
 
