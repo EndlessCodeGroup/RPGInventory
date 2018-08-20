@@ -17,7 +17,6 @@ bukkit {
 }
 
 dependencies {
-    runtimeOnly(kotlinRuntime)
     compileOnly(bukkit())
     applyDeps(bukkitDeps) { compileOnly(it) }
 }
@@ -32,48 +31,26 @@ shadowJar {
 
 assemble.dependsOn shadowJar
 
-def pomConfig = {
-    licenses {
-        license {
-            name "GNU Affero General Public License v3.0"
-            url "https://www.gnu.org/licenses/agpl-3.0.html"
-        }
-    }
-
-    developers {
-        developer {
-            id "endlesscodegroup"
-            name "Endless Code Group"
-        }
-        developer {
-            id "osipxd"
-            name "Osip Fatkullin"
-            email "osip.fatkullin@gmail.com"
-        }
-    }
-}
-
 publishing {
     publications {
         bukkit(MavenPublication) {
             artifactId "$rootProject.name-$name"
 
-            artifact shadowJar
+            from components.java
+            artifact sourcesJar
 
             pom.withXml {
                 def root = asNode()
-                root.appendNode("description", project.description)
+                root.appendNode("name", "Inspector (Bukkit)")
+                root.appendNode("description", "Bukkit implementation of Inspector API")
                 root.children().last() + pomConfig
-            }
-        }
-        api(MavenPublication) {
-            artifactId "$rootProject.name-$apiProject.name"
 
-            artifact apiProject.jar
-            pom.withXml {
-                def root = asNode()
-                root.appendNode("description", apiProject.description)
-                root.children().last() + pomConfig
+                // Remove not needed dependencies
+                root.dependencies.'*'.findAll() {
+                    it.artifactId.text() == "kotlin-runtime"
+                }.each() {
+                    it.parent().remove(it)
+                }
             }
         }
     }
