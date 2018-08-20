@@ -37,3 +37,26 @@ repositories {
 dependencies {
     applyDeps(commonDeps) { compileOnly(it) }
 }
+
+ext.pomConfig = {
+    url "https://gitlab.com/endlesscodegroup/inspector"
+
+    licenses {
+        license {
+            name "GNU Affero General Public License v3.0"
+            url "https://www.gnu.org/licenses/agpl-3.0.html"
+        }
+    }
+
+    developers {
+        developer {
+            id "endlesscodegroup"
+            name "Endless Code Group"
+        }
+        developer {
+            id "osipxd"
+            name "Osip Fatkullin"
+            email "osip.fatkullin@gmail.com"
+        }
+    }
+}

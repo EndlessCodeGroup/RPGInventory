@@ -1,4 +1,7 @@
 // API build config
+plugins {
+    id("maven-publish")
+}
 
 version = "0.3"
 
@@ -6,5 +9,23 @@ dependencies {
     implementation(apiDeps.khttp) {
         exclude(group: "org.jetbrains.spek")
         exclude(group: "org.jetbrains.kotlin")
+    }
+}
+
+publishing {
+    publications {
+        api(MavenPublication) {
+            artifactId "$rootProject.name-$name"
+
+            from components.java
+            artifact sourcesJar
+
+            pom.withXml {
+                def root = asNode()
+                root.appendNode("name", "Inspector API")
+                root.appendNode("description", project.description)
+                root.children().last() + pomConfig
+            }
+        }
     }
 }
