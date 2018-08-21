@@ -43,3 +43,4 @@ task("proguard", proguard.gradle.ProGuardTask::class) {
     // Import static configurations
     configuration("proguard/proguard.pro")
 }
+tasks["shadowJar"].finalizedBy("proguard")

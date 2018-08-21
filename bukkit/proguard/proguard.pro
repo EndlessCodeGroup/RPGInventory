@@ -2,10 +2,9 @@
 -printmapping out.map
 
 -keepparameternames
--renamesourcefileattribute SourceFile
 -keepattributes Exceptions,InnerClasses,Signature,Deprecated,SourceFile,LineNumberTable,*Annotation*,EnclosingMethod
 
--keep public class !ru.endlesscode.inspector.shade.**,ru.endlesscode.inspector.**  {
+-keep,includedescriptorclasses public class !ru.endlesscode.inspector.shade.**,ru.endlesscode.inspector.**  {
       public protected *;
 }
 
