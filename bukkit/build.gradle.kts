@@ -2,9 +2,13 @@ import org.gradle.jvm.tasks.Jar
 
 // Bukkit implementation build config
 buildscript {
+    val localProps = java.util.Properties()
+    localProps.load(file("local.properties").inputStream())
+    val proguardPath = localProps.getProperty("proguard.dir") ?: "SPECIFY proguard.dir PROPERTY"
+
     repositories {
         flatDir {
-            dirs("/usr/share/proguard/lib")
+            dirs(proguardPath)
         }
     }
 
