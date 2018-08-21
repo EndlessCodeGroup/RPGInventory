@@ -1,7 +1,7 @@
 // Root project build config
 
 buildscript {
-    ext.kotlinVersion = '1.2.60'
+    ext.kotlinVersion = '1.2.61'
 
     repositories {
         mavenCentral()
