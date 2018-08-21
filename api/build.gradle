@@ -3,7 +3,7 @@ plugins {
     id("maven-publish")
 }
 
-version = "0.3"
+version = inspectorVersion
 
 dependencies {
     implementation(apiDeps.khttp) {
@@ -25,6 +25,9 @@ publishing {
                 root.appendNode("name", "Inspector API")
                 root.appendNode("description", project.description)
                 root.children().last() + pomConfig
+
+                // Remove dependencies in API's POM
+                root.remove(root.dependencies)
             }
         }
     }

@@ -1,0 +1,48 @@
+ext.pomConfig = {
+    url "https://gitlab.com/endlesscodegroup/inspector"
+
+    licenses {
+        license {
+            name "GNU Affero General Public License v3.0"
+            url "https://www.gnu.org/licenses/agpl-3.0.html"
+        }
+    }
+
+    developers {
+        developer {
+            id "endlesscodegroup"
+            name "Endless Code Group"
+        }
+        developer {
+            id "osipxd"
+            name "Osip Fatkullin"
+            email "osip.fatkullin@gmail.com"
+        }
+    }
+}
+
+apply plugin: "com.jfrog.bintray"
+
+bintray {
+    user = project.getProperty("bintrayUser") ?: System.getenv("BINTRAY_USER")
+    key = project.getProperty("bintrayApiKey") ?: System.getenv("BINTRAY_API_KEY")
+    publications = ["api", "bukkit"]
+
+    pkg {
+        repo = "repo"
+        name = "inspector"
+        userOrg = "endlesscode"
+        licenses = ["AGPL-v3"]
+        publicDownloadNumbers = true
+        websiteUrl = "https://gitlab.com/endlesscodegroup/inspector"
+        issueTrackerUrl = "https://gitlab.com/endlesscodegroup/inspector/issues"
+        vcsUrl = "https://gitlab.com/endlesscodegroup/inspector.git"
+
+        version {
+            name = inspectorVersion
+            desc = "Inspector v$inspectorVersion"
+            released  = new Date()
+            vcsTag = "v$inspectorVersion"
+        }
+    }
+}

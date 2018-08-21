@@ -1,5 +1,6 @@
+import org.gradle.jvm.tasks.Jar
+
 // Bukkit implementation build config
-import java.util.Properties
 
 plugins {
     id("com.github.johnrengelman.shadow") version "2.0.4"
@@ -8,8 +9,12 @@ plugins {
 }
 
 val apiProject: Project by extra
-val minorVersion = 1
+val minorVersion = 2
 version = "${apiProject.version}.$minorVersion"
 
 // TODO: Port it to Kotlin DSL
 apply(from = "groovy.gradle")
+
+if (System.getenv("CI") == null) {
+    apply(from = "proguard.gradle.kts")
+}

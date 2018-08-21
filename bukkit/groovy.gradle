@@ -46,8 +46,9 @@ publishing {
                 root.children().last() + pomConfig
 
                 // Remove not needed dependencies
+                def artifactsToFilter = ["kotlin-stdlib-jdk8", "kotlinx-coroutines-core"]
                 root.dependencies.'*'.findAll() {
-                    it.artifactId.text() == "kotlin-runtime"
+                    it.artifactId.text() in artifactsToFilter
                 }.each() {
                     it.parent().remove(it)
                 }
