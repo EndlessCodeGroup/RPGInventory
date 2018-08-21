@@ -25,16 +25,17 @@ import java.io.Reader
  * @param pluginClass class of plugin to track
  */
 @Suppress("LeakingThis")
-abstract class TrackedPlugin(pluginClass: Class<out PluginLifecycle>) : JavaPlugin(), ReporterFocus {
+abstract class TrackedPlugin @JvmOverloads constructor(
+        pluginClass: Class<out PluginLifecycle>,
+        envProperties: BukkitEnvironment.Properties = BukkitEnvironment.EMPTY_PROPERTIES
+) : JavaPlugin(), ReporterFocus {
 
     companion object {
         const val INSPECTOR_TAG = "[Inspector]"
     }
 
     override val focusedPackage: String = javaClass.`package`.name
-    override val environment: ReportEnvironment = BukkitEnvironment(this)
-
-    open val interestPluginsNames: List<String> = emptyList()
+    override val environment: ReportEnvironment = BukkitEnvironment(this, envProperties)
 
     val reporter: Reporter
     val plugin: PluginLifecycle = pluginClass.newInstance()
