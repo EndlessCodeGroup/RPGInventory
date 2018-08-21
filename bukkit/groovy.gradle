@@ -37,6 +37,7 @@ publishing {
             artifactId "$rootProject.name-$name"
 
             from components.java
+            artifact sourcesJar
 
             pom.withXml {
                 def root = asNode()

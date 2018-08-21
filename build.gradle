@@ -9,6 +9,13 @@ buildscript {
 
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
+        classpath "com.jfrog.bintray.gradle:gradle-bintray-plugin:1+"
+
+        constraints {
+            classpath("org.apache.httpcomponents:httpclient:4.5.2") {
+                because("it's needed for gradle-download-task plugin")
+            }
+        }
     }
 }
 
@@ -21,12 +28,13 @@ description = "Catch and report all exceptions"
 allprojects {
     ext.pluginName = "Inspector"
     ext.apiProject = project(":api")
+    ext.inspectorVersion = "0.3"
 }
 
 // Common configurations for all subprojects
 subprojects {
-    apply plugin: "kotlin"
-    apply from: rootProject.file("gradle/common.gradle")
+    apply(plugin: "kotlin")
+    apply(from: rootProject.file("gradle/common.gradle"))
 
     tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
         kotlinOptions {
@@ -36,6 +44,8 @@ subprojects {
             freeCompilerArgs = ["-Xenable-jvm-default"]
         }
     }
+
+    apply(from: rootProject.file("gradle/publish.gradle"))
 }
 
 // Configuration for API implementations
