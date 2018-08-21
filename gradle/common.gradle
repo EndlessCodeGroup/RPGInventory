@@ -28,6 +28,10 @@ afterEvaluate {
     sourceCompatibility = targetCompatibility = "1.8"
 }
 
+artifacts {
+    sourcesJar
+}
+
 repositories {
     mavenCentral()
     jcenter()
@@ -35,7 +39,7 @@ repositories {
 }
 
 dependencies {
-    applyDeps(commonDeps) { compileOnly(it) }
+    applyDeps(commonDeps) { implementation(it) }
 }
 
 ext.pomConfig = {

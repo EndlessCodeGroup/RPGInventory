@@ -40,6 +40,7 @@ subprojects {
 
 // Configuration for API implementations
 configure(subprojects - apiProject) {
+
     // Finish configuring API first
     evaluationDependsOn(apiProject.path)
 

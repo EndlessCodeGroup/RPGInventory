@@ -1,5 +1,17 @@
+import org.gradle.jvm.tasks.Jar
+
 // Bukkit implementation build config
-import java.util.Properties
+buildscript {
+    repositories {
+        flatDir {
+            dirs("/usr/share/proguard/lib")
+        }
+    }
+
+    dependencies {
+        classpath(":proguard")
+    }
+}
 
 plugins {
     id("com.github.johnrengelman.shadow") version "2.0.4"
@@ -13,3 +25,17 @@ version = "${apiProject.version}.$minorVersion"
 
 // TODO: Port it to Kotlin DSL
 apply(from = "groovy.gradle")
+
+task("proguard", proguard.gradle.ProGuardTask::class) {
+    // Specify the input jars, output jars, and library jars.
+    val jarFile = (tasks.get("shadowJar") as Jar).archivePath
+    val outPath = jarFile.parentFile.resolve("Inspector-$version-min.jar")
+    injars(jarFile.path)
+    outjars(outPath)
+
+    val bukkitLib = project.configurations.compileOnly.first { it.name.startsWith("bukkit-") }
+    libraryjars(bukkitLib.path)
+
+    // Import static configurations
+    configuration("proguard/proguard.pro")
+}
