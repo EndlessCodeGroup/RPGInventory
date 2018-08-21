@@ -2,7 +2,7 @@ import org.gradle.jvm.tasks.Jar
 
 // Bukkit implementation build config
 buildscript {
-    if (System.getenv("CI") != "true") {
+    if (System.getenv("CI") == null) {
         val localProps = java.util.Properties()
         localProps.load(file("local.properties").inputStream())
         val proguardPath = localProps.getProperty("proguard.dir") ?: "SPECIFY proguard.dir PROPERTY"
@@ -32,7 +32,7 @@ version = "${apiProject.version}.$minorVersion"
 // TODO: Port it to Kotlin DSL
 apply(from = "groovy.gradle")
 
-if (System.getenv("CI") != "true") {
+if (System.getenv("CI") == null) {
     task("proguard", proguard.gradle.ProGuardTask::class) {
         // Specify the input jars, output jars, and library jars.
         val jarFile = (tasks.get("shadowJar") as Jar).archivePath
