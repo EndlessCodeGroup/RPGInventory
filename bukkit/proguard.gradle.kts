@@ -16,8 +16,9 @@ buildscript {
 
 task("proguard", proguard.gradle.ProGuardTask::class) {
     // Specify the input jars, output jars, and library jars.
-    val jarFile = (tasks.get("shadowJar") as Jar).archivePath
-    val outPath = jarFile.parentFile.resolve("Inspector-$version-min.jar")
+    val shadowJar = (tasks.get("shadowJar") as Jar)
+    val jarFile = shadowJar.archivePath
+    val outPath = jarFile.parentFile.resolve("${shadowJar.archiveName}-min.jar")
     injars(jarFile.path)
     outjars(outPath)
 
@@ -27,4 +28,4 @@ task("proguard", proguard.gradle.ProGuardTask::class) {
     // Import static configurations
     configuration("proguard/proguard.pro")
 }
-tasks["shadowJar"].finalizedBy("proguard")
+//tasks["shadowJar"].finalizedBy("proguard")

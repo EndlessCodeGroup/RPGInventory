@@ -30,10 +30,6 @@ abstract class TrackedPlugin @JvmOverloads constructor(
         envProperties: BukkitEnvironment.Properties = BukkitEnvironment.EMPTY_PROPERTIES
 ) : JavaPlugin(), ReporterFocus {
 
-    companion object {
-        const val INSPECTOR_TAG = "[Inspector]"
-    }
-
     override val focusedPackage: String = javaClass.`package`.name
     override val environment: ReportEnvironment = BukkitEnvironment(this, envProperties)
 
@@ -46,13 +42,13 @@ abstract class TrackedPlugin @JvmOverloads constructor(
         reporter = if (Inspector.GLOBAL.isEnabled) createReporter() else SilentReporter
         reporter.addHandler(
                 beforeReport = { message, _ ->
-                    logger.warning("$INSPECTOR_TAG $message")
+                    logger.warning("${Inspector.TAG} $message")
                 },
                 onSuccess = { _, _ ->
-                    logger.warning("$INSPECTOR_TAG Error was reported to author!")
+                    logger.warning("${Inspector.TAG} Error was reported to author!")
                 },
                 onError = {
-                    logger.severe("$INSPECTOR_TAG Error on report: ${it.localizedMessage}")
+                    logger.severe("${Inspector.TAG} Error on report: ${it.localizedMessage}")
                 }
         )
     }

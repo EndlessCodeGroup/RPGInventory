@@ -11,6 +11,7 @@ class InspectorConfig(
             DataType.CORE to true,
             DataType.PLUGINS to true
     )
+    internal var isEventsLoggerEnabled: Boolean = false
 
     fun shouldSendData(dataType: DataType) = sendData.getValue(dataType)
 }
