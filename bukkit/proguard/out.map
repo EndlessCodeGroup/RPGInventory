@@ -364,39 +364,83 @@ ru.endlesscode.inspector.api.service.TextStorage -> ru.endlesscode.inspector.api
     java.lang.Object storeText(java.lang.String,ru.endlesscode.inspector.shade.kotlin.coroutines.experimental.Continuation) -> storeText
 ru.endlesscode.inspector.bukkit.Inspector -> ru.endlesscode.inspector.bukkit.Inspector:
     ru.endlesscode.inspector.bukkit.InspectorConfig GLOBAL -> GLOBAL
+    java.lang.String TAG -> TAG
     ru.endlesscode.inspector.bukkit.Inspector$Companion Companion -> Companion
-    7:18:void <init>() -> <init>
-    1022:1030:void loadConfig():22:30 -> <init>
-    1022:1030:void <init>():16 -> <init>
+    44:56:java.util.Map loadLogRules() -> a
+    8:21:void <init>() -> <init>
+    1025:1034:void loadConfig():25:34 -> <init>
+    1025:1034:void <init>():19 -> <init>
+    1037:1041:void enableEventsLogger():37:41 -> <init>
+    1037:1041:void <init>():21 -> <init>
     void <clinit>() -> <clinit>
-    7:7:ru.endlesscode.inspector.bukkit.InspectorConfig access$getGLOBAL$cp() -> access$getGLOBAL$cp
-    7:7:void access$setGLOBAL$cp(ru.endlesscode.inspector.bukkit.InspectorConfig) -> access$setGLOBAL$cp
+    8:8:ru.endlesscode.inspector.bukkit.InspectorConfig access$getGLOBAL$cp() -> access$getGLOBAL$cp
+    8:8:void access$setGLOBAL$cp(ru.endlesscode.inspector.bukkit.InspectorConfig) -> access$setGLOBAL$cp
     ru.endlesscode.inspector.bukkit.InspectorConfig getGLOBAL() -> getGLOBAL
     void setGLOBAL(ru.endlesscode.inspector.bukkit.InspectorConfig) -> setGLOBAL
 ru.endlesscode.inspector.bukkit.Inspector$Companion -> ru.endlesscode.inspector.bukkit.Inspector$Companion:
     void GLOBAL$annotations() -> GLOBAL$annotations
-    11:11:ru.endlesscode.inspector.bukkit.InspectorConfig getGLOBAL() -> getGLOBAL
-    11:11:void setGLOBAL(ru.endlesscode.inspector.bukkit.InspectorConfig) -> setGLOBAL
-    9:9:void <init>() -> <init>
-    9:9:void <init>(ru.endlesscode.inspector.shade.kotlin.jvm.internal.DefaultConstructorMarker) -> <init>
+    12:12:ru.endlesscode.inspector.bukkit.InspectorConfig getGLOBAL() -> getGLOBAL
+    12:12:void setGLOBAL(ru.endlesscode.inspector.bukkit.InspectorConfig) -> setGLOBAL
+    10:10:void <init>() -> <init>
+    10:10:void <init>(ru.endlesscode.inspector.shade.kotlin.jvm.internal.DefaultConstructorMarker) -> <init>
 ru.endlesscode.inspector.bukkit.InspectorConfig -> ru.endlesscode.inspector.bukkit.InspectorConfig:
     boolean isEnabled -> a
     java.util.Map sendData -> b
-    java.lang.String version -> c
+    boolean isEventsLoggerEnabled -> c
+    java.lang.String version -> d
     9:9:boolean isEnabled$Inspector() -> isEnabled$Inspector
     9:9:void setEnabled$Inspector(boolean) -> setEnabled$Inspector
     10:10:java.util.Map getSendData$Inspector() -> getSendData$Inspector
     10:10:void setSendData$Inspector(java.util.Map) -> setSendData$Inspector
-    15:15:boolean shouldSendData(ru.endlesscode.inspector.bukkit.report.DataType) -> shouldSendData
+    14:14:boolean isEventsLoggerEnabled$Inspector() -> isEventsLoggerEnabled$Inspector
+    14:14:void setEventsLoggerEnabled$Inspector(boolean) -> setEventsLoggerEnabled$Inspector
+    16:16:boolean shouldSendData(ru.endlesscode.inspector.bukkit.report.DataType) -> shouldSendData
     6:6:java.lang.String getVersion() -> getVersion
     5:12:void <init>(java.lang.String) -> <init>
-ru.endlesscode.inspector.bukkit.listener.EventsLogger -> ru.endlesscode.inspector.bukkit.listener.EventsLogger:
-    12:23:void inject(org.bukkit.plugin.Plugin) -> inject
-    9:9:void <init>() -> <init>
-ru.endlesscode.inspector.bukkit.listener.EventsLogger$inject$registeredListener$1 -> ru.endlesscode.inspector.bukkit.listener.EventsLogger$inject$registeredListener$1:
-    org.bukkit.plugin.Plugin $plugin -> a
-    20:21:void callEvent(org.bukkit.event.Event) -> callEvent
-    12:12:void <init>(org.bukkit.plugin.Plugin,org.bukkit.event.Listener,org.bukkit.plugin.EventExecutor,org.bukkit.event.EventPriority,org.bukkit.plugin.Plugin,boolean) -> <init>
+ru.endlesscode.inspector.bukkit.event.EventsLogger -> ru.endlesscode.inspector.bukkit.event.EventsLogger:
+    java.util.logging.Logger logger -> a
+    java.util.Map rules -> b
+    ru.endlesscode.inspector.bukkit.event.EventsLogger$Companion Companion -> Companion
+    18:37:void inject(org.bukkit.plugin.Plugin) -> inject
+    1052:1055:void injectToAllEvents(org.bukkit.plugin.RegisteredListener):52:55 -> inject
+    1052:1055:void inject(org.bukkit.plugin.Plugin):36 -> inject
+    40:43:ru.endlesscode.inspector.bukkit.event.LogRule findLogRule(java.lang.Class) -> a
+    58:64:void injectToEvent(java.lang.Class,org.bukkit.plugin.RegisteredListener) -> a
+    11:11:java.util.logging.Logger getLogger() -> getLogger
+    11:11:void <init>(java.util.logging.Logger,java.util.Map) -> <init>
+    void <clinit>() -> <clinit>
+    11:11:ru.endlesscode.inspector.bukkit.event.LogRule access$findLogRule(ru.endlesscode.inspector.bukkit.event.EventsLogger,java.lang.Class) -> access$findLogRule
+    11:11:void access$logEvent(ru.endlesscode.inspector.bukkit.event.EventsLogger,org.bukkit.event.Event,ru.endlesscode.inspector.bukkit.event.LogRule) -> access$logEvent
+    2047:2049:void logEvent(org.bukkit.event.Event,ru.endlesscode.inspector.bukkit.event.LogRule):47:49 -> access$logEvent
+    2047:2049:void access$logEvent(ru.endlesscode.inspector.bukkit.event.EventsLogger,org.bukkit.event.Event,ru.endlesscode.inspector.bukkit.event.LogRule):11 -> access$logEvent
+ru.endlesscode.inspector.bukkit.event.EventsLogger$Companion -> ru.endlesscode.inspector.bukkit.event.EventsLogger$Companion:
+    13:13:void <init>() -> <init>
+    13:13:void <init>(ru.endlesscode.inspector.shade.kotlin.jvm.internal.DefaultConstructorMarker) -> <init>
+ru.endlesscode.inspector.bukkit.event.EventsLogger$inject$registeredListener$1 -> ru.endlesscode.inspector.bukkit.event.EventsLogger$inject$registeredListener$1:
+    ru.endlesscode.inspector.bukkit.event.EventsLogger this$0 -> a
+    org.bukkit.plugin.Plugin $plugin -> b
+    26:33:void callEvent(org.bukkit.event.Event) -> callEvent
+    18:18:void <init>(ru.endlesscode.inspector.bukkit.event.EventsLogger,org.bukkit.plugin.Plugin,org.bukkit.event.Listener,org.bukkit.plugin.EventExecutor,org.bukkit.event.EventPriority,org.bukkit.plugin.Plugin,boolean) -> <init>
+ru.endlesscode.inspector.bukkit.event.LogRule -> ru.endlesscode.inspector.bukkit.event.LogRule:
+    boolean log -> a
+    int count -> b
+    java.lang.String event -> c
+    int frequency -> d
+    ru.endlesscode.inspector.bukkit.event.LogRule$Companion Companion -> Companion
+    35:35:boolean getLog() -> getLog
+    1050:1050:boolean isNeedToLog():50:50 -> getLog
+    1050:1050:boolean getLog():35 -> getLog
+    38:38:int getCount() -> getCount
+    42:43:void onEvent() -> onEvent
+    46:47:void afterLog() -> afterLog
+    8:8:java.lang.String getEvent() -> getEvent
+    7:33:void <init>(java.lang.String,boolean,int) -> <init>
+    9:10:void <init>(java.lang.String,boolean,int,int,ru.endlesscode.inspector.shade.kotlin.jvm.internal.DefaultConstructorMarker) -> <init>
+    void <clinit>() -> <clinit>
+ru.endlesscode.inspector.bukkit.event.LogRule$Companion -> ru.endlesscode.inspector.bukkit.event.LogRule$Companion:
+    22:29:ru.endlesscode.inspector.bukkit.event.LogRule fromString(java.lang.String) -> fromString
+    13:13:void <init>() -> <init>
+    13:13:void <init>(ru.endlesscode.inspector.shade.kotlin.jvm.internal.DefaultConstructorMarker) -> <init>
 ru.endlesscode.inspector.bukkit.plugin.PluginLifecycle -> ru.endlesscode.inspector.bukkit.plugin.PluginLifecycle:
     ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin holder -> holder
     ru.endlesscode.inspector.shade.kotlin.Lazy trackedServer$delegate -> a
@@ -452,73 +496,67 @@ ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin -> ru.endlesscode.inspector
     ru.endlesscode.inspector.api.report.ReportEnvironment environment -> b
     ru.endlesscode.inspector.api.report.Reporter reporter -> c
     ru.endlesscode.inspector.bukkit.plugin.PluginLifecycle plugin -> d
-    java.lang.String INSPECTOR_TAG -> INSPECTOR_TAG
-    ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin$Companion Companion -> Companion
-    37:37:java.lang.String getFocusedPackage() -> getFocusedPackage
-    38:38:ru.endlesscode.inspector.api.report.ReportEnvironment getEnvironment() -> getEnvironment
-    40:40:ru.endlesscode.inspector.api.report.Reporter getReporter() -> getReporter
-    41:41:ru.endlesscode.inspector.bukkit.plugin.PluginLifecycle getPlugin() -> getPlugin
+    33:33:java.lang.String getFocusedPackage() -> getFocusedPackage
+    34:34:ru.endlesscode.inspector.api.report.ReportEnvironment getEnvironment() -> getEnvironment
+    36:36:ru.endlesscode.inspector.api.report.Reporter getReporter() -> getReporter
+    37:37:ru.endlesscode.inspector.bukkit.plugin.PluginLifecycle getPlugin() -> getPlugin
     ru.endlesscode.inspector.api.report.Reporter createReporter() -> createReporter
-    63:63:org.bukkit.configuration.file.FileConfiguration getConfig() -> getConfig
-    67:68:void reloadConfig() -> reloadConfig
-    71:72:void saveConfig() -> saveConfig
-    75:76:void saveDefaultConfig() -> saveDefaultConfig
-    79:80:void saveResource(java.lang.String,boolean) -> saveResource
-    83:83:java.io.InputStream getResource(java.lang.String) -> getResource
-    87:87:org.bukkit.command.PluginCommand getCommand(java.lang.String) -> getCommand
-    98:98:boolean onCommand(org.bukkit.command.CommandSender,org.bukkit.command.Command,java.lang.String,java.lang.String[]) -> onCommand
-    109:109:java.util.List onTabComplete(org.bukkit.command.CommandSender,org.bukkit.command.Command,java.lang.String,java.lang.String[]) -> onTabComplete
-    115:118:void onLoad() -> onLoad
-    121:124:void onEnable() -> onEnable
-    127:130:void onDisable() -> onDisable
-    133:133:org.bukkit.generator.ChunkGenerator getDefaultWorldGenerator(java.lang.String,java.lang.String) -> getDefaultWorldGenerator
-    139:139:java.lang.String toString() -> toString
-    143:149:java.lang.Object track(java.lang.String,ru.endlesscode.inspector.shade.kotlin.jvm.functions.Function0) -> a
-    142:142:java.lang.Object track$default(ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin,java.lang.String,ru.endlesscode.inspector.shade.kotlin.jvm.functions.Function0,int,java.lang.Object) -> a
-    155:155:java.io.File _getFile$Inspector() -> _getFile$Inspector
-    157:157:java.lang.ClassLoader _getClassLoader$Inspector() -> _getClassLoader$Inspector
-    159:159:java.io.Reader _getTextResource$Inspector(java.lang.String) -> _getTextResource$Inspector
-    161:161:org.bukkit.command.PluginCommand _getCommand$Inspector(java.lang.String) -> _getCommand$Inspector
-    164:165:void _setEnabled$Inspector(boolean) -> _setEnabled$Inspector
-    28:54:void <init>(java.lang.Class,ru.endlesscode.inspector.bukkit.report.BukkitEnvironment$Properties) -> <init>
+    59:59:org.bukkit.configuration.file.FileConfiguration getConfig() -> getConfig
+    63:64:void reloadConfig() -> reloadConfig
+    67:68:void saveConfig() -> saveConfig
+    71:72:void saveDefaultConfig() -> saveDefaultConfig
+    75:76:void saveResource(java.lang.String,boolean) -> saveResource
+    79:79:java.io.InputStream getResource(java.lang.String) -> getResource
+    83:83:org.bukkit.command.PluginCommand getCommand(java.lang.String) -> getCommand
+    94:94:boolean onCommand(org.bukkit.command.CommandSender,org.bukkit.command.Command,java.lang.String,java.lang.String[]) -> onCommand
+    105:105:java.util.List onTabComplete(org.bukkit.command.CommandSender,org.bukkit.command.Command,java.lang.String,java.lang.String[]) -> onTabComplete
+    111:114:void onLoad() -> onLoad
+    117:120:void onEnable() -> onEnable
+    123:126:void onDisable() -> onDisable
+    129:129:org.bukkit.generator.ChunkGenerator getDefaultWorldGenerator(java.lang.String,java.lang.String) -> getDefaultWorldGenerator
+    135:135:java.lang.String toString() -> toString
+    139:145:java.lang.Object track(java.lang.String,ru.endlesscode.inspector.shade.kotlin.jvm.functions.Function0) -> a
+    138:138:java.lang.Object track$default(ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin,java.lang.String,ru.endlesscode.inspector.shade.kotlin.jvm.functions.Function0,int,java.lang.Object) -> a
+    151:151:java.io.File _getFile$Inspector() -> _getFile$Inspector
+    153:153:java.lang.ClassLoader _getClassLoader$Inspector() -> _getClassLoader$Inspector
+    155:155:java.io.Reader _getTextResource$Inspector(java.lang.String) -> _getTextResource$Inspector
+    157:157:org.bukkit.command.PluginCommand _getCommand$Inspector(java.lang.String) -> _getCommand$Inspector
+    160:161:void _setEnabled$Inspector(boolean) -> _setEnabled$Inspector
+    28:50:void <init>(java.lang.Class,ru.endlesscode.inspector.bukkit.report.BukkitEnvironment$Properties) -> <init>
     30:30:void <init>(java.lang.Class,ru.endlesscode.inspector.bukkit.report.BukkitEnvironment$Properties,int,ru.endlesscode.inspector.shade.kotlin.jvm.internal.DefaultConstructorMarker) -> <init>
     void <init>(java.lang.Class) -> <init>
-    void <clinit>() -> <clinit>
 ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin$1 -> ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin$1:
     ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin this$0 -> a
     28:28:java.lang.Object invoke(java.lang.Object,java.lang.Object) -> a
-    1049:1050:void invoke(java.lang.String,ru.endlesscode.inspector.api.report.ExceptionData):49:50 -> a
-    1049:1050:java.lang.Object invoke(java.lang.Object,java.lang.Object):28 -> a
+    1045:1046:void invoke(java.lang.String,ru.endlesscode.inspector.api.report.ExceptionData):45:46 -> a
+    1045:1046:java.lang.Object invoke(java.lang.Object,java.lang.Object):28 -> a
     void <init>(ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin) -> <init>
 ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin$2 -> ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin$2:
     ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin this$0 -> a
     28:28:java.lang.Object invoke(java.lang.Object,java.lang.Object) -> a
-    1052:1053:void invoke(java.lang.String,ru.endlesscode.inspector.api.report.ExceptionData):52:53 -> a
-    1052:1053:java.lang.Object invoke(java.lang.Object,java.lang.Object):28 -> a
+    1048:1049:void invoke(java.lang.String,ru.endlesscode.inspector.api.report.ExceptionData):48:49 -> a
+    1048:1049:java.lang.Object invoke(java.lang.Object,java.lang.Object):28 -> a
     void <init>(ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin) -> <init>
 ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin$3 -> ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin$3:
     ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin this$0 -> a
     28:28:java.lang.Object invoke(java.lang.Object) -> a
-    1055:1056:void invoke(java.lang.Throwable):55:56 -> a
-    1055:1056:java.lang.Object invoke(java.lang.Object):28 -> a
+    1051:1052:void invoke(java.lang.Throwable):51:52 -> a
+    1051:1052:java.lang.Object invoke(java.lang.Object):28 -> a
     void <init>(ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin) -> <init>
-ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin$Companion -> ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin$Companion:
-    33:33:void <init>() -> <init>
-    33:33:void <init>(ru.endlesscode.inspector.shade.kotlin.jvm.internal.DefaultConstructorMarker) -> <init>
 ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin$getCommand$1 -> ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin$a:
     ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin this$0 -> a
     java.lang.String $name -> b
     28:28:java.lang.Object invoke() -> a
-    1088:1088:org.bukkit.command.PluginCommand invoke():88:88 -> a
-    1088:1088:java.lang.Object invoke():28 -> a
+    1084:1084:org.bukkit.command.PluginCommand invoke():84:84 -> a
+    1084:1084:java.lang.Object invoke():28 -> a
     void <init>(ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin,java.lang.String) -> <init>
 ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin$getDefaultWorldGenerator$1 -> ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin$b:
     ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin this$0 -> a
     java.lang.String $worldName -> b
     java.lang.String $id -> c
     28:28:java.lang.Object invoke() -> a
-    1134:1134:org.bukkit.generator.ChunkGenerator invoke():134:134 -> a
-    1134:1134:java.lang.Object invoke():28 -> a
+    1130:1130:org.bukkit.generator.ChunkGenerator invoke():130:130 -> a
+    1130:1130:java.lang.Object invoke():28 -> a
     void <init>(ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin,java.lang.String,java.lang.String) -> <init>
 ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin$onCommand$1 -> ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin$c:
     ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin this$0 -> a
@@ -527,26 +565,26 @@ ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin$onCommand$1 -> ru.endlessco
     java.lang.String $label -> d
     java.lang.String[] $args -> e
     28:28:java.lang.Object invoke() -> a
-    1099:1099:boolean invoke():99:99 -> a
-    1099:1099:java.lang.Object invoke():28 -> a
+    1095:1095:boolean invoke():95:95 -> a
+    1095:1095:java.lang.Object invoke():28 -> a
     void <init>(ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin,org.bukkit.command.CommandSender,org.bukkit.command.Command,java.lang.String,java.lang.String[]) -> <init>
 ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin$onDisable$1 -> ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin$d:
     ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin this$0 -> a
     28:28:java.lang.Object invoke() -> a
-    1128:1129:void invoke():128:129 -> a
-    1128:1129:java.lang.Object invoke():28 -> a
+    1124:1125:void invoke():124:125 -> a
+    1124:1125:java.lang.Object invoke():28 -> a
     void <init>(ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin) -> <init>
 ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin$onEnable$1 -> ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin$e:
     ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin this$0 -> a
     28:28:java.lang.Object invoke() -> a
-    1122:1123:void invoke():122:123 -> a
-    1122:1123:java.lang.Object invoke():28 -> a
+    1118:1119:void invoke():118:119 -> a
+    1118:1119:java.lang.Object invoke():28 -> a
     void <init>(ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin) -> <init>
 ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin$onLoad$1 -> ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin$f:
     ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin this$0 -> a
     28:28:java.lang.Object invoke() -> a
-    1116:1117:void invoke():116:117 -> a
-    1116:1117:java.lang.Object invoke():28 -> a
+    1112:1113:void invoke():112:113 -> a
+    1112:1113:java.lang.Object invoke():28 -> a
     void <init>(ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin) -> <init>
 ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin$onTabComplete$1 -> ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin$g:
     ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin this$0 -> a
@@ -555,8 +593,8 @@ ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin$onTabComplete$1 -> ru.endle
     java.lang.String $alias -> d
     java.lang.String[] $args -> e
     28:28:java.lang.Object invoke() -> a
-    1110:1110:java.util.List invoke():110:110 -> a
-    1110:1110:java.lang.Object invoke():28 -> a
+    1106:1106:java.util.List invoke():106:106 -> a
+    1106:1106:java.lang.Object invoke():28 -> a
     void <init>(ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin,org.bukkit.command.CommandSender,org.bukkit.command.Command,java.lang.String,java.lang.String[]) -> <init>
 ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin$track$1 -> ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin$h:
     ru.endlesscode.inspector.shade.kotlin.coroutines.experimental.CoroutineContext$Key p$$49079fec -> b
@@ -566,7 +604,7 @@ ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin$track$1 -> ru.endlesscode.i
     28:28:java.lang.Object invoke(java.lang.Object,java.lang.Object) -> a
     1000:1000:java.lang.Object invoke$7c41d176(ru.endlesscode.inspector.shade.kotlin.coroutines.experimental.CoroutineContext$Key,ru.endlesscode.inspector.shade.kotlin.coroutines.experimental.Continuation):0:0 -> a
     1000:1000:java.lang.Object invoke(java.lang.Object,java.lang.Object):28 -> a
-    146:148:java.lang.Object doResume(java.lang.Object,java.lang.Throwable) -> a
+    142:144:java.lang.Object doResume(java.lang.Object,java.lang.Throwable) -> a
     void <init>(ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin,java.lang.String,java.lang.Exception,ru.endlesscode.inspector.shade.kotlin.coroutines.experimental.Continuation) -> <init>
     ru.endlesscode.inspector.shade.kotlin.coroutines.experimental.Continuation create$8d7f5bb(ru.endlesscode.inspector.shade.kotlin.coroutines.experimental.CoroutineContext$Key,ru.endlesscode.inspector.shade.kotlin.coroutines.experimental.Continuation) -> a
     28:28:ru.endlesscode.inspector.shade.kotlin.coroutines.experimental.Continuation create(java.lang.Object,ru.endlesscode.inspector.shade.kotlin.coroutines.experimental.Continuation) -> a
@@ -835,12 +873,12 @@ ru.endlesscode.inspector.bukkit.util.EventsUtils -> ru.endlesscode.inspector.buk
     11:16:void <clinit>() -> <clinit>
     13:13:org.bukkit.plugin.EventExecutor getNULL_EXECUTOR() -> getNULL_EXECUTOR
     14:14:org.bukkit.event.Listener getNULL_LISTENER() -> getNULL_LISTENER
-    19:19:java.util.Set getEventsClasses() -> getEventsClasses
+    21:21:java.util.Set getEventsClasses() -> getEventsClasses
     1000:1000:ru.endlesscode.inspector.shade.org.reflections.Reflections getReflections():0:0 -> getEventsClasses
-    1000:1000:java.util.Set getEventsClasses():19 -> getEventsClasses
-    25:30:org.bukkit.event.HandlerList getEventListeners(java.lang.Class) -> getEventListeners
-    35:44:java.lang.Class getRegistrationClass(java.lang.Class) -> a
-    47:47:java.lang.reflect.Method getHandlerListMethod(java.lang.Class) -> b
+    1000:1000:java.util.Set getEventsClasses():21 -> getEventsClasses
+    27:32:org.bukkit.event.HandlerList getEventListeners(java.lang.Class) -> getEventListeners
+    37:46:java.lang.Class getRegistrationClass(java.lang.Class) -> a
+    49:49:java.lang.reflect.Method getHandlerListMethod(java.lang.Class) -> b
     11:11:void <init>() -> <init>
 ru.endlesscode.inspector.bukkit.util.EventsUtils$NULL_EXECUTOR$1 -> ru.endlesscode.inspector.bukkit.util.EventsUtils$a:
     ru.endlesscode.inspector.bukkit.util.EventsUtils$NULL_EXECUTOR$1 INSTANCE -> a
@@ -852,8 +890,8 @@ ru.endlesscode.inspector.bukkit.util.EventsUtils$NULL_LISTENER$1 -> ru.endlessco
 ru.endlesscode.inspector.bukkit.util.EventsUtils$reflections$2 -> ru.endlesscode.inspector.bukkit.util.EventsUtils$b:
     ru.endlesscode.inspector.bukkit.util.EventsUtils$reflections$2 INSTANCE -> a
     11:11:java.lang.Object invoke() -> a
-    1016:1016:ru.endlesscode.inspector.shade.org.reflections.Reflections invoke():16:16 -> a
-    1016:1016:java.lang.Object invoke():11 -> a
+    1017:1017:ru.endlesscode.inspector.shade.org.reflections.Reflections invoke():17:17 -> a
+    1017:1017:java.lang.Object invoke():11 -> a
     void <init>() -> <init>
     void <clinit>() -> <clinit>
 ru.endlesscode.inspector.bukkit.util.PluginsKt -> ru.endlesscode.inspector.bukkit.util.PluginsKt:
@@ -1927,15 +1965,18 @@ ru.endlesscode.inspector.shade.kotlin.collections.ArraysKt___ArraysJvmKt -> ru.e
     14013:14013:java.util.List ru.endlesscode.inspector.shade.kotlin.collections.ArraysUtilJVM.asList(java.lang.Object[]):13:13 -> d
     14013:14013:java.util.List asList(java.lang.Object[]):40 -> d
     14384:14384:boolean ru.endlesscode.inspector.shade.kotlin.collections.ArraysKt___ArraysKt.contains(java.lang.Object[],java.lang.Object):384:384 -> a
-    15248:15261:int ru.endlesscode.inspector.shade.kotlin.collections.ArraysKt___ArraysKt.indexOf(java.lang.Object[],java.lang.Object):1248:1261 -> b
-    16061:16064:java.util.Collection ru.endlesscode.inspector.shade.kotlin.collections.ArraysKt___ArraysKt.toCollection(java.lang.Object[],java.util.Collection):7061:7064 -> a
-    16313:16313:java.util.List ru.endlesscode.inspector.shade.kotlin.collections.ArraysKt___ArraysKt.toMutableList(java.lang.Object[]):7313:7313 -> e
-    17054:17054:java.util.Collection ru.endlesscode.inspector.shade.kotlin.collections.CollectionsKt__CollectionsKt.asCollection(java.lang.Object[]):54:54 -> e
-    17054:17054:java.util.List ru.endlesscode.inspector.shade.kotlin.collections.ArraysKt___ArraysKt.toMutableList(java.lang.Object[]):7313 -> e
-    17988:17998:java.lang.Appendable ru.endlesscode.inspector.shade.kotlin.collections.ArraysKt___ArraysKt.joinTo(java.lang.Object[],java.lang.Appendable,java.lang.CharSequence,java.lang.CharSequence,java.lang.CharSequence,int,java.lang.CharSequence,ru.endlesscode.inspector.shade.kotlin.jvm.functions.Function1):12988:12998 -> a
-    18209:18209:java.lang.String ru.endlesscode.inspector.shade.kotlin.collections.ArraysKt___ArraysKt.joinToString$default$2e90a606(java.lang.Object[],java.lang.CharSequence,java.lang.CharSequence,java.lang.CharSequence,int,java.lang.CharSequence,ru.endlesscode.inspector.shade.kotlin.jvm.functions.Function1,int):13209:13209 -> a
-    18210:18210:java.lang.String ru.endlesscode.inspector.shade.kotlin.collections.ArraysKt___ArraysKt.joinToString(java.lang.Object[],java.lang.CharSequence,java.lang.CharSequence,java.lang.CharSequence,int,java.lang.CharSequence,ru.endlesscode.inspector.shade.kotlin.jvm.functions.Function1):13210:13210 -> a
-    18210:18210:java.lang.String ru.endlesscode.inspector.shade.kotlin.collections.ArraysKt___ArraysKt.joinToString$default$2e90a606(java.lang.Object[],java.lang.CharSequence,java.lang.CharSequence,java.lang.CharSequence,int,java.lang.CharSequence,ru.endlesscode.inspector.shade.kotlin.jvm.functions.Function1,int):13209 -> a
+    14440:14440:boolean ru.endlesscode.inspector.shade.kotlin.collections.ArraysKt___ArraysKt.contains(char[],char):440:440 -> a
+    15352:15357:int ru.endlesscode.inspector.shade.kotlin.collections.ArraysKt___ArraysKt.indexOf(char[],char):1352:1357 -> a
+    15352:15357:boolean ru.endlesscode.inspector.shade.kotlin.collections.ArraysKt___ArraysKt.contains(char[],char):440 -> a
+    16248:16261:int ru.endlesscode.inspector.shade.kotlin.collections.ArraysKt___ArraysKt.indexOf(java.lang.Object[],java.lang.Object):1248:1261 -> b
+    17061:17064:java.util.Collection ru.endlesscode.inspector.shade.kotlin.collections.ArraysKt___ArraysKt.toCollection(java.lang.Object[],java.util.Collection):7061:7064 -> a
+    17313:17313:java.util.List ru.endlesscode.inspector.shade.kotlin.collections.ArraysKt___ArraysKt.toMutableList(java.lang.Object[]):7313:7313 -> e
+    18054:18054:java.util.Collection ru.endlesscode.inspector.shade.kotlin.collections.CollectionsKt__CollectionsKt.asCollection(java.lang.Object[]):54:54 -> e
+    18054:18054:java.util.List ru.endlesscode.inspector.shade.kotlin.collections.ArraysKt___ArraysKt.toMutableList(java.lang.Object[]):7313 -> e
+    18988:18998:java.lang.Appendable ru.endlesscode.inspector.shade.kotlin.collections.ArraysKt___ArraysKt.joinTo(java.lang.Object[],java.lang.Appendable,java.lang.CharSequence,java.lang.CharSequence,java.lang.CharSequence,int,java.lang.CharSequence,ru.endlesscode.inspector.shade.kotlin.jvm.functions.Function1):12988:12998 -> a
+    19209:19209:java.lang.String ru.endlesscode.inspector.shade.kotlin.collections.ArraysKt___ArraysKt.joinToString$default$2e90a606(java.lang.Object[],java.lang.CharSequence,java.lang.CharSequence,java.lang.CharSequence,int,java.lang.CharSequence,ru.endlesscode.inspector.shade.kotlin.jvm.functions.Function1,int):13209:13209 -> a
+    19210:19210:java.lang.String ru.endlesscode.inspector.shade.kotlin.collections.ArraysKt___ArraysKt.joinToString(java.lang.Object[],java.lang.CharSequence,java.lang.CharSequence,java.lang.CharSequence,int,java.lang.CharSequence,ru.endlesscode.inspector.shade.kotlin.jvm.functions.Function1):13210:13210 -> a
+    19210:19210:java.lang.String ru.endlesscode.inspector.shade.kotlin.collections.ArraysKt___ArraysKt.joinToString$default$2e90a606(java.lang.Object[],java.lang.CharSequence,java.lang.CharSequence,java.lang.CharSequence,int,java.lang.CharSequence,ru.endlesscode.inspector.shade.kotlin.jvm.functions.Function1,int):13209 -> a
 ru.endlesscode.inspector.shade.kotlin.collections.CollectionsKt -> ru.endlesscode.inspector.shade.kotlin.a.e:
 ru.endlesscode.inspector.shade.kotlin.collections.CollectionsKt__IterablesKt -> ru.endlesscode.inspector.shade.kotlin.a.f:
     39:39:int collectionSizeOrDefault(java.lang.Iterable,int) -> a
@@ -2110,15 +2151,21 @@ ru.endlesscode.inspector.shade.kotlin.collections.MapsKt__MapsKt -> ru.endlessco
     4021:4110:java.lang.Object ru.endlesscode.inspector.shade.kotlin.collections.MapsKt__MapWithDefaultKt.getOrImplicitDefaultNullable(java.util.Map,java.lang.Object):21:110 -> a
     4021:4110:java.lang.Object getValue(java.util.Map,java.lang.Object):263 -> a
     321:324:void putAll(java.util.Map,ru.endlesscode.inspector.shade.kotlin.Pair[]) -> a
+    330:333:void putAll(java.util.Map,java.lang.Iterable) -> a
+    460:467:java.util.Map toMap(java.lang.Iterable) -> a
+    5037:5037:java.util.Map emptyMap():37:37 -> a
+    5037:5037:java.util.Map toMap(java.lang.Iterable):462 -> a
+    5474:5474:java.util.Map toMap(java.lang.Iterable,java.util.Map):474:474 -> a
+    5474:5474:java.util.Map toMap(java.lang.Iterable):464 -> a
     576:576:java.util.Map plus(java.util.Map,java.util.Map) -> a
-    5024:5037:java.util.List ru.endlesscode.inspector.shade.kotlin.collections.MapsKt___MapsKt.toList(java.util.Map):24:37 -> b
-    5070:5070:java.util.List ru.endlesscode.inspector.shade.kotlin.collections.CollectionsKt__CollectionsKt.emptyList():70:70 -> b
-    5070:5070:java.util.List ru.endlesscode.inspector.shade.kotlin.collections.MapsKt___MapsKt.toList(java.util.Map):25 -> b
+    6024:6037:java.util.List ru.endlesscode.inspector.shade.kotlin.collections.MapsKt___MapsKt.toList(java.util.Map):24:37 -> b
     6070:6070:java.util.List ru.endlesscode.inspector.shade.kotlin.collections.CollectionsKt__CollectionsKt.emptyList():70:70 -> b
-    6070:6070:java.util.List ru.endlesscode.inspector.shade.kotlin.collections.MapsKt___MapsKt.toList(java.util.Map):28 -> b
-    6220:6220:ru.endlesscode.inspector.shade.kotlin.sequences.Sequence ru.endlesscode.inspector.shade.kotlin.collections.MapsKt___MapsKt.asSequence(java.util.Map):220:220 -> c
-    6229:6229:ru.endlesscode.inspector.shade.kotlin.sequences.Sequence ru.endlesscode.inspector.shade.kotlin.collections.CollectionsKt___CollectionsKt.asSequence(java.lang.Iterable):2229:2229 -> c
-    6229:6229:ru.endlesscode.inspector.shade.kotlin.sequences.Sequence ru.endlesscode.inspector.shade.kotlin.collections.MapsKt___MapsKt.asSequence(java.util.Map):220 -> c
+    6070:6070:java.util.List ru.endlesscode.inspector.shade.kotlin.collections.MapsKt___MapsKt.toList(java.util.Map):25 -> b
+    7070:7070:java.util.List ru.endlesscode.inspector.shade.kotlin.collections.CollectionsKt__CollectionsKt.emptyList():70:70 -> b
+    7070:7070:java.util.List ru.endlesscode.inspector.shade.kotlin.collections.MapsKt___MapsKt.toList(java.util.Map):28 -> b
+    7220:7220:ru.endlesscode.inspector.shade.kotlin.sequences.Sequence ru.endlesscode.inspector.shade.kotlin.collections.MapsKt___MapsKt.asSequence(java.util.Map):220:220 -> c
+    7229:7229:ru.endlesscode.inspector.shade.kotlin.sequences.Sequence ru.endlesscode.inspector.shade.kotlin.collections.CollectionsKt___CollectionsKt.asSequence(java.lang.Iterable):2229:2229 -> c
+    7229:7229:ru.endlesscode.inspector.shade.kotlin.sequences.Sequence ru.endlesscode.inspector.shade.kotlin.collections.MapsKt___MapsKt.asSequence(java.util.Map):220 -> c
 ru.endlesscode.inspector.shade.kotlin.collections.SetsKt___SetsKt -> ru.endlesscode.inspector.shade.kotlin.a.s:
 ru.endlesscode.inspector.shade.kotlin.concurrent.ThreadsKt -> ru.endlesscode.inspector.shade.kotlin.b.a:
     java.lang.String symbol -> a
@@ -2502,6 +2549,7 @@ ru.endlesscode.inspector.shade.kotlin.sequences.SequencesKt___SequencesJvmKt -> 
     2669:2669:java.lang.String ru.endlesscode.inspector.shade.kotlin.sequences.SequencesKt___SequencesKt.joinToString$default$e0dbb36(ru.endlesscode.inspector.shade.kotlin.sequences.Sequence,java.lang.CharSequence,java.lang.CharSequence,java.lang.CharSequence,int,java.lang.CharSequence,ru.endlesscode.inspector.shade.kotlin.jvm.functions.Function1,int):1669:1669 -> a
     2670:2670:java.lang.String ru.endlesscode.inspector.shade.kotlin.sequences.SequencesKt___SequencesKt.joinToString(ru.endlesscode.inspector.shade.kotlin.sequences.Sequence,java.lang.CharSequence,java.lang.CharSequence,java.lang.CharSequence,int,java.lang.CharSequence,ru.endlesscode.inspector.shade.kotlin.jvm.functions.Function1):1670:1670 -> a
     2670:2670:java.lang.String ru.endlesscode.inspector.shade.kotlin.sequences.SequencesKt___SequencesKt.joinToString$default$e0dbb36(ru.endlesscode.inspector.shade.kotlin.sequences.Sequence,java.lang.CharSequence,java.lang.CharSequence,java.lang.CharSequence,int,java.lang.CharSequence,ru.endlesscode.inspector.shade.kotlin.jvm.functions.Function1,int):1669 -> a
+    2677:2677:java.lang.Iterable ru.endlesscode.inspector.shade.kotlin.sequences.SequencesKt___SequencesKt.asIterable(ru.endlesscode.inspector.shade.kotlin.sequences.Sequence):1677:1677 -> a
 ru.endlesscode.inspector.shade.kotlin.sequences.SequencesKt___SequencesKt$asIterable$$inlined$Iterable$1 -> ru.endlesscode.inspector.shade.kotlin.f.e:
     ru.endlesscode.inspector.shade.kotlin.sequences.Sequence receiver$0$inlined -> a
     16:16:void <init>(ru.endlesscode.inspector.shade.kotlin.sequences.Sequence) -> <init>
@@ -2600,6 +2648,7 @@ ru.endlesscode.inspector.shade.kotlin.text.StringsKt__StringNumberConversionsKt 
     8279:8279:boolean ru.endlesscode.inspector.shade.kotlin.text.StringsKt__StringsJVMKt.isBlank(java.lang.CharSequence):344 -> a
     8376:8379:boolean ru.endlesscode.inspector.shade.kotlin.text.StringsKt__StringsJVMKt.regionMatches(java.lang.String,int,java.lang.String,int,int,boolean):376:379 -> a
 ru.endlesscode.inspector.shade.kotlin.text.StringsKt__StringsKt -> ru.endlesscode.inspector.shade.kotlin.g.h:
+    103:1338:java.lang.String trimStart(java.lang.String,char[]) -> a
     118:1371:java.lang.CharSequence trim(java.lang.CharSequence) -> b
     285:285:int getLastIndex(java.lang.CharSequence) -> c
     329:329:java.lang.String substring(java.lang.CharSequence,ru.endlesscode.inspector.shade.kotlin.ranges.IntRange) -> a
@@ -2608,52 +2657,63 @@ ru.endlesscode.inspector.shade.kotlin.text.StringsKt__StringsKt -> ru.endlesscod
     3041:3041:java.lang.Integer ru.endlesscode.inspector.shade.kotlin.ranges.IntRange.getEndInclusive():41:41 -> a
     3041:3041:java.lang.String substring(java.lang.CharSequence,ru.endlesscode.inspector.shade.kotlin.ranges.IntRange):329 -> a
     691:699:boolean regionMatchesImpl(java.lang.CharSequence,int,java.lang.CharSequence,int,int,boolean) -> a
+    705:705:boolean startsWith$default$1ac7c153(java.lang.CharSequence,char,boolean,int) -> a
+    3706:3706:boolean startsWith(java.lang.CharSequence,char,boolean):706:706 -> a
+    3706:3706:boolean startsWith$default$1ac7c153(java.lang.CharSequence,char,boolean,int):705 -> a
+    801:1384:int indexOfAny(java.lang.CharSequence,char[],int,boolean) -> a
+    4144:4147:char ru.endlesscode.inspector.shade.kotlin.collections.ArraysKt___ArraysKt.single(char[]):2144:2147 -> a
+    4144:4147:int indexOfAny(java.lang.CharSequence,char[],int,boolean):802 -> a
     841:857:int indexOf$StringsKt__StringsKt(java.lang.CharSequence,java.lang.CharSequence,int,int,boolean,boolean) -> a
     840:840:int indexOf$StringsKt__StringsKt$default$6a8519d5(java.lang.CharSequence,java.lang.CharSequence,int,int,boolean,boolean,int) -> a
     954:954:int indexOf$default$b46a3c3(java.lang.CharSequence,char,int,boolean,int) -> a
-    3955:3958:int indexOf(java.lang.CharSequence,char,int,boolean):955:958 -> a
-    3955:3958:int indexOf$default$b46a3c3(java.lang.CharSequence,char,int,boolean,int):954 -> a
-    4801:5384:int indexOfAny(java.lang.CharSequence,char[],int,boolean):801:1384 -> a
-    4801:5384:int indexOf(java.lang.CharSequence,char,int,boolean):956 -> a
-    4801:5384:int indexOf$default$b46a3c3(java.lang.CharSequence,char,int,boolean,int):954 -> a
-    6144:6147:char ru.endlesscode.inspector.shade.kotlin.collections.ArraysKt___ArraysKt.single(char[]):2144:2147 -> a
-    6144:6147:int indexOfAny(java.lang.CharSequence,char[],int,boolean):802 -> a
-    6144:6147:int indexOf(java.lang.CharSequence,char,int,boolean):956 -> a
-    6144:6147:int indexOf$default$b46a3c3(java.lang.CharSequence,char,int,boolean,int):954 -> a
+    4955:4958:int indexOf(java.lang.CharSequence,char,int,boolean):955:958 -> a
+    4955:4958:int indexOf$default$b46a3c3(java.lang.CharSequence,char,int,boolean,int):954 -> a
     969:972:int indexOf(java.lang.CharSequence,java.lang.String,int,boolean) -> a
     1129:1129:ru.endlesscode.inspector.shade.kotlin.sequences.Sequence rangesDelimitedBy$StringsKt__StringsKt$default$5acf893a(java.lang.CharSequence,java.lang.String[],int,boolean,int,int) -> a
-    7130:7133:ru.endlesscode.inspector.shade.kotlin.sequences.Sequence rangesDelimitedBy$StringsKt__StringsKt(java.lang.CharSequence,java.lang.String[],int,boolean,int):1130:1133 -> a
-    7130:7133:ru.endlesscode.inspector.shade.kotlin.sequences.Sequence rangesDelimitedBy$StringsKt__StringsKt$default$5acf893a(java.lang.CharSequence,java.lang.String[],int,boolean,int,int):1129 -> a
+    5130:5133:ru.endlesscode.inspector.shade.kotlin.sequences.Sequence rangesDelimitedBy$StringsKt__StringsKt(java.lang.CharSequence,java.lang.String[],int,boolean,int):1130:1133 -> a
+    5130:5133:ru.endlesscode.inspector.shade.kotlin.sequences.Sequence rangesDelimitedBy$StringsKt__StringsKt$default$5acf893a(java.lang.CharSequence,java.lang.String[],int,boolean,int,int):1129 -> a
     1165:1165:java.util.List split$default$5b07c063(java.lang.CharSequence,java.lang.String[],boolean,int,int) -> a
-    7166:7394:java.util.List split(java.lang.CharSequence,java.lang.String[],boolean,int):1166:1394 -> a
-    7166:7394:java.util.List split$default$5b07c063(java.lang.CharSequence,java.lang.String[],boolean,int,int):1165 -> a
-    8210:8229:java.util.List split$StringsKt__StringsKt(java.lang.CharSequence,java.lang.String,boolean,int):1210:1229 -> a
-    8210:8229:java.util.List split(java.lang.CharSequence,java.lang.String[],boolean,int):1169 -> a
-    8210:8229:java.util.List split$default$5b07c063(java.lang.CharSequence,java.lang.String[],boolean,int,int):1165 -> a
-    8677:8677:java.lang.Iterable ru.endlesscode.inspector.shade.kotlin.sequences.SequencesKt___SequencesKt.asIterable(ru.endlesscode.inspector.shade.kotlin.sequences.Sequence):1677:1677 -> a
-    8677:8677:java.util.List split(java.lang.CharSequence,java.lang.String[],boolean,int):1173 -> a
-    8677:8677:java.util.List split$default$5b07c063(java.lang.CharSequence,java.lang.String[],boolean,int,int):1165 -> a
+    5166:5394:java.util.List split(java.lang.CharSequence,java.lang.String[],boolean,int):1166:1394 -> a
+    5166:5394:java.util.List split$default$5b07c063(java.lang.CharSequence,java.lang.String[],boolean,int,int):1165 -> a
+    1193:1193:java.util.List split$default$7dbd8218(java.lang.CharSequence,char[],boolean,int,int) -> a
+    6194:6398:java.util.List split(java.lang.CharSequence,char[],boolean,int):1194:1398 -> a
+    6194:6398:java.util.List split$default$7dbd8218(java.lang.CharSequence,char[],boolean,int,int):1193 -> a
+    7106:7106:ru.endlesscode.inspector.shade.kotlin.sequences.Sequence rangesDelimitedBy$StringsKt__StringsKt$default$33aba7df(java.lang.CharSequence,char[],int,boolean,int,int):1106:1106 -> a
+    7106:7106:java.util.List split(java.lang.CharSequence,char[],boolean,int):1198 -> a
+    7106:7106:java.util.List split$default$7dbd8218(java.lang.CharSequence,char[],boolean,int,int):1193 -> a
+    7107:7109:ru.endlesscode.inspector.shade.kotlin.sequences.Sequence rangesDelimitedBy$StringsKt__StringsKt(java.lang.CharSequence,char[],int,boolean,int):1107:1109 -> a
+    7107:7109:ru.endlesscode.inspector.shade.kotlin.sequences.Sequence rangesDelimitedBy$StringsKt__StringsKt$default$33aba7df(java.lang.CharSequence,char[],int,boolean,int,int):1106 -> a
+    7107:7109:java.util.List split(java.lang.CharSequence,char[],boolean,int):1198 -> a
+    7107:7109:java.util.List split$default$7dbd8218(java.lang.CharSequence,char[],boolean,int,int):1193 -> a
+    1210:1229:java.util.List split$StringsKt__StringsKt(java.lang.CharSequence,java.lang.String,boolean,int) -> a
     1:1:ru.endlesscode.inspector.shade.kotlin.Pair access$findAnyOf(java.lang.CharSequence,java.util.Collection,int,boolean,boolean) -> a
-    8861:9390:ru.endlesscode.inspector.shade.kotlin.Pair findAnyOf$StringsKt__StringsKt(java.lang.CharSequence,java.util.Collection,int,boolean,boolean):861:1390 -> a
-    8861:9390:ru.endlesscode.inspector.shade.kotlin.Pair access$findAnyOf(java.lang.CharSequence,java.util.Collection,int,boolean,boolean):1 -> a
-    9968:9968:int indexOf$default$49949d7e(java.lang.CharSequence,java.lang.String,int,boolean,int):968:968 -> a
-    9968:9968:ru.endlesscode.inspector.shade.kotlin.Pair findAnyOf$StringsKt__StringsKt(java.lang.CharSequence,java.util.Collection,int,boolean,boolean):863 -> a
-    9968:9968:ru.endlesscode.inspector.shade.kotlin.Pair access$findAnyOf(java.lang.CharSequence,java.util.Collection,int,boolean,boolean):1 -> a
-    9998:9998:int lastIndexOf$default$49949d7e(java.lang.CharSequence,java.lang.String,int,boolean,int):998:998 -> a
-    9998:9998:ru.endlesscode.inspector.shade.kotlin.Pair findAnyOf$StringsKt__StringsKt(java.lang.CharSequence,java.util.Collection,int,boolean,boolean):863 -> a
-    9998:9998:ru.endlesscode.inspector.shade.kotlin.Pair access$findAnyOf(java.lang.CharSequence,java.util.Collection,int,boolean,boolean):1 -> a
-    9999:10002:int lastIndexOf(java.lang.CharSequence,java.lang.String,int,boolean):999:1002 -> a
-    9999:10002:int lastIndexOf$default$49949d7e(java.lang.CharSequence,java.lang.String,int,boolean,int):998 -> a
-    9999:10002:ru.endlesscode.inspector.shade.kotlin.Pair findAnyOf$StringsKt__StringsKt(java.lang.CharSequence,java.util.Collection,int,boolean,boolean):863 -> a
-    9999:10002:ru.endlesscode.inspector.shade.kotlin.Pair access$findAnyOf(java.lang.CharSequence,java.util.Collection,int,boolean,boolean):1 -> a
-ru.endlesscode.inspector.shade.kotlin.text.StringsKt__StringsKt$rangesDelimitedBy$4 -> ru.endlesscode.inspector.shade.kotlin.g.h$a:
+    7861:8390:ru.endlesscode.inspector.shade.kotlin.Pair findAnyOf$StringsKt__StringsKt(java.lang.CharSequence,java.util.Collection,int,boolean,boolean):861:1390 -> a
+    7861:8390:ru.endlesscode.inspector.shade.kotlin.Pair access$findAnyOf(java.lang.CharSequence,java.util.Collection,int,boolean,boolean):1 -> a
+    8968:8968:int indexOf$default$49949d7e(java.lang.CharSequence,java.lang.String,int,boolean,int):968:968 -> a
+    8968:8968:ru.endlesscode.inspector.shade.kotlin.Pair findAnyOf$StringsKt__StringsKt(java.lang.CharSequence,java.util.Collection,int,boolean,boolean):863 -> a
+    8968:8968:ru.endlesscode.inspector.shade.kotlin.Pair access$findAnyOf(java.lang.CharSequence,java.util.Collection,int,boolean,boolean):1 -> a
+    8998:8998:int lastIndexOf$default$49949d7e(java.lang.CharSequence,java.lang.String,int,boolean,int):998:998 -> a
+    8998:8998:ru.endlesscode.inspector.shade.kotlin.Pair findAnyOf$StringsKt__StringsKt(java.lang.CharSequence,java.util.Collection,int,boolean,boolean):863 -> a
+    8998:8998:ru.endlesscode.inspector.shade.kotlin.Pair access$findAnyOf(java.lang.CharSequence,java.util.Collection,int,boolean,boolean):1 -> a
+    8999:9002:int lastIndexOf(java.lang.CharSequence,java.lang.String,int,boolean):999:1002 -> a
+    8999:9002:int lastIndexOf$default$49949d7e(java.lang.CharSequence,java.lang.String,int,boolean,int):998 -> a
+    8999:9002:ru.endlesscode.inspector.shade.kotlin.Pair findAnyOf$StringsKt__StringsKt(java.lang.CharSequence,java.util.Collection,int,boolean,boolean):863 -> a
+    8999:9002:ru.endlesscode.inspector.shade.kotlin.Pair access$findAnyOf(java.lang.CharSequence,java.util.Collection,int,boolean,boolean):1 -> a
+ru.endlesscode.inspector.shade.kotlin.text.StringsKt__StringsKt$rangesDelimitedBy$2 -> ru.endlesscode.inspector.shade.kotlin.g.h$a:
+    char[] $delimiters -> a
+    boolean $ignoreCase -> b
+    java.lang.Object invoke(java.lang.Object,java.lang.Object) -> a
+    2110:2110:ru.endlesscode.inspector.shade.kotlin.Pair invoke(java.lang.CharSequence,int):1110:1110 -> a
+    2110:2110:java.lang.Object invoke(java.lang.Object,java.lang.Object):0 -> a
+    void <init>(char[],boolean) -> <init>
+ru.endlesscode.inspector.shade.kotlin.text.StringsKt__StringsKt$rangesDelimitedBy$4 -> ru.endlesscode.inspector.shade.kotlin.g.h$b:
     java.util.List $delimitersList -> a
     boolean $ignoreCase -> b
     java.lang.Object invoke(java.lang.Object,java.lang.Object) -> a
     2133:2133:ru.endlesscode.inspector.shade.kotlin.Pair invoke(java.lang.CharSequence,int):1133:1133 -> a
     2133:2133:java.lang.Object invoke(java.lang.Object,java.lang.Object):0 -> a
     void <init>(java.util.List,boolean) -> <init>
-ru.endlesscode.inspector.shade.kotlin.text.StringsKt__StringsKt$splitToSequence$1 -> ru.endlesscode.inspector.shade.kotlin.g.h$b:
+ru.endlesscode.inspector.shade.kotlin.text.StringsKt__StringsKt$splitToSequence$1 -> ru.endlesscode.inspector.shade.kotlin.g.h$c:
     java.lang.CharSequence receiver$0 -> a
     java.lang.Object invoke(java.lang.Object) -> a
     2152:2152:java.lang.String invoke(ru.endlesscode.inspector.shade.kotlin.ranges.IntRange):1152:1152 -> a
@@ -3782,6 +3842,7 @@ ru.endlesscode.inspector.shade.org.reflections.Reflections -> ru.endlesscode.ins
     ru.endlesscode.inspector.shade.org.reflections.Configuration configuration -> b
     ru.endlesscode.inspector.shade.org.reflections.Store store -> c
     112:129:void <init>(ru.endlesscode.inspector.shade.org.reflections.Configuration) -> <init>
+    141:142:void <init>(java.lang.String,ru.endlesscode.inspector.shade.org.reflections.scanners.Scanner[]) -> <init>
     168:169:void <init>(java.lang.Object[]) -> <init>
     171:174:void <init>() -> <init>
     178:237:void scan() -> a
