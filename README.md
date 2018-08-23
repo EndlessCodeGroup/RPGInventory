@@ -44,6 +44,19 @@ To add Inspector to the plugin you should:
 - Modify main plugin class
 - Change main class in `plugin.yml` to new
 
+### Add Inspector to the project
+```groovy
+repositories { 
+    maven { 
+        url "https://dl.bintray.com/endlesscode/repo" 
+    } 
+}
+
+dependencies {
+    compileOnly "ru.endlesscode.inspector:inspector-bukkit:0.4.0"
+}
+```
+
 ### Main plugin class modifications
 
 First of all your current main plugin class should extend `PluginLifecycle` instead of `JavaPlugin`.  
