@@ -4,7 +4,8 @@
 def junitVersion = "4.12"
 def mockitoVersion = "2.8.+"
 def powermockVersion = "1.7.+"
-def coroutinesVersion = "0.24.0"
+def coroutinesVersion = "0.24.+"
+def reflectionVersion = "0.9.11"
 
 // Groups
 def powermockGroup = "org.powermock"
@@ -17,7 +18,7 @@ ext {
     commonDeps = [
             // Dependencies used in all subprojects
             kotlinStdlib : kotlin("stdlib-jdk8"),
-            coroutines : dep(kotlinxGroup, "kotlinx-coroutines-core", coroutinesVersion)
+            coroutines   : dep(kotlinxGroup, "kotlinx-coroutines-core", coroutinesVersion)
     ]
 
     apiDeps = [
@@ -25,9 +26,9 @@ ext {
             khttp : dep("com.github.jkcclemens", "khttp", "master-SNAPSHOT")
     ]
 
-    // These dependencies will be used with scope `compileOnly`
     bukkitDeps = [
             // Dependencies (except Bukkit API) used only in Bukkit implementation
+            reflections : dep("org.reflections", "reflections", reflectionVersion)
     ]
 
     // These dependencies will be used with scope `testImplementation`

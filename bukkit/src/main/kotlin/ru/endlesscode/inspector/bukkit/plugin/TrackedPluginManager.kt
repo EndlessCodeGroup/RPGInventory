@@ -2,7 +2,6 @@ package ru.endlesscode.inspector.bukkit.plugin
 
 import org.bukkit.event.Event
 import org.bukkit.event.EventPriority
-import org.bukkit.event.HandlerList
 import org.bukkit.event.Listener
 import org.bukkit.plugin.AuthorNagException
 import org.bukkit.plugin.EventExecutor
@@ -11,6 +10,7 @@ import org.bukkit.plugin.Plugin
 import org.bukkit.plugin.PluginManager
 import org.bukkit.plugin.RegisteredListener
 import ru.endlesscode.inspector.api.report.Reporter
+import ru.endlesscode.inspector.bukkit.util.EventsUtils
 import ru.endlesscode.inspector.bukkit.util.realPlugin
 
 
@@ -18,11 +18,6 @@ class TrackedPluginManager(
         private val delegate: PluginManager,
         private val reporter: Reporter
 ) : PluginManager by delegate {
-
-    companion object {
-        // Just in case Bukkit decides to validate the parameters in the future
-        private val NULL_EXECUTOR = EventExecutor { _, _ -> error("This method should never be called!") }
-    }
 
     constructor(plugin: TrackedPlugin) : this(plugin.server.pluginManager, plugin.reporter)
 
@@ -41,7 +36,7 @@ class TrackedPluginManager(
         val registeredListeners = realPlugin.pluginLoader.createRegisteredListeners(listener, realPlugin)
         for ((key, listeners) in registeredListeners) {
             val wrapped = wrapAllListeners(listeners)
-            getEventListeners(getRegistrationClass(key)).registerAll(wrapped)
+            EventsUtils.getEventListeners(key).registerAll(wrapped)
         }
     }
 
@@ -93,7 +88,7 @@ class TrackedPluginManager(
     private fun wrapListener(delegate: RegisteredListener): RegisteredListener {
         return object : RegisteredListener(
                 delegate.listener,
-                NULL_EXECUTOR,
+                EventsUtils.NULL_EXECUTOR,
                 delegate.priority,
                 delegate.plugin,
                 delegate.isIgnoringCancelled
@@ -123,31 +118,4 @@ class TrackedPluginManager(
             reporter.report("Error occurred on ${event.eventName}", e)
         }
     }
-
-    // Methods from SimplePluginManager
-
-    private fun getEventListeners(type: Class<out Event>): HandlerList {
-        try {
-            val method = getRegistrationClass(type).getHandlerListMethod()
-            method.isAccessible = true
-            return method.invoke(null, *arrayOfNulls(0)) as HandlerList
-        } catch (e: Exception) {
-            throw IllegalPluginAccessException(e.toString())
-        }
-    }
-
-    private fun getRegistrationClass(type: Class<out Event>): Class<out Event> {
-        try {
-            type.getHandlerListMethod()
-            return type
-        } catch (e: NoSuchMethodException) {
-            if (Event::class.java != type.superclass && Event::class.java.isAssignableFrom(type.superclass)) {
-                return getRegistrationClass(type.superclass.asSubclass(Event::class.java))
-            }
-        }
-
-        throw IllegalPluginAccessException("Unable to find handler list for event ${type.name}")
-    }
-
-    private fun Class<out Event>.getHandlerListMethod() = getDeclaredMethod("getHandlerList", *arrayOfNulls(0))
 }
