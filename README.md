@@ -15,6 +15,27 @@ It sends:
 Just copy plugin to `plugins/` folder.
 Also you can disable sending of information about server core and installed plugins in the Inspector's config.
 
+### Config exmple
+```yaml
+Reporter:
+  enabled: true 
+  # Here you can choose what you don't want to send
+  data:
+    core: true    # Info about server core
+    plugins: true # Plugins list
+
+# Events logger it is the tool that helps developers to debug events
+EventsLogger:
+  enabled: false
+  # What we need to log
+  # Here you can use super classes to configure event groups
+  log:
+  - Event               # Log all events
+  - PlayerMoveEvent:20  # Log PlayerMoveEvent (every 20th time)
+  - -EntityEvent        # Don't log events that extends EntityEvent
+  - -WorldEvent         # Don't log events that extends WorldEvent
+```
+
 ## For plugin developers
 
 To add Inspector to the plugin you should:
