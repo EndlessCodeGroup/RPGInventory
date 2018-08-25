@@ -8,7 +8,11 @@ import ru.endlesscode.inspector.bukkit.util.EventsUtils
 import java.util.logging.Logger
 
 
-internal class EventsLogger(val logger: Logger, private val rules: Map<String, LogRule>) {
+internal class EventsLogger(
+        val logger: Logger,
+        private val rules: Map<String, LogRule>,
+        private val showHierarchy: Boolean
+) {
 
     companion object {
         private const val TAG = "[EventsLogger]"
@@ -47,7 +51,12 @@ internal class EventsLogger(val logger: Logger, private val rules: Map<String, L
         val skippedString = if (skipped > 0) " (skipped $skipped)" else ""
         val sb = buildString {
             append("$TAG ${event.eventName}$skippedString\n")
-            append("    Hierarchy: ").append(hierarchy).append("\n    Fields:\n")
+
+            if (showHierarchy) {
+                append("    Hierarchy: ").append(hierarchy).append("\n")
+            }
+
+            append("    Fields:\n")
             var prefix = ""
             for (detail in details) {
                 append(prefix)
