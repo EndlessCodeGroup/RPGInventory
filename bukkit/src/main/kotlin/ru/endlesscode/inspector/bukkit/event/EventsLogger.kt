@@ -71,7 +71,7 @@ internal class EventsLogger(val logger: Logger, private val rules: Map<String, L
             val handlerList = EventsUtils.getEventListeners(eventClass)
             handlerList.register(registeredListener)
         } catch (e: Exception) {
-            println("${eventClass.simpleName} - ${e.message}")
+            // It's ok. We just ignore it
         }
     }
 }
