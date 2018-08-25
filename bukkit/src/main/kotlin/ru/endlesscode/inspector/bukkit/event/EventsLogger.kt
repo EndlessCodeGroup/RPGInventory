@@ -44,12 +44,26 @@ internal class EventsLogger(val logger: Logger, private val rules: Map<String, L
     }
 
     private fun logEvent(event: Event, logRule: LogRule) {
-        val count = if (logRule.count > 1) "[x${logRule.count}]" else ""
-        logger.info("$TAG ${event.eventName} $count")
+        val (hierarchy, details) = EventDetails.forEvent(event)
+
+        val count = if (logRule.count > 1) " (skipped ${logRule.count})" else ""
+        val sb = buildString {
+            append("$TAG ${event.eventName}$count\n")
+            append("    Hierarchy: ").append(hierarchy).append("\n    Fields:\n")
+            var prefix = ""
+            for (detail in details) {
+                append(prefix)
+                append("        ")
+                append(detail)
+                prefix = "\n"
+            }
+        }
+
+        logger.info(sb)
     }
 
     private fun injectToAllEvents(registeredListener: RegisteredListener) {
-        for (eventClass in EventsUtils.getEventsClasses()) {
+        for (eventClass in EventsUtils.eventsClasses) {
             injectToEvent(eventClass, registeredListener)
         }
     }

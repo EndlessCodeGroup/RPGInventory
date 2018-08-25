@@ -13,12 +13,8 @@ internal object EventsUtils {
     val NULL_EXECUTOR = EventExecutor { _, _ -> error("This method should never be called!") }
     val NULL_LISTENER = object : Listener { }
 
-    private val reflections by lazy {
-        Reflections("org.bukkit.event")
-    }
-
-    fun getEventsClasses(): Set<Class<out Event>> {
-        return reflections.getSubTypesOf(Event::class.java)
+    val eventsClasses: Set<Class<out Event>> by lazy {
+        Reflections("org.bukkit.event").getSubTypesOf(Event::class.java)
     }
 
     // Methods from SimplePluginManager
