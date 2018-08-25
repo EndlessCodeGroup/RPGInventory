@@ -11,7 +11,7 @@ import java.util.logging.Logger
 internal class EventsLogger(val logger: Logger, private val rules: Map<String, LogRule>) {
 
     companion object {
-        private const val TAG = "[Event]"
+        private const val TAG = "[EventsLogger]"
     }
 
     fun inject(plugin: Plugin) {
@@ -25,10 +25,8 @@ internal class EventsLogger(val logger: Logger, private val rules: Map<String, L
             override fun callEvent(event: Event) {
                 val logRule = findLogRule(event.javaClass) ?: return
 
-                logRule.onEvent()
-                if (logRule.log) {
-                    logEvent(event, logRule)
-                    logRule.afterLog()
+                logRule.onEvent {
+                    logEvent(event, logRule.skipped)
                 }
             }
         }
@@ -43,12 +41,12 @@ internal class EventsLogger(val logger: Logger, private val rules: Map<String, L
         return if (eventClass == Event::class.java) null else findLogRule(eventClass.superclass)
     }
 
-    private fun logEvent(event: Event, logRule: LogRule) {
+    private fun logEvent(event: Event, skipped: Int) {
         val (hierarchy, details) = EventDetails.forEvent(event)
 
-        val count = if (logRule.count > 1) " (skipped ${logRule.count})" else ""
+        val skippedString = if (skipped > 0) " (skipped $skipped)" else ""
         val sb = buildString {
-            append("$TAG ${event.eventName}$count\n")
+            append("$TAG ${event.eventName}$skippedString\n")
             append("    Hierarchy: ").append(hierarchy).append("\n    Fields:\n")
             var prefix = ""
             for (detail in details) {

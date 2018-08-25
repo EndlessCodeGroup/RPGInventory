@@ -20,7 +20,7 @@ object EventDetails {
         val (parentHierarchy, parentDetails) = forEvent(event, eventClass.superclass)
         val details = detailsGetters[eventClass.simpleName]?.getDetails(event) ?: emptyList()
 
-        return "$parentHierarchy > ${eventClass.simpleName}" to (parentDetails + details)
+        return "$parentHierarchy < ${eventClass.simpleName}" to (parentDetails + details)
     }
 
 

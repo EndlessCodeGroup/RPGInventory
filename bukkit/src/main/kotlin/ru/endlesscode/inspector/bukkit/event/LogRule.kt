@@ -6,17 +6,19 @@ package ru.endlesscode.inspector.bukkit.event
  */
 internal class LogRule(
         val event: String,
-        log: Boolean = true,
-        private val frequency: Int = 1
+        private val log: Boolean = true,
+        private val skip: Int = 0
 ) {
 
     companion object {
+        private val LOG = "LOG"
+        private const val SKIP = "SKIP"
 
         /**
          * Creates [LogRule] from string representation.
          * Examples:
          *      "-Event" (event: Event, log: false)
-         *      "PlayerEvent:10" (event: PlayerEvent, log: true, frequency: 10)
+         *      "PlayerEvent:10" (event: PlayerEvent, log: true, skip: 10)
          */
         fun fromString(value: String): LogRule {
             val trimmedValue = value.trim()
@@ -24,29 +26,53 @@ internal class LogRule(
 
             val event = parts[0]
             val log = !trimmedValue.startsWith('-')
-            val frequency = parts.getOrNull(1)?.toIntOrNull() ?: 1
+            val skip = parts.getOrNull(1)?.toIntOrNull() ?: 0
 
-            return LogRule(event, log, frequency)
+            return LogRule(event, log, skip)
         }
     }
 
-    val log = log
-        get() {
-            return field && isNeedToLog()
-        }
+    private val states = mapOf(
+            LOG to LogState(),
+            SKIP to SkipState()
+    )
 
-    var count: Int = 0
+    var skipped = 0
         private set
 
-    fun onEvent() {
-        count++
+    private var state: State = states.getValue(LOG)
+
+    fun onEvent(block: () -> Unit) {
+        state.onEvent(block)?.let {
+            state = states.getValue(it)
+        }
     }
 
-    fun afterLog() {
-        count = 0
+
+    @FunctionalInterface
+    private interface State {
+        fun onEvent(wantedAction: () -> Unit): String?
     }
 
-    private fun isNeedToLog(): Boolean {
-        return count >= frequency
+    private inner class LogState : State {
+        override fun onEvent(wantedAction: () -> Unit): String? {
+            if (log) {
+                wantedAction()
+            }
+
+            return if (skip == 0) {
+                null
+            } else {
+                skipped = 0
+                return SKIP
+            }
+        }
+    }
+
+    private inner class SkipState: State {
+        override fun onEvent(wantedAction: () -> Unit): String? {
+            skipped++
+            return if (skipped >= skip) LOG else null
+        }
     }
 }
