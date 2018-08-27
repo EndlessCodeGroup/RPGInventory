@@ -76,7 +76,7 @@ public class InventoryLocker {
             InventoryLocker.BUYABLE_SLOT.setItemMeta(meta);
             InventoryLocker.BUYABLE_SLOT = addId(InventoryLocker.BUYABLE_SLOT);
         } catch (Exception e) {
-            e.printStackTrace();
+            instance.getReporter().report("Error on InventoryLocker initialization", e);
             return false;
         }
 

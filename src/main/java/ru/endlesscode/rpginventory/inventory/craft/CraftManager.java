@@ -19,20 +19,19 @@
 package ru.endlesscode.rpginventory.inventory.craft;
 
 import com.comphenix.protocol.ProtocolLibrary;
-
 import org.bukkit.configuration.MemorySection;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.*;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import ru.endlesscode.rpginventory.RPGInventory;
 import ru.endlesscode.rpginventory.event.listener.CraftListener;
 import ru.endlesscode.rpginventory.misc.Config;
 import ru.endlesscode.rpginventory.utils.ItemUtils;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Created by OsipXD on 29.08.2016
@@ -61,7 +60,7 @@ public class CraftManager {
                 EXTENSIONS.add(new CraftExtension(extensionName, config.getConfigurationSection("extensions." + extensionName)));
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            instance.getReporter().report("Error on CraftManager initialization", e);
             return false;
         }
 

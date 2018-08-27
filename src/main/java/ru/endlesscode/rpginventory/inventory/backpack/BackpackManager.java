@@ -25,7 +25,17 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.*;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import ru.endlesscode.inspector.api.report.Reporter;
+import ru.endlesscode.rpginventory.RPGInventory;
+import ru.endlesscode.rpginventory.event.listener.BackpackListener;
+import ru.endlesscode.rpginventory.inventory.InventoryManager;
+import ru.endlesscode.rpginventory.inventory.slot.Slot;
+import ru.endlesscode.rpginventory.inventory.slot.SlotManager;
+import ru.endlesscode.rpginventory.misc.Config;
+import ru.endlesscode.rpginventory.utils.ItemUtils;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -35,14 +45,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-
-import ru.endlesscode.rpginventory.RPGInventory;
-import ru.endlesscode.rpginventory.event.listener.BackpackListener;
-import ru.endlesscode.rpginventory.inventory.InventoryManager;
-import ru.endlesscode.rpginventory.inventory.slot.Slot;
-import ru.endlesscode.rpginventory.inventory.slot.SlotManager;
-import ru.endlesscode.rpginventory.misc.Config;
-import ru.endlesscode.rpginventory.utils.ItemUtils;
 
 /**
  * Created by OsipXD on 05.10.2015
@@ -54,10 +56,14 @@ public class BackpackManager {
     private static final HashMap<UUID, Backpack> BACKPACKS = new HashMap<>();
     private static int BACKPACK_LIMIT;
 
+    private static Reporter reporter;
+
     public static boolean init(@NotNull RPGInventory instance) {
         if (!isEnabled()) {
             return false;
         }
+
+        reporter = instance.getReporter();
 
         try {
             Path petsFile = RPGInventory.getInstance().getDataPath().resolve("backpacks.yml");
@@ -74,7 +80,7 @@ public class BackpackManager {
 
             BackpackManager.loadBackpacks();
         } catch (Exception e) {
-            e.printStackTrace();
+            reporter.report("Error on BackpackManager initialization", e);
             return false;
         }
 
@@ -166,7 +172,7 @@ public class BackpackManager {
                 BackpackSerializer.saveBackpack(entry.getValue(), bpFile);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            reporter.report("Error on backpack save", e);
         }
     }
 
@@ -178,8 +184,8 @@ public class BackpackManager {
             Files.list(folder)
                     .filter((file) -> Files.isRegularFile(file) && file.toString().endsWith(".bp"))
                     .forEach(BackpackManager::tryToLoadBackpack);
-        } catch (@NotNull IOException | RuntimeException e) {
-            e.printStackTrace();
+        } catch (IOException | RuntimeException e) {
+            reporter.report("Error on backpack load", e);
         }
     }
 

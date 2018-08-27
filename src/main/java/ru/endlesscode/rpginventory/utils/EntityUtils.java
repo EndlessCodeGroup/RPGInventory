@@ -23,6 +23,8 @@ import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import ru.endlesscode.inspector.api.report.Reporter;
+import ru.endlesscode.rpginventory.RPGInventory;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
 import ru.endlesscode.rpginventory.pet.PetManager;
 import ru.endlesscode.rpginventory.pet.PetType;
@@ -37,8 +39,12 @@ import java.lang.reflect.Method;
  */
 public class EntityUtils {
 
-    private static Method craftEntity_getHandle, navigationAbstract_a, entityInsentient_getNavigation;
+    private static Method craftEntity_getHandle;
+    private static Method navigationAbstract_a;
+    private static Method entityInsentient_getNavigation;
     private static Class<?> entityInsentientClass = MinecraftReflection.getMinecraftClass("EntityInsentient");
+
+    private static Reporter reporter = RPGInventory.getInstance().getReporter();
 
     static {
         try {
@@ -47,7 +53,7 @@ public class EntityUtils {
             navigationAbstract_a = MinecraftReflection.getMinecraftClass("NavigationAbstract")
                     .getDeclaredMethod("a", double.class, double.class, double.class, double.class);
         } catch (NoSuchMethodException e) {
-            e.printStackTrace();
+            reporter.report("Error on EntityUtils initialization", e);
         }
     }
 
@@ -79,7 +85,7 @@ public class EntityUtils {
             Object navigation = entityInsentient_getNavigation.invoke(insentient);
             navigationAbstract_a.invoke(navigation, target.getX(), target.getY(), target.getZ(), speedModifier);
         } catch (@NotNull IllegalAccessException | InvocationTargetException e) {
-            e.printStackTrace();
+            reporter.report("Error on going pet to player", e);
         }
     }
 }
