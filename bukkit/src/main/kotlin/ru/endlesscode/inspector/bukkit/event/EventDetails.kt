@@ -1,9 +1,9 @@
 package ru.endlesscode.inspector.bukkit.event
 
 import org.bukkit.event.Event
-import org.bukkit.event.HandlerList
 import ru.endlesscode.inspector.bukkit.util.EventsUtils
 import java.lang.reflect.Field
+import java.lang.reflect.Modifier
 
 object EventDetails {
 
@@ -30,7 +30,7 @@ object EventDetails {
 
         init {
             fieldsMap = eventClass.declaredFields
-                    .filter { it.type != HandlerList::class.java }
+                    .filter { !Modifier.isStatic(it.modifiers) }
                     .map { field ->
                         field.isAccessible = true
                         field.name to field
