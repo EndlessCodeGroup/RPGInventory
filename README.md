@@ -1,6 +1,7 @@
 # Inspector
 
-![Inspector Example](https://gitlab.com/endlesscodegroup/inspector/raw/develop/images/example.png)
+![Inspector Example](https://gitlab.com/endlesscodegroup/inspector/raw/develop/images/example.png)  
+![Event Logging Example](https://gitlab.com/endlesscodegroup/inspector/raw/develop/images/event_log_example.png)
 
 Inspector helps developers to track all exceptions and crashes of theirs plugins.
 It automatically sends reports to the developer with all needed information about the environment.
