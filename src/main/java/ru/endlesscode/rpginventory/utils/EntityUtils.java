@@ -84,7 +84,7 @@ public class EntityUtils {
             Object insentient = entityInsentientClass.cast(craftEntity_getHandle.invoke(entity));
             Object navigation = entityInsentient_getNavigation.invoke(insentient);
             navigationAbstract_a.invoke(navigation, target.getX(), target.getY(), target.getZ(), speedModifier);
-        } catch (@NotNull IllegalAccessException | InvocationTargetException e) {
+        } catch (IllegalAccessException | InvocationTargetException e) {
             reporter.report("Error on going pet to player", e);
         }
     }

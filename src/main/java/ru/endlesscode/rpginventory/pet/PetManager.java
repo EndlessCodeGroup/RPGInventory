@@ -334,9 +334,11 @@ public class PetManager {
         }
 
         final List<MetadataValue> metadata = entity.getMetadata(PetManager.METADATA_KEY_PET_OWNER);
-        final Optional<MetadataValue> metadataValue = metadata.stream()
-                .filter(value -> value.getOwningPlugin().equals(RPGInventory.getInstance())).findFirst();
-        return metadataValue.isPresent() ? (UUID) metadataValue.get().value() : null;
+        return metadata.stream()
+                .filter(value -> value.getOwningPlugin().equals(RPGInventory.getInstance()))
+                .findFirst()
+                .map(it -> (UUID) it.value())
+                .orElse(null);
     }
 
     @Nullable
