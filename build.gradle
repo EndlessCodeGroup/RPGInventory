@@ -46,8 +46,6 @@ subprojects {
             freeCompilerArgs = ["-Xenable-jvm-default"]
         }
     }
-
-    apply(from: rootProject.file("gradle/publish.gradle"))
 }
 
 // Configuration for API implementations

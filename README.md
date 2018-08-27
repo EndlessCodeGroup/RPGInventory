@@ -1,6 +1,7 @@
 # Inspector
 
-![Inspector Example](https://gitlab.com/endlesscodegroup/inspector/raw/develop/images/example.png)
+![Inspector Example](https://gitlab.com/endlesscodegroup/inspector/raw/develop/images/example.png)  
+![Event Logging Example](https://gitlab.com/endlesscodegroup/inspector/raw/develop/images/event_log_example.png)
 
 Inspector helps developers to track all exceptions and crashes of theirs plugins.
 It automatically sends reports to the developer with all needed information about the environment.
@@ -30,10 +31,13 @@ EventsLogger:
   # What we need to log
   # Here you can use super classes to configure event groups
   log:
-  - Event               # Log all events
-  - PlayerMoveEvent:20  # Log PlayerMoveEvent (every 20th time)
-  - -EntityEvent        # Don't log events that extends EntityEvent
-  - -WorldEvent         # Don't log events that extends WorldEvent
+  - Event                               # Log all events
+  - PlayerStatisticIncrementEvent:100   # Skip this event 100 times
+  - PlayerMoveEvent:20                  
+  - -ChunkEvent                         # Don't log all events that extends ChunkEvent
+  - -BlockEvent                          
+  - -VehicleEvent                       
+  - -EntityAirChangeEvent               # Don't log the event
 ```
 
 ## For plugin developers

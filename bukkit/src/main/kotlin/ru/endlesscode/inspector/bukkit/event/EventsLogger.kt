@@ -1,17 +1,21 @@
 package ru.endlesscode.inspector.bukkit.event
 
+import org.bukkit.command.ConsoleCommandSender
 import org.bukkit.event.Event
 import org.bukkit.event.EventPriority
 import org.bukkit.plugin.Plugin
 import org.bukkit.plugin.RegisteredListener
 import ru.endlesscode.inspector.bukkit.util.EventsUtils
-import java.util.logging.Logger
 
 
-internal class EventsLogger(val logger: Logger, private val rules: Map<String, LogRule>) {
+internal class EventsLogger(
+        private val sender: ConsoleCommandSender,
+        private val rules: Map<String, LogRule>,
+        private val showHierarchy: Boolean
+) {
 
     companion object {
-        private const val TAG = "[Event]"
+        private const val TAG = "[EventsLogger]"
     }
 
     fun inject(plugin: Plugin) {
@@ -25,10 +29,8 @@ internal class EventsLogger(val logger: Logger, private val rules: Map<String, L
             override fun callEvent(event: Event) {
                 val logRule = findLogRule(event.javaClass) ?: return
 
-                logRule.onEvent()
-                if (logRule.log) {
-                    logEvent(event, logRule)
-                    logRule.afterLog()
+                logRule.onEvent {
+                    logEvent(event, logRule.skipped)
                 }
             }
         }
@@ -43,13 +45,22 @@ internal class EventsLogger(val logger: Logger, private val rules: Map<String, L
         return if (eventClass == Event::class.java) null else findLogRule(eventClass.superclass)
     }
 
-    private fun logEvent(event: Event, logRule: LogRule) {
-        val count = if (logRule.count > 1) "[x${logRule.count}]" else ""
-        logger.info("$TAG ${event.eventName} $count")
+    private fun logEvent(event: Event, skipped: Int) {
+        val skippedString = if (skipped > 0) " (skipped $skipped)" else ""
+        val lines = mutableListOf("$TAG ${event.eventName}$skippedString")
+
+        val (hierarchy, details) = EventDetails.forEvent(event)
+        if (showHierarchy) {
+            lines += "  Hierarchy: $hierarchy"
+        }
+        lines += "  Fields:"
+        details.mapTo(lines) { "    $it" }
+
+        sender.sendMessage(lines.toTypedArray())
     }
 
     private fun injectToAllEvents(registeredListener: RegisteredListener) {
-        for (eventClass in EventsUtils.getEventsClasses()) {
+        for (eventClass in EventsUtils.eventsClasses) {
             injectToEvent(eventClass, registeredListener)
         }
     }
@@ -59,7 +70,7 @@ internal class EventsLogger(val logger: Logger, private val rules: Map<String, L
             val handlerList = EventsUtils.getEventListeners(eventClass)
             handlerList.register(registeredListener)
         } catch (e: Exception) {
-            println("${eventClass.simpleName} - ${e.message}")
+            // It's ok. We just ignore it
         }
     }
 }

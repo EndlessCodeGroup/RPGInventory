@@ -39,10 +39,10 @@ bintray {
         vcsUrl = "https://gitlab.com/endlesscodegroup/inspector.git"
 
         version {
-            name = inspectorVersion
-            desc = "Inspector v$inspectorVersion"
+            name = project.version
+            desc = "Inspector v$project.version"
             released  = new Date()
-            vcsTag = "v$inspectorVersion"
+            vcsTag = "v$project.version"
         }
     }
 }

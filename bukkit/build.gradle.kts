@@ -9,7 +9,7 @@ plugins {
 }
 
 val apiProject: Project by extra
-val minorVersion = 0
+val minorVersion = 1
 version = "${apiProject.version}.$minorVersion"
 
 // TODO: Port it to Kotlin DSL

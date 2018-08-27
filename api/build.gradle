@@ -12,6 +12,8 @@ dependencies {
     }
 }
 
+apply(from: rootProject.file("gradle/publish.gradle"))
+
 publishing {
     publications {
         api(MavenPublication) {
