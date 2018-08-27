@@ -10,6 +10,9 @@ EventsLogger:
   hierarchy: true
   log:
   - Event
+  - PlayerStatisticIncrementEvent:100
   - PlayerMoveEvent:20
-  - -EntityEvent
-  - -WorldEvent
+  - -ChunkEvent
+  - -BlockEvent
+  - -VehicleEvent
+  - -EntityAirChangeEvent

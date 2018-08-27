@@ -30,10 +30,13 @@ EventsLogger:
   # What we need to log
   # Here you can use super classes to configure event groups
   log:
-  - Event               # Log all events
-  - PlayerMoveEvent:20  # Log PlayerMoveEvent (every 20th time)
-  - -EntityEvent        # Don't log events that extends EntityEvent
-  - -WorldEvent         # Don't log events that extends WorldEvent
+  - Event                               # Log all events
+  - PlayerStatisticIncrementEvent:100   # Skip this event 100 times
+  - PlayerMoveEvent:20                  
+  - -ChunkEvent                         # Don't log all events that extends ChunkEvent
+  - -BlockEvent                          
+  - -VehicleEvent                       
+  - -EntityAirChangeEvent               # Don't log the event
 ```
 
 ## For plugin developers
