@@ -36,6 +36,8 @@ shadowJar {
 
 assemble.dependsOn shadowJar
 
+apply(from: rootProject.file("gradle/publish.gradle"))
+
 publishing {
     publications {
         bukkit(MavenPublication) {
