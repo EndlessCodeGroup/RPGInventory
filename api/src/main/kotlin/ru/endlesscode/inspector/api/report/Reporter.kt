@@ -44,12 +44,26 @@ interface Reporter {
      *
      * @param message The message that describes when exception thrown
      * @param exception The exception
-     * @return [Job] that can be used to track when report done,
+     * @return [Job] that can be used to track when report done
      */
     fun report(
             message: String,
             exception: Exception
     ): Job
+
+    /**
+     * Catch and report all exceptions that will be occurred inside [block].
+     *
+     * @param message The message that will be used as title
+     * @param block Block that should be executed
+     */
+    fun track(message: String, block: () -> Unit) {
+        try {
+            block.invoke()
+        } catch (e: Exception) {
+            report(message, e)
+        }
+    }
 
     abstract class Builder {
 

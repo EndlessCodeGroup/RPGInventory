@@ -9,12 +9,16 @@ import org.bukkit.generator.ChunkGenerator
 import org.bukkit.plugin.PluginBase
 import org.bukkit.plugin.PluginDescriptionFile
 import org.bukkit.plugin.PluginLoader
+import ru.endlesscode.inspector.api.report.Reporter
 import java.io.File
 import java.io.InputStream
 import java.io.Reader
 import java.util.logging.Logger
 
 abstract class PluginLifecycle : PluginBase() {
+
+    val reporter: Reporter
+        get() = holder.reporter
 
     internal lateinit var holder: TrackedPlugin
 

@@ -17,6 +17,7 @@ import ru.endlesscode.inspector.bukkit.report.BukkitEnvironment
 import java.io.File
 import java.io.InputStream
 import java.io.Reader
+import java.util.logging.Level
 
 
 /**
@@ -41,8 +42,8 @@ abstract class TrackedPlugin @JvmOverloads constructor(
 
         reporter = if (Inspector.GLOBAL.isEnabled) createReporter() else SilentReporter
         reporter.addHandler(
-                beforeReport = { message, _ ->
-                    logger.warning("${Inspector.TAG} $message")
+                beforeReport = { message, exception ->
+                    logger.log(Level.WARNING, "${Inspector.TAG} $message", exception)
                 },
                 onSuccess = { _, _ ->
                     logger.warning("${Inspector.TAG} Error was reported to author!")
