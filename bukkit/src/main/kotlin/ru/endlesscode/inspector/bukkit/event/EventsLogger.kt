@@ -1,15 +1,15 @@
 package ru.endlesscode.inspector.bukkit.event
 
+import org.bukkit.command.ConsoleCommandSender
 import org.bukkit.event.Event
 import org.bukkit.event.EventPriority
 import org.bukkit.plugin.Plugin
 import org.bukkit.plugin.RegisteredListener
 import ru.endlesscode.inspector.bukkit.util.EventsUtils
-import java.util.logging.Logger
 
 
 internal class EventsLogger(
-        val logger: Logger,
+        private val sender: ConsoleCommandSender,
         private val rules: Map<String, LogRule>,
         private val showHierarchy: Boolean
 ) {
@@ -46,27 +46,17 @@ internal class EventsLogger(
     }
 
     private fun logEvent(event: Event, skipped: Int) {
-        val (hierarchy, details) = EventDetails.forEvent(event)
-
         val skippedString = if (skipped > 0) " (skipped $skipped)" else ""
-        val sb = buildString {
-            append("$TAG ${event.eventName}$skippedString\n")
+        val lines = mutableListOf("$TAG ${event.eventName}$skippedString")
 
-            if (showHierarchy) {
-                append("    Hierarchy: ").append(hierarchy).append("\n")
-            }
-
-            append("    Fields:\n")
-            var prefix = ""
-            for (detail in details) {
-                append(prefix)
-                append("        ")
-                append(detail)
-                prefix = "\n"
-            }
+        val (hierarchy, details) = EventDetails.forEvent(event)
+        if (showHierarchy) {
+            lines += "  Hierarchy: $hierarchy"
         }
+        lines += "  Fields:"
+        details.mapTo(lines) { "    $it" }
 
-        logger.info(sb)
+        sender.sendMessage(lines.toTypedArray())
     }
 
     private fun injectToAllEvents(registeredListener: RegisteredListener) {

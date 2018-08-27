@@ -36,7 +36,7 @@ class Inspector : JavaPlugin() {
     private fun enableEventsLogger() {
         if (GLOBAL.isEventsLoggerEnabled) {
             val showHierarchy = config.getBoolean("EventsLogger.hierarchy", true)
-            val eventsLogger = EventsLogger(logger, loadLogRules(), showHierarchy)
+            val eventsLogger = EventsLogger(server.consoleSender, loadLogRules(), showHierarchy)
             eventsLogger.inject(this)
         }
     }

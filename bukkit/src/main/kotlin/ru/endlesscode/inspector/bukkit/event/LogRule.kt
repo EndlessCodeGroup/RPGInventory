@@ -11,7 +11,7 @@ internal class LogRule(
 ) {
 
     companion object {
-        private val LOG = "LOG"
+        private const val LOG = "LOG"
         private const val SKIP = "SKIP"
 
         /**
@@ -49,7 +49,6 @@ internal class LogRule(
     }
 
 
-    @FunctionalInterface
     private interface State {
         fun onEvent(wantedAction: () -> Unit): String?
     }
