@@ -125,41 +125,44 @@ ru.endlesscode.inspector.api.report.FilteringReporter -> ru.endlesscode.inspecto
     java.util.List reportedCauses -> a
     java.util.List handlers -> b
     16:17:void addHandler(ru.endlesscode.inspector.api.report.ReportHandler) -> addHandler
-    20:27:ru.endlesscode.inspector.shade.kotlinx.coroutines.experimental.Job report(java.lang.String,java.lang.Exception) -> report
-    1031:1031:boolean shouldBeFiltered(java.lang.Throwable):31:31 -> report
-    1031:1031:ru.endlesscode.inspector.shade.kotlinx.coroutines.experimental.Job report(java.lang.String,java.lang.Exception):21 -> report
-    1035:1062:void beforeReport(java.lang.String,ru.endlesscode.inspector.api.report.ExceptionData):35:62 -> report
-    1035:1062:ru.endlesscode.inspector.shade.kotlinx.coroutines.experimental.Job report(java.lang.String,java.lang.Exception):26 -> report
+    20:32:void report(java.lang.String,java.lang.Exception,boolean) -> report
+    1035:1035:boolean shouldBeFiltered(java.lang.Throwable):35:35 -> report
+    1035:1035:void report(java.lang.String,java.lang.Exception,boolean):21 -> report
+    1039:1066:void beforeReport(java.lang.String,ru.endlesscode.inspector.api.report.ExceptionData):39:66 -> report
+    1039:1066:void report(java.lang.String,java.lang.Exception,boolean):26 -> report
     ru.endlesscode.inspector.shade.kotlinx.coroutines.experimental.Job reportFiltered(java.lang.String,ru.endlesscode.inspector.api.report.ExceptionData,ru.endlesscode.inspector.shade.kotlin.jvm.functions.Function2,ru.endlesscode.inspector.shade.kotlin.jvm.functions.Function1) -> reportFiltered
     11:13:void <init>() -> <init>
     11:11:void addHandler(ru.endlesscode.inspector.shade.kotlin.jvm.functions.Function2,ru.endlesscode.inspector.shade.kotlin.jvm.functions.Function2,ru.endlesscode.inspector.shade.kotlin.jvm.functions.Function1) -> addHandler
+    11:11:void report(java.lang.String,java.lang.Exception) -> report
+    11:11:void track(java.lang.String,ru.endlesscode.inspector.shade.kotlin.jvm.functions.Function0) -> track
     11:11:void access$onSuccess(ru.endlesscode.inspector.api.report.FilteringReporter,java.lang.String,ru.endlesscode.inspector.api.report.ExceptionData) -> access$onSuccess
-    2039:2064:void onSuccess(java.lang.String,ru.endlesscode.inspector.api.report.ExceptionData):39:64 -> access$onSuccess
-    2039:2064:void access$onSuccess(ru.endlesscode.inspector.api.report.FilteringReporter,java.lang.String,ru.endlesscode.inspector.api.report.ExceptionData):11 -> access$onSuccess
+    2043:2068:void onSuccess(java.lang.String,ru.endlesscode.inspector.api.report.ExceptionData):43:68 -> access$onSuccess
+    2043:2068:void access$onSuccess(ru.endlesscode.inspector.api.report.FilteringReporter,java.lang.String,ru.endlesscode.inspector.api.report.ExceptionData):11 -> access$onSuccess
     11:11:void access$onError(ru.endlesscode.inspector.api.report.FilteringReporter,java.lang.Throwable) -> access$onError
-    3043:3066:void onError(java.lang.Throwable):43:66 -> access$onError
-    3043:3066:void access$onError(ru.endlesscode.inspector.api.report.FilteringReporter,java.lang.Throwable):11 -> access$onError
+    3047:3070:void onError(java.lang.Throwable):47:70 -> access$onError
+    3047:3070:void access$onError(ru.endlesscode.inspector.api.report.FilteringReporter,java.lang.Throwable):11 -> access$onError
 ru.endlesscode.inspector.api.report.FilteringReporter$report$1 -> ru.endlesscode.inspector.api.report.FilteringReporter$a:
     ru.endlesscode.inspector.shade.kotlin.coroutines.experimental.CoroutineContext$Key p$$49079fec -> b
+    ru.endlesscode.inspector.shade.kotlinx.coroutines.experimental.Job $reportJob -> c
     11:11:java.lang.Object invoke(java.lang.Object,java.lang.Object) -> a
     1000:1000:java.lang.Object invoke$7c41d176(ru.endlesscode.inspector.shade.kotlin.coroutines.experimental.CoroutineContext$Key,ru.endlesscode.inspector.shade.kotlin.coroutines.experimental.Continuation):0:0 -> a
     1000:1000:java.lang.Object invoke(java.lang.Object,java.lang.Object):11 -> a
-    21:21:java.lang.Object doResume(java.lang.Object,java.lang.Throwable) -> a
-    void <init>(ru.endlesscode.inspector.shade.kotlin.coroutines.experimental.Continuation) -> <init>
+    30:30:java.lang.Object doResume(java.lang.Object,java.lang.Throwable) -> a
+    void <init>(ru.endlesscode.inspector.shade.kotlinx.coroutines.experimental.Job,ru.endlesscode.inspector.shade.kotlin.coroutines.experimental.Continuation) -> <init>
     ru.endlesscode.inspector.shade.kotlin.coroutines.experimental.Continuation create$8d7f5bb(ru.endlesscode.inspector.shade.kotlin.coroutines.experimental.CoroutineContext$Key,ru.endlesscode.inspector.shade.kotlin.coroutines.experimental.Continuation) -> a
     11:11:ru.endlesscode.inspector.shade.kotlin.coroutines.experimental.Continuation create(java.lang.Object,ru.endlesscode.inspector.shade.kotlin.coroutines.experimental.Continuation) -> a
-ru.endlesscode.inspector.api.report.FilteringReporter$report$2 -> ru.endlesscode.inspector.api.report.FilteringReporter$b:
+ru.endlesscode.inspector.api.report.FilteringReporter$report$reportJob$1 -> ru.endlesscode.inspector.api.report.FilteringReporter$b:
     11:11:java.lang.Object invoke(java.lang.Object,java.lang.Object) -> a
-    1027:1027:void invoke(java.lang.String,ru.endlesscode.inspector.api.report.ExceptionData):27:27 -> a
-    1027:1027:java.lang.Object invoke(java.lang.Object,java.lang.Object):11 -> a
+    1028:1028:void invoke(java.lang.String,ru.endlesscode.inspector.api.report.ExceptionData):28:28 -> a
+    1028:1028:java.lang.Object invoke(java.lang.Object,java.lang.Object):11 -> a
     ru.endlesscode.inspector.shade.kotlin.reflect.KDeclarationContainer getOwner() -> a
     java.lang.String getName() -> b
     java.lang.String getSignature() -> c
     void <init>(ru.endlesscode.inspector.api.report.FilteringReporter) -> <init>
-ru.endlesscode.inspector.api.report.FilteringReporter$report$3 -> ru.endlesscode.inspector.api.report.FilteringReporter$c:
+ru.endlesscode.inspector.api.report.FilteringReporter$report$reportJob$2 -> ru.endlesscode.inspector.api.report.FilteringReporter$c:
     11:11:java.lang.Object invoke(java.lang.Object) -> a
-    1027:1027:void invoke(java.lang.Throwable):27:27 -> a
-    1027:1027:java.lang.Object invoke(java.lang.Object):11 -> a
+    1028:1028:void invoke(java.lang.Throwable):28:28 -> a
+    1028:1028:java.lang.Object invoke(java.lang.Object):11 -> a
     ru.endlesscode.inspector.shade.kotlin.reflect.KDeclarationContainer getOwner() -> a
     java.lang.String getName() -> b
     java.lang.String getSignature() -> c
@@ -249,53 +252,57 @@ ru.endlesscode.inspector.api.report.Reporter -> ru.endlesscode.inspector.api.rep
     ru.endlesscode.inspector.api.report.ReporterFocus getFocus() -> getFocus
     void addHandler(ru.endlesscode.inspector.shade.kotlin.jvm.functions.Function2,ru.endlesscode.inspector.shade.kotlin.jvm.functions.Function2,ru.endlesscode.inspector.shade.kotlin.jvm.functions.Function1) -> addHandler
     void addHandler(ru.endlesscode.inspector.api.report.ReportHandler) -> addHandler
-    ru.endlesscode.inspector.shade.kotlinx.coroutines.experimental.Job report(java.lang.String,java.lang.Exception) -> report
+    void report(java.lang.String,java.lang.Exception) -> report
+    void report(java.lang.String,java.lang.Exception,boolean) -> report
+    void track(java.lang.String,ru.endlesscode.inspector.shade.kotlin.jvm.functions.Function0) -> track
 ru.endlesscode.inspector.api.report.Reporter$Builder -> ru.endlesscode.inspector.api.report.Reporter$Builder:
     ru.endlesscode.inspector.api.report.ReporterFocus focus -> a
     java.util.List fieldsTags -> b
     java.util.List customFields -> c
-    56:56:ru.endlesscode.inspector.api.report.ReporterFocus getFocus() -> getFocus
-    56:56:void setFocus(ru.endlesscode.inspector.api.report.ReporterFocus) -> setFocus
-    63:125:java.util.Set getFields() -> getFields
-    80:82:ru.endlesscode.inspector.api.report.Reporter$Builder focusOn(ru.endlesscode.inspector.api.report.ReporterFocus) -> focusOn
-    90:91:ru.endlesscode.inspector.api.report.Reporter$Builder setFields(java.lang.String[]) -> setFields
-    98:99:ru.endlesscode.inspector.api.report.Reporter$Builder addFields(java.lang.String[]) -> addFields
-    106:107:ru.endlesscode.inspector.api.report.Reporter$Builder removeFields(java.lang.String[]) -> removeFields
-    114:115:ru.endlesscode.inspector.api.report.Reporter$Builder addCustomFields(ru.endlesscode.inspector.api.report.ReportField[]) -> addCustomFields
+    75:75:ru.endlesscode.inspector.api.report.ReporterFocus getFocus() -> getFocus
+    75:75:void setFocus(ru.endlesscode.inspector.api.report.ReporterFocus) -> setFocus
+    82:144:java.util.Set getFields() -> getFields
+    99:101:ru.endlesscode.inspector.api.report.Reporter$Builder focusOn(ru.endlesscode.inspector.api.report.ReporterFocus) -> focusOn
+    109:110:ru.endlesscode.inspector.api.report.Reporter$Builder setFields(java.lang.String[]) -> setFields
+    117:118:ru.endlesscode.inspector.api.report.Reporter$Builder addFields(java.lang.String[]) -> addFields
+    125:126:ru.endlesscode.inspector.api.report.Reporter$Builder removeFields(java.lang.String[]) -> removeFields
+    133:134:ru.endlesscode.inspector.api.report.Reporter$Builder addCustomFields(ru.endlesscode.inspector.api.report.ReportField[]) -> addCustomFields
     ru.endlesscode.inspector.api.report.Reporter build() -> build
-    54:71:void <init>() -> <init>
+    73:90:void <init>() -> <init>
 ru.endlesscode.inspector.api.report.Reporter$DefaultImpls -> ru.endlesscode.inspector.api.report.Reporter$DefaultImpls:
-    18:31:void addHandler(ru.endlesscode.inspector.api.report.Reporter,ru.endlesscode.inspector.shade.kotlin.jvm.functions.Function2,ru.endlesscode.inspector.shade.kotlin.jvm.functions.Function2,ru.endlesscode.inspector.shade.kotlin.jvm.functions.Function1) -> addHandler
-    14:16:void addHandler$default(ru.endlesscode.inspector.api.report.Reporter,ru.endlesscode.inspector.shade.kotlin.jvm.functions.Function2,ru.endlesscode.inspector.shade.kotlin.jvm.functions.Function2,ru.endlesscode.inspector.shade.kotlin.jvm.functions.Function1,int,java.lang.Object) -> addHandler$default
+    16:29:void addHandler(ru.endlesscode.inspector.api.report.Reporter,ru.endlesscode.inspector.shade.kotlin.jvm.functions.Function2,ru.endlesscode.inspector.shade.kotlin.jvm.functions.Function2,ru.endlesscode.inspector.shade.kotlin.jvm.functions.Function1) -> addHandler
+    12:14:void addHandler$default(ru.endlesscode.inspector.api.report.Reporter,ru.endlesscode.inspector.shade.kotlin.jvm.functions.Function2,ru.endlesscode.inspector.shade.kotlin.jvm.functions.Function2,ru.endlesscode.inspector.shade.kotlin.jvm.functions.Function1,int,java.lang.Object) -> addHandler$default
+    47:48:void report(ru.endlesscode.inspector.api.report.Reporter,java.lang.String,java.lang.Exception) -> report
+    66:71:void track(ru.endlesscode.inspector.api.report.Reporter,java.lang.String,ru.endlesscode.inspector.shade.kotlin.jvm.functions.Function0) -> track
 ru.endlesscode.inspector.api.report.Reporter$addHandler$1 -> ru.endlesscode.inspector.api.report.Reporter$DefaultImpls$a:
     ru.endlesscode.inspector.api.report.Reporter$addHandler$1 INSTANCE -> a
-    6:6:java.lang.Object invoke(java.lang.Object,java.lang.Object) -> a
-    1014:1014:void invoke(java.lang.String,ru.endlesscode.inspector.api.report.ExceptionData):14:14 -> a
-    1014:1014:java.lang.Object invoke(java.lang.Object,java.lang.Object):6 -> a
+    4:4:java.lang.Object invoke(java.lang.Object,java.lang.Object) -> a
+    1012:1012:void invoke(java.lang.String,ru.endlesscode.inspector.api.report.ExceptionData):12:12 -> a
+    1012:1012:java.lang.Object invoke(java.lang.Object,java.lang.Object):4 -> a
     void <init>() -> <init>
     void <clinit>() -> <clinit>
 ru.endlesscode.inspector.api.report.Reporter$addHandler$2 -> ru.endlesscode.inspector.api.report.Reporter$DefaultImpls$b:
     ru.endlesscode.inspector.api.report.Reporter$addHandler$2 INSTANCE -> a
-    6:6:java.lang.Object invoke(java.lang.Object,java.lang.Object) -> a
-    1015:1015:void invoke(java.lang.String,ru.endlesscode.inspector.api.report.ExceptionData):15:15 -> a
-    1015:1015:java.lang.Object invoke(java.lang.Object,java.lang.Object):6 -> a
+    4:4:java.lang.Object invoke(java.lang.Object,java.lang.Object) -> a
+    1013:1013:void invoke(java.lang.String,ru.endlesscode.inspector.api.report.ExceptionData):13:13 -> a
+    1013:1013:java.lang.Object invoke(java.lang.Object,java.lang.Object):4 -> a
     void <init>() -> <init>
     void <clinit>() -> <clinit>
 ru.endlesscode.inspector.api.report.Reporter$addHandler$3 -> ru.endlesscode.inspector.api.report.Reporter$DefaultImpls$c:
     ru.endlesscode.inspector.api.report.Reporter$addHandler$3 INSTANCE -> a
-    6:6:java.lang.Object invoke(java.lang.Object) -> a
-    1016:1016:void invoke(java.lang.Throwable):16:16 -> a
-    1016:1016:java.lang.Object invoke(java.lang.Object):6 -> a
+    4:4:java.lang.Object invoke(java.lang.Object) -> a
+    1014:1014:void invoke(java.lang.Throwable):14:14 -> a
+    1014:1014:java.lang.Object invoke(java.lang.Object):4 -> a
     void <init>() -> <init>
     void <clinit>() -> <clinit>
 ru.endlesscode.inspector.api.report.Reporter$addHandler$4 -> ru.endlesscode.inspector.api.report.Reporter$addHandler$4:
     ru.endlesscode.inspector.shade.kotlin.jvm.functions.Function2 $beforeReport -> a
     ru.endlesscode.inspector.shade.kotlin.jvm.functions.Function2 $onSuccess -> b
     ru.endlesscode.inspector.shade.kotlin.jvm.functions.Function1 $onError -> c
-    20:21:void beforeReport(java.lang.String,ru.endlesscode.inspector.api.report.ExceptionData) -> beforeReport
-    24:25:void onSuccess(java.lang.String,ru.endlesscode.inspector.api.report.ExceptionData) -> onSuccess
-    28:29:void onError(java.lang.Throwable) -> onError
-    18:18:void <init>(ru.endlesscode.inspector.shade.kotlin.jvm.functions.Function2,ru.endlesscode.inspector.shade.kotlin.jvm.functions.Function2,ru.endlesscode.inspector.shade.kotlin.jvm.functions.Function1) -> <init>
+    18:19:void beforeReport(java.lang.String,ru.endlesscode.inspector.api.report.ExceptionData) -> beforeReport
+    22:23:void onSuccess(java.lang.String,ru.endlesscode.inspector.api.report.ExceptionData) -> onSuccess
+    26:27:void onError(java.lang.Throwable) -> onError
+    16:16:void <init>(ru.endlesscode.inspector.shade.kotlin.jvm.functions.Function2,ru.endlesscode.inspector.shade.kotlin.jvm.functions.Function2,ru.endlesscode.inspector.shade.kotlin.jvm.functions.Function1) -> <init>
 ru.endlesscode.inspector.api.report.ReporterFocus -> ru.endlesscode.inspector.api.report.ReporterFocus:
     ru.endlesscode.inspector.api.report.ReporterFocus$Companion Companion -> Companion
     java.lang.String getFocusedPackage() -> getFocusedPackage
@@ -316,21 +323,14 @@ ru.endlesscode.inspector.api.report.ReporterFocus$Companion$NO_FOCUS$1 -> ru.end
 ru.endlesscode.inspector.api.report.SilentReporter -> ru.endlesscode.inspector.api.report.SilentReporter:
     ru.endlesscode.inspector.api.report.ReporterFocus focus -> a
     ru.endlesscode.inspector.api.report.SilentReporter INSTANCE -> INSTANCE
-    12:12:ru.endlesscode.inspector.api.report.ReporterFocus getFocus() -> getFocus
-    16:16:void addHandler(ru.endlesscode.inspector.api.report.ReportHandler) -> addHandler
-    19:19:ru.endlesscode.inspector.shade.kotlinx.coroutines.experimental.Job report(java.lang.String,java.lang.Exception) -> report
-    10:10:void <init>() -> <init>
-    10:12:void <clinit>() -> <clinit>
-    10:10:void addHandler(ru.endlesscode.inspector.shade.kotlin.jvm.functions.Function2,ru.endlesscode.inspector.shade.kotlin.jvm.functions.Function2,ru.endlesscode.inspector.shade.kotlin.jvm.functions.Function1) -> addHandler
-ru.endlesscode.inspector.api.report.SilentReporter$report$1 -> ru.endlesscode.inspector.api.report.SilentReporter$a:
-    ru.endlesscode.inspector.shade.kotlin.coroutines.experimental.CoroutineContext$Key p$$49079fec -> b
-    10:10:java.lang.Object invoke(java.lang.Object,java.lang.Object) -> a
-    1000:1000:java.lang.Object invoke$7c41d176(ru.endlesscode.inspector.shade.kotlin.coroutines.experimental.CoroutineContext$Key,ru.endlesscode.inspector.shade.kotlin.coroutines.experimental.Continuation):0:0 -> a
-    1000:1000:java.lang.Object invoke(java.lang.Object,java.lang.Object):10 -> a
-    19:21:java.lang.Object doResume(java.lang.Object,java.lang.Throwable) -> a
-    void <init>(ru.endlesscode.inspector.shade.kotlin.coroutines.experimental.Continuation) -> <init>
-    ru.endlesscode.inspector.shade.kotlin.coroutines.experimental.Continuation create$8d7f5bb(ru.endlesscode.inspector.shade.kotlin.coroutines.experimental.CoroutineContext$Key,ru.endlesscode.inspector.shade.kotlin.coroutines.experimental.Continuation) -> a
-    10:10:ru.endlesscode.inspector.shade.kotlin.coroutines.experimental.Continuation create(java.lang.Object,ru.endlesscode.inspector.shade.kotlin.coroutines.experimental.Continuation) -> a
+    9:9:ru.endlesscode.inspector.api.report.ReporterFocus getFocus() -> getFocus
+    13:13:void addHandler(ru.endlesscode.inspector.api.report.ReportHandler) -> addHandler
+    17:17:void report(java.lang.String,java.lang.Exception,boolean) -> report
+    7:7:void <init>() -> <init>
+    7:9:void <clinit>() -> <clinit>
+    7:7:void addHandler(ru.endlesscode.inspector.shade.kotlin.jvm.functions.Function2,ru.endlesscode.inspector.shade.kotlin.jvm.functions.Function2,ru.endlesscode.inspector.shade.kotlin.jvm.functions.Function1) -> addHandler
+    7:7:void report(java.lang.String,java.lang.Exception) -> report
+    7:7:void track(java.lang.String,ru.endlesscode.inspector.shade.kotlin.jvm.functions.Function0) -> track
 ru.endlesscode.inspector.api.report.TextField -> ru.endlesscode.inspector.api.report.TextField:
     java.lang.String tag -> a
     java.lang.String shortValue -> b
@@ -481,50 +481,51 @@ ru.endlesscode.inspector.bukkit.plugin.PluginLifecycle -> ru.endlesscode.inspect
     ru.endlesscode.inspector.shade.kotlin.Lazy trackedServer$delegate -> a
     ru.endlesscode.inspector.shade.kotlin.Lazy trackedPluginLoader$delegate -> b
     void <clinit>() -> <clinit>
-    19:19:ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin getHolder$Inspector() -> getHolder$Inspector
-    19:19:void setHolder$Inspector(ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin) -> setHolder$Inspector
-    25:25:java.io.File getDataFolder() -> getDataFolder
-    29:29:org.bukkit.plugin.PluginLoader getPluginLoader() -> getPluginLoader
+    21:21:ru.endlesscode.inspector.api.report.Reporter getReporter() -> getReporter
+    23:23:ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin getHolder$Inspector() -> getHolder$Inspector
+    23:23:void setHolder$Inspector(ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin) -> setHolder$Inspector
+    29:29:java.io.File getDataFolder() -> getDataFolder
+    33:33:org.bukkit.plugin.PluginLoader getPluginLoader() -> getPluginLoader
     1000:1000:ru.endlesscode.inspector.bukkit.plugin.TrackedPluginLoader getTrackedPluginLoader():0:0 -> getPluginLoader
-    1000:1000:org.bukkit.plugin.PluginLoader getPluginLoader():29 -> getPluginLoader
-    33:33:org.bukkit.Server getServer() -> getServer
+    1000:1000:org.bukkit.plugin.PluginLoader getPluginLoader():33 -> getPluginLoader
+    37:37:org.bukkit.Server getServer() -> getServer
     2000:2000:ru.endlesscode.inspector.bukkit.plugin.TrackedServer getTrackedServer():0:0 -> getServer
-    2000:2000:org.bukkit.Server getServer():33 -> getServer
-    37:37:boolean isEnabled() -> isEnabled
-    41:41:org.bukkit.plugin.PluginDescriptionFile getDescription() -> getDescription
-    45:45:org.bukkit.configuration.file.FileConfiguration getConfig() -> getConfig
-    49:50:void reloadConfig() -> reloadConfig
-    53:54:void saveConfig() -> saveConfig
-    57:58:void saveDefaultConfig() -> saveDefaultConfig
-    61:62:void saveResource(java.lang.String,boolean) -> saveResource
-    65:65:java.io.InputStream getResource(java.lang.String) -> getResource
-    74:74:boolean onCommand(org.bukkit.command.CommandSender,org.bukkit.command.Command,java.lang.String,java.lang.String[]) -> onCommand
-    83:83:java.util.List onTabComplete(org.bukkit.command.CommandSender,org.bukkit.command.Command,java.lang.String,java.lang.String[]) -> onTabComplete
-    86:86:void onLoad() -> onLoad
-    88:88:void onEnable() -> onEnable
-    90:90:void onDisable() -> onDisable
-    93:93:org.bukkit.generator.ChunkGenerator getDefaultWorldGenerator(java.lang.String,java.lang.String) -> getDefaultWorldGenerator
-    97:97:boolean isNaggable() -> isNaggable
-    101:102:void setNaggable(boolean) -> setNaggable
-    105:105:java.util.logging.Logger getLogger() -> getLogger
-    109:109:java.lang.String toString() -> toString
-    114:114:org.bukkit.command.PluginCommand getCommand(java.lang.String) -> getCommand
-    116:116:java.io.Reader getTextResource(java.lang.String) -> getTextResource
-    118:118:java.io.File getFile() -> getFile
-    120:120:java.lang.ClassLoader getClassLoader() -> getClassLoader
-    123:124:void setEnabled(boolean) -> setEnabled
-    17:22:void <init>() -> <init>
+    2000:2000:org.bukkit.Server getServer():37 -> getServer
+    41:41:boolean isEnabled() -> isEnabled
+    45:45:org.bukkit.plugin.PluginDescriptionFile getDescription() -> getDescription
+    49:49:org.bukkit.configuration.file.FileConfiguration getConfig() -> getConfig
+    53:54:void reloadConfig() -> reloadConfig
+    57:58:void saveConfig() -> saveConfig
+    61:62:void saveDefaultConfig() -> saveDefaultConfig
+    65:66:void saveResource(java.lang.String,boolean) -> saveResource
+    69:69:java.io.InputStream getResource(java.lang.String) -> getResource
+    78:78:boolean onCommand(org.bukkit.command.CommandSender,org.bukkit.command.Command,java.lang.String,java.lang.String[]) -> onCommand
+    87:87:java.util.List onTabComplete(org.bukkit.command.CommandSender,org.bukkit.command.Command,java.lang.String,java.lang.String[]) -> onTabComplete
+    90:90:void onLoad() -> onLoad
+    92:92:void onEnable() -> onEnable
+    94:94:void onDisable() -> onDisable
+    97:97:org.bukkit.generator.ChunkGenerator getDefaultWorldGenerator(java.lang.String,java.lang.String) -> getDefaultWorldGenerator
+    101:101:boolean isNaggable() -> isNaggable
+    105:106:void setNaggable(boolean) -> setNaggable
+    109:109:java.util.logging.Logger getLogger() -> getLogger
+    113:113:java.lang.String toString() -> toString
+    118:118:org.bukkit.command.PluginCommand getCommand(java.lang.String) -> getCommand
+    120:120:java.io.Reader getTextResource(java.lang.String) -> getTextResource
+    122:122:java.io.File getFile() -> getFile
+    124:124:java.lang.ClassLoader getClassLoader() -> getClassLoader
+    127:128:void setEnabled(boolean) -> setEnabled
+    18:26:void <init>() -> <init>
 ru.endlesscode.inspector.bukkit.plugin.PluginLifecycle$trackedPluginLoader$2 -> ru.endlesscode.inspector.bukkit.plugin.PluginLifecycle$a:
     ru.endlesscode.inspector.bukkit.plugin.PluginLifecycle this$0 -> a
-    17:17:java.lang.Object invoke() -> a
-    1022:1022:ru.endlesscode.inspector.bukkit.plugin.TrackedPluginLoader invoke():22:22 -> a
-    1022:1022:java.lang.Object invoke():17 -> a
+    18:18:java.lang.Object invoke() -> a
+    1026:1026:ru.endlesscode.inspector.bukkit.plugin.TrackedPluginLoader invoke():26:26 -> a
+    1026:1026:java.lang.Object invoke():18 -> a
     void <init>(ru.endlesscode.inspector.bukkit.plugin.PluginLifecycle) -> <init>
 ru.endlesscode.inspector.bukkit.plugin.PluginLifecycle$trackedServer$2 -> ru.endlesscode.inspector.bukkit.plugin.PluginLifecycle$b:
     ru.endlesscode.inspector.bukkit.plugin.PluginLifecycle this$0 -> a
-    17:17:java.lang.Object invoke() -> a
-    1021:1021:ru.endlesscode.inspector.bukkit.plugin.TrackedServer invoke():21:21 -> a
-    1021:1021:java.lang.Object invoke():17 -> a
+    18:18:java.lang.Object invoke() -> a
+    1025:1025:ru.endlesscode.inspector.bukkit.plugin.TrackedServer invoke():25:25 -> a
+    1025:1025:java.lang.Object invoke():18 -> a
     void <init>(ru.endlesscode.inspector.bukkit.plugin.PluginLifecycle) -> <init>
 ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin -> ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin:
     java.lang.String focusedPackage -> a
@@ -550,13 +551,13 @@ ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin -> ru.endlesscode.inspector
     123:126:void onDisable() -> onDisable
     129:129:org.bukkit.generator.ChunkGenerator getDefaultWorldGenerator(java.lang.String,java.lang.String) -> getDefaultWorldGenerator
     135:135:java.lang.String toString() -> toString
-    139:145:java.lang.Object track(java.lang.String,ru.endlesscode.inspector.shade.kotlin.jvm.functions.Function0) -> a
+    139:143:java.lang.Object track(java.lang.String,ru.endlesscode.inspector.shade.kotlin.jvm.functions.Function0) -> a
     138:138:java.lang.Object track$default(ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin,java.lang.String,ru.endlesscode.inspector.shade.kotlin.jvm.functions.Function0,int,java.lang.Object) -> a
-    151:151:java.io.File _getFile$Inspector() -> _getFile$Inspector
-    153:153:java.lang.ClassLoader _getClassLoader$Inspector() -> _getClassLoader$Inspector
-    155:155:java.io.Reader _getTextResource$Inspector(java.lang.String) -> _getTextResource$Inspector
-    157:157:org.bukkit.command.PluginCommand _getCommand$Inspector(java.lang.String) -> _getCommand$Inspector
-    160:161:void _setEnabled$Inspector(boolean) -> _setEnabled$Inspector
+    149:149:java.io.File _getFile$Inspector() -> _getFile$Inspector
+    151:151:java.lang.ClassLoader _getClassLoader$Inspector() -> _getClassLoader$Inspector
+    153:153:java.io.Reader _getTextResource$Inspector(java.lang.String) -> _getTextResource$Inspector
+    155:155:org.bukkit.command.PluginCommand _getCommand$Inspector(java.lang.String) -> _getCommand$Inspector
+    158:159:void _setEnabled$Inspector(boolean) -> _setEnabled$Inspector
     28:50:void <init>(java.lang.Class,ru.endlesscode.inspector.bukkit.report.BukkitEnvironment$Properties) -> <init>
     30:30:void <init>(java.lang.Class,ru.endlesscode.inspector.bukkit.report.BukkitEnvironment$Properties,int,ru.endlesscode.inspector.shade.kotlin.jvm.internal.DefaultConstructorMarker) -> <init>
     void <init>(java.lang.Class) -> <init>
@@ -631,18 +632,6 @@ ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin$onTabComplete$1 -> ru.endle
     1106:1106:java.util.List invoke():106:106 -> a
     1106:1106:java.lang.Object invoke():28 -> a
     void <init>(ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin,org.bukkit.command.CommandSender,org.bukkit.command.Command,java.lang.String,java.lang.String[]) -> <init>
-ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin$track$1 -> ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin$h:
-    ru.endlesscode.inspector.shade.kotlin.coroutines.experimental.CoroutineContext$Key p$$49079fec -> b
-    ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin this$0 -> c
-    java.lang.String $message -> d
-    java.lang.Exception $e -> e
-    28:28:java.lang.Object invoke(java.lang.Object,java.lang.Object) -> a
-    1000:1000:java.lang.Object invoke$7c41d176(ru.endlesscode.inspector.shade.kotlin.coroutines.experimental.CoroutineContext$Key,ru.endlesscode.inspector.shade.kotlin.coroutines.experimental.Continuation):0:0 -> a
-    1000:1000:java.lang.Object invoke(java.lang.Object,java.lang.Object):28 -> a
-    142:144:java.lang.Object doResume(java.lang.Object,java.lang.Throwable) -> a
-    void <init>(ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin,java.lang.String,java.lang.Exception,ru.endlesscode.inspector.shade.kotlin.coroutines.experimental.Continuation) -> <init>
-    ru.endlesscode.inspector.shade.kotlin.coroutines.experimental.Continuation create$8d7f5bb(ru.endlesscode.inspector.shade.kotlin.coroutines.experimental.CoroutineContext$Key,ru.endlesscode.inspector.shade.kotlin.coroutines.experimental.Continuation) -> a
-    28:28:ru.endlesscode.inspector.shade.kotlin.coroutines.experimental.Continuation create(java.lang.Object,ru.endlesscode.inspector.shade.kotlin.coroutines.experimental.Continuation) -> a
 ru.endlesscode.inspector.bukkit.plugin.TrackedPluginLoader -> ru.endlesscode.inspector.bukkit.plugin.TrackedPluginLoader:
     org.bukkit.plugin.PluginLoader delegate -> a
     18:18:java.util.Map createRegisteredListeners(org.bukkit.event.Listener,org.bukkit.plugin.Plugin) -> createRegisteredListeners
