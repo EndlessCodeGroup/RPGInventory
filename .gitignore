@@ -3,8 +3,6 @@
 
 ## Directory-based project format:
 .idea/**
-*.iml
-
 # Keep scopes and copyrights
 !.idea/copyright/
 !.idea/copyright/*
