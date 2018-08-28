@@ -185,6 +185,14 @@ public class RPGInventory extends PluginLifecycle {
         this.getCommand("rpginventory").setExecutor(new RPGInventoryCommandExecutor());
 
         this.checkUpdates(null);
+
+        // Do this after all plugins loaded
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                checkThatSystemsLoaded();
+            }
+        }.runTask(this);
     }
 
     private boolean checkRequirements() {
@@ -245,18 +253,22 @@ public class RPGInventory extends PluginLifecycle {
         levelSystem = PlayerUtils.LevelSystem.valueOf(Config.getConfig().getString("level-system"));
         classSystem = PlayerUtils.ClassSystem.valueOf(Config.getConfig().getString("class-system"));
 
+        return InventoryManager.init(this) && SlotManager.init();
+    }
+
+    private void checkThatSystemsLoaded() {
         PluginManager pm = this.getServer().getPluginManager();
         if (levelSystem != PlayerUtils.LevelSystem.EXP && !pm.isPluginEnabled(levelSystem.getPluginName())) {
             this.getLogger().warning("Level-system " + levelSystem.getPluginName() + " is not enabled!");
-            return false;
+            this.getLogger().warning("Will be used EXP by default.");
+            levelSystem = PlayerUtils.LevelSystem.EXP;
         }
 
         if (classSystem != PlayerUtils.ClassSystem.PERMISSIONS && !pm.isPluginEnabled(classSystem.getPluginName())) {
             this.getLogger().warning("Class-system " + classSystem.getPluginName() + " is not enabled!");
-            return false;
+            this.getLogger().warning("Will be used PERMISSIONS by default.");
+            classSystem = PlayerUtils.ClassSystem.PERMISSIONS;
         }
-
-        return InventoryManager.init(this) && SlotManager.init();
     }
 
     @Override
