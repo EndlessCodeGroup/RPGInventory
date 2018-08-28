@@ -57,7 +57,7 @@ repositories {
 }
 
 dependencies {
-    compileOnly "ru.endlesscode.inspector:inspector-bukkit:0.4.0"
+    compileOnly "ru.endlesscode.inspector:inspector-bukkit:0.4.2"
 }
 ```
 
