@@ -3,7 +3,8 @@ plugins {
     id("maven-publish")
 }
 
-version = inspectorVersion
+def patchVersion = 1
+version = "$inspectorVersion.$patchVersion"
 
 dependencies {
     implementation(apiDeps.khttp) {

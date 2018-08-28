@@ -61,7 +61,7 @@ abstract class TextGroup : Group(indent = "", firstLine = null) {
         return "__${text}__"
     }
 
-    fun code (text: String): String {
+    fun code(text: String): String {
         return "`$text`"
     }
 

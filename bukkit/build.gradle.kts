@@ -8,9 +8,9 @@ plugins {
     id("maven-publish")
 }
 
-val apiProject: Project by extra
-val minorVersion = 1
-version = "${apiProject.version}.$minorVersion"
+val inspectorVersion: String by extra
+val minorVersion = 2
+version = "$inspectorVersion.$minorVersion"
 
 // TODO: Port it to Kotlin DSL
 apply(from = "groovy.gradle")

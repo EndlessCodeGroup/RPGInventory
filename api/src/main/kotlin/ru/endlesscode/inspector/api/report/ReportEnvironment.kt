@@ -15,7 +15,7 @@ interface ReportEnvironment {
     val fields: Map<String, ReportField>
 
     /**
-     * Tags of fields taht will be sent by default.
+     * Tags of fields that will be sent by default.
      */
     val defaultFieldsTags: List<String>
 }

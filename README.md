@@ -16,7 +16,7 @@ It sends:
 Just copy plugin to `plugins/` folder.
 Also you can disable sending of information about server core and installed plugins in the Inspector's config.
 
-### Config exmple
+### Config example
 ```yaml
 Reporter:
   enabled: true 
@@ -57,7 +57,7 @@ repositories {
 }
 
 dependencies {
-    compileOnly "ru.endlesscode.inspector:inspector-bukkit:0.4.0"
+    compileOnly "ru.endlesscode.inspector:inspector-bukkit:0.4.2"
 }
 ```
 
