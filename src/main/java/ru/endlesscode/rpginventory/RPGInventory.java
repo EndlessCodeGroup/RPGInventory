@@ -23,22 +23,17 @@ import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketEvent;
-
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
-
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.jetbrains.annotations.*;
-
-import java.io.IOException;
-import java.nio.file.Path;
-import java.util.logging.Logger;
-
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import ru.endlesscode.inspector.bukkit.plugin.PluginLifecycle;
 import ru.endlesscode.rpginventory.event.listener.ArmorEquipListener;
 import ru.endlesscode.rpginventory.event.listener.ElytraListener;
 import ru.endlesscode.rpginventory.event.listener.HandSwapListener;
@@ -64,7 +59,11 @@ import ru.endlesscode.rpginventory.utils.ResourcePackUtils;
 import ru.endlesscode.rpginventory.utils.StringUtils;
 import ru.endlesscode.rpginventory.utils.VersionUtils;
 
-public class RPGInventory extends JavaPlugin {
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.logging.Logger;
+
+public class RPGInventory extends PluginLifecycle {
     private static RPGInventory instance;
 
     private Permission perms;
@@ -186,6 +185,14 @@ public class RPGInventory extends JavaPlugin {
         this.getCommand("rpginventory").setExecutor(new RPGInventoryCommandExecutor());
 
         this.checkUpdates(null);
+
+        // Do this after all plugins loaded
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                checkThatSystemsLoaded();
+            }
+        }.runTask(this);
     }
 
     private boolean checkRequirements() {
@@ -246,18 +253,22 @@ public class RPGInventory extends JavaPlugin {
         levelSystem = PlayerUtils.LevelSystem.valueOf(Config.getConfig().getString("level-system"));
         classSystem = PlayerUtils.ClassSystem.valueOf(Config.getConfig().getString("class-system"));
 
+        return InventoryManager.init(this) && SlotManager.init();
+    }
+
+    private void checkThatSystemsLoaded() {
         PluginManager pm = this.getServer().getPluginManager();
         if (levelSystem != PlayerUtils.LevelSystem.EXP && !pm.isPluginEnabled(levelSystem.getPluginName())) {
             this.getLogger().warning("Level-system " + levelSystem.getPluginName() + " is not enabled!");
-            return false;
+            this.getLogger().warning("Will be used EXP by default");
+            levelSystem = PlayerUtils.LevelSystem.EXP;
         }
 
         if (classSystem != PlayerUtils.ClassSystem.PERMISSIONS && !pm.isPluginEnabled(classSystem.getPluginName())) {
             this.getLogger().warning("Class-system " + classSystem.getPluginName() + " is not enabled!");
-            return false;
+            this.getLogger().warning("Will be used PERMISSIONS by default");
+            classSystem = PlayerUtils.ClassSystem.PERMISSIONS;
         }
-
-        return InventoryManager.init(this) && SlotManager.init();
     }
 
     @Override

@@ -1,6 +1,7 @@
 depend:
   - ProtocolLib
   - Vault
+  - Inspector
 softdepend:
   - BattleLevels
   - Skills

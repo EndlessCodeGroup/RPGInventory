@@ -34,6 +34,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import ru.endlesscode.inspector.api.report.Reporter;
 import ru.endlesscode.rpginventory.RPGInventory;
 import ru.endlesscode.rpginventory.api.InventoryAPI;
 import ru.endlesscode.rpginventory.event.PetEquipEvent;
@@ -63,18 +64,21 @@ public class InventoryManager {
     private static final Map<UUID, PlayerWrapper> INVENTORIES = new HashMap<>();
 
     private static ItemStack FILL_SLOT = null;
+    private static Reporter reporter;
 
     private InventoryManager() {
     }
 
     public static boolean init(@NotNull RPGInventory instance) {
+        reporter = instance.getReporter();
+
         try {
             InventoryManager.FILL_SLOT = ItemUtils.getTexturedItem(Config.getConfig().getString("fill"));
             ItemMeta meta = InventoryManager.FILL_SLOT.getItemMeta();
             meta.setDisplayName(" ");
             InventoryManager.FILL_SLOT.setItemMeta(meta);
         } catch (Exception e) {
-            e.printStackTrace();
+            reporter.report("Error on InventoryManager initialization", e);
             return false;
         }
 
@@ -504,7 +508,7 @@ public class InventoryManager {
 
             InventoryManager.INVENTORIES.put(player.getUniqueId(), playerWrapper);
         } catch (IOException e) {
-            e.printStackTrace();
+            reporter.report("Error on inventory load", e);
         }
 
         InventoryLocker.lockSlots(player);
@@ -545,7 +549,7 @@ public class InventoryManager {
 
             InventorySerializer.savePlayer(playerWrapper, file);
         } catch (IOException e) {
-            e.printStackTrace();
+            reporter.report("Error on inventory save", e);
         }
     }
 

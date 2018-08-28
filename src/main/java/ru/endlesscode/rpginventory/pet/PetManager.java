@@ -58,7 +58,7 @@ import java.util.*;
  * All rights reserved 2014 - 2016 © «EndlessCode Group»
  */
 public class PetManager {
-    public static final String METADATA_KEY_PET_OWNER = "rpginventory:petowner";
+    private static final String METADATA_KEY_PET_OWNER = "rpginventory:petowner";
     private static final Map<String, PetType> PETS = new HashMap<>();
     private static final Map<String, PetFood> PET_FOOD = new HashMap<>();
     private static final String DEATH_TIME_TAG = "pet.deathTime";
@@ -73,6 +73,7 @@ public class PetManager {
         SLOT_PET = SlotManager.instance().getPetSlot() != null ? SlotManager.instance().getPetSlot().getSlotId() : -1;
 
         if (!PetManager.isEnabled()) {
+            instance.getLogger().info("Slot for pets not found");
             return false;
         }
 
@@ -94,11 +95,12 @@ public class PetManager {
                 tryToAddPetFood(key, petsConfig.getConfigurationSection("food." + key));
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            instance.getReporter().report("Error on PetManager initialization", e);
             return false;
         }
 
-        if (PETS.isEmpty() && PET_FOOD.isEmpty()) {
+        if (PETS.isEmpty()) {
+            instance.getLogger().info("No one configured pet found");
             return false;
         }
 
@@ -334,9 +336,11 @@ public class PetManager {
         }
 
         final List<MetadataValue> metadata = entity.getMetadata(PetManager.METADATA_KEY_PET_OWNER);
-        final Optional<MetadataValue> metadataValue = metadata.stream()
-                .filter(value -> value.getOwningPlugin().equals(RPGInventory.getInstance())).findFirst();
-        return metadataValue.isPresent() ? (UUID) metadataValue.get().value() : null;
+        return metadata.stream()
+                .filter(value -> value.getOwningPlugin().equals(RPGInventory.getInstance()))
+                .findFirst()
+                .map(it -> (UUID) it.value())
+                .orElse(null);
     }
 
     @Nullable

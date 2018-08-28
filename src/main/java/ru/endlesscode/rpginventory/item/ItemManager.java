@@ -72,11 +72,12 @@ public class ItemManager {
                 tryToAddItem(key, itemsConfig.getConfigurationSection("items." + key));
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            instance.getReporter().report("Error on InventoryManager initialization", e);
             return false;
         }
 
         if (CUSTOM_ITEMS.isEmpty()) {
+            instance.getLogger().info("No one configured item found");
             return false;
         }
 

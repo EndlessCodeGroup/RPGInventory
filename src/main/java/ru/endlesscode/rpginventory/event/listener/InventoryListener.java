@@ -278,8 +278,7 @@ public class InventoryListener implements Listener {
         }
 
         // In RPG Inventory or quick slot
-        if (InventoryAPI.isRPGInventory(inventory)
-                || slotType == InventoryType.SlotType.QUICKBAR && slot != null
+        if (InventoryAPI.isRPGInventory(inventory) || slotType == InventoryType.SlotType.QUICKBAR && slot != null
                 && (slot.isQuick() || slot.getSlotType() == Slot.SlotType.SHIELD) && player.getGameMode() != GameMode.CREATIVE) {
             if (rawSlot < 54 && slot == null || action == InventoryAction.MOVE_TO_OTHER_INVENTORY) {
                 event.setCancelled(true);

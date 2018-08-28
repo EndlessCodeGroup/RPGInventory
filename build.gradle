@@ -11,7 +11,10 @@ description = pluginDesc
 bukkit {
     version = '1.12.2'
 
-    meta.authors = ["OsipXD", "EndlessCode Group"]
+    meta {
+        main = "ru.endlesscode.rpginventory.RPGInventoryPlugin"
+        authors = ["OsipXD", "EndlessCode Group"]
+    }
 
     run {
         core = "paper"
@@ -51,6 +54,11 @@ repositories {
         name 'ec-repo'
         url 'https://raw.github.com/EndlessCodeGroup/mvn-repo/master/'
     }
+
+    maven {
+        name 'bintray-ec'
+        url 'https://dl.bintray.com/endlesscode/repo'
+    }
 }
 
 shadowJar {
@@ -72,6 +80,7 @@ dependencies {
     compileOnly('me.baks:RPGPlayerLeveling:3.7.2')
     compileOnly('com.sucy:SkillAPI:3.102')
     compileOnly('me.leothepro555:Skills')
+    compileOnly('ru.endlesscode.inspector:inspector-bukkit:0.4.3')
     testImplementation('junit:junit:4.12')
 }
 

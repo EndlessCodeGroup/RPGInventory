@@ -40,7 +40,7 @@ public class Config {
                 Path destination = plugin.getDataPath().resolve("config-example.yml");
                 Files.copy(configFile, destination, StandardCopyOption.REPLACE_EXISTING);
             } catch (IOException e) {
-                e.printStackTrace();
+                plugin.getReporter().report("Error on load config.yml", e);
             }
         }
 
