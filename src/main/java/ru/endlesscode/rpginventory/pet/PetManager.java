@@ -73,6 +73,7 @@ public class PetManager {
         SLOT_PET = SlotManager.instance().getPetSlot() != null ? SlotManager.instance().getPetSlot().getSlotId() : -1;
 
         if (!PetManager.isEnabled()) {
+            instance.getLogger().info("Slot for pets not found");
             return false;
         }
 
@@ -98,7 +99,8 @@ public class PetManager {
             return false;
         }
 
-        if (PETS.isEmpty() && PET_FOOD.isEmpty()) {
+        if (PETS.isEmpty()) {
+            instance.getLogger().info("No one configured pet found");
             return false;
         }
 

@@ -85,6 +85,7 @@ public class BackpackManager {
         }
 
         if (BACKPACK_TYPES.isEmpty()) {
+            instance.getLogger().info("No one backpack type found");
             return false;
         }
 

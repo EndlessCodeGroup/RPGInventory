@@ -80,7 +80,7 @@ dependencies {
     compileOnly('me.baks:RPGPlayerLeveling:3.7.2')
     compileOnly('com.sucy:SkillAPI:3.102')
     compileOnly('me.leothepro555:Skills')
-    compileOnly('ru.endlesscode.inspector:inspector-bukkit:0.4.1')
+    compileOnly('ru.endlesscode.inspector:inspector-bukkit:0.4.2')
     testImplementation('junit:junit:4.12')
 }
 

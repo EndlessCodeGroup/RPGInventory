@@ -260,13 +260,13 @@ public class RPGInventory extends PluginLifecycle {
         PluginManager pm = this.getServer().getPluginManager();
         if (levelSystem != PlayerUtils.LevelSystem.EXP && !pm.isPluginEnabled(levelSystem.getPluginName())) {
             this.getLogger().warning("Level-system " + levelSystem.getPluginName() + " is not enabled!");
-            this.getLogger().warning("Will be used EXP by default.");
+            this.getLogger().warning("Will be used EXP by default");
             levelSystem = PlayerUtils.LevelSystem.EXP;
         }
 
         if (classSystem != PlayerUtils.ClassSystem.PERMISSIONS && !pm.isPluginEnabled(classSystem.getPluginName())) {
             this.getLogger().warning("Class-system " + classSystem.getPluginName() + " is not enabled!");
-            this.getLogger().warning("Will be used PERMISSIONS by default.");
+            this.getLogger().warning("Will be used PERMISSIONS by default");
             classSystem = PlayerUtils.ClassSystem.PERMISSIONS;
         }
     }

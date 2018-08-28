@@ -77,6 +77,7 @@ public class ItemManager {
         }
 
         if (CUSTOM_ITEMS.isEmpty()) {
+            instance.getLogger().info("No one configured item found");
             return false;
         }
 
