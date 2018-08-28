@@ -1,6 +1,5 @@
 package ru.endlesscode.inspector.bukkit.plugin
 
-import kotlinx.coroutines.experimental.runBlocking
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
 import org.bukkit.command.PluginCommand
@@ -140,9 +139,7 @@ abstract class TrackedPlugin @JvmOverloads constructor(
         try {
             return block.invoke()
         } catch (e: Exception) {
-            runBlocking {
-                reporter.report(message, e).join()
-            }
+            reporter.report(message, e, async = false)
             throw ReportedException(e)
         }
     }

@@ -1,7 +1,7 @@
 package ru.endlesscode.inspector.api.report
 
 import kotlinx.coroutines.experimental.Job
-import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.experimental.runBlocking
 import ru.endlesscode.inspector.util.rootCause
 import ru.endlesscode.inspector.util.similarTo
 
@@ -16,15 +16,19 @@ abstract class FilteringReporter : Reporter {
         handlers.add(handler)
     }
 
-    final override fun report(message: String, exception: Exception): Job {
+    final override fun report(message: String, exception: Exception, async: Boolean) {
         val cause = exception.rootCause
-        if (shouldBeFiltered(cause)) return launch { /* Return completed job */ }
+        if (shouldBeFiltered(cause)) return
 
         reportedCauses.add(cause)
 
         val exceptionData = ExceptionData(exception)
         beforeReport(message, exceptionData)
-        return reportFiltered(message, exceptionData, ::onSuccess, ::onError)
+
+        val reportJob = reportFiltered(message, exceptionData, ::onSuccess, ::onError)
+        if (async) {
+            runBlocking { reportJob.join() }
+        }
     }
 
     private fun shouldBeFiltered(cause: Throwable): Boolean {
