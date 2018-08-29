@@ -1,6 +1,5 @@
 package ru.endlesscode.rpginventory.pet;
 
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -12,7 +11,11 @@ import ru.endlesscode.rpginventory.inventory.slot.Slot;
 import ru.endlesscode.rpginventory.inventory.slot.SlotManager;
 import ru.endlesscode.rpginventory.utils.ItemUtils;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Objects;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -22,10 +25,11 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class CooldownsTimer extends BukkitRunnable {
 
-    public final static int TICK_PERIOD = 5;
-    private final static int TICK_RATE = 20 / CooldownsTimer.TICK_PERIOD;
+    public static final int TICK_PERIOD = 5;
+    private static final int TICK_RATE = 20 / CooldownsTimer.TICK_PERIOD;
     //temporaryMap for avoid CME.
-    private final HashMap<UUID, ValuePair> petItemsByPlayer = new HashMap<>(), temporaryMap = new HashMap<>();
+    private final HashMap<UUID, ValuePair> petItemsByPlayer = new HashMap<>();
+    private final HashMap<UUID, ValuePair> temporaryMap = new HashMap<>();
     private final RPGInventory plugin;
     private final Slot petSlot;
 
@@ -36,7 +40,7 @@ public class CooldownsTimer extends BukkitRunnable {
     }
 
     public void addPetCooldown(Player player, ItemStack itemStack) {
-        if (player == null || itemStack == null || itemStack.getType() == Material.AIR) {
+        if (player == null || ItemUtils.isEmpty(itemStack)) {
             //throw new IllegalArgumentException?
             return;
         }
