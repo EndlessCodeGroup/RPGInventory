@@ -1,8 +1,5 @@
 package ru.endlesscode.inspector.api.report
 
-import kotlinx.coroutines.experimental.Job
-import kotlinx.coroutines.experimental.launch
-
 /**
  * Reporter that reports nothing.
  * Used to disable reporting.
@@ -15,9 +12,7 @@ object SilentReporter : Reporter {
         // Do nothing
     }
 
-    override fun report(message: String, exception: Exception): Job {
-        return launch {
-            // Do nothing
-        }
+    override fun report(message: String, exception: Exception, async: Boolean) {
+        // Do nothing
     }
 }

@@ -9,7 +9,7 @@ plugins {
 }
 
 val inspectorVersion: String by extra
-val minorVersion = 2
+val minorVersion = 3
 version = "$inspectorVersion.$minorVersion"
 
 // TODO: Port it to Kotlin DSL

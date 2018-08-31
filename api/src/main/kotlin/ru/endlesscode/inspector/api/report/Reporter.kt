@@ -1,7 +1,5 @@
 package ru.endlesscode.inspector.api.report
 
-import kotlinx.coroutines.experimental.Job
-
 
 interface Reporter {
 
@@ -40,16 +38,23 @@ interface Reporter {
     fun addHandler(handler: ReportHandler)
 
     /**
+     * Report about exception with message (asynchronously).
+     *
+     * @param message The message that describes when exception thrown
+     * @param exception The exception
+     */
+    fun report(message: String, exception: Exception) {
+        report(message, exception, true)
+    }
+
+    /**
      * Report about exception with message.
      *
      * @param message The message that describes when exception thrown
      * @param exception The exception
-     * @return [Job] that can be used to track when report done
+     * @param async Asynchronously or not
      */
-    fun report(
-            message: String,
-            exception: Exception
-    ): Job
+    fun report(message: String, exception: Exception, async: Boolean)
 
     /**
      * Catch and report all exceptions that will be occurred inside [block].
@@ -61,7 +66,7 @@ interface Reporter {
         try {
             block.invoke()
         } catch (e: Exception) {
-            report(message, e)
+            report(message, e, true)
         }
     }
 
