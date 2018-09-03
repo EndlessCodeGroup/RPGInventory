@@ -47,6 +47,11 @@ class Inspector : JavaPlugin() {
     }
 
     private fun enablePacketsLogger() {
+        if (!server.pluginManager.isPluginEnabled("ProtocolLib")) {
+            logger.warning("ProtocolLib not found, packets logger will be disabled!")
+            return
+        }
+
         val packetsLogger = PacketsLogger(server.consoleSender)
         packetsLogger.inject(this)
     }
