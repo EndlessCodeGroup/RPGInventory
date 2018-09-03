@@ -56,6 +56,9 @@ internal class EventsLogger(
         lines += "  Fields:"
         details.mapTo(lines) { "    $it" }
 
+        // Add empty line at the end to separate log entries
+        lines += " "
+
         sender.sendMessage(lines.toTypedArray())
     }
 

@@ -69,7 +69,7 @@ internal class PacketsLogger(
     }
 
     private fun logPacket(event: PacketEvent) {
-        val message = mutableListOf(
+        val lines = mutableListOf(
                 "$TAG ${PrintUtils.toString(event.packetType)}",
                 "  Player: ${PrintUtils.toString(event.player)}",
                 "  Fields:"
@@ -83,13 +83,16 @@ internal class PacketsLogger(
         packetDescription.removeAt(0)
 
         if (packetDescription.isEmpty()) {
-            message += "    <no fields>"
+            lines += "    <no fields>"
         } else {
             for (s in packetDescription) {
-                message += "  $s"
+                lines += "  $s"
             }
         }
 
-        sender.sendMessage(message.toTypedArray())
+        // Add empty line at the end to separate log entries
+        lines += " "
+
+        sender.sendMessage(lines.toTypedArray())
     }
 }
