@@ -22,8 +22,4 @@ internal object PrintUtils {
         val sender = packetType.sender.name.firstUpperCase()
         return packetType.toString().replace(packetType.name(), "$protocol.$sender.${packetType.name()}")
     }
-
-    private fun String.firstUpperCase(): String {
-        return this.toLowerCase().capitalize()
-    }
 }

@@ -16,3 +16,11 @@ EventsLogger:
   - -BlockEvent
   - -VehicleEvent
   - -EntityAirChangeEvent
+
+PacketsLogger:
+  enabled: false
+  log:
+  - Handshake
+  - Play
+  - Status
+  - Login

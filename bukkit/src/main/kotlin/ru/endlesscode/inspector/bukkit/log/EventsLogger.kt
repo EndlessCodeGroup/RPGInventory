@@ -8,7 +8,7 @@ import org.bukkit.plugin.RegisteredListener
 import ru.endlesscode.inspector.bukkit.util.EventsUtils
 
 
-internal class EventsLogger internal constructor(
+internal class EventsLogger(
         private val sender: ConsoleCommandSender,
         private val rules: Map<String, LogRule>,
         private val showHierarchy: Boolean

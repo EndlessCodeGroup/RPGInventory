@@ -19,11 +19,15 @@ class Inspector : JavaPlugin() {
         GLOBAL = InspectorConfig(description.version)
         loadConfig()
 
-        enableEventsLogger()
+        if (GLOBAL.isEventsLoggerEnabled) {
+            enableEventsLogger()
+        }
     }
 
     override fun onEnable() {
-        enablePacketsLogger()
+        if (GLOBAL.isPacketsLoggerEnabled) {
+            enablePacketsLogger()
+        }
     }
 
     private fun loadConfig() {
@@ -35,15 +39,14 @@ class Inspector : JavaPlugin() {
             sendData[DataType.CORE] = config.getBoolean("Reporter.data.core", true)
             sendData[DataType.PLUGINS] = config.getBoolean("Reporter.data.plugins", true)
             isEventsLoggerEnabled = config.getBoolean("EventsLogger.enabled", false)
+            isPacketsLoggerEnabled = config.getBoolean("PacketsLogger.enabled", false)
         }
     }
 
     private fun enableEventsLogger() {
-        if (GLOBAL.isEventsLoggerEnabled) {
-            val showHierarchy = config.getBoolean("EventsLogger.hierarchy", true)
-            val eventsLogger = EventsLogger(server.consoleSender, loadEventsLogRules(), showHierarchy)
-            eventsLogger.inject(this)
-        }
+        val showHierarchy = config.getBoolean("EventsLogger.hierarchy", true)
+        val eventsLogger = EventsLogger(server.consoleSender, loadEventsLogRules(), showHierarchy)
+        eventsLogger.inject(this)
     }
 
     private fun enablePacketsLogger() {
@@ -52,13 +55,19 @@ class Inspector : JavaPlugin() {
             return
         }
 
-        val packetsLogger = PacketsLogger(server.consoleSender)
+        val packetsLogger = PacketsLogger(server.consoleSender, loadPacketsLogRules())
         packetsLogger.inject(this)
     }
 
     private fun loadEventsLogRules(): Map<String, LogRule> {
-        val rules = config.getStringList("EventsLogger.log")
+        return loadLogRules(config.getStringList("EventsLogger.log"))
+    }
 
+    private fun loadPacketsLogRules(): Map<String, LogRule> {
+        return loadLogRules(config.getStringList("PacketsLogger.log"))
+    }
+
+    private fun loadLogRules(rules: List<String>): Map<String, LogRule> {
         return rules.map {
             val rule = LogRule.fromString(it)
             rule.name to rule
