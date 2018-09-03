@@ -1,4 +1,4 @@
-package ru.endlesscode.inspector.bukkit.event
+package ru.endlesscode.inspector.bukkit.log
 
 import org.bukkit.command.ConsoleCommandSender
 import org.bukkit.event.Event
@@ -29,7 +29,7 @@ internal class EventsLogger internal constructor(
             override fun callEvent(event: Event) {
                 val logRule = findLogRule(event.javaClass) ?: return
 
-                logRule.onEvent {
+                logRule.log {
                     logEvent(event, logRule.skipped)
                 }
             }

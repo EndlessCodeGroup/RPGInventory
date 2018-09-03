@@ -1,9 +1,9 @@
 package ru.endlesscode.inspector.bukkit
 
 import org.bukkit.plugin.java.JavaPlugin
-import ru.endlesscode.inspector.bukkit.event.EventsLogger
-import ru.endlesscode.inspector.bukkit.event.LogRule
-import ru.endlesscode.inspector.bukkit.packet.PacketsLogger
+import ru.endlesscode.inspector.bukkit.log.EventsLogger
+import ru.endlesscode.inspector.bukkit.log.LogRule
+import ru.endlesscode.inspector.bukkit.log.PacketsLogger
 import ru.endlesscode.inspector.bukkit.report.DataType
 
 class Inspector : JavaPlugin() {
@@ -56,7 +56,7 @@ class Inspector : JavaPlugin() {
 
         return rules.map {
             val rule = LogRule.fromString(it)
-            rule.event to rule
+            rule.name to rule
         }.toMap()
     }
 }

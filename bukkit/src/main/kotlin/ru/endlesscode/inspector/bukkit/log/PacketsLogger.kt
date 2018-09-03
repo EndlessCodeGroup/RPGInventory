@@ -1,4 +1,4 @@
-package ru.endlesscode.inspector.bukkit.packet
+package ru.endlesscode.inspector.bukkit.log
 
 import com.comphenix.protocol.PacketType
 import com.comphenix.protocol.ProtocolLibrary
