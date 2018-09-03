@@ -31,6 +31,7 @@
     java.lang.Object readResolve();
 }
 
+-dontwarn com.comphenix.protocol.**
 -dontwarn com.google.**
 -dontwarn com.sun.**
 -dontwarn org.slf4j.**
