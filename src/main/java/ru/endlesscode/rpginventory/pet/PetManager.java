@@ -312,6 +312,15 @@ public class PetManager {
         playerWrapper.setPet(null);
     }
 
+    public static void despawnPet(Tameable petEntity) {
+        if (!PetManager.isEnabled()) {
+            return;
+        }
+
+        EffectUtils.playDespawnEffect(petEntity);
+        petEntity.remove();
+    }
+
     public static void respawnPet(@Nullable OfflinePlayer player) {
         if (!InventoryManager.playerIsLoaded(player) || !PetManager.isEnabled()) {
             return;

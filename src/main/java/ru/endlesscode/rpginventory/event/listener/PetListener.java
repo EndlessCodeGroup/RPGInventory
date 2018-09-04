@@ -280,9 +280,14 @@ public class PetListener implements Listener {
             final Tameable petEntity = (Tameable) event.getDamager();
             final AnimalTamer petOwner = petEntity.getOwner();
             if (petOwner != null) {
-                PetType petType = PetManager.getPetFromEntity((LivingEntity) petEntity, (Player) petOwner);
+                OfflinePlayer petOwnerPlayer = (OfflinePlayer) petOwner;
+                PetType petType = PetManager.getPetFromEntity((LivingEntity) petEntity, petOwnerPlayer);
                 if (petType != null) {
-                    event.setDamage(petType.getDamage());
+                    if (petOwnerPlayer.isOnline()) {
+                        event.setDamage(petType.getDamage());
+                    } else {
+                        PetManager.despawnPet(petEntity);
+                    }
                 }
             }
             //or as damage reciever
