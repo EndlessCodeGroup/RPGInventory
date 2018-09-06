@@ -5,7 +5,8 @@ def junitVersion = "4.12"
 def mockitoVersion = "2.8.+"
 def powermockVersion = "1.7.+"
 def coroutinesVersion = "0.24.+"
-def reflectionVersion = "0.9.11"
+def reflectionVersion = "0.9.+"
+def protocolLibVersion = "4.4.+"
 
 // Groups
 def powermockGroup = "org.powermock"
@@ -28,7 +29,8 @@ ext {
 
     bukkitDeps = [
             // Dependencies (except Bukkit API) used only in Bukkit implementation
-            reflections : dep("org.reflections", "reflections", reflectionVersion)
+            reflections : dep("org.reflections", "reflections", reflectionVersion),
+            protocolLibApi : dep("com.comphenix.protocol", "ProtocolLib-API", protocolLibVersion)
     ]
 
     // These dependencies will be used with scope `testImplementation`

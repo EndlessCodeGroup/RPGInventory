@@ -1,11 +1,11 @@
-package ru.endlesscode.inspector.bukkit.event
+package ru.endlesscode.inspector.bukkit.log
 
 /**
  * Rule of logging
  *
  */
 internal class LogRule(
-        val event: String,
+        val name: String,
         private val log: Boolean = true,
         private val skip: Int = 0
 ) {
@@ -15,10 +15,10 @@ internal class LogRule(
         private const val SKIP = "SKIP"
 
         /**
-         * Creates [LogRule] from string representation.
+         * Creates [LogRule] from string representation given in [value].
          * Examples:
-         *      "-Event" (event: Event, log: false)
-         *      "PlayerEvent:10" (event: PlayerEvent, log: true, skip: 10)
+         *      "-Event" (name: Event, log: false, skip: 0)
+         *      "PlayerEvent:10" (name: PlayerEvent, log: true, skip: 10)
          */
         fun fromString(value: String): LogRule {
             val trimmedValue = value.trim()
@@ -42,7 +42,7 @@ internal class LogRule(
 
     private var state: State = states.getValue(LOG)
 
-    fun onEvent(block: () -> Unit) {
+    fun log(block: () -> Unit) {
         state.onEvent(block)?.let {
             state = states.getValue(it)
         }

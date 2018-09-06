@@ -12,6 +12,10 @@ It sends:
 - List of plugins with versions
 - Exception stacktrace
 
+Also it contains some tools:
+- EventLogger - tool to log events
+- PacketsLogger - tool to log packets (needs ProtocolLib)
+
 ## For server owners
 Just copy plugin to `plugins/` folder.
 Also you can disable sending of information about server core and installed plugins in the Inspector's config.
@@ -38,6 +42,31 @@ EventsLogger:
   - -BlockEvent                          
   - -VehicleEvent                       
   - -EntityAirChangeEvent               # Don't log the event
+
+# Events logger it is the tool that helps developers to debug events
+PacketsLogger:
+  enabled: false
+  # What we need to log
+  # Format: <protocol>[.<source>[.<name>]]
+  # Minecraft protocol: https://wiki.vg/Protocol
+  # ProtocolLib packet types: https://github.com/aadnk/ProtocolLib/blob/master/modules/API/src/main/java/com/comphenix/protocol/PacketType.java
+  log:
+  - Handshake                           # Log all protocols
+  - Status
+  - Login
+  - Play
+  - Play.Client.POSITION:20             # Skip this packet 20 times
+  - -Play.Client.LOOK                   # Don't want these frequent events
+  - -Play.Server.MAP_CHUNK
+  - -Play.Server.UPDATE_TIME
+  - -Play.Server.ENTITY_HEAD_ROTATION
+  - -Play.Server.ENTITY_VELOCITY
+  - -Play.Server.ENTITY_TELEPORT
+  - -Play.Server.ENTITY_METADATA
+  - -Play.Server.ENTITY_LOOK
+  - -Play.Server.ENTITY_STATUS
+  - -Play.Server.REL_ENTITY_MOVE
+  - -Play.Server.REL_ENTITY_MOVE_LOOK
 ```
 
 ## For plugin developers
@@ -57,7 +86,7 @@ repositories {
 }
 
 dependencies {
-    compileOnly "ru.endlesscode.inspector:inspector-bukkit:0.4.2"
+    compileOnly "ru.endlesscode.inspector:inspector-bukkit:0.5.0"
 }
 ```
 
