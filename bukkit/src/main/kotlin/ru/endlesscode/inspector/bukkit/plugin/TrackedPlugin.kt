@@ -22,19 +22,19 @@ import java.util.logging.Level
 /**
  * Class that takes plugin, and watches for all exceptions.
  *
- * @param pluginClass class of plugin to track
+ * @param lifecycleClass The class of a plugin to track.
  */
 @Suppress("LeakingThis")
 abstract class TrackedPlugin @JvmOverloads constructor(
-        pluginClass: Class<out PluginLifecycle>,
-        envProperties: BukkitEnvironment.Properties = BukkitEnvironment.EMPTY_PROPERTIES
+    lifecycleClass: Class<out PluginLifecycle>,
+    envProperties: BukkitEnvironment.Properties = BukkitEnvironment.EMPTY_PROPERTIES
 ) : JavaPlugin(), ReporterFocus {
 
     override val focusedPackage: String = javaClass.`package`.name
     override val environment: ReportEnvironment = BukkitEnvironment(this, envProperties)
 
     val reporter: Reporter
-    val plugin: PluginLifecycle = pluginClass.newInstance()
+    val plugin: PluginLifecycle = lifecycleClass.newInstance()
 
     init {
         plugin.holder = this
@@ -89,9 +89,9 @@ abstract class TrackedPlugin @JvmOverloads constructor(
             sender: CommandSender?,
             command: Command?,
             label: String?,
-            args: Array<out String>?
+            args: Array<out String>
     ): Boolean {
-        return track("Error occurred during command execution") {
+        return track("Exception occurred on command '$label' with arguments: ${args.contentToString()}") {
             plugin.onCommand(sender, command, label, args)
         }
     }
