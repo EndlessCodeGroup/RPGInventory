@@ -61,6 +61,7 @@ import ru.endlesscode.rpginventory.utils.VersionUtils;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.logging.Logger;
 
 public class RPGInventory extends PluginLifecycle {
@@ -250,10 +251,32 @@ public class RPGInventory extends PluginLifecycle {
             this.getLogger().warning("Economy not found!");
         }
 
-        levelSystem = PlayerUtils.LevelSystem.valueOf(Config.getConfig().getString("level-system"));
-        classSystem = PlayerUtils.ClassSystem.valueOf(Config.getConfig().getString("class-system"));
+        initLevelSystem();
+        initClassSystem();
 
         return InventoryManager.init(this) && SlotManager.init();
+    }
+
+    private void initLevelSystem() {
+        String levelSystemName = Config.getConfig().getString("level-system");
+        try {
+            levelSystem = PlayerUtils.LevelSystem.valueOf(levelSystemName);
+        } catch (IllegalArgumentException e) {
+            this.getLogger().warning("Unknown level system: " + levelSystemName + ". Used EXP by default.");
+            this.getLogger().warning("Available level systems: " + Arrays.toString(PlayerUtils.LevelSystem.values()));
+            levelSystem = PlayerUtils.LevelSystem.EXP;
+        }
+    }
+
+    private void initClassSystem() {
+        String classSystemName = Config.getConfig().getString("class-system");
+        try {
+            classSystem = PlayerUtils.ClassSystem.valueOf(classSystemName);
+        } catch (IllegalArgumentException e) {
+            this.getLogger().warning("Unknown class system: " + classSystemName + ". Used PERMISSIONS by default.");
+            this.getLogger().warning("Available class systems: " + Arrays.toString(PlayerUtils.LevelSystem.values()));
+            classSystem = PlayerUtils.ClassSystem.PERMISSIONS;
+        }
     }
 
     private void checkThatSystemsLoaded() {
