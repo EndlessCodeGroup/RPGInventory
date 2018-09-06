@@ -366,116 +366,165 @@ ru.endlesscode.inspector.bukkit.Inspector -> ru.endlesscode.inspector.bukkit.Ins
     ru.endlesscode.inspector.bukkit.InspectorConfig GLOBAL -> GLOBAL
     java.lang.String TAG -> TAG
     ru.endlesscode.inspector.bukkit.Inspector$Companion Companion -> Companion
-    45:57:java.util.Map loadLogRules() -> a
-    8:21:void <init>() -> <init>
-    1025:1034:void loadConfig():25:34 -> <init>
-    1025:1034:void <init>():19 -> <init>
-    1037:1042:void enableEventsLogger():37:42 -> <init>
-    1037:1042:void <init>():21 -> <init>
+    28:31:void onEnable() -> onEnable
+    1053:1060:void enablePacketsLogger():53:60 -> onEnable
+    1053:1060:void onEnable():29 -> onEnable
+    1067:1067:java.util.Map loadPacketsLogRules():67:67 -> onEnable
+    1067:1067:void enablePacketsLogger():58 -> onEnable
+    1067:1067:void onEnable():29 -> onEnable
+    71:81:java.util.Map loadLogRules(java.util.List) -> a
+    9:23:void <init>() -> <init>
+    2034:2044:void loadConfig():34:44 -> <init>
+    2034:2044:void <init>():20 -> <init>
+    2047:2050:void enableEventsLogger():47:50 -> <init>
+    2047:2050:void <init>():23 -> <init>
+    2063:2063:java.util.Map loadEventsLogRules():63:63 -> <init>
+    2063:2063:void enableEventsLogger():48 -> <init>
+    2063:2063:void <init>():23 -> <init>
     void <clinit>() -> <clinit>
-    8:8:ru.endlesscode.inspector.bukkit.InspectorConfig access$getGLOBAL$cp() -> access$getGLOBAL$cp
-    8:8:void access$setGLOBAL$cp(ru.endlesscode.inspector.bukkit.InspectorConfig) -> access$setGLOBAL$cp
+    9:9:ru.endlesscode.inspector.bukkit.InspectorConfig access$getGLOBAL$cp() -> access$getGLOBAL$cp
+    9:9:void access$setGLOBAL$cp(ru.endlesscode.inspector.bukkit.InspectorConfig) -> access$setGLOBAL$cp
     ru.endlesscode.inspector.bukkit.InspectorConfig getGLOBAL() -> getGLOBAL
     void setGLOBAL(ru.endlesscode.inspector.bukkit.InspectorConfig) -> setGLOBAL
 ru.endlesscode.inspector.bukkit.Inspector$Companion -> ru.endlesscode.inspector.bukkit.Inspector$Companion:
     void GLOBAL$annotations() -> GLOBAL$annotations
-    12:12:ru.endlesscode.inspector.bukkit.InspectorConfig getGLOBAL() -> getGLOBAL
-    12:12:void setGLOBAL(ru.endlesscode.inspector.bukkit.InspectorConfig) -> setGLOBAL
-    10:10:void <init>() -> <init>
-    10:10:void <init>(ru.endlesscode.inspector.shade.kotlin.jvm.internal.DefaultConstructorMarker) -> <init>
+    13:13:ru.endlesscode.inspector.bukkit.InspectorConfig getGLOBAL() -> getGLOBAL
+    13:13:void setGLOBAL(ru.endlesscode.inspector.bukkit.InspectorConfig) -> setGLOBAL
+    11:11:void <init>() -> <init>
+    11:11:void <init>(ru.endlesscode.inspector.shade.kotlin.jvm.internal.DefaultConstructorMarker) -> <init>
 ru.endlesscode.inspector.bukkit.InspectorConfig -> ru.endlesscode.inspector.bukkit.InspectorConfig:
     boolean isEnabled -> a
     java.util.Map sendData -> b
     boolean isEventsLoggerEnabled -> c
-    java.lang.String version -> d
+    boolean isPacketsLoggerEnabled -> d
+    java.lang.String version -> e
     9:9:boolean isEnabled$Inspector() -> isEnabled$Inspector
     9:9:void setEnabled$Inspector(boolean) -> setEnabled$Inspector
     10:10:java.util.Map getSendData$Inspector() -> getSendData$Inspector
     10:10:void setSendData$Inspector(java.util.Map) -> setSendData$Inspector
     14:14:boolean isEventsLoggerEnabled$Inspector() -> isEventsLoggerEnabled$Inspector
     14:14:void setEventsLoggerEnabled$Inspector(boolean) -> setEventsLoggerEnabled$Inspector
-    16:16:boolean shouldSendData(ru.endlesscode.inspector.bukkit.report.DataType) -> shouldSendData
+    15:15:boolean isPacketsLoggerEnabled$Inspector() -> isPacketsLoggerEnabled$Inspector
+    15:15:void setPacketsLoggerEnabled$Inspector(boolean) -> setPacketsLoggerEnabled$Inspector
+    17:17:boolean shouldSendData(ru.endlesscode.inspector.bukkit.report.DataType) -> shouldSendData
     6:6:java.lang.String getVersion() -> getVersion
     5:12:void <init>(java.lang.String) -> <init>
-ru.endlesscode.inspector.bukkit.event.EventDetails -> ru.endlesscode.inspector.bukkit.event.EventDetails:
+ru.endlesscode.inspector.bukkit.command.TrackedCommandExecutor -> ru.endlesscode.inspector.bukkit.command.TrackedCommandExecutor:
+    org.bukkit.command.CommandExecutor delegate -> a
+    ru.endlesscode.inspector.api.report.Reporter reporter -> b
+    16:20:boolean onCommand(org.bukkit.command.CommandSender,org.bukkit.command.Command,java.lang.String,java.lang.String[]) -> onCommand
+    10:10:void <init>(org.bukkit.command.CommandExecutor,ru.endlesscode.inspector.api.report.Reporter) -> <init>
+ru.endlesscode.inspector.bukkit.log.EventDetails -> ru.endlesscode.inspector.bukkit.log.EventDetails:
     java.util.Map detailsGetters -> a
-    ru.endlesscode.inspector.bukkit.event.EventDetails INSTANCE -> INSTANCE
+    ru.endlesscode.inspector.bukkit.log.EventDetails INSTANCE -> INSTANCE
     18:23:ru.endlesscode.inspector.shade.kotlin.Pair forEvent(org.bukkit.event.Event,java.lang.Class) -> forEvent
     1070:1070:java.util.List ru.endlesscode.inspector.shade.kotlin.collections.CollectionsKt__CollectionsKt.emptyList():70:70 -> forEvent
     1070:1070:ru.endlesscode.inspector.shade.kotlin.Pair forEvent(org.bukkit.event.Event,java.lang.Class):21 -> forEvent
-    17:17:ru.endlesscode.inspector.shade.kotlin.Pair forEvent$default(ru.endlesscode.inspector.bukkit.event.EventDetails,org.bukkit.event.Event,java.lang.Class,int,java.lang.Object) -> forEvent$default
+    17:17:ru.endlesscode.inspector.shade.kotlin.Pair forEvent$default(ru.endlesscode.inspector.bukkit.log.EventDetails,org.bukkit.event.Event,java.lang.Class,int,java.lang.Object) -> forEvent$default
     8:8:void <init>() -> <init>
     8:53:void <clinit>() -> <clinit>
-ru.endlesscode.inspector.bukkit.event.EventDetails$DetailsGetter -> ru.endlesscode.inspector.bukkit.event.EventDetails$a:
+ru.endlesscode.inspector.bukkit.log.EventDetails$DetailsGetter -> ru.endlesscode.inspector.bukkit.log.EventDetails$a:
     java.util.Map fieldsMap -> a
     41:53:java.util.List getDetails(org.bukkit.event.Event) -> a
     1070:1070:java.util.List ru.endlesscode.inspector.shade.kotlin.collections.CollectionsKt__CollectionsKt.emptyList():70:70 -> a
     1070:1070:java.util.List getDetails(org.bukkit.event.Event):44 -> a
     27:60:void <init>(java.lang.Class) -> <init>
-ru.endlesscode.inspector.bukkit.event.EventsLogger -> ru.endlesscode.inspector.bukkit.event.EventsLogger:
+ru.endlesscode.inspector.bukkit.log.EventsLogger -> ru.endlesscode.inspector.bukkit.log.EventsLogger:
     org.bukkit.command.ConsoleCommandSender sender -> a
     java.util.Map rules -> b
     boolean showHierarchy -> c
-    ru.endlesscode.inspector.bukkit.event.EventsLogger$Companion Companion -> Companion
+    ru.endlesscode.inspector.bukkit.log.EventsLogger$Companion Companion -> Companion
     22:39:void inject(org.bukkit.plugin.Plugin) -> inject
-    1063:1066:void injectToAllEvents(org.bukkit.plugin.RegisteredListener):63:66 -> inject
-    1063:1066:void inject(org.bukkit.plugin.Plugin):38 -> inject
-    42:45:ru.endlesscode.inspector.bukkit.event.LogRule findLogRule(java.lang.Class) -> a
-    69:75:void injectToEvent(java.lang.Class,org.bukkit.plugin.RegisteredListener) -> a
+    1066:1069:void injectToAllEvents(org.bukkit.plugin.RegisteredListener):66:69 -> inject
+    1066:1069:void inject(org.bukkit.plugin.Plugin):38 -> inject
+    42:45:ru.endlesscode.inspector.bukkit.log.LogRule findLogRule(java.lang.Class) -> a
+    72:78:void injectToEvent(java.lang.Class,org.bukkit.plugin.RegisteredListener) -> a
     11:11:void <init>(org.bukkit.command.ConsoleCommandSender,java.util.Map,boolean) -> <init>
     void <clinit>() -> <clinit>
-    11:11:ru.endlesscode.inspector.bukkit.event.LogRule access$findLogRule(ru.endlesscode.inspector.bukkit.event.EventsLogger,java.lang.Class) -> access$findLogRule
-    11:11:void access$logEvent(ru.endlesscode.inspector.bukkit.event.EventsLogger,org.bukkit.event.Event,int) -> access$logEvent
-    2049:2082:void logEvent(org.bukkit.event.Event,int):49:82 -> access$logEvent
-    2049:2082:void access$logEvent(ru.endlesscode.inspector.bukkit.event.EventsLogger,org.bukkit.event.Event,int):11 -> access$logEvent
-ru.endlesscode.inspector.bukkit.event.EventsLogger$Companion -> ru.endlesscode.inspector.bukkit.event.EventsLogger$Companion:
+    11:11:ru.endlesscode.inspector.bukkit.log.LogRule access$findLogRule(ru.endlesscode.inspector.bukkit.log.EventsLogger,java.lang.Class) -> access$findLogRule
+    11:11:void access$logEvent(ru.endlesscode.inspector.bukkit.log.EventsLogger,org.bukkit.event.Event,int) -> access$logEvent
+    2049:2085:void logEvent(org.bukkit.event.Event,int):49:85 -> access$logEvent
+    2049:2085:void access$logEvent(ru.endlesscode.inspector.bukkit.log.EventsLogger,org.bukkit.event.Event,int):11 -> access$logEvent
+ru.endlesscode.inspector.bukkit.log.EventsLogger$Companion -> ru.endlesscode.inspector.bukkit.log.EventsLogger$Companion:
     17:17:void <init>() -> <init>
     17:17:void <init>(ru.endlesscode.inspector.shade.kotlin.jvm.internal.DefaultConstructorMarker) -> <init>
-ru.endlesscode.inspector.bukkit.event.EventsLogger$inject$registeredListener$1 -> ru.endlesscode.inspector.bukkit.event.EventsLogger$inject$registeredListener$1:
-    ru.endlesscode.inspector.bukkit.event.EventsLogger this$0 -> a
+ru.endlesscode.inspector.bukkit.log.EventsLogger$inject$registeredListener$1 -> ru.endlesscode.inspector.bukkit.log.EventsLogger$inject$registeredListener$1:
+    ru.endlesscode.inspector.bukkit.log.EventsLogger this$0 -> a
     org.bukkit.plugin.Plugin $plugin -> b
     30:35:void callEvent(org.bukkit.event.Event) -> callEvent
-    22:22:void <init>(ru.endlesscode.inspector.bukkit.event.EventsLogger,org.bukkit.plugin.Plugin,org.bukkit.event.Listener,org.bukkit.plugin.EventExecutor,org.bukkit.event.EventPriority,org.bukkit.plugin.Plugin,boolean) -> <init>
-ru.endlesscode.inspector.bukkit.event.EventsLogger$inject$registeredListener$1$callEvent$1 -> ru.endlesscode.inspector.bukkit.event.EventsLogger$inject$registeredListener$1$a:
-    ru.endlesscode.inspector.bukkit.event.EventsLogger$inject$registeredListener$1 this$0 -> a
+    22:22:void <init>(ru.endlesscode.inspector.bukkit.log.EventsLogger,org.bukkit.plugin.Plugin,org.bukkit.event.Listener,org.bukkit.plugin.EventExecutor,org.bukkit.event.EventPriority,org.bukkit.plugin.Plugin,boolean) -> <init>
+ru.endlesscode.inspector.bukkit.log.EventsLogger$inject$registeredListener$1$callEvent$1 -> ru.endlesscode.inspector.bukkit.log.EventsLogger$inject$registeredListener$1$a:
+    ru.endlesscode.inspector.bukkit.log.EventsLogger$inject$registeredListener$1 this$0 -> a
     org.bukkit.event.Event $event -> b
-    ru.endlesscode.inspector.bukkit.event.LogRule $logRule -> c
+    ru.endlesscode.inspector.bukkit.log.LogRule $logRule -> c
     22:22:java.lang.Object invoke() -> a
     1033:1034:void invoke():33:34 -> a
     1033:1034:java.lang.Object invoke():22 -> a
-    void <init>(ru.endlesscode.inspector.bukkit.event.EventsLogger$inject$registeredListener$1,org.bukkit.event.Event,ru.endlesscode.inspector.bukkit.event.LogRule) -> <init>
-ru.endlesscode.inspector.bukkit.event.LogRule -> ru.endlesscode.inspector.bukkit.event.LogRule:
+    void <init>(ru.endlesscode.inspector.bukkit.log.EventsLogger$inject$registeredListener$1,org.bukkit.event.Event,ru.endlesscode.inspector.bukkit.log.LogRule) -> <init>
+ru.endlesscode.inspector.bukkit.log.LogRule -> ru.endlesscode.inspector.bukkit.log.LogRule:
     java.util.Map states -> a
     int skipped -> b
-    ru.endlesscode.inspector.bukkit.event.LogRule$State state -> c
-    java.lang.String event -> d
+    ru.endlesscode.inspector.bukkit.log.LogRule$State state -> c
+    java.lang.String name -> d
     boolean log -> e
     int skip -> f
-    ru.endlesscode.inspector.bukkit.event.LogRule$Companion Companion -> Companion
+    ru.endlesscode.inspector.bukkit.log.LogRule$Companion Companion -> Companion
     40:40:int getSkipped() -> getSkipped
-    46:49:void onEvent(ru.endlesscode.inspector.shade.kotlin.jvm.functions.Function0) -> onEvent
-    8:8:java.lang.String getEvent() -> getEvent
+    46:49:void log(ru.endlesscode.inspector.shade.kotlin.jvm.functions.Function0) -> log
+    8:8:java.lang.String getName() -> getName
     7:43:void <init>(java.lang.String,boolean,int) -> <init>
     9:10:void <init>(java.lang.String,boolean,int,int,ru.endlesscode.inspector.shade.kotlin.jvm.internal.DefaultConstructorMarker) -> <init>
     void <clinit>() -> <clinit>
-    7:7:boolean access$getLog$p(ru.endlesscode.inspector.bukkit.event.LogRule) -> access$getLog$p
-    7:7:int access$getSkip$p(ru.endlesscode.inspector.bukkit.event.LogRule) -> access$getSkip$p
-    7:7:int access$getSkipped$p(ru.endlesscode.inspector.bukkit.event.LogRule) -> access$getSkipped$p
-    7:7:void access$setSkipped$p(ru.endlesscode.inspector.bukkit.event.LogRule,int) -> access$setSkipped$p
-ru.endlesscode.inspector.bukkit.event.LogRule$Companion -> ru.endlesscode.inspector.bukkit.event.LogRule$Companion:
-    24:31:ru.endlesscode.inspector.bukkit.event.LogRule fromString(java.lang.String) -> fromString
+    7:7:boolean access$getLog$p(ru.endlesscode.inspector.bukkit.log.LogRule) -> access$getLog$p
+    7:7:int access$getSkip$p(ru.endlesscode.inspector.bukkit.log.LogRule) -> access$getSkip$p
+    7:7:int access$getSkipped$p(ru.endlesscode.inspector.bukkit.log.LogRule) -> access$getSkipped$p
+    7:7:void access$setSkipped$p(ru.endlesscode.inspector.bukkit.log.LogRule,int) -> access$setSkipped$p
+ru.endlesscode.inspector.bukkit.log.LogRule$Companion -> ru.endlesscode.inspector.bukkit.log.LogRule$Companion:
+    24:31:ru.endlesscode.inspector.bukkit.log.LogRule fromString(java.lang.String) -> fromString
     13:13:void <init>() -> <init>
     13:13:void <init>(ru.endlesscode.inspector.shade.kotlin.jvm.internal.DefaultConstructorMarker) -> <init>
-ru.endlesscode.inspector.bukkit.event.LogRule$LogState -> ru.endlesscode.inspector.bukkit.event.LogRule$a:
-    ru.endlesscode.inspector.bukkit.event.LogRule this$0 -> a
+ru.endlesscode.inspector.bukkit.log.LogRule$LogState -> ru.endlesscode.inspector.bukkit.log.LogRule$a:
+    ru.endlesscode.inspector.bukkit.log.LogRule this$0 -> a
     58:66:java.lang.String onEvent(ru.endlesscode.inspector.shade.kotlin.jvm.functions.Function0) -> a
-    56:56:void <init>(ru.endlesscode.inspector.bukkit.event.LogRule) -> <init>
-ru.endlesscode.inspector.bukkit.event.LogRule$SkipState -> ru.endlesscode.inspector.bukkit.event.LogRule$b:
-    ru.endlesscode.inspector.bukkit.event.LogRule this$0 -> a
+    56:56:void <init>(ru.endlesscode.inspector.bukkit.log.LogRule) -> <init>
+ru.endlesscode.inspector.bukkit.log.LogRule$SkipState -> ru.endlesscode.inspector.bukkit.log.LogRule$b:
+    ru.endlesscode.inspector.bukkit.log.LogRule this$0 -> a
     73:74:java.lang.String onEvent(ru.endlesscode.inspector.shade.kotlin.jvm.functions.Function0) -> a
-    71:71:void <init>(ru.endlesscode.inspector.bukkit.event.LogRule) -> <init>
-ru.endlesscode.inspector.bukkit.event.LogRule$State -> ru.endlesscode.inspector.bukkit.event.LogRule$c:
+    71:71:void <init>(ru.endlesscode.inspector.bukkit.log.LogRule) -> <init>
+ru.endlesscode.inspector.bukkit.log.LogRule$State -> ru.endlesscode.inspector.bukkit.log.LogRule$c:
     java.lang.String onEvent(ru.endlesscode.inspector.shade.kotlin.jvm.functions.Function0) -> a
+ru.endlesscode.inspector.bukkit.log.PacketsLogger -> ru.endlesscode.inspector.bukkit.log.PacketsLogger:
+    org.bukkit.command.ConsoleCommandSender sender -> a
+    java.util.Map rules -> b
+    ru.endlesscode.inspector.bukkit.log.PacketsLogger$Companion Companion -> Companion
+    26:42:void inject(org.bukkit.plugin.Plugin) -> inject
+    16:16:void <init>(org.bukkit.command.ConsoleCommandSender,java.util.Map) -> <init>
+    void <clinit>() -> <clinit>
+    16:16:void access$onPacketEvent(ru.endlesscode.inspector.bukkit.log.PacketsLogger,com.comphenix.protocol.events.PacketEvent) -> access$onPacketEvent
+    1045:1050:void onPacketEvent(com.comphenix.protocol.events.PacketEvent):45:50 -> access$onPacketEvent
+    1045:1050:void access$onPacketEvent(ru.endlesscode.inspector.bukkit.log.PacketsLogger,com.comphenix.protocol.events.PacketEvent):16 -> access$onPacketEvent
+    1053:1068:ru.endlesscode.inspector.bukkit.log.LogRule findLogRule(com.comphenix.protocol.PacketType):53:68 -> access$onPacketEvent
+    1053:1068:void onPacketEvent(com.comphenix.protocol.events.PacketEvent):45 -> access$onPacketEvent
+    1053:1068:void access$onPacketEvent(ru.endlesscode.inspector.bukkit.log.PacketsLogger,com.comphenix.protocol.events.PacketEvent):16 -> access$onPacketEvent
+    16:16:void access$logPacket(ru.endlesscode.inspector.bukkit.log.PacketsLogger,com.comphenix.protocol.events.PacketEvent) -> access$logPacket
+    1072:1101:void logPacket(com.comphenix.protocol.events.PacketEvent):72:101 -> access$logPacket
+    1072:1101:void access$logPacket(ru.endlesscode.inspector.bukkit.log.PacketsLogger,com.comphenix.protocol.events.PacketEvent):16 -> access$logPacket
+ru.endlesscode.inspector.bukkit.log.PacketsLogger$Companion -> ru.endlesscode.inspector.bukkit.log.PacketsLogger$Companion:
+    21:21:void <init>() -> <init>
+    21:21:void <init>(ru.endlesscode.inspector.shade.kotlin.jvm.internal.DefaultConstructorMarker) -> <init>
+ru.endlesscode.inspector.bukkit.log.PacketsLogger$inject$1 -> ru.endlesscode.inspector.bukkit.log.PacketsLogger$inject$1:
+    ru.endlesscode.inspector.bukkit.log.PacketsLogger this$0 -> a
+    com.comphenix.protocol.events.PacketAdapter$AdapterParameteters $params -> b
+    35:36:void onPacketReceiving(com.comphenix.protocol.events.PacketEvent) -> onPacketReceiving
+    39:40:void onPacketSending(com.comphenix.protocol.events.PacketEvent) -> onPacketSending
+    33:33:void <init>(ru.endlesscode.inspector.bukkit.log.PacketsLogger,com.comphenix.protocol.events.PacketAdapter$AdapterParameteters,com.comphenix.protocol.events.PacketAdapter$AdapterParameteters) -> <init>
+ru.endlesscode.inspector.bukkit.log.PacketsLogger$onPacketEvent$1 -> ru.endlesscode.inspector.bukkit.log.PacketsLogger$a:
+    ru.endlesscode.inspector.bukkit.log.PacketsLogger this$0 -> a
+    com.comphenix.protocol.events.PacketEvent $event -> b
+    16:16:java.lang.Object invoke() -> a
+    1048:1049:void invoke():48:49 -> a
+    1048:1049:java.lang.Object invoke():16 -> a
+    void <init>(ru.endlesscode.inspector.bukkit.log.PacketsLogger,com.comphenix.protocol.events.PacketEvent) -> <init>
 ru.endlesscode.inspector.bukkit.plugin.PluginLifecycle -> ru.endlesscode.inspector.bukkit.plugin.PluginLifecycle:
     ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin holder -> holder
     ru.endlesscode.inspector.shade.kotlin.Lazy trackedServer$delegate -> a
@@ -709,15 +758,19 @@ ru.endlesscode.inspector.bukkit.plugin.TrackedPluginManager$wrapListener$1$callE
     1098:1099:java.lang.Object invoke():89 -> a
     void <init>(ru.endlesscode.inspector.bukkit.plugin.TrackedPluginManager$wrapListener$1,org.bukkit.event.Event) -> <init>
 ru.endlesscode.inspector.bukkit.plugin.TrackedServer -> ru.endlesscode.inspector.bukkit.plugin.TrackedServer:
-    ru.endlesscode.inspector.shade.kotlin.Lazy pluginManager$delegate -> a
-    org.bukkit.Server server -> b
+    ru.endlesscode.inspector.shade.kotlin.Lazy trackedPluginManager$delegate -> a
+    ru.endlesscode.inspector.shade.kotlin.Lazy trackedScheduler$delegate -> b
+    org.bukkit.Server server -> c
     void <clinit>() -> <clinit>
-    14:14:org.bukkit.plugin.PluginManager getPluginManager() -> getPluginManager
-    1000:1000:ru.endlesscode.inspector.bukkit.plugin.TrackedPluginManager getPluginManager():0:0 -> getPluginManager
-    1000:1000:org.bukkit.plugin.PluginManager getPluginManager():14 -> getPluginManager
-    7:7:org.bukkit.Server getServer() -> getServer
-    7:11:void <init>(org.bukkit.Server,ru.endlesscode.inspector.api.report.Reporter) -> <init>
-    9:9:void <init>(ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin) -> <init>
+    17:17:org.bukkit.plugin.PluginManager getPluginManager() -> getPluginManager
+    1000:1000:org.bukkit.plugin.PluginManager getTrackedPluginManager():0:0 -> getPluginManager
+    1000:1000:org.bukkit.plugin.PluginManager getPluginManager():17 -> getPluginManager
+    21:21:org.bukkit.scheduler.BukkitScheduler getScheduler() -> getScheduler
+    2000:2000:org.bukkit.scheduler.BukkitScheduler getTrackedScheduler():0:0 -> getScheduler
+    2000:2000:org.bukkit.scheduler.BukkitScheduler getScheduler():21 -> getScheduler
+    9:9:org.bukkit.Server getServer() -> getServer
+    9:14:void <init>(org.bukkit.Server,ru.endlesscode.inspector.api.report.Reporter) -> <init>
+    11:11:void <init>(ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin) -> <init>
     boolean addRecipe(org.bukkit.inventory.Recipe) -> addRecipe
     java.util.Iterator advancementIterator() -> advancementIterator
     void banIP(java.lang.String) -> banIP
@@ -779,7 +832,6 @@ ru.endlesscode.inspector.bukkit.plugin.TrackedServer -> ru.endlesscode.inspector
     org.bukkit.command.PluginCommand getPluginCommand(java.lang.String) -> getPluginCommand
     int getPort() -> getPort
     java.util.List getRecipesFor(org.bukkit.inventory.ItemStack) -> getRecipesFor
-    org.bukkit.scheduler.BukkitScheduler getScheduler() -> getScheduler
     org.bukkit.scoreboard.ScoreboardManager getScoreboardManager() -> getScoreboardManager
     org.bukkit.util.CachedServerIcon getServerIcon() -> getServerIcon
     java.lang.String getServerId() -> getServerId
@@ -824,12 +876,19 @@ ru.endlesscode.inspector.bukkit.plugin.TrackedServer -> ru.endlesscode.inspector
     void unbanIP(java.lang.String) -> unbanIP
     boolean unloadWorld(java.lang.String,boolean) -> unloadWorld
     boolean unloadWorld(org.bukkit.World,boolean) -> unloadWorld
-ru.endlesscode.inspector.bukkit.plugin.TrackedServer$pluginManager$2 -> ru.endlesscode.inspector.bukkit.plugin.TrackedServer$a:
+ru.endlesscode.inspector.bukkit.plugin.TrackedServer$trackedPluginManager$2 -> ru.endlesscode.inspector.bukkit.plugin.TrackedServer$a:
     ru.endlesscode.inspector.bukkit.plugin.TrackedServer this$0 -> a
     ru.endlesscode.inspector.api.report.Reporter $reporter -> b
-    7:7:java.lang.Object invoke() -> a
-    1011:1011:ru.endlesscode.inspector.bukkit.plugin.TrackedPluginManager invoke():11:11 -> a
-    1011:1011:java.lang.Object invoke():7 -> a
+    9:9:java.lang.Object invoke() -> a
+    1013:1013:ru.endlesscode.inspector.bukkit.plugin.TrackedPluginManager invoke():13:13 -> a
+    1013:1013:java.lang.Object invoke():9 -> a
+    void <init>(ru.endlesscode.inspector.bukkit.plugin.TrackedServer,ru.endlesscode.inspector.api.report.Reporter) -> <init>
+ru.endlesscode.inspector.bukkit.plugin.TrackedServer$trackedScheduler$2 -> ru.endlesscode.inspector.bukkit.plugin.TrackedServer$b:
+    ru.endlesscode.inspector.bukkit.plugin.TrackedServer this$0 -> a
+    ru.endlesscode.inspector.api.report.Reporter $reporter -> b
+    9:9:java.lang.Object invoke() -> a
+    1014:1014:ru.endlesscode.inspector.bukkit.scheduler.TrackedScheduler invoke():14:14 -> a
+    1014:1014:java.lang.Object invoke():9 -> a
     void <init>(ru.endlesscode.inspector.bukkit.plugin.TrackedServer,ru.endlesscode.inspector.api.report.Reporter) -> <init>
 ru.endlesscode.inspector.bukkit.report.BukkitEnvironment -> ru.endlesscode.inspector.bukkit.report.BukkitEnvironment:
     java.util.Map fields -> a
@@ -895,6 +954,169 @@ ru.endlesscode.inspector.bukkit.report.PluginListField$3 -> ru.endlesscode.inspe
     1020:1020:java.lang.Object invoke(java.lang.Object):8 -> a
     void <init>() -> <init>
     void <clinit>() -> <clinit>
+ru.endlesscode.inspector.bukkit.scheduler.TrackedBukkitRunnable -> ru.endlesscode.inspector.bukkit.scheduler.TrackedBukkitRunnable:
+    org.bukkit.scheduler.BukkitTask task -> a
+    14:15:org.bukkit.scheduler.BukkitTask runTask(org.bukkit.plugin.Plugin) -> runTask
+    1059:1060:org.bukkit.scheduler.BukkitTask setupTask(org.bukkit.scheduler.BukkitTask):59:60 -> runTask
+    1059:1060:org.bukkit.scheduler.BukkitTask runTask(org.bukkit.plugin.Plugin):15 -> runTask
+    20:21:org.bukkit.scheduler.BukkitTask runTaskAsynchronously(org.bukkit.plugin.Plugin) -> runTaskAsynchronously
+    2059:2060:org.bukkit.scheduler.BukkitTask setupTask(org.bukkit.scheduler.BukkitTask):59:60 -> runTaskAsynchronously
+    2059:2060:org.bukkit.scheduler.BukkitTask runTaskAsynchronously(org.bukkit.plugin.Plugin):21 -> runTaskAsynchronously
+    26:27:org.bukkit.scheduler.BukkitTask runTaskLater(org.bukkit.plugin.Plugin,long) -> runTaskLater
+    3059:3060:org.bukkit.scheduler.BukkitTask setupTask(org.bukkit.scheduler.BukkitTask):59:60 -> runTaskLater
+    3059:3060:org.bukkit.scheduler.BukkitTask runTaskLater(org.bukkit.plugin.Plugin,long):27 -> runTaskLater
+    32:33:org.bukkit.scheduler.BukkitTask runTaskLaterAsynchronously(org.bukkit.plugin.Plugin,long) -> runTaskLaterAsynchronously
+    4059:4060:org.bukkit.scheduler.BukkitTask setupTask(org.bukkit.scheduler.BukkitTask):59:60 -> runTaskLaterAsynchronously
+    4059:4060:org.bukkit.scheduler.BukkitTask runTaskLaterAsynchronously(org.bukkit.plugin.Plugin,long):33 -> runTaskLaterAsynchronously
+    38:39:org.bukkit.scheduler.BukkitTask runTaskTimer(org.bukkit.plugin.Plugin,long,long) -> runTaskTimer
+    5059:5060:org.bukkit.scheduler.BukkitTask setupTask(org.bukkit.scheduler.BukkitTask):59:60 -> runTaskTimer
+    5059:5060:org.bukkit.scheduler.BukkitTask runTaskTimer(org.bukkit.plugin.Plugin,long,long):39 -> runTaskTimer
+    44:45:org.bukkit.scheduler.BukkitTask runTaskTimerAsynchronously(org.bukkit.plugin.Plugin,long,long) -> runTaskTimerAsynchronously
+    6059:6060:org.bukkit.scheduler.BukkitTask setupTask(org.bukkit.scheduler.BukkitTask):59:60 -> runTaskTimerAsynchronously
+    6059:6060:org.bukkit.scheduler.BukkitTask runTaskTimerAsynchronously(org.bukkit.plugin.Plugin,long,long):45 -> runTaskTimerAsynchronously
+    49:49:org.bukkit.scheduler.BukkitScheduler getScheduler(org.bukkit.plugin.Plugin) -> a
+    53:56:void checkNotYetScheduled() -> a
+    8:8:void <init>() -> <init>
+ru.endlesscode.inspector.bukkit.scheduler.TrackedScheduler -> ru.endlesscode.inspector.bukkit.scheduler.TrackedScheduler:
+    org.bukkit.scheduler.BukkitScheduler delegate -> a
+    ru.endlesscode.inspector.api.report.Reporter reporter -> b
+    18:18:int scheduleSyncDelayedTask(org.bukkit.plugin.Plugin,java.lang.Runnable) -> scheduleSyncDelayedTask
+    28:28:int scheduleSyncDelayedTask(org.bukkit.plugin.Plugin,org.bukkit.scheduler.BukkitRunnable) -> scheduleSyncDelayedTask
+    32:32:int scheduleSyncDelayedTask(org.bukkit.plugin.Plugin,java.lang.Runnable,long) -> scheduleSyncDelayedTask
+    42:42:int scheduleSyncDelayedTask(org.bukkit.plugin.Plugin,org.bukkit.scheduler.BukkitRunnable,long) -> scheduleSyncDelayedTask
+    46:46:int scheduleSyncRepeatingTask(org.bukkit.plugin.Plugin,java.lang.Runnable,long,long) -> scheduleSyncRepeatingTask
+    56:56:int scheduleSyncRepeatingTask(org.bukkit.plugin.Plugin,org.bukkit.scheduler.BukkitRunnable,long,long) -> scheduleSyncRepeatingTask
+    60:60:int scheduleAsyncDelayedTask(org.bukkit.plugin.Plugin,java.lang.Runnable) -> scheduleAsyncDelayedTask
+    66:66:int scheduleAsyncDelayedTask(org.bukkit.plugin.Plugin,java.lang.Runnable,long) -> scheduleAsyncDelayedTask
+    72:72:int scheduleAsyncRepeatingTask(org.bukkit.plugin.Plugin,java.lang.Runnable,long,long) -> scheduleAsyncRepeatingTask
+    78:82:int scheduleTracked(java.lang.Runnable,ru.endlesscode.inspector.shade.kotlin.jvm.functions.Function1) -> a
+    86:86:org.bukkit.scheduler.BukkitTask runTask(org.bukkit.plugin.Plugin,java.lang.Runnable) -> runTask
+    96:96:org.bukkit.scheduler.BukkitTask runTask(org.bukkit.plugin.Plugin,org.bukkit.scheduler.BukkitRunnable) -> runTask
+    100:100:org.bukkit.scheduler.BukkitTask runTaskAsynchronously(org.bukkit.plugin.Plugin,java.lang.Runnable) -> runTaskAsynchronously
+    110:110:org.bukkit.scheduler.BukkitTask runTaskAsynchronously(org.bukkit.plugin.Plugin,org.bukkit.scheduler.BukkitRunnable) -> runTaskAsynchronously
+    114:114:org.bukkit.scheduler.BukkitTask runTaskLater(org.bukkit.plugin.Plugin,java.lang.Runnable,long) -> runTaskLater
+    124:124:org.bukkit.scheduler.BukkitTask runTaskLater(org.bukkit.plugin.Plugin,org.bukkit.scheduler.BukkitRunnable,long) -> runTaskLater
+    128:128:org.bukkit.scheduler.BukkitTask runTaskLaterAsynchronously(org.bukkit.plugin.Plugin,java.lang.Runnable,long) -> runTaskLaterAsynchronously
+    138:138:org.bukkit.scheduler.BukkitTask runTaskLaterAsynchronously(org.bukkit.plugin.Plugin,org.bukkit.scheduler.BukkitRunnable,long) -> runTaskLaterAsynchronously
+    142:142:org.bukkit.scheduler.BukkitTask runTaskTimer(org.bukkit.plugin.Plugin,java.lang.Runnable,long,long) -> runTaskTimer
+    152:152:org.bukkit.scheduler.BukkitTask runTaskTimer(org.bukkit.plugin.Plugin,org.bukkit.scheduler.BukkitRunnable,long,long) -> runTaskTimer
+    156:156:org.bukkit.scheduler.BukkitTask runTaskTimerAsynchronously(org.bukkit.plugin.Plugin,java.lang.Runnable,long,long) -> runTaskTimerAsynchronously
+    166:166:org.bukkit.scheduler.BukkitTask runTaskTimerAsynchronously(org.bukkit.plugin.Plugin,org.bukkit.scheduler.BukkitRunnable,long,long) -> runTaskTimerAsynchronously
+    170:174:org.bukkit.scheduler.BukkitTask runTracked(java.lang.Runnable,ru.endlesscode.inspector.shade.kotlin.jvm.functions.Function1) -> b
+    10:10:void <init>(org.bukkit.scheduler.BukkitScheduler,ru.endlesscode.inspector.api.report.Reporter) -> <init>
+    15:15:void <init>(ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin) -> <init>
+    java.util.concurrent.Future callSyncMethod(org.bukkit.plugin.Plugin,java.util.concurrent.Callable) -> callSyncMethod
+    void cancelTask(int) -> cancelTask
+    void cancelTasks(org.bukkit.plugin.Plugin) -> cancelTasks
+    java.util.List getActiveWorkers() -> getActiveWorkers
+    java.util.List getPendingTasks() -> getPendingTasks
+    boolean isCurrentlyRunning(int) -> isCurrentlyRunning
+    boolean isQueued(int) -> isQueued
+    10:10:ru.endlesscode.inspector.api.report.Reporter access$getReporter$p(ru.endlesscode.inspector.bukkit.scheduler.TrackedScheduler) -> access$getReporter$p
+    10:10:org.bukkit.scheduler.BukkitScheduler access$getDelegate$p(ru.endlesscode.inspector.bukkit.scheduler.TrackedScheduler) -> access$getDelegate$p
+ru.endlesscode.inspector.bukkit.scheduler.TrackedScheduler$TrackedRunnable -> ru.endlesscode.inspector.bukkit.scheduler.TrackedScheduler$a:
+    int taskId -> a
+    java.lang.Runnable delegate -> b
+    ru.endlesscode.inspector.bukkit.scheduler.TrackedScheduler this$0 -> c
+    179:179:void setTaskId(int) -> a
+    182:187:void run() -> run
+    178:179:void <init>(ru.endlesscode.inspector.bukkit.scheduler.TrackedScheduler,java.lang.Runnable) -> <init>
+ru.endlesscode.inspector.bukkit.scheduler.TrackedScheduler$runTask$1 -> ru.endlesscode.inspector.bukkit.scheduler.TrackedScheduler$b:
+    ru.endlesscode.inspector.bukkit.scheduler.TrackedScheduler this$0 -> a
+    org.bukkit.plugin.Plugin $plugin -> b
+    10:10:java.lang.Object invoke(java.lang.Object) -> a
+    1087:1087:org.bukkit.scheduler.BukkitTask invoke(java.lang.Runnable):87:87 -> a
+    1087:1087:java.lang.Object invoke(java.lang.Object):10 -> a
+    void <init>(ru.endlesscode.inspector.bukkit.scheduler.TrackedScheduler,org.bukkit.plugin.Plugin) -> <init>
+ru.endlesscode.inspector.bukkit.scheduler.TrackedScheduler$runTaskAsynchronously$1 -> ru.endlesscode.inspector.bukkit.scheduler.TrackedScheduler$c:
+    ru.endlesscode.inspector.bukkit.scheduler.TrackedScheduler this$0 -> a
+    org.bukkit.plugin.Plugin $plugin -> b
+    10:10:java.lang.Object invoke(java.lang.Object) -> a
+    1101:1101:org.bukkit.scheduler.BukkitTask invoke(java.lang.Runnable):101:101 -> a
+    1101:1101:java.lang.Object invoke(java.lang.Object):10 -> a
+    void <init>(ru.endlesscode.inspector.bukkit.scheduler.TrackedScheduler,org.bukkit.plugin.Plugin) -> <init>
+ru.endlesscode.inspector.bukkit.scheduler.TrackedScheduler$runTaskLater$1 -> ru.endlesscode.inspector.bukkit.scheduler.TrackedScheduler$d:
+    ru.endlesscode.inspector.bukkit.scheduler.TrackedScheduler this$0 -> a
+    org.bukkit.plugin.Plugin $plugin -> b
+    long $delay -> c
+    10:10:java.lang.Object invoke(java.lang.Object) -> a
+    1115:1115:org.bukkit.scheduler.BukkitTask invoke(java.lang.Runnable):115:115 -> a
+    1115:1115:java.lang.Object invoke(java.lang.Object):10 -> a
+    void <init>(ru.endlesscode.inspector.bukkit.scheduler.TrackedScheduler,org.bukkit.plugin.Plugin,long) -> <init>
+ru.endlesscode.inspector.bukkit.scheduler.TrackedScheduler$runTaskLaterAsynchronously$1 -> ru.endlesscode.inspector.bukkit.scheduler.TrackedScheduler$e:
+    ru.endlesscode.inspector.bukkit.scheduler.TrackedScheduler this$0 -> a
+    org.bukkit.plugin.Plugin $plugin -> b
+    long $delay -> c
+    10:10:java.lang.Object invoke(java.lang.Object) -> a
+    1129:1129:org.bukkit.scheduler.BukkitTask invoke(java.lang.Runnable):129:129 -> a
+    1129:1129:java.lang.Object invoke(java.lang.Object):10 -> a
+    void <init>(ru.endlesscode.inspector.bukkit.scheduler.TrackedScheduler,org.bukkit.plugin.Plugin,long) -> <init>
+ru.endlesscode.inspector.bukkit.scheduler.TrackedScheduler$runTaskTimer$1 -> ru.endlesscode.inspector.bukkit.scheduler.TrackedScheduler$f:
+    ru.endlesscode.inspector.bukkit.scheduler.TrackedScheduler this$0 -> a
+    org.bukkit.plugin.Plugin $plugin -> b
+    long $delay -> c
+    long $period -> d
+    10:10:java.lang.Object invoke(java.lang.Object) -> a
+    1143:1143:org.bukkit.scheduler.BukkitTask invoke(java.lang.Runnable):143:143 -> a
+    1143:1143:java.lang.Object invoke(java.lang.Object):10 -> a
+    void <init>(ru.endlesscode.inspector.bukkit.scheduler.TrackedScheduler,org.bukkit.plugin.Plugin,long,long) -> <init>
+ru.endlesscode.inspector.bukkit.scheduler.TrackedScheduler$runTaskTimerAsynchronously$1 -> ru.endlesscode.inspector.bukkit.scheduler.TrackedScheduler$g:
+    ru.endlesscode.inspector.bukkit.scheduler.TrackedScheduler this$0 -> a
+    org.bukkit.plugin.Plugin $plugin -> b
+    long $delay -> c
+    long $period -> d
+    10:10:java.lang.Object invoke(java.lang.Object) -> a
+    1157:1157:org.bukkit.scheduler.BukkitTask invoke(java.lang.Runnable):157:157 -> a
+    1157:1157:java.lang.Object invoke(java.lang.Object):10 -> a
+    void <init>(ru.endlesscode.inspector.bukkit.scheduler.TrackedScheduler,org.bukkit.plugin.Plugin,long,long) -> <init>
+ru.endlesscode.inspector.bukkit.scheduler.TrackedScheduler$scheduleAsyncDelayedTask$1 -> ru.endlesscode.inspector.bukkit.scheduler.TrackedScheduler$h:
+    ru.endlesscode.inspector.bukkit.scheduler.TrackedScheduler this$0 -> a
+    org.bukkit.plugin.Plugin $plugin -> b
+    10:10:java.lang.Object invoke(java.lang.Object) -> a
+    1061:1061:int invoke(java.lang.Runnable):61:61 -> a
+    1061:1061:java.lang.Object invoke(java.lang.Object):10 -> a
+    void <init>(ru.endlesscode.inspector.bukkit.scheduler.TrackedScheduler,org.bukkit.plugin.Plugin) -> <init>
+ru.endlesscode.inspector.bukkit.scheduler.TrackedScheduler$scheduleAsyncDelayedTask$2 -> ru.endlesscode.inspector.bukkit.scheduler.TrackedScheduler$i:
+    ru.endlesscode.inspector.bukkit.scheduler.TrackedScheduler this$0 -> a
+    org.bukkit.plugin.Plugin $plugin -> b
+    long $delay -> c
+    10:10:java.lang.Object invoke(java.lang.Object) -> a
+    1067:1067:int invoke(java.lang.Runnable):67:67 -> a
+    1067:1067:java.lang.Object invoke(java.lang.Object):10 -> a
+    void <init>(ru.endlesscode.inspector.bukkit.scheduler.TrackedScheduler,org.bukkit.plugin.Plugin,long) -> <init>
+ru.endlesscode.inspector.bukkit.scheduler.TrackedScheduler$scheduleAsyncRepeatingTask$1 -> ru.endlesscode.inspector.bukkit.scheduler.TrackedScheduler$j:
+    ru.endlesscode.inspector.bukkit.scheduler.TrackedScheduler this$0 -> a
+    org.bukkit.plugin.Plugin $plugin -> b
+    long $delay -> c
+    long $period -> d
+    10:10:java.lang.Object invoke(java.lang.Object) -> a
+    1073:1073:int invoke(java.lang.Runnable):73:73 -> a
+    1073:1073:java.lang.Object invoke(java.lang.Object):10 -> a
+    void <init>(ru.endlesscode.inspector.bukkit.scheduler.TrackedScheduler,org.bukkit.plugin.Plugin,long,long) -> <init>
+ru.endlesscode.inspector.bukkit.scheduler.TrackedScheduler$scheduleSyncDelayedTask$1 -> ru.endlesscode.inspector.bukkit.scheduler.TrackedScheduler$k:
+    ru.endlesscode.inspector.bukkit.scheduler.TrackedScheduler this$0 -> a
+    org.bukkit.plugin.Plugin $plugin -> b
+    10:10:java.lang.Object invoke(java.lang.Object) -> a
+    1019:1019:int invoke(java.lang.Runnable):19:19 -> a
+    1019:1019:java.lang.Object invoke(java.lang.Object):10 -> a
+    void <init>(ru.endlesscode.inspector.bukkit.scheduler.TrackedScheduler,org.bukkit.plugin.Plugin) -> <init>
+ru.endlesscode.inspector.bukkit.scheduler.TrackedScheduler$scheduleSyncDelayedTask$2 -> ru.endlesscode.inspector.bukkit.scheduler.TrackedScheduler$l:
+    ru.endlesscode.inspector.bukkit.scheduler.TrackedScheduler this$0 -> a
+    org.bukkit.plugin.Plugin $plugin -> b
+    long $delay -> c
+    10:10:java.lang.Object invoke(java.lang.Object) -> a
+    1033:1033:int invoke(java.lang.Runnable):33:33 -> a
+    1033:1033:java.lang.Object invoke(java.lang.Object):10 -> a
+    void <init>(ru.endlesscode.inspector.bukkit.scheduler.TrackedScheduler,org.bukkit.plugin.Plugin,long) -> <init>
+ru.endlesscode.inspector.bukkit.scheduler.TrackedScheduler$scheduleSyncRepeatingTask$1 -> ru.endlesscode.inspector.bukkit.scheduler.TrackedScheduler$m:
+    ru.endlesscode.inspector.bukkit.scheduler.TrackedScheduler this$0 -> a
+    org.bukkit.plugin.Plugin $plugin -> b
+    long $delay -> c
+    long $period -> d
+    10:10:java.lang.Object invoke(java.lang.Object) -> a
+    1047:1047:int invoke(java.lang.Runnable):47:47 -> a
+    1047:1047:java.lang.Object invoke(java.lang.Object):10 -> a
+    void <init>(ru.endlesscode.inspector.bukkit.scheduler.TrackedScheduler,org.bukkit.plugin.Plugin,long,long) -> <init>
 ru.endlesscode.inspector.bukkit.util.EventsUtils -> ru.endlesscode.inspector.bukkit.util.EventsUtils:
     ru.endlesscode.inspector.shade.kotlin.reflect.KProperty[] $$delegatedProperties -> a
     org.bukkit.plugin.EventExecutor NULL_EXECUTOR -> b
@@ -926,6 +1148,19 @@ ru.endlesscode.inspector.bukkit.util.EventsUtils$eventsClasses$2 -> ru.endlessco
 ru.endlesscode.inspector.bukkit.util.PluginsKt -> ru.endlesscode.inspector.bukkit.util.PluginsKt:
     7:7:org.bukkit.plugin.Plugin getRealPlugin(org.bukkit.plugin.Plugin) -> getRealPlugin
     9:9:java.lang.String getPrintableForm(org.bukkit.plugin.Plugin) -> getPrintableForm
+ru.endlesscode.inspector.bukkit.util.PrintUtils -> ru.endlesscode.inspector.bukkit.util.PrintUtils:
+    ru.endlesscode.inspector.bukkit.util.PrintUtils INSTANCE -> INSTANCE
+    9:12:java.lang.String toString(java.lang.Object) -> toString
+    1017:1017:java.lang.String playerToString(org.bukkit.entity.Player):17:17 -> toString
+    1017:1017:java.lang.String toString(java.lang.Object):10 -> toString
+    1021:1023:java.lang.String packetTypeToString(com.comphenix.protocol.PacketType):21:23 -> toString
+    1021:1023:java.lang.String toString(java.lang.Object):11 -> toString
+    6:6:void <init>() -> <init>
+    6:6:void <clinit>() -> <clinit>
+ru.endlesscode.inspector.bukkit.util.StringsKt -> ru.endlesscode.inspector.bukkit.util.StringsKt:
+    5:5:java.lang.String firstUpperCase(java.lang.String) -> firstUpperCase
+    1417:1417:java.lang.String ru.endlesscode.inspector.shade.kotlin.text.StringsKt__StringsJVMKt.capitalize(java.lang.String):417:417 -> firstUpperCase
+    1417:1417:java.lang.String firstUpperCase(java.lang.String):5 -> firstUpperCase
 ru.endlesscode.inspector.shade.javassist.bytecode.AnnotationDefaultAttribute -> ru.endlesscode.inspector.shade.a.a.a:
     101:102:void <init>(ru.endlesscode.inspector.shade.javassist.bytecode.ConstPool,int,java.io.DataInputStream) -> <init>
     125:129:ru.endlesscode.inspector.shade.javassist.bytecode.annotation.MemberValue getDefaultValue() -> a
@@ -1976,20 +2211,20 @@ ru.endlesscode.inspector.shade.kotlin.collections.ArraysKt -> ru.endlesscode.ins
 ru.endlesscode.inspector.shade.kotlin.collections.ArraysKt__ArraysJVMKt -> ru.endlesscode.inspector.shade.kotlin.a.c:
     8018:8018:java.util.List ru.endlesscode.inspector.shade.kotlin.collections.CollectionsKt__CollectionsJVMKt.listOf(java.lang.Object):18:18 -> a
     8076:8076:java.util.List ru.endlesscode.inspector.shade.kotlin.collections.CollectionsKt__CollectionsKt.listOf(java.lang.Object[]):76:76 -> a
-    8106:8106:java.util.List ru.endlesscode.inspector.shade.kotlin.collections.CollectionsKt__CollectionsKt.mutableListOf(java.lang.Object[]):106:106 -> b
-    8113:8113:java.util.ArrayList ru.endlesscode.inspector.shade.kotlin.collections.CollectionsKt__CollectionsKt.arrayListOf(java.lang.Object[]):113:113 -> c
-    8162:8162:int ru.endlesscode.inspector.shade.kotlin.collections.CollectionsKt__CollectionsKt.getLastIndex(java.util.List):162:162 -> a
-    9027:9027:java.util.Map ru.endlesscode.inspector.shade.kotlin.collections.MapsKt__MapsJVMKt.mapOf(ru.endlesscode.inspector.shade.kotlin.Pair):27:27 -> a
-    9052:9052:java.util.SortedMap ru.endlesscode.inspector.shade.kotlin.collections.MapsKt__MapsJVMKt.toSortedMap(java.util.Map):52:52 -> a
-    10042:10042:java.util.Set ru.endlesscode.inspector.shade.kotlin.collections.SetsKt__SetsKt.setOf(java.lang.Object[]):42:42 -> d
-    10394:10397:java.util.Set ru.endlesscode.inspector.shade.kotlin.collections.ArraysKt___ArraysKt.toSet(java.lang.Object[]):7394:7397 -> d
-    10394:10397:java.util.Set ru.endlesscode.inspector.shade.kotlin.collections.SetsKt__SetsKt.setOf(java.lang.Object[]):42 -> d
-    11034:11034:java.util.Set ru.endlesscode.inspector.shade.kotlin.collections.SetsKt__SetsKt.emptySet():34:34 -> d
-    11034:11034:java.util.Set ru.endlesscode.inspector.shade.kotlin.collections.ArraysKt___ArraysKt.toSet(java.lang.Object[]):7395 -> d
-    11034:11034:java.util.Set ru.endlesscode.inspector.shade.kotlin.collections.SetsKt__SetsKt.setOf(java.lang.Object[]):42 -> d
-    12016:12016:java.util.Set ru.endlesscode.inspector.shade.kotlin.collections.SetsKt__SetsJVMKt.setOf(java.lang.Object):16:16 -> d
-    12016:12016:java.util.Set ru.endlesscode.inspector.shade.kotlin.collections.ArraysKt___ArraysKt.toSet(java.lang.Object[]):7396 -> d
-    12016:12016:java.util.Set ru.endlesscode.inspector.shade.kotlin.collections.SetsKt__SetsKt.setOf(java.lang.Object[]):42 -> d
+    9070:9070:java.util.List ru.endlesscode.inspector.shade.kotlin.collections.CollectionsKt__CollectionsKt.emptyList():70:70 -> a
+    9070:9070:java.util.List ru.endlesscode.inspector.shade.kotlin.collections.CollectionsKt__CollectionsKt.listOf(java.lang.Object[]):76 -> a
+    9106:9106:java.util.List ru.endlesscode.inspector.shade.kotlin.collections.CollectionsKt__CollectionsKt.mutableListOf(java.lang.Object[]):106:106 -> b
+    9113:9113:java.util.ArrayList ru.endlesscode.inspector.shade.kotlin.collections.CollectionsKt__CollectionsKt.arrayListOf(java.lang.Object[]):113:113 -> c
+    9162:9162:int ru.endlesscode.inspector.shade.kotlin.collections.CollectionsKt__CollectionsKt.getLastIndex(java.util.List):162:162 -> a
+    10027:10027:java.util.Map ru.endlesscode.inspector.shade.kotlin.collections.MapsKt__MapsJVMKt.mapOf(ru.endlesscode.inspector.shade.kotlin.Pair):27:27 -> a
+    10052:10052:java.util.SortedMap ru.endlesscode.inspector.shade.kotlin.collections.MapsKt__MapsJVMKt.toSortedMap(java.util.Map):52:52 -> a
+    11016:11016:java.util.Set ru.endlesscode.inspector.shade.kotlin.collections.SetsKt__SetsJVMKt.setOf(java.lang.Object):16:16 -> b
+    11042:11042:java.util.Set ru.endlesscode.inspector.shade.kotlin.collections.SetsKt__SetsKt.setOf(java.lang.Object[]):42:42 -> d
+    11394:11397:java.util.Set ru.endlesscode.inspector.shade.kotlin.collections.ArraysKt___ArraysKt.toSet(java.lang.Object[]):7394:7397 -> d
+    11394:11397:java.util.Set ru.endlesscode.inspector.shade.kotlin.collections.SetsKt__SetsKt.setOf(java.lang.Object[]):42 -> d
+    12034:12034:java.util.Set ru.endlesscode.inspector.shade.kotlin.collections.SetsKt__SetsKt.emptySet():34:34 -> d
+    12034:12034:java.util.Set ru.endlesscode.inspector.shade.kotlin.collections.ArraysKt___ArraysKt.toSet(java.lang.Object[]):7395 -> d
+    12034:12034:java.util.Set ru.endlesscode.inspector.shade.kotlin.collections.SetsKt__SetsKt.setOf(java.lang.Object[]):42 -> d
 ru.endlesscode.inspector.shade.kotlin.collections.ArraysKt___ArraysJvmKt -> ru.endlesscode.inspector.shade.kotlin.a.d:
     40:40:java.util.List asList(java.lang.Object[]) -> e
     14013:14013:java.util.List ru.endlesscode.inspector.shade.kotlin.collections.ArraysUtilJVM.asList(java.lang.Object[]):13:13 -> e
@@ -2038,12 +2273,20 @@ ru.endlesscode.inspector.shade.kotlin.collections.CollectionsKt___CollectionsJvm
     5070:5070:java.util.List ru.endlesscode.inspector.shade.kotlin.collections.CollectionsKt__CollectionsKt.optimizeReadOnlyList(java.util.List):196 -> c
     5070:5070:java.util.List ru.endlesscode.inspector.shade.kotlin.collections.CollectionsKt___CollectionsKt.toList(java.lang.Iterable):1086 -> c
     5102:5102:java.util.List ru.endlesscode.inspector.shade.kotlin.collections.CollectionsKt___CollectionsKt.toMutableList(java.util.Collection):1102:1102 -> a
-    5925:5928:java.util.List ru.endlesscode.inspector.shade.kotlin.collections.CollectionsKt___CollectionsKt.plus(java.util.Collection,java.lang.Object):1925:1928 -> a
-    5967:5975:java.util.List ru.endlesscode.inspector.shade.kotlin.collections.CollectionsKt___CollectionsKt.plus(java.util.Collection,java.lang.Iterable):1967:1975 -> b
-    6190:6200:java.lang.Appendable ru.endlesscode.inspector.shade.kotlin.collections.CollectionsKt___CollectionsKt.joinTo(java.lang.Iterable,java.lang.Appendable,java.lang.CharSequence,java.lang.CharSequence,java.lang.CharSequence,int,java.lang.CharSequence,ru.endlesscode.inspector.shade.kotlin.jvm.functions.Function1):2190:2200 -> a
-    6211:6211:java.lang.String ru.endlesscode.inspector.shade.kotlin.collections.CollectionsKt___CollectionsKt.joinToString$default$7f5ac898(java.lang.Iterable,java.lang.CharSequence,java.lang.CharSequence,java.lang.CharSequence,int,java.lang.CharSequence,ru.endlesscode.inspector.shade.kotlin.jvm.functions.Function1,int):2211:2211 -> a
-    6212:6212:java.lang.String ru.endlesscode.inspector.shade.kotlin.collections.CollectionsKt___CollectionsKt.joinToString(java.lang.Iterable,java.lang.CharSequence,java.lang.CharSequence,java.lang.CharSequence,int,java.lang.CharSequence,ru.endlesscode.inspector.shade.kotlin.jvm.functions.Function1):2212:2212 -> a
-    6212:6212:java.lang.String ru.endlesscode.inspector.shade.kotlin.collections.CollectionsKt___CollectionsKt.joinToString$default$7f5ac898(java.lang.Iterable,java.lang.CharSequence,java.lang.CharSequence,java.lang.CharSequence,int,java.lang.CharSequence,ru.endlesscode.inspector.shade.kotlin.jvm.functions.Function1,int):2211 -> a
+    5111:5118:java.util.Set ru.endlesscode.inspector.shade.kotlin.collections.CollectionsKt___CollectionsKt.toSet(java.lang.Iterable):1111:1118 -> d
+    6034:6034:java.util.Set ru.endlesscode.inspector.shade.kotlin.collections.SetsKt__SetsKt.emptySet():34:34 -> d
+    6034:6034:java.util.Set ru.endlesscode.inspector.shade.kotlin.collections.CollectionsKt___CollectionsKt.toSet(java.lang.Iterable):1113 -> d
+    6089:6093:java.util.Set ru.endlesscode.inspector.shade.kotlin.collections.SetsKt__SetsKt.optimizeReadOnlySet(java.util.Set):89:93 -> d
+    6089:6093:java.util.Set ru.endlesscode.inspector.shade.kotlin.collections.CollectionsKt___CollectionsKt.toSet(java.lang.Iterable):1118 -> d
+    7034:7034:java.util.Set ru.endlesscode.inspector.shade.kotlin.collections.SetsKt__SetsKt.emptySet():34:34 -> d
+    7034:7034:java.util.Set ru.endlesscode.inspector.shade.kotlin.collections.SetsKt__SetsKt.optimizeReadOnlySet(java.util.Set):90 -> d
+    7034:7034:java.util.Set ru.endlesscode.inspector.shade.kotlin.collections.CollectionsKt___CollectionsKt.toSet(java.lang.Iterable):1118 -> d
+    7925:7928:java.util.List ru.endlesscode.inspector.shade.kotlin.collections.CollectionsKt___CollectionsKt.plus(java.util.Collection,java.lang.Object):1925:1928 -> a
+    7967:7975:java.util.List ru.endlesscode.inspector.shade.kotlin.collections.CollectionsKt___CollectionsKt.plus(java.util.Collection,java.lang.Iterable):1967:1975 -> b
+    8190:8200:java.lang.Appendable ru.endlesscode.inspector.shade.kotlin.collections.CollectionsKt___CollectionsKt.joinTo(java.lang.Iterable,java.lang.Appendable,java.lang.CharSequence,java.lang.CharSequence,java.lang.CharSequence,int,java.lang.CharSequence,ru.endlesscode.inspector.shade.kotlin.jvm.functions.Function1):2190:2200 -> a
+    8211:8211:java.lang.String ru.endlesscode.inspector.shade.kotlin.collections.CollectionsKt___CollectionsKt.joinToString$default$7f5ac898(java.lang.Iterable,java.lang.CharSequence,java.lang.CharSequence,java.lang.CharSequence,int,java.lang.CharSequence,ru.endlesscode.inspector.shade.kotlin.jvm.functions.Function1,int):2211:2211 -> a
+    8212:8212:java.lang.String ru.endlesscode.inspector.shade.kotlin.collections.CollectionsKt___CollectionsKt.joinToString(java.lang.Iterable,java.lang.CharSequence,java.lang.CharSequence,java.lang.CharSequence,int,java.lang.CharSequence,ru.endlesscode.inspector.shade.kotlin.jvm.functions.Function1):2212:2212 -> a
+    8212:8212:java.lang.String ru.endlesscode.inspector.shade.kotlin.collections.CollectionsKt___CollectionsKt.joinToString$default$7f5ac898(java.lang.Iterable,java.lang.CharSequence,java.lang.CharSequence,java.lang.CharSequence,int,java.lang.CharSequence,ru.endlesscode.inspector.shade.kotlin.jvm.functions.Function1,int):2211 -> a
 ru.endlesscode.inspector.shade.kotlin.collections.CollectionsKt___CollectionsKt$asSequence$$inlined$Sequence$1 -> ru.endlesscode.inspector.shade.kotlin.a.j:
     java.lang.Iterable receiver$0$inlined -> a
     21:21:void <init>(java.lang.Iterable) -> <init>
@@ -4215,8 +4458,8 @@ ru.endlesscode.inspector.util.ExceptionsKt -> ru.endlesscode.inspector.util.Exce
     15:15:java.lang.String getFocusedRootStackTrace(java.lang.Throwable,java.lang.String) -> getFocusedRootStackTrace
     19:19:java.lang.Throwable getRootCause(java.lang.Throwable) -> getRootCause
     22:22:boolean similarTo(java.lang.Throwable,java.lang.Throwable) -> similarTo
-    26:50:java.lang.String getFocusedStackTrace(java.lang.Throwable,java.lang.String) -> getFocusedStackTrace
-    1053:1053:void appendLine$default$2bf0ef75(java.lang.StringBuilder,java.lang.String,java.lang.String,int):53:53 -> getFocusedStackTrace
-    1053:1053:java.lang.String getFocusedStackTrace(java.lang.Throwable,java.lang.String):29 -> getFocusedStackTrace
-    54:57:void appendLine(java.lang.StringBuilder,java.lang.String,java.lang.String) -> a
-    60:65:void appendSkipCount(java.lang.StringBuilder,int) -> a
+    26:54:java.lang.String getFocusedStackTrace(java.lang.Throwable,java.lang.String) -> getFocusedStackTrace
+    1057:1057:void appendLine$default$2bf0ef75(java.lang.StringBuilder,java.lang.String,java.lang.String,int):57:57 -> getFocusedStackTrace
+    1057:1057:java.lang.String getFocusedStackTrace(java.lang.Throwable,java.lang.String):29 -> getFocusedStackTrace
+    58:61:void appendLine(java.lang.StringBuilder,java.lang.String,java.lang.String) -> a
+    64:69:void appendSkipCount(java.lang.StringBuilder,int) -> a
