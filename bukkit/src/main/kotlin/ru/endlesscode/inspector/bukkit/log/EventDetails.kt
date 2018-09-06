@@ -1,18 +1,18 @@
-package ru.endlesscode.inspector.bukkit.event
+package ru.endlesscode.inspector.bukkit.log
 
 import org.bukkit.event.Event
 import ru.endlesscode.inspector.bukkit.util.EventsUtils
 import java.lang.reflect.Field
 import java.lang.reflect.Modifier
 
-object EventDetails {
+internal object EventDetails {
 
     private val detailsGetters: Map<String, DetailsGetter<out Event>> = EventsUtils.eventsClasses.map { eventClass ->
         eventClass.simpleName to DetailsGetter(eventClass)
     }.toMap()
 
     /**
-     * Returns details for given event.
+     * Returns details for the given [event].
      */
     fun <E : Event> forEvent(event: E, eventClass: Class<in E> = event.javaClass): Pair<String, List<String>> {
         if (eventClass == Event::class.java) return "Event" to mutableListOf()

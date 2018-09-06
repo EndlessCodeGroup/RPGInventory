@@ -12,6 +12,7 @@ class InspectorConfig(
             DataType.PLUGINS to true
     )
     internal var isEventsLoggerEnabled: Boolean = false
+    internal var isPacketsLoggerEnabled: Boolean = false
 
     fun shouldSendData(dataType: DataType) = sendData.getValue(dataType)
 }

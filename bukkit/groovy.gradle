@@ -16,8 +16,16 @@ bukkit {
     }
 }
 
+repositories {
+    maven {
+        name = "dmulloy2-repo"
+        url = "http://repo.dmulloy2.net/nexus/repository/public/"
+    }
+}
+
 dependencies {
     compileOnly(bukkit())
+    compileOnly(bukkitDeps.protocolLibApi)
     implementation(bukkitDeps.reflections) {
         // Guava already in Bukkit
         exclude(module: "guava")

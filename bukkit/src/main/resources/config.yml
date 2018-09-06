@@ -16,3 +16,23 @@ EventsLogger:
   - -BlockEvent
   - -VehicleEvent
   - -EntityAirChangeEvent
+
+PacketsLogger:
+  enabled: false
+  log:
+  - Handshake
+  - Status
+  - Login
+  - Play
+  - Play.Client.POSITION:20
+  - -Play.Client.LOOK
+  - -Play.Server.MAP_CHUNK
+  - -Play.Server.UPDATE_TIME
+  - -Play.Server.ENTITY_HEAD_ROTATION
+  - -Play.Server.ENTITY_VELOCITY
+  - -Play.Server.ENTITY_TELEPORT
+  - -Play.Server.ENTITY_METADATA
+  - -Play.Server.ENTITY_LOOK
+  - -Play.Server.ENTITY_STATUS
+  - -Play.Server.REL_ENTITY_MOVE
+  - -Play.Server.REL_ENTITY_MOVE_LOOK
