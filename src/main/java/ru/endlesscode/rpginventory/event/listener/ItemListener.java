@@ -63,6 +63,10 @@ import java.util.List;
 public class ItemListener implements Listener {
     @EventHandler(priority = EventPriority.LOW)
     public void onDamage(@NotNull EntityDamageByEntityEvent event) {
+        if (event.getEntity() == null) {
+            return;
+        }
+
         Player damager;
 
         // Defensive stats
@@ -78,6 +82,10 @@ public class ItemListener implements Listener {
                 event.setDamage(EntityDamageEvent.DamageModifier.ARMOR, armor);
             }
         } catch (UnsupportedOperationException ignored) {
+        }
+
+        if (event.getDamager() == null) {
+            return;
         }
 
         // Attack stats
@@ -173,21 +181,24 @@ public class ItemListener implements Listener {
 
     @EventHandler
     public void onPlayerFall(@NotNull EntityDamageEvent event) {
-        if (event.getEntity().getType() == EntityType.PLAYER
-                && event.getCause() == EntityDamageEvent.DamageCause.FALL) {
-            Player player = (Player) event.getEntity();
+        if (event.getEntity() == null
+                || event.getEntity().getType() != EntityType.PLAYER
+                || event.getCause() != EntityDamageEvent.DamageCause.FALL) {
+            return;
+        }
 
-            if (!InventoryManager.playerIsLoaded(player)) {
-                return;
-            }
+        Player player = (Player) event.getEntity();
 
-            Modifier jumpModifier = ItemManager.getModifier(player, ItemStat.StatType.JUMP);
-            double height = (1.5D + jumpModifier.getBonus()) * jumpModifier.getMultiplier() * 1.5;
-            event.setDamage(event.getDamage() - height);
+        if (!InventoryManager.playerIsLoaded(player)) {
+            return;
+        }
 
-            if (event.getDamage() <= 0.0D) {
-                event.setCancelled(true);
-            }
+        Modifier jumpModifier = ItemManager.getModifier(player, ItemStat.StatType.JUMP);
+        double height = (1.5D + jumpModifier.getBonus()) * jumpModifier.getMultiplier() * 1.5;
+        event.setDamage(event.getDamage() - height);
+
+        if (event.getDamage() <= 0.0D) {
+            event.setCancelled(true);
         }
     }
 

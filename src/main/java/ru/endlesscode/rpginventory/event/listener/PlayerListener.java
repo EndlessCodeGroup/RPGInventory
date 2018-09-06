@@ -54,7 +54,8 @@ public class PlayerListener implements Listener {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
     public void onDamageWhenPlayerNotLoaded(@NotNull EntityDamageEvent event) {
-        if (event.getEntityType() != EntityType.PLAYER) {
+        if (event.getEntity() == null
+                || event.getEntityType() != EntityType.PLAYER) {
             return;
         }
 

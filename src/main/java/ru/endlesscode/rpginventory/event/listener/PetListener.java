@@ -59,7 +59,8 @@ public class PetListener implements Listener {
 
     @EventHandler(ignoreCancelled = true)
     public void onPlayerInteractEntity(PlayerInteractEntityEvent event) {
-        if (event.getRightClicked() == null || !(event.getRightClicked() instanceof LivingEntity)) {
+        if (event.getRightClicked() == null
+                || !(event.getRightClicked() instanceof LivingEntity)) {
             return;
         }
 
@@ -142,13 +143,10 @@ public class PetListener implements Listener {
             return;
         }
 
-        //Ugly trick to avoid infinite pet spawning when player teleports from non-solid/non-cuboid block
+        // Ugly trick to avoid infinite pet spawning when player teleports from non-solid/non-cuboid block
         final Location from = event.getFrom();
         final Location to = event.getTo();
-        if (from.getBlockX() != to.getBlockX() || from.getBlockZ() != to.getBlockZ()) {
-            return;
-        }
-        if (from.distance(to) < 0.775D) {
+        if (from.getBlockX() != to.getBlockX() || from.getBlockZ() != to.getBlockZ() || from.distance(to) < 0.775D) {
             return;
         }
 
@@ -156,7 +154,7 @@ public class PetListener implements Listener {
         final ItemStack item = InventoryManager.get(player).getInventory().getItem(PetManager.getPetSlotId());
         if (from.distance(to) > maxDistance && item != null) {
             PetManager.spawnPet(player, item);
-        } else if (LocationUtils.isSafeLocation(player.getLocation())){
+        } else if (LocationUtils.isSafeLocation(player.getLocation())) {
             PetManager.teleportPet(player, to);
         }
 
@@ -167,7 +165,7 @@ public class PetListener implements Listener {
         Player player = event.getPlayer();
         ItemStack itemInHand = player.getEquipment().getItemInMainHand();
 
-        if (!InventoryManager.playerIsLoaded(player)) {
+        if (event.getRightClicked() == null || !InventoryManager.playerIsLoaded(player)) {
             return;
         }
 
@@ -193,14 +191,14 @@ public class PetListener implements Listener {
 
     @EventHandler
     public void onPetDeath(@NotNull EntityDeathEvent event) {
-        if (PetManager.getPetOwner(event.getEntity()) == null) {
+        if (event.getEntity() == null || PetManager.getPetOwner(event.getEntity()) == null) {
             return;
         }
 
         LivingEntity petEntity = event.getEntity();
         final Player player = Bukkit.getPlayer(PetManager.getPetOwner(petEntity));
 
-        if (player == null || !InventoryManager.playerIsLoaded(player)) {
+        if (!InventoryManager.playerIsLoaded(player)) {
             return;
         }
 
@@ -226,8 +224,11 @@ public class PetListener implements Listener {
 
     @EventHandler
     public void onTarget(@NotNull EntityTargetLivingEntityEvent event) {
-        if (!(event.getEntity() instanceof Tameable) || !(event.getEntity() instanceof LivingEntity)
-                || event.getTarget() == null || !InventoryManager.isAllowedWorld(event.getTarget().getWorld())) {
+        if (event.getEntity() == null
+                || !(event.getEntity() instanceof Tameable)
+                || !(event.getEntity() instanceof LivingEntity)
+                || event.getTarget() == null
+                || !InventoryManager.isAllowedWorld(event.getTarget().getWorld())) {
             return;
         }
 
@@ -256,7 +257,9 @@ public class PetListener implements Listener {
 
     @EventHandler(ignoreCancelled = true)
     public void onAttack(@NotNull EntityDamageByEntityEvent event) {
-        if (!InventoryManager.isAllowedWorld(event.getEntity().getWorld())) {
+        if (event.getEntity() == null
+                || event.getDamager() == null
+                || !InventoryManager.isAllowedWorld(event.getEntity().getWorld())) {
             return;
         }
 
@@ -331,7 +334,9 @@ public class PetListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onWorldChanged(@NotNull EntityPortalEnterEvent event) {
-        if (!(event.getEntity() instanceof Tameable) || !(event.getEntity() instanceof LivingEntity)) {
+        if (event.getEntity() == null
+                || !(event.getEntity() instanceof Tameable)
+                || !(event.getEntity() instanceof LivingEntity)) {
             return;
         }
 
