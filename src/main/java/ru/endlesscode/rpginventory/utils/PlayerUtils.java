@@ -29,7 +29,7 @@ import me.leothepro555.skills.Skills;
 import me.robin.battlelevels.api.BattleLevelsAPI;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-import ru.endlesscode.inspector.bukkit.plugin.TrackedBukkitRunnable;
+import ru.endlesscode.inspector.bukkit.scheduler.TrackedBukkitRunnable;
 import ru.endlesscode.rpginventory.RPGInventory;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
 import ru.endlesscode.rpginventory.inventory.PlayerWrapper;

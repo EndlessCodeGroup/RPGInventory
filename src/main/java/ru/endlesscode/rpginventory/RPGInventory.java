@@ -29,12 +29,12 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import ru.endlesscode.inspector.bukkit.command.TrackedCommandExecutor;
 import ru.endlesscode.inspector.bukkit.plugin.PluginLifecycle;
-import ru.endlesscode.inspector.bukkit.plugin.TrackedBukkitRunnable;
+import ru.endlesscode.inspector.bukkit.scheduler.TrackedBukkitRunnable;
 import ru.endlesscode.rpginventory.event.listener.ArmorEquipListener;
 import ru.endlesscode.rpginventory.event.listener.ElytraListener;
 import ru.endlesscode.rpginventory.event.listener.HandSwapListener;
@@ -184,7 +184,9 @@ public class RPGInventory extends PluginLifecycle {
         this.startMetrics();
 
         // Enable commands
-        this.getCommand("rpginventory").setExecutor(new RPGInventoryCommandExecutor());
+        this.getCommand("rpginventory").setExecutor(
+                new TrackedCommandExecutor(new RPGInventoryCommandExecutor(), getReporter())
+        );
 
         this.checkUpdates(null);
 
