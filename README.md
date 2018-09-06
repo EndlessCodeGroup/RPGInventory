@@ -43,7 +43,7 @@ EventsLogger:
   - -VehicleEvent                       
   - -EntityAirChangeEvent               # Don't log the event
 
-# Events logger it is the tool that helps developers to debug events
+# Packets logger it is the tool that helps developers to debug packets
 PacketsLogger:
   enabled: false
   # What we need to log
