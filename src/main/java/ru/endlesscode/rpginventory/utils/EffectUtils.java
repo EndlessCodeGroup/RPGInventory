@@ -27,9 +27,10 @@ import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
-import org.jetbrains.annotations.*;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import ru.endlesscode.inspector.bukkit.scheduler.TrackedBukkitRunnable;
 import ru.endlesscode.rpginventory.RPGInventory;
 
 import java.lang.reflect.InvocationTargetException;
@@ -114,7 +115,7 @@ public class EffectUtils {
             throw new IllegalStateException("Unable to send packet", e);
         }
 
-        new BukkitRunnable() {
+        new TrackedBukkitRunnable() {
             int line = 0;
 
             @Override

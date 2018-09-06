@@ -29,11 +29,12 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import ru.endlesscode.inspector.bukkit.command.TrackedCommandExecutor;
 import ru.endlesscode.inspector.bukkit.plugin.PluginLifecycle;
+import ru.endlesscode.inspector.bukkit.scheduler.TrackedBukkitRunnable;
 import ru.endlesscode.rpginventory.event.listener.ArmorEquipListener;
 import ru.endlesscode.rpginventory.event.listener.ElytraListener;
 import ru.endlesscode.rpginventory.event.listener.HandSwapListener;
@@ -61,6 +62,7 @@ import ru.endlesscode.rpginventory.utils.VersionUtils;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.logging.Logger;
 
 public class RPGInventory extends PluginLifecycle {
@@ -182,12 +184,14 @@ public class RPGInventory extends PluginLifecycle {
         this.startMetrics();
 
         // Enable commands
-        this.getCommand("rpginventory").setExecutor(new RPGInventoryCommandExecutor());
+        this.getCommand("rpginventory").setExecutor(
+                new TrackedCommandExecutor(new RPGInventoryCommandExecutor(), getReporter())
+        );
 
         this.checkUpdates(null);
 
         // Do this after all plugins loaded
-        new BukkitRunnable() {
+        new TrackedBukkitRunnable() {
             @Override
             public void run() {
                 checkThatSystemsLoaded();
@@ -206,7 +210,7 @@ public class RPGInventory extends PluginLifecycle {
 
         // Check version compatibility
         if (!VersionHandler.checkVersion()) {
-            this.getLogger().warning("[RPGInventory] This version of RPG Inventory is not tested with \"" + Bukkit.getBukkitVersion() + "\"!");
+            this.getLogger().warning("This version of RPG Inventory is not tested with \"" + Bukkit.getBukkitVersion() + "\"!");
         }
 
         // Check resource-pack settings
@@ -250,10 +254,32 @@ public class RPGInventory extends PluginLifecycle {
             this.getLogger().warning("Economy not found!");
         }
 
-        levelSystem = PlayerUtils.LevelSystem.valueOf(Config.getConfig().getString("level-system"));
-        classSystem = PlayerUtils.ClassSystem.valueOf(Config.getConfig().getString("class-system"));
+        initLevelSystem();
+        initClassSystem();
 
         return InventoryManager.init(this) && SlotManager.init();
+    }
+
+    private void initLevelSystem() {
+        String levelSystemName = Config.getConfig().getString("level-system");
+        try {
+            levelSystem = PlayerUtils.LevelSystem.valueOf(levelSystemName);
+        } catch (IllegalArgumentException e) {
+            this.getLogger().warning("Unknown level system: " + levelSystemName + ". Used EXP by default.");
+            this.getLogger().warning("Available level systems: " + Arrays.toString(PlayerUtils.LevelSystem.values()));
+            levelSystem = PlayerUtils.LevelSystem.EXP;
+        }
+    }
+
+    private void initClassSystem() {
+        String classSystemName = Config.getConfig().getString("class-system");
+        try {
+            classSystem = PlayerUtils.ClassSystem.valueOf(classSystemName);
+        } catch (IllegalArgumentException e) {
+            this.getLogger().warning("Unknown class system: " + classSystemName + ". Used PERMISSIONS by default.");
+            this.getLogger().warning("Available class systems: " + Arrays.toString(PlayerUtils.LevelSystem.values()));
+            classSystem = PlayerUtils.ClassSystem.PERMISSIONS;
+        }
     }
 
     private void checkThatSystemsLoaded() {
@@ -338,7 +364,7 @@ public class RPGInventory extends PluginLifecycle {
             return;
         }
 
-        new BukkitRunnable() {
+        new TrackedBukkitRunnable() {
             @Override
             public void run() {
                 Updater updater = new Updater(RPGInventory.instance, Updater.UpdateType.NO_DOWNLOAD);

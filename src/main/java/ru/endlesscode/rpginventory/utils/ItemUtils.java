@@ -21,16 +21,11 @@ package ru.endlesscode.rpginventory.utils;
 import com.comphenix.protocol.utility.MinecraftReflection;
 import com.comphenix.protocol.wrappers.nbt.NbtCompound;
 import com.comphenix.protocol.wrappers.nbt.NbtFactory;
-
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.Arrays;
-import java.util.List;
-
 import ru.endlesscode.rpginventory.RPGInventory;
 import ru.endlesscode.rpginventory.inventory.backpack.BackpackManager;
 import ru.endlesscode.rpginventory.inventory.backpack.BackpackType;
@@ -39,6 +34,9 @@ import ru.endlesscode.rpginventory.item.ItemManager;
 import ru.endlesscode.rpginventory.pet.PetFood;
 import ru.endlesscode.rpginventory.pet.PetManager;
 import ru.endlesscode.rpginventory.pet.PetType;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by OsipXD on 28.08.2015
@@ -63,7 +61,12 @@ public class ItemUtils {
             Material.BOW, Material.FLINT_AND_STEEL, Material.SHEARS, Material.FISHING_ROD
     );
 
+    @Contract("null, _, _ -> null")
     public static ItemStack setTag(ItemStack item, String tag, @NotNull String value) {
+        if (isEmpty(item)) {
+            return item;
+        }
+
         item = toBukkitItemStack(item);
         NbtCompound nbt = NbtFactory.asCompound(NbtFactory.fromItemTag(item));
 
@@ -87,6 +90,10 @@ public class ItemUtils {
     @NotNull
     @SuppressWarnings("WeakerAccess")
     public static String getTag(@NotNull ItemStack item, @NotNull String tag, @NotNull String defaultValue) {
+        if (isEmpty(item)) {
+            return "";
+        }
+
         item = toBukkitItemStack(item);
         NbtCompound nbt = NbtFactory.asCompound(NbtFactory.fromItemTag(item));
 
@@ -98,7 +105,7 @@ public class ItemUtils {
     }
 
     public static boolean hasTag(@Nullable ItemStack originalItem, String tag) {
-        if (originalItem == null || !originalItem.hasItemMeta()) {
+        if (isEmpty(originalItem) || !originalItem.hasItemMeta()) {
             return false;
         }
 

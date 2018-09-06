@@ -18,21 +18,41 @@
 
 package ru.endlesscode.rpginventory.event.listener;
 
-import org.bukkit.*;
-import org.bukkit.entity.*;
+import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.Sound;
+import org.bukkit.entity.AnimalTamer;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Horse;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
+import org.bukkit.entity.Tameable;
+import org.bukkit.entity.Wolf;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.entity.*;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.entity.EntityPortalEnterEvent;
+import org.bukkit.event.entity.EntityTargetLivingEntityEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
-import org.bukkit.event.player.*;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.vehicle.VehicleEnterEvent;
 import org.bukkit.inventory.HorseInventory;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
+import ru.endlesscode.inspector.bukkit.scheduler.TrackedBukkitRunnable;
 import ru.endlesscode.rpginventory.RPGInventory;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
 import ru.endlesscode.rpginventory.inventory.PlayerWrapper;
@@ -59,7 +79,8 @@ public class PetListener implements Listener {
 
     @EventHandler(ignoreCancelled = true)
     public void onPlayerInteractEntity(PlayerInteractEntityEvent event) {
-        if (event.getRightClicked() == null || !(event.getRightClicked() instanceof LivingEntity)) {
+        if (event.getRightClicked() == null
+                || !(event.getRightClicked() instanceof LivingEntity)) {
             return;
         }
 
@@ -142,13 +163,10 @@ public class PetListener implements Listener {
             return;
         }
 
-        //Ugly trick to avoid infinite pet spawning when player teleports from non-solid/non-cuboid block
+        // Ugly trick to avoid infinite pet spawning when player teleports from non-solid/non-cuboid block
         final Location from = event.getFrom();
         final Location to = event.getTo();
-        if (from.getBlockX() != to.getBlockX() || from.getBlockZ() != to.getBlockZ()) {
-            return;
-        }
-        if (from.distance(to) < 0.775D) {
+        if (from.getBlockX() != to.getBlockX() || from.getBlockZ() != to.getBlockZ() || from.distance(to) < 0.775D) {
             return;
         }
 
@@ -156,7 +174,7 @@ public class PetListener implements Listener {
         final ItemStack item = InventoryManager.get(player).getInventory().getItem(PetManager.getPetSlotId());
         if (from.distance(to) > maxDistance && item != null) {
             PetManager.spawnPet(player, item);
-        } else if (LocationUtils.isSafeLocation(player.getLocation())){
+        } else if (LocationUtils.isSafeLocation(player.getLocation())) {
             PetManager.teleportPet(player, to);
         }
 
@@ -167,7 +185,7 @@ public class PetListener implements Listener {
         Player player = event.getPlayer();
         ItemStack itemInHand = player.getEquipment().getItemInMainHand();
 
-        if (!InventoryManager.playerIsLoaded(player)) {
+        if (event.getRightClicked() == null || !InventoryManager.playerIsLoaded(player)) {
             return;
         }
 
@@ -193,14 +211,14 @@ public class PetListener implements Listener {
 
     @EventHandler
     public void onPetDeath(@NotNull EntityDeathEvent event) {
-        if (PetManager.getPetOwner(event.getEntity()) == null) {
+        if (event.getEntity() == null || PetManager.getPetOwner(event.getEntity()) == null) {
             return;
         }
 
         LivingEntity petEntity = event.getEntity();
         final Player player = Bukkit.getPlayer(PetManager.getPetOwner(petEntity));
 
-        if (player == null || !InventoryManager.playerIsLoaded(player)) {
+        if (!InventoryManager.playerIsLoaded(player)) {
             return;
         }
 
@@ -226,8 +244,11 @@ public class PetListener implements Listener {
 
     @EventHandler
     public void onTarget(@NotNull EntityTargetLivingEntityEvent event) {
-        if (!(event.getEntity() instanceof Tameable) || !(event.getEntity() instanceof LivingEntity)
-                || event.getTarget() == null || !InventoryManager.isAllowedWorld(event.getTarget().getWorld())) {
+        if (event.getEntity() == null
+                || !(event.getEntity() instanceof Tameable)
+                || !(event.getEntity() instanceof LivingEntity)
+                || event.getTarget() == null
+                || !InventoryManager.isAllowedWorld(event.getTarget().getWorld())) {
             return;
         }
 
@@ -256,7 +277,9 @@ public class PetListener implements Listener {
 
     @EventHandler(ignoreCancelled = true)
     public void onAttack(@NotNull EntityDamageByEntityEvent event) {
-        if (!InventoryManager.isAllowedWorld(event.getEntity().getWorld())) {
+        if (event.getEntity() == null
+                || event.getDamager() == null
+                || !InventoryManager.isAllowedWorld(event.getEntity().getWorld())) {
             return;
         }
 
@@ -280,9 +303,14 @@ public class PetListener implements Listener {
             final Tameable petEntity = (Tameable) event.getDamager();
             final AnimalTamer petOwner = petEntity.getOwner();
             if (petOwner != null) {
-                PetType petType = PetManager.getPetFromEntity((LivingEntity) petEntity, (Player) petOwner);
+                OfflinePlayer petOwnerPlayer = (OfflinePlayer) petOwner;
+                PetType petType = PetManager.getPetFromEntity((LivingEntity) petEntity, petOwnerPlayer);
                 if (petType != null) {
-                    event.setDamage(petType.getDamage());
+                    if (petOwnerPlayer.isOnline()) {
+                        event.setDamage(petType.getDamage());
+                    } else {
+                        PetManager.despawnPet(petEntity);
+                    }
                 }
             }
             //or as damage reciever
@@ -326,7 +354,9 @@ public class PetListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onWorldChanged(@NotNull EntityPortalEnterEvent event) {
-        if (!(event.getEntity() instanceof Tameable) || !(event.getEntity() instanceof LivingEntity)) {
+        if (event.getEntity() == null
+                || !(event.getEntity() instanceof Tameable)
+                || !(event.getEntity() instanceof LivingEntity)) {
             return;
         }
 
@@ -353,7 +383,7 @@ public class PetListener implements Listener {
             playerWrapper.openInventory();
             event.setCancelled(true);
 
-            new BukkitRunnable() {
+            new TrackedBukkitRunnable() {
                 @Override
                 public void run() {
                     HorseInventory horseInv = ((Horse) playerWrapper.getPet()).getInventory();

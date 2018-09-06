@@ -33,13 +33,19 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.inventory.InventoryType;
-import org.bukkit.event.player.*;
+import org.bukkit.event.player.PlayerDropItemEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerItemBreakEvent;
+import org.bukkit.event.player.PlayerItemHeldEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerPickupItemEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
-import org.jetbrains.annotations.*;
+import org.jetbrains.annotations.NotNull;
+import ru.endlesscode.inspector.bukkit.scheduler.TrackedBukkitRunnable;
 import ru.endlesscode.rpginventory.RPGInventory;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
 import ru.endlesscode.rpginventory.inventory.slot.Slot;
@@ -63,6 +69,10 @@ import java.util.List;
 public class ItemListener implements Listener {
     @EventHandler(priority = EventPriority.LOW)
     public void onDamage(@NotNull EntityDamageByEntityEvent event) {
+        if (event.getEntity() == null) {
+            return;
+        }
+
         Player damager;
 
         // Defensive stats
@@ -78,6 +88,10 @@ public class ItemListener implements Listener {
                 event.setDamage(EntityDamageEvent.DamageModifier.ARMOR, armor);
             }
         } catch (UnsupportedOperationException ignored) {
+        }
+
+        if (event.getDamager() == null) {
+            return;
         }
 
         // Attack stats
@@ -173,21 +187,24 @@ public class ItemListener implements Listener {
 
     @EventHandler
     public void onPlayerFall(@NotNull EntityDamageEvent event) {
-        if (event.getEntity().getType() == EntityType.PLAYER
-                && event.getCause() == EntityDamageEvent.DamageCause.FALL) {
-            Player player = (Player) event.getEntity();
+        if (event.getEntity() == null
+                || event.getEntity().getType() != EntityType.PLAYER
+                || event.getCause() != EntityDamageEvent.DamageCause.FALL) {
+            return;
+        }
 
-            if (!InventoryManager.playerIsLoaded(player)) {
-                return;
-            }
+        Player player = (Player) event.getEntity();
 
-            Modifier jumpModifier = ItemManager.getModifier(player, ItemStat.StatType.JUMP);
-            double height = (1.5D + jumpModifier.getBonus()) * jumpModifier.getMultiplier() * 1.5;
-            event.setDamage(event.getDamage() - height);
+        if (!InventoryManager.playerIsLoaded(player)) {
+            return;
+        }
 
-            if (event.getDamage() <= 0.0D) {
-                event.setCancelled(true);
-            }
+        Modifier jumpModifier = ItemManager.getModifier(player, ItemStat.StatType.JUMP);
+        double height = (1.5D + jumpModifier.getBonus()) * jumpModifier.getMultiplier() * 1.5;
+        event.setDamage(event.getDamage() - height);
+
+        if (event.getDamage() <= 0.0D) {
+            event.setCancelled(true);
         }
     }
 
@@ -257,7 +274,7 @@ public class ItemListener implements Listener {
             return;
         }
 
-        new BukkitRunnable() {
+        new TrackedBukkitRunnable() {
             @Override
             public void run() {
                 InventoryView inventoryView = event.getView();
@@ -282,7 +299,7 @@ public class ItemListener implements Listener {
         final ItemStack newItem = player.getInventory().getItem(event.getNewSlot());
         final ItemStack oldItem = player.getInventory().getItem(event.getPreviousSlot());
 
-        new BukkitRunnable() {
+        new TrackedBukkitRunnable() {
             @Override
             public void run() {
                 if (CustomItem.isCustomItem(oldItem) || CustomItem.isCustomItem(newItem)) {
