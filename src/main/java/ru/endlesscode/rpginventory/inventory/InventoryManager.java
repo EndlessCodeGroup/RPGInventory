@@ -30,11 +30,11 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ru.endlesscode.inspector.api.report.Reporter;
+import ru.endlesscode.inspector.bukkit.scheduler.TrackedBukkitRunnable;
 import ru.endlesscode.rpginventory.RPGInventory;
 import ru.endlesscode.rpginventory.api.InventoryAPI;
 import ru.endlesscode.rpginventory.event.PetEquipEvent;
@@ -48,7 +48,11 @@ import ru.endlesscode.rpginventory.item.ItemManager;
 import ru.endlesscode.rpginventory.misc.Config;
 import ru.endlesscode.rpginventory.pet.PetManager;
 import ru.endlesscode.rpginventory.pet.PetType;
-import ru.endlesscode.rpginventory.utils.*;
+import ru.endlesscode.rpginventory.utils.EffectUtils;
+import ru.endlesscode.rpginventory.utils.InventoryUtils;
+import ru.endlesscode.rpginventory.utils.ItemUtils;
+import ru.endlesscode.rpginventory.utils.PlayerUtils;
+import ru.endlesscode.rpginventory.utils.StringUtils;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -464,7 +468,7 @@ public class InventoryManager {
     }
 
     private static void sendResourcePack(@NotNull final Player player) {
-        new BukkitRunnable() {
+        new TrackedBukkitRunnable() {
             @Override
             public void run() {
                 player.setResourcePack(Config.getConfig().getString("resource-pack.url"));

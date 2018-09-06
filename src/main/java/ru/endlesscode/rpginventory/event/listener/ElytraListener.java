@@ -66,7 +66,7 @@ public class ElytraListener implements Listener {
 
     @EventHandler(ignoreCancelled = true)
     public void onEntityToggleGlide(@NotNull EntityToggleGlideEvent event) {
-        if (event.getEntityType() != EntityType.PLAYER) {
+        if (event.getEntity() == null || event.getEntityType() != EntityType.PLAYER) {
             return;
         }
 
