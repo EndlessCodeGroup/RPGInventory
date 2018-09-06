@@ -28,8 +28,8 @@ import me.baks.rpl.api.API;
 import me.leothepro555.skills.Skills;
 import me.robin.battlelevels.api.BattleLevelsAPI;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
-import org.jetbrains.annotations.*;
+import org.jetbrains.annotations.NotNull;
+import ru.endlesscode.inspector.bukkit.plugin.TrackedBukkitRunnable;
 import ru.endlesscode.rpginventory.RPGInventory;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
 import ru.endlesscode.rpginventory.inventory.PlayerWrapper;
@@ -117,7 +117,7 @@ public class PlayerUtils {
     }
 
     public static void updateInventory(@NotNull final Player player) {
-        new BukkitRunnable() {
+        new TrackedBukkitRunnable() {
             @Override
             public void run() {
                 player.updateInventory();

@@ -40,8 +40,10 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.scheduler.BukkitRunnable;
-import org.jetbrains.annotations.*;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import ru.endlesscode.inspector.bukkit.plugin.TrackedBukkitRunnable;
 import ru.endlesscode.rpginventory.RPGInventory;
 import ru.endlesscode.rpginventory.event.PetEquipEvent;
 import ru.endlesscode.rpginventory.event.PetUnequipEvent;
@@ -53,7 +55,8 @@ import ru.endlesscode.rpginventory.inventory.slot.SlotManager;
 import ru.endlesscode.rpginventory.utils.ItemUtils;
 import ru.endlesscode.rpginventory.utils.PlayerUtils;
 
-import java.util.*;
+import java.util.Objects;
+import java.util.UUID;
 
 /**
  * Created by Keyle on 21.05.2016
@@ -159,7 +162,7 @@ public class MyPetManager implements Listener {
         }
 
         final UUID petUUID = UUID.fromString(petId);
-        new BukkitRunnable() {
+        new TrackedBukkitRunnable() {
             @Override
             public void run() {
                 activateMyPet(player, petUUID);

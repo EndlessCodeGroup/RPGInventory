@@ -34,6 +34,7 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ru.endlesscode.inspector.bukkit.plugin.PluginLifecycle;
+import ru.endlesscode.inspector.bukkit.plugin.TrackedBukkitRunnable;
 import ru.endlesscode.rpginventory.event.listener.ArmorEquipListener;
 import ru.endlesscode.rpginventory.event.listener.ElytraListener;
 import ru.endlesscode.rpginventory.event.listener.HandSwapListener;
@@ -188,7 +189,7 @@ public class RPGInventory extends PluginLifecycle {
         this.checkUpdates(null);
 
         // Do this after all plugins loaded
-        new BukkitRunnable() {
+        new TrackedBukkitRunnable() {
             @Override
             public void run() {
                 checkThatSystemsLoaded();
@@ -361,7 +362,7 @@ public class RPGInventory extends PluginLifecycle {
             return;
         }
 
-        new BukkitRunnable() {
+        new TrackedBukkitRunnable() {
             @Override
             public void run() {
                 Updater updater = new Updater(RPGInventory.instance, Updater.UpdateType.NO_DOWNLOAD);

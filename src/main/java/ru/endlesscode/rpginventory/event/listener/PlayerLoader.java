@@ -28,8 +28,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffectType;
-import org.bukkit.scheduler.BukkitRunnable;
-import org.jetbrains.annotations.*;
+import org.jetbrains.annotations.NotNull;
+import ru.endlesscode.inspector.bukkit.plugin.TrackedBukkitRunnable;
 import ru.endlesscode.rpginventory.RPGInventory;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
 import ru.endlesscode.rpginventory.misc.Config;
@@ -76,7 +76,7 @@ public class PlayerLoader extends PacketAdapter implements Listener {
         final LoadData loadData = new LoadData();
         loadList.put(player.getUniqueId(), loadData);
 
-        new BukkitRunnable() {
+        new TrackedBukkitRunnable() {
             @Override
             public void run() {
                 loadData.setPrepared();
@@ -98,7 +98,7 @@ public class PlayerLoader extends PacketAdapter implements Listener {
                 return;
             case SUCCESSFULLY_LOADED:
                 final double damage = loadList.get(player.getUniqueId()).getDamage();
-                new BukkitRunnable() {
+                new TrackedBukkitRunnable() {
                     @Override
                     public void run() {
                         InventoryManager.loadPlayerInventory(player);
@@ -113,7 +113,7 @@ public class PlayerLoader extends PacketAdapter implements Listener {
                 break;
             case DECLINED:
             case FAILED_DOWNLOAD:
-                new BukkitRunnable() {
+                new TrackedBukkitRunnable() {
                     @Override
                     public void run() {
                         player.kickPlayer(RPGInventory.getLanguage().getMessage("error.rp.denied"));
