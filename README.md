@@ -76,6 +76,8 @@ To add Inspector to the plugin you should:
 - Add Inspector to plugin.yml to `depend` section
 - Modify main plugin class
 - Change main class in `plugin.yml` to new
+- Change all usages of `BukkitRunnable` to `TrackedBukkitRunnable`
+- Wrap `CommandExecutor` with `TrackedCommandExecutor` 
 
 ### Add Inspector to the project
 ```groovy
