@@ -185,8 +185,8 @@ public class BackpackManager {
             Files.list(folder)
                     .filter((file) -> Files.isRegularFile(file) && file.toString().endsWith(".bp"))
                     .forEach(BackpackManager::tryToLoadBackpack);
-        } catch (IOException | RuntimeException e) {
-            reporter.report("Error on backpack load", e);
+        } catch (IOException e) {
+            reporter.report("Error on backpacks loading", e);
         }
     }
 
@@ -194,7 +194,9 @@ public class BackpackManager {
         try {
             loadBackpack(path);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            RPGInventory.getPluginLogger().warning(String.format(
+                    "Error: %s (on loading backpack %s)", e.getLocalizedMessage(), path.getFileName()
+            ));
         }
     }
 
