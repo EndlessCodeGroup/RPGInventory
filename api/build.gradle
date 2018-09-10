@@ -3,7 +3,7 @@ plugins {
     id("maven-publish")
 }
 
-def patchVersion = 0
+def patchVersion = 1
 version = "$inspectorVersion.$patchVersion"
 
 dependencies {
