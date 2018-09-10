@@ -10,6 +10,18 @@ abstract class TrackedBukkitRunnable : BukkitRunnable() {
     private var task: BukkitTask? = null
 
     @Synchronized
+    override fun isCancelled(): Boolean {
+        checkScheduled()
+        return task!!.isCancelled
+    }
+
+    @Synchronized
+    override fun getTaskId(): Int {
+        checkScheduled()
+        return task!!.taskId
+    }
+
+    @Synchronized
     override fun runTask(plugin: Plugin): BukkitTask {
         checkNotYetScheduled()
         return setupTask(getScheduler(plugin).runTask(plugin, this as Runnable))
@@ -47,6 +59,12 @@ abstract class TrackedBukkitRunnable : BukkitRunnable() {
 
     private fun getScheduler(plugin: Plugin): BukkitScheduler {
         return plugin.server.scheduler ?: error("Scheduler can't be null")
+    }
+
+    private fun checkScheduled() {
+        if (task == null) {
+            error("Not scheduled yet")
+        }
     }
 
     private fun checkNotYetScheduled() {
