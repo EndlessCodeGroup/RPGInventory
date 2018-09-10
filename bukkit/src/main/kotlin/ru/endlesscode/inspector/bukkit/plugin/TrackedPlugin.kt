@@ -34,10 +34,18 @@ abstract class TrackedPlugin @JvmOverloads constructor(
     override val environment: ReportEnvironment = BukkitEnvironment(this, envProperties)
 
     val reporter: Reporter
-    val plugin: PluginLifecycle = lifecycleClass.newInstance()
+    val plugin: PluginLifecycle
 
     init {
-        plugin.holder = this
+        try {
+            plugin = lifecycleClass.newInstance()
+            plugin.holder = this
+            plugin.init()
+        } catch (e: UninitializedPropertyAccessException) {
+            logger.severe("${Inspector.TAG} Looks like you trying to use plugin's methods on initialization.")
+            logger.severe("${Inspector.TAG} Instead of this, overload method init() and do the work within.")
+            throw e
+        }
 
         reporter = if (Inspector.GLOBAL.isEnabled) createReporter() else SilentReporter
         reporter.addHandler(

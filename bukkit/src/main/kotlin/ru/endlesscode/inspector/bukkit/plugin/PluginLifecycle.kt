@@ -25,6 +25,13 @@ abstract class PluginLifecycle : PluginBase() {
     private val trackedServer by lazy { TrackedServer(holder) }
     private val trackedPluginLoader by lazy { TrackedPluginLoader(holder.pluginLoader) }
 
+    /**
+     * Override this method if you want to do something on plugin's object initialization.
+     */
+    open fun init() {
+        // To be overridden
+    }
+
     final override fun getDataFolder(): File {
         return holder.dataFolder
     }
