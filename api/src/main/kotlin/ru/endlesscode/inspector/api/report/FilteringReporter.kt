@@ -26,7 +26,7 @@ abstract class FilteringReporter : Reporter {
         beforeReport(message, exceptionData)
 
         val reportJob = reportFiltered(message, exceptionData, ::onSuccess, ::onError)
-        if (async) {
+        if (!async) {
             runBlocking { reportJob.join() }
         }
     }

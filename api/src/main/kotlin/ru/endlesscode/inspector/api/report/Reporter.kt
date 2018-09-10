@@ -44,7 +44,7 @@ interface Reporter {
      * @param exception The exception
      */
     fun report(message: String, exception: Exception) {
-        report(message, exception, true)
+        report(message, exception, async = true)
     }
 
     /**
@@ -66,7 +66,7 @@ interface Reporter {
         try {
             block.invoke()
         } catch (e: Exception) {
-            report(message, e, true)
+            report(message, e)
         }
     }
 
