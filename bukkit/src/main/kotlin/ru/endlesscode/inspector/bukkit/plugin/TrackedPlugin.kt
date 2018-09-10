@@ -41,8 +41,8 @@ abstract class TrackedPlugin @JvmOverloads constructor(
 
         reporter = if (Inspector.GLOBAL.isEnabled) createReporter() else SilentReporter
         reporter.addHandler(
-                beforeReport = { message, exception ->
-                    logger.log(Level.WARNING, "${Inspector.TAG} $message", exception)
+                beforeReport = { message, exceptionData ->
+                    logger.log(Level.WARNING, "${Inspector.TAG} $message", exceptionData.exception)
                 },
                 onSuccess = { _, _ ->
                     logger.warning("${Inspector.TAG} Error was reported to author!")
