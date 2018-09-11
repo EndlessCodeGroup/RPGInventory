@@ -195,7 +195,7 @@ public class BackpackManager {
             loadBackpack(path);
         } catch (IOException e) {
             RPGInventory.getPluginLogger().warning(String.format(
-                    "Error: %s (on loading backpack %s)", e.getLocalizedMessage(), path.getFileName()
+                    "Error: %s (on loading backpack %s)", e.getLocalizedMessage(), path.getFileName().toString()
             ));
         }
     }
