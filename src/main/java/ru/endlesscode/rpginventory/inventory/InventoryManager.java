@@ -654,7 +654,7 @@ public class InventoryManager {
                 EffectUtils.sendTitle(player,
                         Config.getConfig().getInt("join-messages.delay"),
                         Config.getConfig().getString("join-messages.default.title"),
-                        Config.getConfig().getStringList("join-messages.default.text"), null);
+                        Config.getConfig().getStringList("join-messages.default.text"));
             }
 
             if (rpEnabled) {

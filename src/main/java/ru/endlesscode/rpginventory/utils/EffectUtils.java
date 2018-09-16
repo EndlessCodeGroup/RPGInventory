@@ -88,6 +88,11 @@ public class EffectUtils {
         playParticlesToAll(EnumWrappers.Particle.SMOKE_NORMAL, 3, loc);
     }
 
+
+    public static void sendTitle(final Player player, int delay, String title, @NotNull final List<String> subtitles) {
+        sendTitle(player, delay, title, subtitles, null);
+    }
+
     public static void sendTitle(final Player player, int delay, String title, @NotNull final List<String> subtitles, @Nullable final Runnable callback) {
         if (delay < 2) {
             delay = 2;

@@ -35,6 +35,7 @@ import ru.endlesscode.rpginventory.item.ItemStat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.logging.Level;
 
 /**
  * Created by OsipXD on 29.08.2015
@@ -69,7 +70,14 @@ public class StringUtils {
     public static String setPlaceholders(@NotNull Player player, @NotNull String line) {
         // Using Placeholder API
         if (RPGInventory.placeholderApiHooked()) {
-            return PlaceholderAPI.setPlaceholders(player, line);
+            try {
+                return PlaceholderAPI.setPlaceholders(player, line);
+            } catch (Exception e) {
+                RPGInventory.getPluginLogger().warning("Can't set placeholders for line \"" + line + "\"");
+                RPGInventory.getPluginLogger().log(
+                        Level.WARNING, "Error in PlaceholderAPI, please report about it to PlaceholderAPI author.", e);
+                return line;
+            }
         }
 
         // Player
