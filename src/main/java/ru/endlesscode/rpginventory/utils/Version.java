@@ -89,6 +89,10 @@ public final class Version implements Comparable<Version> {
         }
     }
 
+    public int compareTo(String version) {
+        return this.compareTo(Version.parseVersion(version));
+    }
+
     @Override
     public int compareTo(@NotNull Version o) {
         int result;

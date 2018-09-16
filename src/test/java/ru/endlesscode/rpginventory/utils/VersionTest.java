@@ -87,8 +87,22 @@ public class VersionTest {
         Assert.assertEquals(-1, version.compareTo(new Version(2, 2, 0)));
         Assert.assertEquals(-1, version.compareTo(new Version(3, 0, 0)));
         Assert.assertEquals(1, version.compareTo(new Version(2, 1, 3)));
-        Assert.assertEquals(1, version.compareTo(new Version(2, 0, 10)));
-        Assert.assertEquals(1, version.compareTo(new Version(1, 10, 10)));
+        Assert.assertEquals(1, version.compareTo(new Version(2, 0, 9)));
+        Assert.assertEquals(1, version.compareTo(new Version(1, 9, 9)));
+    }
+
+    @Test
+    public void comparingWithStringShouldBeRight() {
+        Version version = new Version(2, 1, 4);
+
+        Assert.assertEquals(0, version.compareTo("2.1.4"));
+        Assert.assertEquals(0, version.compareTo("2.1.4-qualifier"));
+        Assert.assertEquals(-1, version.compareTo("2.1.5"));
+        Assert.assertEquals(-1, version.compareTo("2.2.0"));
+        Assert.assertEquals(-1, version.compareTo("3.0.0"));
+        Assert.assertEquals(1, version.compareTo("2.1.3"));
+        Assert.assertEquals(1, version.compareTo("2.0.9"));
+        Assert.assertEquals(1, version.compareTo("1.9.9"));
     }
 
     @Test(expected = IllegalArgumentException.class)
