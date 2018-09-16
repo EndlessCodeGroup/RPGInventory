@@ -58,7 +58,7 @@ import ru.endlesscode.rpginventory.pet.mypet.MyPetManager;
 import ru.endlesscode.rpginventory.utils.PlayerUtils;
 import ru.endlesscode.rpginventory.utils.ResourcePackUtils;
 import ru.endlesscode.rpginventory.utils.StringUtils;
-import ru.endlesscode.rpginventory.utils.VersionUtils;
+import ru.endlesscode.rpginventory.utils.Version;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -391,22 +391,19 @@ public class RPGInventory extends PluginLifecycle {
     }
 
     private void updateConfig() {
-        String fullVersion = this.getDescription().getVersion();
-        String currentVersion = VersionUtils.trimQualifiers(fullVersion);
+        final Version version = Version.parseVersion(this.getDescription().getVersion());
 
         if (!Config.getConfig().contains("version")) {
-            Config.getConfig().set("version", currentVersion);
+            Config.getConfig().set("version", version.toString());
             Config.save();
             return;
         }
 
-        int currentVersionCode = VersionUtils.versionToCode(currentVersion);
-        int configVersionCode = VersionUtils.versionToCode(Config.getConfig().getString("version"));
-
-        if (configVersionCode < currentVersionCode) {
-            ConfigUpdater.update(configVersionCode);
+        final Version configVersion = Version.parseVersion(Config.getConfig().getString("version"));
+        if (version.compareTo(configVersion) > 0) {
+            ConfigUpdater.update(configVersion);
             Config.getConfig().set("version", null);
-            Config.getConfig().set("version", currentVersion);
+            Config.getConfig().set("version", version.toString());
             Config.save();
             Config.reload();
         }

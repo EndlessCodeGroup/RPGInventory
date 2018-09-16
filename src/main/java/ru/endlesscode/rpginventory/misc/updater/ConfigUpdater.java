@@ -19,12 +19,12 @@
 package ru.endlesscode.rpginventory.misc.updater;
 
 import org.bukkit.configuration.file.FileConfiguration;
+import ru.endlesscode.rpginventory.inventory.slot.SlotManager;
+import ru.endlesscode.rpginventory.misc.Config;
+import ru.endlesscode.rpginventory.utils.Version;
 
 import java.util.Arrays;
 import java.util.Collections;
-
-import ru.endlesscode.rpginventory.inventory.slot.SlotManager;
-import ru.endlesscode.rpginventory.misc.Config;
 
 /**
  * Created by OsipXD on 05.09.2015
@@ -32,159 +32,160 @@ import ru.endlesscode.rpginventory.misc.Config;
  * All rights reserved 2014 - 2016 © «EndlessCode Group»
  */
 public class ConfigUpdater {
-    public static void update(int configVersion) {
+    public static void update(Version configVersion) {
         FileConfiguration config = Config.getConfig();
 
-        switch (configVersion) {
-            case 91:
-                config.set("ids", null);
-                config.set("attack.auto-held", true);
-            case 100:
-                config.set("slots.pet", null);
-                config.set("slots.crafting", null);
-                config.set("slots.enabled", true);
-                config.set("slots.level.spend", false);
-                SlotManager.instance().saveDefaults();
-            case 101:
-            case 102:
-            case 103:
-            case 104:
-            case 105:
-            case 106:
-                config.set("alternate-view.enabled", false);
-                config.set("alternate-view.fill", "STAINED_GLASS_PANE:0");
-            case 110:
-            case 111:
-            case 112:
-            case 113:
-                config.set("alternate-view.item", "ENCHANTED_BOOK");
+        if (configVersion.compareTo("1.0.0") < 0) {
+            config.set("ids", null);
+            config.set("attack.auto-held", true);
+        }
+
+        if (configVersion.compareTo("1.0.1") < 0) {
+            config.set("slots.pet", null);
+            config.set("slots.crafting", null);
+            config.set("slots.enabled", true);
+            config.set("slots.level.spend", false);
+            SlotManager.instance().saveDefaults();
+        }
+
+        if (configVersion.compareTo("1.1.0") < 0) {
+            config.set("alternate-view.enabled", false);
+            config.set("alternate-view.fill", "STAINED_GLASS_PANE:0");
+        }
+
+        if (configVersion.compareTo("1.0.4") < 0) {
+            config.set("alternate-view.item", "ENCHANTED_BOOK");
+            config.set("alternate-view.slot", 8);
+            config.set("alternate-view.name", "&6Equipment");
+            config.set("alternate-view.lore", "&7&o(Right click to open equipment)");
+        }
+
+        if (configVersion.compareTo("1.0.5") < 0) {
+            if (config.getInt("alternate-view.slot") == 9) {
                 config.set("alternate-view.slot", 8);
-                config.set("alternate-view.name", "&6Equipment");
-                config.set("alternate-view.lore", "&7&o(Right click to open equipment)");
-            case 114:
-                if (config.getInt("alternate-view.slot") == 9) {
-                    config.set("alternate-view.slot", 8);
-                }
-                config.set("resource-pack.mode", config.getBoolean("alternate-view.enabled") ? "DISABLED" : "AUTO");
-                config.set("resource-pack.url", "PUT_YOUR_URL_HERE");
-                config.set("resource-pack.hash", "PUT_YOUR_HASH_HERE");
-                config.set("alternate-view.enabled", null);
-                config.set("alternate-view.use-item", true);
-            case 115:
-            case 116:
-            case 117:
-                config.set("alternate-view.enable-craft", true);
-                config.set("worlds.mode", "BLACKLIST");
-                config.set("worlds.list", new String[]{"blocked_world"});
-            case 118:
-            case 119:
-            case 120:
-            case 121:
-            case 122:
-            case 123:
-                config.set("backpacks.expiration-time", 30);
-            case 124:
-                config.set("level-system", "EXP");
-                config.set("class-system", "PERMISSIONS");
-                config.set("metrics", true);
-            case 125:
-            case 126:
-                config.set("items.lore-pattern", new String[]{
-                        "_UNBREAKABLE_",
-                        "_DROP_",
-                        "_LEVEL_",
-                        "_CLASS_",
-                        "_SEPARATOR_",
-                        "_LORE_",
-                        "_SEPARATOR_",
-                        "_SKILLS_",
-                        "_SEPARATOR_",
-                        "_STATS_"
-                });
-                config.set("items.separator", "");
-                config.set("auto-update", false);
-            case 127:
-            case 128:
-            case 129:
-                config.set("auto-update", true);
-            case 130:
-            case 131:
-            case 132:
-                config.set("health.base", 20);
-                config.set("health.scale", false);
-                config.set("health.hearts", 20);
-                config.set("health.heart-capacity.min", 1);
-                config.set("health.heart-capacity.max", 5);
-            case 133:
-            case 134:
-            case 135:
-                // Removed RP settings
-                config.set("resource-pack.fill", "DIAMOND_HOE:1");
-                config.set("resource-pack.mode", null);
-                config.set("alternate-view", null);
-                config.set("containers.block", false);
-                config.set("slots.locked", "DIAMOND_HOE:19");
-                config.set("slots.buyable", "DIAMOND_HOE:18");
+            }
+            config.set("resource-pack.mode", config.getBoolean("alternate-view.enabled") ? "DISABLED" : "AUTO");
+            config.set("resource-pack.url", "PUT_YOUR_URL_HERE");
+            config.set("resource-pack.hash", "PUT_YOUR_HASH_HERE");
+            config.set("alternate-view.enabled", null);
+            config.set("alternate-view.use-item", true);
+        }
 
-                // Added craft extensions
-                config.set("craft.enabled", true);
-                config.set("craft.extendable", "DIAMOND_HOE:0");
-                config.set("craft.extensions.journeyman.name", "&aJourneyman slots");
-                config.set("craft.extensions.journeyman.lore", "&eYou must be a journeyman to use it");
-                config.set("craft.extensions.journeyman.slots", Arrays.asList(8, 9));
-                config.set("craft.extensions.master.name", "&3Master slots");
-                config.set("craft.extensions.master.lore", "&eYou must be a master to use it");
-                config.set("craft.extensions.master.includes", Collections.singletonList("journeyman"));
-                config.set("craft.extensions.master.slots", Arrays.asList(1, 4, 7));
+        if (configVersion.compareTo("1.1.8") < 0) {
+            config.set("alternate-view.enable-craft", true);
+            config.set("worlds.mode", "BLACKLIST");
+            config.set("worlds.list", new String[]{"blocked_world"});
+        }
 
-                // Added join-messages
-                config.set("join-messages.enabled", true);
-                config.set("join-messages.delay", 3);
-                config.set("join-messages.default.title", "&l&2Welcome to server!");
-                config.set("join-messages.default.text", Arrays.asList("&6Glad to see you, &3%PLAYER%", "&6This server using &9RPGInventory"));
+        if (configVersion.compareTo("1.2.4") < 0) {
+            config.set("backpacks.expiration-time", 30);
+        }
+
+        if (configVersion.compareTo("1.2.5") < 0) {
+            config.set("level-system", "EXP");
+            config.set("class-system", "PERMISSIONS");
+            config.set("metrics", true);
+        }
+
+        if (configVersion.compareTo("1.2.7") < 0) {
+            config.set("items.lore-pattern", new String[]{
+                    "_UNBREAKABLE_",
+                    "_DROP_",
+                    "_LEVEL_",
+                    "_CLASS_",
+                    "_SEPARATOR_",
+                    "_LORE_",
+                    "_SEPARATOR_",
+                    "_SKILLS_",
+                    "_SEPARATOR_",
+                    "_STATS_"
+            });
+            config.set("items.separator", "");
+            config.set("auto-update", false);
+        }
+
+        if (configVersion.compareTo("1.3.0") < 0) {
+            config.set("auto-update", true);
+        }
+
+        if (configVersion.compareTo("1.3.3") < 0) {
+            config.set("health.base", 20);
+            config.set("health.scale", false);
+            config.set("health.hearts", 20);
+            config.set("health.heart-capacity.min", 1);
+            config.set("health.heart-capacity.max", 5);
+        }
+
+        if (configVersion.compareTo("2.0.0") < 0) {
+            // Removed RP settings
+            config.set("resource-pack.fill", "DIAMOND_HOE:1");
+            config.set("resource-pack.mode", null);
+            config.set("alternate-view", null);
+            config.set("containers.block", false);
+            config.set("slots.locked", "DIAMOND_HOE:19");
+            config.set("slots.buyable", "DIAMOND_HOE:18");
+
+            // Added craft extensions
+            config.set("craft.enabled", true);
+            config.set("craft.extendable", "DIAMOND_HOE:0");
+            config.set("craft.extensions.journeyman.name", "&aJourneyman slots");
+            config.set("craft.extensions.journeyman.lore", "&eYou must be a journeyman to use it");
+            config.set("craft.extensions.journeyman.slots", Arrays.asList(8, 9));
+            config.set("craft.extensions.master.name", "&3Master slots");
+            config.set("craft.extensions.master.lore", "&eYou must be a master to use it");
+            config.set("craft.extensions.master.includes", Collections.singletonList("journeyman"));
+            config.set("craft.extensions.master.slots", Arrays.asList(1, 4, 7));
+
+            // Added join-messages
+            config.set("join-messages.enabled", true);
+            config.set("join-messages.delay", 3);
+            config.set("join-messages.default.title", "&l&2Welcome to server!");
+            config.set("join-messages.default.text", Arrays.asList("&6Glad to see you, &3%PLAYER%", "&6This server using &9RPGInventory"));
+            config.set("join-messages.rp-info.title", "&l&4It is important!");
+            config.set("join-messages.rp-info.text", Arrays.asList(
+                    "&6You should &callow &6resource pack to play on this server",
+                    "&6This will allow you fully immerse in the RPG atmosphere",
+                    "&6But if you declined downloading of RP you can fix it...",
+                    "&6Select the server in list, click &e'Edit' &6 and set &e'Resource-Pack: Accept'"));
+        }
+
+        if (configVersion.compareTo("2.0.1") < 0) {
+            if ("&l&2Welcome to server!".equals(config.get("join-messages.rp-info.title"))) {
                 config.set("join-messages.rp-info.title", "&l&4It is important!");
-                config.set("join-messages.rp-info.text", Arrays.asList(
-                        "&6You should &callow &6resource pack to play on this server",
-                        "&6This will allow you fully immerse in the RPG atmosphere",
-                        "&6But if you declined downloading of RP you can fix it...",
-                        "&6Select the server in list, click &e'Edit' &6 and set &e'Resource-Pack: Accept'"));
-            case 200:
-                if ("&l&2Welcome to server!".equals(config.get("join-messages.rp-info.title"))) {
-                    config.set("join-messages.rp-info.title", "&l&4It is important!");
-                    config.set("join-messages.default.title", "&l&2Welcome to server!");
-                }
-            case 201:
-            case 202:
-            case 203:
-                // Fixing join messages disabling
-                config.set("join-messages.enabled", null);
-                config.set("join-messages.rp-info.enabled", true);
-                config.set("join-messages.default.enabled", true);
+                config.set("join-messages.default.title", "&l&2Welcome to server!");
+            }
+        }
 
-                // Added backpacks limit
-                config.set("backpacks.limit", 1);
+        if (configVersion.compareTo("2.0.4") < 0) {
+            // Fixing join messages disabling
+            config.set("join-messages.enabled", null);
+            config.set("join-messages.rp-info.enabled", true);
+            config.set("join-messages.default.enabled", true);
 
-                // Added ability to disable extension for workbench
-                config.set("craft.workbench", true);
-                if ("DIAMOND_HOE:0".equals(config.get("craft.extendable"))) {
-                    config.set("craft.extendable", "DIAMOND_HOE:27");
-                }
-            case 204:
-            case 205:
-            case 206:
-            case 207:
-                config.set("fill", config.get("resource-pack.fill"));
-                config.set("resource-pack.fill", null);
-                config.set("resource-pack.enabled", true);
-            case 208:
-                config.set("resource-pack.delay", 2);
-                config.set("check-update", config.getBoolean("auto-update"));
-                config.set("auto-update", null);
-            case 210:
-            case 211:
-            case 212:
-            case 213:
-                config.set("health", null);
+            // Added backpacks limit
+            config.set("backpacks.limit", 1);
+
+            // Added ability to disable extension for workbench
+            config.set("craft.workbench", true);
+            if ("DIAMOND_HOE:0".equals(config.get("craft.extendable"))) {
+                config.set("craft.extendable", "DIAMOND_HOE:27");
+            }
+        }
+
+        if (configVersion.compareTo("2.0.8") < 0) {
+            config.set("fill", config.get("resource-pack.fill"));
+            config.set("resource-pack.fill", null);
+            config.set("resource-pack.enabled", true);
+        }
+
+        if (configVersion.compareTo("2.1.0") < 0) {
+            config.set("resource-pack.delay", 2);
+            config.set("check-update", config.getBoolean("auto-update"));
+            config.set("auto-update", null);
+        }
+
+        if (configVersion.compareTo("2.1.4") < 0) {
+            config.set("health", null);
         }
     }
 }
