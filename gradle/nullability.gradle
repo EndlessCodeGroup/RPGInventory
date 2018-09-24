@@ -1,0 +1,30 @@
+// This script enables javac2 to instrument JetBrains annotations
+// See: https://www.grahamedgecombe.com/blog/2013/04/03/using-intellij-ideas-javac2-in-gradle
+
+configurations {
+    antTask
+}
+
+repositories {
+    flatDir dirs: "${rootDir}/antlibs"
+}
+
+dependencies {
+    antTask ':javac2:'
+    antTask ':forms_rt:'
+    antTask ':asm-all:'
+    antTask 'org.jdom:jdom:1.1'
+}
+
+task compileJava(overwrite: true, dependsOn: configurations.compile.getTaskDependencyFromProjectDependency(true, 'jar')) {
+    doLast {
+        project.sourceSets.main.output.classesDir.mkdirs()
+        ant.taskdef name: 'javac2', classname: 'com.intellij.ant.Javac2', classpath: configurations.antTask.asPath
+        ant.javac2 srcdir: project.sourceSets.main.java.srcDirs.join(':'),
+                classpath: project.sourceSets.main.compileClasspath.asPath,
+                destdir: project.sourceSets.main.output.classesDir,
+                source: sourceCompatibility,
+                target: targetCompatibility,
+                includeAntRuntime: false
+    }
+}
