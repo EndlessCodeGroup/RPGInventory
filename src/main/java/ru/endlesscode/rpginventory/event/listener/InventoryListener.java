@@ -271,6 +271,11 @@ public class InventoryListener implements Listener {
 
             switch (event.getSlotType()) {
                 case CRAFTING:
+                    //Force cancellation of an event if player has an ItemStack in the cursor.
+                    if (event.getCursor() != null){
+                        event.setCancelled(true);
+                    }
+
                     //Without this stupid shit we already get click in the our inventory on bukkit 1.9.4
                     //Ofc, player picking up item in the clicked slot (1, 2, 3, 4, depends on clicked slot in the small crafting grid)
                     //Fixes #142.
