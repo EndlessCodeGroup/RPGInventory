@@ -1,21 +1,21 @@
 package ru.endlesscode.inspector.api.dsl
 
 
-interface Element {
+internal interface Element {
     fun render(builder: StringBuilder, indent: String = "")
 }
 
-class Line(private val text: String) : Element {
+internal class Line(private val text: String) : Element {
     override fun render(builder: StringBuilder, indent: String) {
         builder.append("$indent$text  \n")
     }
 }
 
 @DslMarker
-annotation class MarkdownMarker
+internal annotation class MarkdownMarker
 
 @MarkdownMarker
-abstract class Group(
+internal abstract class Group(
         private val indent: String,
         private val firstLine: String?,
         private val lastLine: String? = firstLine
@@ -40,6 +40,10 @@ abstract class Group(
         children.add(Line(this ?: ""))
     }
 
+    operator fun List<String>?.unaryPlus() {
+        this?.forEach { +it }
+    }
+
     override fun toString(): String {
         val builder = StringBuilder()
         render(builder)
@@ -47,7 +51,7 @@ abstract class Group(
     }
 }
 
-abstract class TextGroup : Group(indent = "", firstLine = null) {
+internal abstract class TextGroup : Group(indent = "", firstLine = null) {
 
     fun b(text: String): String {
         return "**$text**"
@@ -68,14 +72,18 @@ abstract class TextGroup : Group(indent = "", firstLine = null) {
     fun st(text: String): String {
         return "~~$text~~"
     }
+
+    fun hr(): String {
+        return "---"
+    }
 }
 
-class Markdown : TextGroup() {
+internal class Markdown : TextGroup() {
     fun code(lang: String = "", init: Code.() -> Unit) = initGroup(Code(lang), init)
 }
 
-class Code(lang: String) : Group(indent = "", firstLine = "```$lang", lastLine = "```")
+internal class Code(lang: String) : Group(indent = "", firstLine = "```$lang", lastLine = "```")
 
-fun markdown(init: Markdown.() -> Unit): Markdown {
+internal fun markdown(init: Markdown.() -> Unit): Markdown {
     return Markdown().also(init)
 }

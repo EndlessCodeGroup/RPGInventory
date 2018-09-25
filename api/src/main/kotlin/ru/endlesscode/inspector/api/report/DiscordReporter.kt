@@ -82,18 +82,19 @@ class DiscordReporter private constructor(
             fullReportUrl: String
     ): String {
         return markdown {
+            val fieldsValues = fields.map { field ->
+                field.render(prepareTag = { b("$it:") }, separator = " ")
+            }
+
             +b(title)
             +""
-            for (field in fields) {
-                +field.render(prepareTag = { b("$it:") }, separator = " ")
-            }
+            +fieldsValues
             +b("Short stacktrace:")
             code("java") {
                 +shortStackTrace
             }
             +"${b("Full report:")} $fullReportUrl"
-            // Separator (yes I know that it's ugly)
-            +st("                                                                                                 ")
+            +hr()
         }.toString()
     }
 
