@@ -12,7 +12,6 @@ import ru.endlesscode.inspector.api.report.ReportedException
 import ru.endlesscode.inspector.api.report.Reporter
 import ru.endlesscode.inspector.api.report.ReporterFocus
 import ru.endlesscode.inspector.bukkit.Inspector
-import ru.endlesscode.inspector.bukkit.InspectorConfig
 import ru.endlesscode.inspector.bukkit.report.BukkitEnvironment
 import java.io.File
 import java.io.InputStream
@@ -31,6 +30,10 @@ abstract class TrackedPlugin @JvmOverloads constructor(
     envProperties: BukkitEnvironment.Properties = BukkitEnvironment.EMPTY_PROPERTIES
 ) : JavaPlugin(), ReporterFocus {
 
+    companion object {
+        private const val TAG = "[Inspector]"
+    }
+
     override val focusedPackage: String = javaClass.`package`.name
     override val environment: ReportEnvironment = BukkitEnvironment(this, envProperties)
 
@@ -45,22 +48,22 @@ abstract class TrackedPlugin @JvmOverloads constructor(
             lifecycle.holder = this
             lifecycle.init()
         } catch (e: UninitializedPropertyAccessException) {
-            logger.severe("${Inspector.TAG} Looks like you trying to use plugin's methods on initialization.")
-            logger.severe("${Inspector.TAG} Instead of this, overload method init() and do the work within.")
+            logger.severe("$TAG Looks like you trying to use plugin's methods on initialization.")
+            logger.severe("$TAG Instead of this, overload method init() and do the work within.")
             throw e
         }
 
         reporter = createReporter()
-        reporter.enabled = InspectorConfig.isEnabled
+        reporter.enabled = Inspector.isEnabled
         reporter.addHandler(
                 beforeReport = { message, exceptionData ->
-                    logger.log(Level.WARNING, "${Inspector.TAG} $message", exceptionData.exception)
+                    logger.log(Level.WARNING, "$TAG $message", exceptionData.exception)
                 },
                 onSuccess = { _, _ ->
-                    logger.warning("${Inspector.TAG} Error was reported to author!")
+                    logger.warning("$TAG Error was reported to author!")
                 },
                 onError = {
-                    logger.severe("${Inspector.TAG} Error on report: ${it.localizedMessage}")
+                    logger.severe("$TAG Error on report: ${it.localizedMessage}")
                 }
         )
     }

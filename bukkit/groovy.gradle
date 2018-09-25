@@ -5,7 +5,7 @@ bukkit {
 
     meta {
         name = pluginName
-        main = "$group.${project.name}.$pluginName"
+        main = "$group.${project.name}.${pluginName}Plugin"
         authors = ["OsipXD", "EndlessCodeGroup"]
         url = repoUrl
     }

@@ -4,8 +4,6 @@ import org.bukkit.plugin.Plugin
 import ru.endlesscode.inspector.api.report.ReportEnvironment
 import ru.endlesscode.inspector.api.report.TextField
 import ru.endlesscode.inspector.bukkit.Inspector
-import ru.endlesscode.inspector.bukkit.InspectorConfig
-import ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin
 import ru.endlesscode.inspector.bukkit.util.printableForm
 
 
@@ -25,13 +23,17 @@ class BukkitEnvironment(
     }
 
     override val fields = mapOf(
-            TAG_PLUGIN to TextField(TAG_PLUGIN, plugin.printableForm),
+        TAG_PLUGIN to TextField(TAG_PLUGIN, plugin.printableForm),
         TAG_CORE to TextField(
             TAG_CORE,
             "${plugin.server.name} (${plugin.server.version})"
-        ) { InspectorConfig.shouldSendData(DataType.CORE) },
-            TAG_PLUGIN_LIST to PluginListField(plugin.server.pluginManager.plugins.asList(), properties.interestPluginsNames),
-        TAG_INSPECTOR_VERSION to TextField(TAG_INSPECTOR_VERSION, InspectorConfig.version)
+        ) { Inspector.shouldSendData(DataType.CORE) },
+
+        TAG_PLUGIN_LIST to PluginListField(
+            plugin.server.pluginManager.plugins.asList(),
+            properties.interestPluginsNames
+        ),
+        TAG_INSPECTOR_VERSION to TextField(TAG_INSPECTOR_VERSION, Inspector.version)
     )
 
     override val defaultFieldsTags: List<String> = listOf(TAG_PLUGIN, TAG_CORE, TAG_PLUGIN_LIST, TAG_INSPECTOR_VERSION)
