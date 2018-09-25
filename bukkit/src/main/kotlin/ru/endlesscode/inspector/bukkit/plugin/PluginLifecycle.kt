@@ -22,7 +22,7 @@ abstract class PluginLifecycle : PluginBase() {
     val reporter: Reporter
         get() = holder.reporter
 
-    internal lateinit var holder: TrackedPlugin
+    lateinit var holder: TrackedPlugin
 
     private val trackedServer by lazy { TrackedServer(holder) }
     private val trackedPluginLoader by lazy { TrackedPluginLoader(holder.pluginLoader) }
