@@ -28,7 +28,6 @@ interface Reporter {
         })
     }
 
-
     /**
      * Add handler to reporter.
      *
@@ -102,27 +101,27 @@ interface Reporter {
         }
 
         /**
-         * Set fields tags to report.
+         * Set fields by tags to report.
          */
-        fun setFields(vararg newFields: String) : Builder {
+        fun setFields(vararg newFieldsTags: String) : Builder {
             // TODO: Add check of tag existence may be
-            fieldsTags = newFields.toMutableList()
+            fieldsTags = newFieldsTags.toMutableList()
             return this
         }
 
         /**
-         * Add fields tags to report.
+         * Add fields by tags to report.
          */
-        fun addFields(vararg newFields: String) : Builder {
-            fieldsTags.addAll(newFields)
+        fun addFields(vararg fieldsTags: String) : Builder {
+            this.fieldsTags.addAll(fieldsTags)
             return this
         }
 
         /**
-         * Remove fields tags from report.
+         * Remove fields by tags from report.
          */
-        fun removeFields(vararg fieldsToRemove: String) : Builder {
-            fieldsTags.removeAll(fieldsToRemove)
+        fun removeFields(vararg fieldsTagsToRemove: String) : Builder {
+            fieldsTags.removeAll(fieldsTagsToRemove)
             return this
         }
 
