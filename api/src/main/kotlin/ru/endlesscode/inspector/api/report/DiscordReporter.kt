@@ -120,8 +120,8 @@ class DiscordReporter private constructor(
          * Build configured [DiscordReporter].
          */
         override fun build(): Reporter {
-            if (id.isBlank() || token.isBlank()) {
-                error("You should specify Discord id and token with method `hook(...)` and it shouldn't be blank.")
+            require(id.isNotBlank() && token.isNotBlank()) {
+                "You should specify Discord id and token with method `hook(...)` and it shouldn't be blank."
             }
 
             return DiscordReporter(
