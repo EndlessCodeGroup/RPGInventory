@@ -34,13 +34,13 @@ abstract class TrackedPlugin @JvmOverloads constructor(
     override val environment: ReportEnvironment = BukkitEnvironment(this, envProperties)
 
     val reporter: Reporter
-    val plugin: PluginLifecycle
+    val lifecycle: PluginLifecycle
 
     init {
         try {
-            plugin = lifecycleClass.newInstance()
-            plugin.holder = this
-            plugin.init()
+            lifecycle = lifecycleClass.newInstance()
+            lifecycle.holder = this
+            lifecycle.init()
         } catch (e: UninitializedPropertyAccessException) {
             logger.severe("${Inspector.TAG} Looks like you trying to use plugin's methods on initialization.")
             logger.severe("${Inspector.TAG} Instead of this, overload method init() and do the work within.")
@@ -89,7 +89,7 @@ abstract class TrackedPlugin @JvmOverloads constructor(
 
     final override fun getCommand(name: String): PluginCommand? {
         return track {
-            plugin.getCommand(name)
+            lifecycle.getCommand(name)
         }
     }
 
@@ -100,7 +100,7 @@ abstract class TrackedPlugin @JvmOverloads constructor(
             args: Array<out String>
     ): Boolean {
         return track("Exception occurred on command '$label' with arguments: ${args.contentToString()}") {
-            plugin.onCommand(sender, command, label, args)
+            lifecycle.onCommand(sender, command, label, args)
         }
     }
 
@@ -111,36 +111,36 @@ abstract class TrackedPlugin @JvmOverloads constructor(
             args: Array<out String>?
     ): MutableList<String>? {
         return track {
-            plugin.onTabComplete(sender, command, alias, args)
+            lifecycle.onTabComplete(sender, command, alias, args)
         }
     }
 
     final override fun onLoad() {
         track("Error occurred during plugin load") {
-            plugin.onLoad()
+            lifecycle.onLoad()
         }
     }
 
     final override fun onEnable() {
         track("Error occurred during plugin enable") {
-            plugin.onEnable()
+            lifecycle.onEnable()
         }
     }
 
     final override fun onDisable() {
         track("Error occurred during plugin disable") {
-            plugin.onDisable()
+            lifecycle.onDisable()
         }
     }
 
     final override fun getDefaultWorldGenerator(worldName: String?, id: String?): ChunkGenerator? {
         return track {
-            plugin.getDefaultWorldGenerator(worldName, id)
+            lifecycle.getDefaultWorldGenerator(worldName, id)
         }
     }
 
     override fun toString(): String {
-        return "$plugin [Tracked]"
+        return "$lifecycle [Tracked]"
     }
 
     private fun <T> track(message: String = "Error occurred on plugin lifecycle", block: () -> T): T {
