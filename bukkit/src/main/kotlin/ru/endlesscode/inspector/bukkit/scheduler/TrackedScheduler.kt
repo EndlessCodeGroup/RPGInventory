@@ -4,6 +4,7 @@ import org.bukkit.plugin.Plugin
 import org.bukkit.scheduler.BukkitRunnable
 import org.bukkit.scheduler.BukkitScheduler
 import org.bukkit.scheduler.BukkitTask
+import ru.endlesscode.inspector.api.PublicApi
 import ru.endlesscode.inspector.api.report.Reporter
 import ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin
 
@@ -12,6 +13,7 @@ class TrackedScheduler(
     private val reporter: Reporter
 ) : BukkitScheduler by delegate {
 
+    @PublicApi
     constructor(plugin: TrackedPlugin) : this(plugin.server.scheduler, plugin.reporter)
 
     override fun scheduleSyncDelayedTask(plugin: Plugin, task: Runnable): Int {
@@ -56,18 +58,21 @@ class TrackedScheduler(
         return scheduleSyncRepeatingTask(plugin, task as Runnable, delay, period)
     }
 
+    @Deprecated("""This name is misleading, as it does not schedule "a sync" task, but rather, "an async" task""")
     override fun scheduleAsyncDelayedTask(plugin: Plugin, task: Runnable): Int {
         return scheduleTracked(task) {
             delegate.scheduleAsyncDelayedTask(plugin, it)
         }
     }
 
+    @Deprecated("""This name is misleading, as it does not schedule "a sync" task, but rather, "an async" task""")
     override fun scheduleAsyncDelayedTask(plugin: Plugin, task: Runnable, delay: Long): Int {
         return scheduleTracked(task) {
             delegate.scheduleAsyncDelayedTask(plugin, it, delay)
         }
     }
 
+    @Deprecated("""This name is misleading, as it does not schedule "a sync" task, but rather, "an async" task""")
     override fun scheduleAsyncRepeatingTask(plugin: Plugin, task: Runnable, delay: Long, period: Long): Int {
         return scheduleTracked(task) {
             delegate.scheduleAsyncRepeatingTask(plugin, it, delay, period)

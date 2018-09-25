@@ -5,7 +5,7 @@ bukkit {
 
     meta {
         name = pluginName
-        main = "$group.${project.name}.$pluginName"
+        main = "$group.${project.name}.${pluginName}Plugin"
         authors = ["OsipXD", "EndlessCodeGroup"]
         url = repoUrl
     }
@@ -17,29 +17,19 @@ bukkit {
 }
 
 repositories {
-    maven {
-        name = "dmulloy2-repo"
-        url = "http://repo.dmulloy2.net/nexus/repository/public/"
-    }
+    dmulloy2()
 }
 
 dependencies {
     compileOnly(bukkit())
-    compileOnly(bukkitDeps.protocolLibApi)
-    implementation(bukkitDeps.reflections) {
-        // Guava already in Bukkit
-        exclude(module: "guava")
-    }
 }
 
 shadowJar {
     relocate("kotlin", "ru.endlesscode.inspector.shade.kotlin")
     relocate("khttp", "ru.endlesscode.inspector.shade.khttp")
-    relocate("javassist", "ru.endlesscode.inspector.shade.javassist")
     relocate("org.json", "ru.endlesscode.inspector.shade.org.json")
     relocate("org.intellij", "ru.endlesscode.inspector.shade.org.intellij")
     relocate("org.jetbrains", "ru.endlesscode.inspector.shade.org.jetbrains")
-    relocate("org.reflections", "ru.endlesscode.inspector.shade.org.reflections")
 }
 
 assemble.dependsOn shadowJar
@@ -61,7 +51,7 @@ publishing {
                 root.children().last() + pomConfig
 
                 // Remove not needed dependencies
-                def artifactsToFilter = ["kotlin-stdlib-jdk8", "kotlinx-coroutines-core", "reflections"]
+                def artifactsToFilter = ["kotlin-stdlib-jdk8", "kotlinx-coroutines-core"]
                 root.dependencies.'*'.findAll() {
                     it.artifactId.text() in artifactsToFilter
                 }.each() {

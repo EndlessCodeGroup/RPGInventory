@@ -7,11 +7,18 @@ class HastebinStorage : TextStorage {
     }
 
     override suspend fun storeText(text: String): String {
-        val response = khttp.post(
+        return try {
+            val response = khttp.post(
                 url = "$HOST/documents",
                 data = text
-        )
-        val key = response.jsonObject["key"]
-        return "$HOST/$key.txt"
+            )
+            val key = response.jsonObject["key"]
+
+            "$HOST/$key.txt"
+        } catch (e: Exception) {
+            e.printStackTrace()
+
+            "<loading to Hastebin failed>"
+        }
     }
 }

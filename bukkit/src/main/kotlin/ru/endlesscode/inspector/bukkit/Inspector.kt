@@ -1,76 +1,54 @@
 package ru.endlesscode.inspector.bukkit
 
-import org.bukkit.plugin.java.JavaPlugin
-import ru.endlesscode.inspector.bukkit.log.EventsLogger
-import ru.endlesscode.inspector.bukkit.log.LogRule
-import ru.endlesscode.inspector.bukkit.log.PacketsLogger
+import org.bukkit.configuration.file.FileConfiguration
+import org.bukkit.configuration.file.YamlConfiguration
 import ru.endlesscode.inspector.bukkit.report.DataType
+import java.io.File
 
-class Inspector : JavaPlugin() {
+class Inspector(private val configFile: File) {
 
     companion object {
+        /**
+         * Used Inspector version
+         */
         @JvmStatic
-        lateinit var GLOBAL: InspectorConfig
-
-        const val TAG = "[Inspector]"
+        val version: String = "0.6.0"
     }
+
+    internal var isEnabled: Boolean = true
+
+    private var sendData = mutableMapOf(
+            DataType.CORE to true,
+            DataType.PLUGINS to true
+    )
+
+    private var config: FileConfiguration? = null
 
     init {
-        GLOBAL = InspectorConfig(description.version)
-        loadConfig()
-
-        if (GLOBAL.isEventsLoggerEnabled) {
-            enableEventsLogger()
-        }
+        reload()
     }
 
-    override fun onEnable() {
-        if (GLOBAL.isPacketsLoggerEnabled) {
-            enablePacketsLogger()
+    /**
+     * Reload config from disk.
+     */
+    fun reload() {
+        this.config = YamlConfiguration.loadConfiguration(configFile).apply {
+            val defaultConfigStream = javaClass.getResourceAsStream("config.yml") ?: return
+            defaults = YamlConfiguration.loadConfiguration(defaultConfigStream.reader())
+            options().copyDefaults(true)
+            save(configFile)
         }
+
+        copyValuesFromConfig()
     }
 
-    private fun loadConfig() {
-        config.options().copyDefaults(true)
-        saveConfig()
+    internal fun shouldSendData(dataType: DataType) = sendData.getValue(dataType)
 
-        with (GLOBAL) {
+    private fun copyValuesFromConfig() {
+        config?.let { config ->
             isEnabled = config.getBoolean("Reporter.enabled", true)
             sendData[DataType.CORE] = config.getBoolean("Reporter.data.core", true)
             sendData[DataType.PLUGINS] = config.getBoolean("Reporter.data.plugins", true)
-            isEventsLoggerEnabled = config.getBoolean("EventsLogger.enabled", false)
-            isPacketsLoggerEnabled = config.getBoolean("PacketsLogger.enabled", false)
         }
-    }
-
-    private fun enableEventsLogger() {
-        val showHierarchy = config.getBoolean("EventsLogger.hierarchy", true)
-        val eventsLogger = EventsLogger(server.consoleSender, loadEventsLogRules(), showHierarchy)
-        eventsLogger.inject(this)
-    }
-
-    private fun enablePacketsLogger() {
-        if (!server.pluginManager.isPluginEnabled("ProtocolLib")) {
-            logger.warning("ProtocolLib not found, packets logger will be disabled!")
-            return
-        }
-
-        val packetsLogger = PacketsLogger(server.consoleSender, loadPacketsLogRules())
-        packetsLogger.inject(this)
-    }
-
-    private fun loadEventsLogRules(): Map<String, LogRule> {
-        return loadLogRules(config.getStringList("EventsLogger.log"))
-    }
-
-    private fun loadPacketsLogRules(): Map<String, LogRule> {
-        return loadLogRules(config.getStringList("PacketsLogger.log"))
-    }
-
-    private fun loadLogRules(rules: List<String>): Map<String, LogRule> {
-        return rules.map {
-            val rule = LogRule.fromString(it)
-            rule.name to rule
-        }.toMap()
     }
 }

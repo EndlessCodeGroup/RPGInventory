@@ -9,8 +9,9 @@ import ru.endlesscode.inspector.bukkit.util.printableForm
 
 
 class BukkitEnvironment(
-        plugin: Plugin,
-        properties: BukkitEnvironment.Properties
+    plugin: Plugin,
+    inspector: Inspector,
+    properties: BukkitEnvironment.Properties
 ) : ReportEnvironment {
 
     companion object {
@@ -20,14 +21,21 @@ class BukkitEnvironment(
         const val TAG_INSPECTOR_VERSION = "Inspector version"
 
         @JvmStatic
-        internal val EMPTY_PROPERTIES = Properties(emptyList())
+        internal val EMPTY_PROPERTIES = Properties()
     }
 
     override val fields = mapOf(
-            TAG_PLUGIN to TextField(TAG_PLUGIN, plugin.printableForm),
-            TAG_CORE to TextField(TAG_CORE,"${plugin.server.name} (${plugin.server.version})") { Inspector.GLOBAL.shouldSendData(DataType.CORE) },
-            TAG_PLUGIN_LIST to PluginListField(plugin.server.pluginManager.plugins.asList(), properties.interestPluginsNames),
-            TAG_INSPECTOR_VERSION to TextField(TAG_INSPECTOR_VERSION, Inspector.GLOBAL.version)
+        TAG_PLUGIN to TextField(TAG_PLUGIN, plugin.printableForm),
+        TAG_CORE to TextField(
+            TAG_CORE,
+            "${plugin.server.name} (${plugin.server.version})"
+        ) { inspector.shouldSendData(DataType.CORE) },
+
+        TAG_PLUGIN_LIST to PluginListField(
+            plugin.server.pluginManager.plugins.asList(),
+            properties.interestPluginsNames
+        ) { inspector.shouldSendData(DataType.PLUGINS) },
+        TAG_INSPECTOR_VERSION to TextField(TAG_INSPECTOR_VERSION, Inspector.version)
     )
 
     override val defaultFieldsTags: List<String> = listOf(TAG_PLUGIN, TAG_CORE, TAG_PLUGIN_LIST, TAG_INSPECTOR_VERSION)
@@ -36,7 +44,7 @@ class BukkitEnvironment(
     /**
      * Contains properties for environment customization
      */
-    class Properties(
-            val interestPluginsNames: List<String>
+    class Properties @JvmOverloads constructor(
+        val interestPluginsNames: List<String> = emptyList()
     )
 }

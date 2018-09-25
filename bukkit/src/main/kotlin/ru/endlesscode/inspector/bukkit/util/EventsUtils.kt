@@ -2,20 +2,13 @@ package ru.endlesscode.inspector.bukkit.util
 
 import org.bukkit.event.Event
 import org.bukkit.event.HandlerList
-import org.bukkit.event.Listener
 import org.bukkit.plugin.EventExecutor
 import org.bukkit.plugin.IllegalPluginAccessException
-import org.reflections.Reflections
 
 
 internal object EventsUtils {
 
     val NULL_EXECUTOR = EventExecutor { _, _ -> error("This method should never be called!") }
-    val NULL_LISTENER = object : Listener { }
-
-    val eventsClasses: Set<Class<out Event>> by lazy {
-        Reflections("org.bukkit.event").getSubTypesOf(Event::class.java)
-    }
 
     // Methods from SimplePluginManager
 

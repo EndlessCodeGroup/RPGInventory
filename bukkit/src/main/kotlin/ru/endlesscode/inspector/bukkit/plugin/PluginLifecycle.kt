@@ -9,6 +9,7 @@ import org.bukkit.generator.ChunkGenerator
 import org.bukkit.plugin.PluginBase
 import org.bukkit.plugin.PluginDescriptionFile
 import org.bukkit.plugin.PluginLoader
+import ru.endlesscode.inspector.api.PublicApi
 import ru.endlesscode.inspector.api.report.Reporter
 import java.io.File
 import java.io.InputStream
@@ -17,10 +18,11 @@ import java.util.logging.Logger
 
 abstract class PluginLifecycle : PluginBase() {
 
+    @PublicApi
     val reporter: Reporter
         get() = holder.reporter
 
-    internal lateinit var holder: TrackedPlugin
+    lateinit var holder: TrackedPlugin
 
     private val trackedServer by lazy { TrackedServer(holder) }
     private val trackedPluginLoader by lazy { TrackedPluginLoader(holder.pluginLoader) }
@@ -122,15 +124,19 @@ abstract class PluginLifecycle : PluginBase() {
 
     // For compatibility with JavaPlugin
 
-    fun getCommand(name: String): PluginCommand? = holder._getCommand(name)
+    fun getCommand(name: String): PluginCommand? = holder.directGetCommand(name)
 
-    protected fun getTextResource(file: String): Reader? = holder._getTextResource(file)
+    @PublicApi
+    protected fun getTextResource(file: String): Reader? = holder.directGetTextResource(file)
 
-    protected fun getFile(): File = holder._getFile()
+    @PublicApi
+    protected fun getFile(): File = holder.directGetFile()
 
-    protected fun getClassLoader(): ClassLoader = holder._getClassLoader()
+    @PublicApi
+    protected fun getClassLoader(): ClassLoader = holder.directGetClassLoader()
 
+    @PublicApi
     protected fun setEnabled(enabled: Boolean) {
-        holder._setEnabled(enabled)
+        holder.directSetEnabled(enabled)
     }
 }
