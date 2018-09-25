@@ -9,6 +9,7 @@ import org.bukkit.plugin.IllegalPluginAccessException
 import org.bukkit.plugin.Plugin
 import org.bukkit.plugin.PluginManager
 import org.bukkit.plugin.RegisteredListener
+import ru.endlesscode.inspector.api.PublicApi
 import ru.endlesscode.inspector.api.report.Reporter
 import ru.endlesscode.inspector.bukkit.util.EventsUtils
 import ru.endlesscode.inspector.bukkit.util.realPlugin
@@ -19,6 +20,7 @@ class TrackedPluginManager(
         private val reporter: Reporter
 ) : PluginManager by delegate {
 
+    @PublicApi
     constructor(plugin: TrackedPlugin) : this(plugin.server.pluginManager, plugin.reporter)
 
     /**

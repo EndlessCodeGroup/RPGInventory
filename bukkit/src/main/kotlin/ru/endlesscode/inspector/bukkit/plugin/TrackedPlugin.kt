@@ -6,11 +6,11 @@ import org.bukkit.command.PluginCommand
 import org.bukkit.configuration.file.FileConfiguration
 import org.bukkit.generator.ChunkGenerator
 import org.bukkit.plugin.java.JavaPlugin
+import ru.endlesscode.inspector.api.PublicApi
 import ru.endlesscode.inspector.api.report.ReportEnvironment
 import ru.endlesscode.inspector.api.report.ReportedException
 import ru.endlesscode.inspector.api.report.Reporter
 import ru.endlesscode.inspector.api.report.ReporterFocus
-import ru.endlesscode.inspector.api.report.SilentReporter
 import ru.endlesscode.inspector.bukkit.Inspector
 import ru.endlesscode.inspector.bukkit.report.BukkitEnvironment
 import java.io.File
@@ -30,33 +30,47 @@ abstract class TrackedPlugin @JvmOverloads constructor(
     envProperties: BukkitEnvironment.Properties = BukkitEnvironment.EMPTY_PROPERTIES
 ) : JavaPlugin(), ReporterFocus {
 
-    override val focusedPackage: String = javaClass.`package`.name
-    override val environment: ReportEnvironment = BukkitEnvironment(this, envProperties)
+    companion object {
+        private const val TAG = "[Inspector]"
+        private const val DEFAULT_CONFIG = "inspector.yml"
+    }
 
-    val reporter: Reporter
-    val plugin: PluginLifecycle
+    val reporter: Reporter = createReporter()
+    val inspector: Inspector = Inspector(inspectorConfigFile)
+
+    override val focusedPackage: String = javaClass.`package`.name
+    override val environment: ReportEnvironment = BukkitEnvironment(this, inspector, envProperties)
+
+    @PublicApi
+    val lifecycle: PluginLifecycle
+
+    /**
+     * Returns
+     */
+    protected open val inspectorConfigFile: File
+        get() = dataFolder.resolve(DEFAULT_CONFIG)
 
     init {
         try {
-            plugin = lifecycleClass.newInstance()
-            plugin.holder = this
-            plugin.init()
+            lifecycle = lifecycleClass.newInstance()
+            lifecycle.holder = this
+            lifecycle.init()
         } catch (e: UninitializedPropertyAccessException) {
-            logger.severe("${Inspector.TAG} Looks like you trying to use plugin's methods on initialization.")
-            logger.severe("${Inspector.TAG} Instead of this, overload method init() and do the work within.")
+            logger.severe("$TAG Looks like you trying to use plugin's methods on initialization.")
+            logger.severe("$TAG Instead of this, overload method init() and do the work within.")
             throw e
         }
 
-        reporter = if (Inspector.GLOBAL.isEnabled) createReporter() else SilentReporter
+        reporter.enabled = inspector.isEnabled
         reporter.addHandler(
                 beforeReport = { message, exceptionData ->
-                    logger.log(Level.WARNING, "${Inspector.TAG} $message", exceptionData.exception)
+                    logger.log(Level.WARNING, "$TAG $message", exceptionData.exception)
                 },
                 onSuccess = { _, _ ->
-                    logger.warning("${Inspector.TAG} Error was reported to author!")
+                    logger.warning("$TAG Error was reported to author!")
                 },
                 onError = {
-                    logger.severe("${Inspector.TAG} Error on report: ${it.localizedMessage}")
+                    logger.severe("$TAG Error on report: ${it.localizedMessage}")
                 }
         )
     }
@@ -89,7 +103,7 @@ abstract class TrackedPlugin @JvmOverloads constructor(
 
     final override fun getCommand(name: String): PluginCommand? {
         return track {
-            plugin.getCommand(name)
+            lifecycle.getCommand(name)
         }
     }
 
@@ -100,7 +114,7 @@ abstract class TrackedPlugin @JvmOverloads constructor(
             args: Array<out String>
     ): Boolean {
         return track("Exception occurred on command '$label' with arguments: ${args.contentToString()}") {
-            plugin.onCommand(sender, command, label, args)
+            lifecycle.onCommand(sender, command, label, args)
         }
     }
 
@@ -111,36 +125,36 @@ abstract class TrackedPlugin @JvmOverloads constructor(
             args: Array<out String>?
     ): MutableList<String>? {
         return track {
-            plugin.onTabComplete(sender, command, alias, args)
+            lifecycle.onTabComplete(sender, command, alias, args)
         }
     }
 
     final override fun onLoad() {
         track("Error occurred during plugin load") {
-            plugin.onLoad()
+            lifecycle.onLoad()
         }
     }
 
     final override fun onEnable() {
         track("Error occurred during plugin enable") {
-            plugin.onEnable()
+            lifecycle.onEnable()
         }
     }
 
     final override fun onDisable() {
         track("Error occurred during plugin disable") {
-            plugin.onDisable()
+            lifecycle.onDisable()
         }
     }
 
     final override fun getDefaultWorldGenerator(worldName: String?, id: String?): ChunkGenerator? {
         return track {
-            plugin.getDefaultWorldGenerator(worldName, id)
+            lifecycle.getDefaultWorldGenerator(worldName, id)
         }
     }
 
     override fun toString(): String {
-        return "$plugin [Tracked]"
+        return "$lifecycle [Tracked]"
     }
 
     private fun <T> track(message: String = "Error occurred on plugin lifecycle", block: () -> T): T {
@@ -154,15 +168,15 @@ abstract class TrackedPlugin @JvmOverloads constructor(
 
     // Methods to make visible for PluginLifecycle
 
-    internal fun _getFile(): File = file
+    internal fun directGetFile(): File = file
 
-    internal fun _getClassLoader(): ClassLoader = classLoader
+    internal fun directGetClassLoader(): ClassLoader = classLoader
 
-    internal fun _getTextResource(file: String): Reader? = super.getTextResource(file)
+    internal fun directGetTextResource(file: String): Reader? = super.getTextResource(file)
 
-    internal fun _getCommand(name: String): PluginCommand? = super.getCommand(name)
+    internal fun directGetCommand(name: String): PluginCommand? = super.getCommand(name)
 
-    internal fun _setEnabled(enabled: Boolean) {
+    internal fun directSetEnabled(enabled: Boolean) {
         isEnabled = enabled
     }
 }

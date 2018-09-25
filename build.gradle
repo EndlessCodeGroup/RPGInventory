@@ -3,7 +3,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 // Root project build config
 
 buildscript {
-    ext.kotlinVersion = '1.2.61'
+    ext.kotlinVersion = '1.2.71'
 
     repositories {
         mavenCentral()
@@ -30,7 +30,7 @@ description = "Catch and report all exceptions"
 allprojects {
     ext.pluginName = "Inspector"
     ext.apiProject = project(":api")
-    ext.inspectorVersion = "0.5"
+    ext.inspectorVersion = "0.6"
 }
 
 // Common configurations for all subprojects

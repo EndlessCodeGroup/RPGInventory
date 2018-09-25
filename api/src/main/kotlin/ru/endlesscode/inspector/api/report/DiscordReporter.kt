@@ -1,7 +1,6 @@
 package ru.endlesscode.inspector.api.report
 
-import kotlinx.coroutines.experimental.Job
-import kotlinx.coroutines.experimental.launch
+import ru.endlesscode.inspector.api.PublicApi
 import ru.endlesscode.inspector.api.dsl.markdown
 import ru.endlesscode.inspector.api.service.HastebinStorage
 import ru.endlesscode.inspector.api.service.TextStorage
@@ -20,7 +19,7 @@ class DiscordReporter private constructor(
         private val username: String,
         private val avatarUrl: String,
         private val fields: Set<ReportField>
-) : FilteringReporter() {
+) : CachingReporter() {
 
     companion object {
         const val DEFAULT_AVATAR_URL = "https://gitlab.com/endlesscodegroup/inspector/raw/master/images/inspector_icon_256.png"
@@ -30,30 +29,27 @@ class DiscordReporter private constructor(
 
     private val url = "https://discordapp.com/api/webhooks/$id/$token"
 
-    override fun reportFiltered(
+    override suspend fun report(
             title: String,
             exceptionData: ExceptionData,
             onSuccess: (String, ExceptionData) -> Unit,
             onError: (Throwable) -> Unit
-    ): Job {
+    ) {
         val exception = exceptionData.exception
+        try {
+            val fullReport = buildFullMessage(title, fields, exception)
+            val fullReportUrl = textStorage.storeText(fullReport)
+            val message = buildShortMessage(
+                title = title,
+                fields = fields,
+                shortStackTrace = exception.getFocusedRootStackTrace(focus.focusedPackage),
+                fullReportUrl = fullReportUrl
+            )
 
-        return launch {
-            try {
-                val fullReport = buildFullMessage(title, fields, exception)
-                val fullReportUrl = textStorage.storeText(fullReport)
-                val message = buildShortMessage(
-                        title = title,
-                        fields = fields,
-                        shortStackTrace = exception.getFocusedRootStackTrace(focus.focusedPackage),
-                        fullReportUrl = fullReportUrl
-                )
-
-                sendMessage(message, onError)
-                onSuccess(title, exceptionData)
-            } catch (e: Exception) {
-                onError(e)
-            }
+            sendMessage(message, onError)
+            onSuccess(title, exceptionData)
+        } catch (e: Exception) {
+            onError(e)
         }
     }
 
@@ -82,18 +78,19 @@ class DiscordReporter private constructor(
             fullReportUrl: String
     ): String {
         return markdown {
+            val fieldsValues = fields.map { field ->
+                field.render(prepareTag = { b("$it:") }, separator = " ")
+            }
+
             +b(title)
             +""
-            for (field in fields) {
-                +field.render(prepareTag = { b("$it:") }, separator = " ")
-            }
+            +fieldsValues
             +b("Short stacktrace:")
             code("java") {
                 +shortStackTrace
             }
             +"${b("Full report:")} $fullReportUrl"
-            // Separator (yes I know that it's ugly)
-            +st("                                                                                                 ")
+            +hr()
         }.toString()
     }
 
@@ -123,8 +120,8 @@ class DiscordReporter private constructor(
          * Build configured [DiscordReporter].
          */
         override fun build(): Reporter {
-            if (id.isBlank() || token.isBlank()) {
-                error("You should specify Discord id and token with method `hook(...)` and it shouldn't be blank.")
+            require(id.isNotBlank() && token.isNotBlank()) {
+                "You should specify Discord id and token with method `hook(...)` and it shouldn't be blank."
             }
 
             return DiscordReporter(
@@ -144,6 +141,7 @@ class DiscordReporter private constructor(
          * @param id Webhook id (it contains only digits).
          * @param token Token for webhook (contains digits and small latin letters).
          */
+        @PublicApi
         fun hook(id: String, token: String) : Builder {
             this.id = id
             this.token = token
@@ -155,6 +153,7 @@ class DiscordReporter private constructor(
          *
          * @param username The username.
          */
+        @PublicApi
         fun setUsername(username: String) : Builder {
             this.username = username
             return this
@@ -165,6 +164,7 @@ class DiscordReporter private constructor(
          *
          * @param avatarUrl The avatar url. Starting with protocol and including all slashes.
          */
+        @PublicApi
         fun setAvatar(avatarUrl: String) : Builder {
             this.avatarUrl = avatarUrl
             return this

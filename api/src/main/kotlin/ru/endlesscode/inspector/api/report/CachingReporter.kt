@@ -1,6 +1,6 @@
 package ru.endlesscode.inspector.api.report
 
-import kotlinx.coroutines.experimental.Job
+import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.runBlocking
 import ru.endlesscode.inspector.util.rootCause
 import ru.endlesscode.inspector.util.similarTo
@@ -8,31 +8,40 @@ import ru.endlesscode.inspector.util.similarTo
 /**
  * Reporter that filters if he already reported similar exception.
  */
-abstract class FilteringReporter : Reporter {
+abstract class CachingReporter : Reporter {
+
     private val reportedCauses = mutableListOf<Throwable>()
     private val handlers = mutableListOf<ReportHandler>()
+
+    override var enabled: Boolean = true
 
     override fun addHandler(handler: ReportHandler) {
         handlers.add(handler)
     }
 
     final override fun report(message: String, exception: Exception, async: Boolean) {
-        val cause = exception.rootCause
-        if (shouldBeFiltered(cause)) return
+        if (!enabled) return
 
-        reportedCauses.add(cause)
+        val cause = exception.rootCause
+        if (isReported(cause)) return
+
+        rememberCause(cause)
 
         val exceptionData = ExceptionData(exception)
         beforeReport(message, exceptionData)
 
-        val reportJob = reportFiltered(message, exceptionData, ::onSuccess, ::onError)
+        val reportJob = launch { report(message, exceptionData, ::onSuccess, ::onError) }
         if (!async) {
             runBlocking { reportJob.join() }
         }
     }
 
-    private fun shouldBeFiltered(cause: Throwable): Boolean {
+    private fun isReported(cause: Throwable): Boolean {
         return reportedCauses.find { it.similarTo(cause) } != null
+    }
+
+    private fun rememberCause(cause: Throwable) {
+        reportedCauses.add(cause)
     }
 
     private fun beforeReport(message: String, exceptionData: ExceptionData) {
@@ -48,16 +57,16 @@ abstract class FilteringReporter : Reporter {
     }
 
     /**
-     * Called if exception not filtered and should be reported.
+     * Called if exception not reported yet and reporter not disabled.
      * It's similar to [report] but has additional parameters [onSuccess] and [onError].
      *
      * @param onSuccess Will be called on successful report
      * @param onError Will be called on error during report
      */
-    abstract fun reportFiltered(
+    abstract suspend fun report(
             title: String,
             exceptionData: ExceptionData,
             onSuccess: (String, ExceptionData) -> Unit,
             onError: (Throwable) -> Unit
-    ): Job
+    )
 }

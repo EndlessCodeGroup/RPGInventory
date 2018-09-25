@@ -22,8 +22,10 @@ task("proguard", proguard.gradle.ProGuardTask::class) {
     injars(jarFile.path)
     outjars(outPath)
 
-    val bukkitLib = project.configurations["compileOnly"].first { it.name.startsWith("bukkit-") }
-    libraryjars(bukkitLib.path)
+    val providedLibs = project.configurations["compileOnly"]
+    for (lib in providedLibs) {
+        libraryjars(lib.path)
+    }
 
     // Import static configurations
     configuration("proguard/proguard.pro")

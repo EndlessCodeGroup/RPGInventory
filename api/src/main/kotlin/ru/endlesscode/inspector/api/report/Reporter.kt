@@ -1,9 +1,17 @@
 package ru.endlesscode.inspector.api.report
 
+import ru.endlesscode.inspector.api.PublicApi
 
 interface Reporter {
 
     val focus: ReporterFocus
+
+    /**
+     * Enable or disable reporter.
+     *
+     * @see CachingReporter.report
+     */
+    var enabled: Boolean
 
     /**
      * Alias for [addHandler] method.
@@ -28,30 +36,23 @@ interface Reporter {
         })
     }
 
-
     /**
-     * Add handler to reporter.
+     * Add given [handler] to the reporter.
      *
-     * @param handler The handler
-     * @see [ReportHandler]
+     * @see ReportHandler
      */
     fun addHandler(handler: ReportHandler)
 
     /**
-     * Report about exception with message (asynchronously).
-     *
-     * @param message The message that describes when exception thrown
-     * @param exception The exception
+     * Report about [exception] with the [message] that describes when exception thrown (asynchronously).
      */
     fun report(message: String, exception: Exception) {
         report(message, exception, async = true)
     }
 
     /**
-     * Report about exception with message.
+     * Report about [exception] with the [message] that describes when exception thrown.
      *
-     * @param message The message that describes when exception thrown
-     * @param exception The exception
      * @param async Asynchronously or not
      */
     fun report(message: String, exception: Exception, async: Boolean)
@@ -95,6 +96,7 @@ interface Reporter {
          *
          * @param focus The focus
          */
+        @PublicApi
         fun focusOn(focus: ReporterFocus) : Builder {
             this.focus = focus
             fieldsTags.addAll(focus.environment.defaultFieldsTags)
@@ -102,33 +104,37 @@ interface Reporter {
         }
 
         /**
-         * Set fields tags to report.
+         * Set fields by tags to report.
          */
-        fun setFields(vararg newFields: String) : Builder {
+        @PublicApi
+        fun setFields(vararg newFieldsTags: String) : Builder {
             // TODO: Add check of tag existence may be
-            fieldsTags = newFields.toMutableList()
+            fieldsTags = newFieldsTags.toMutableList()
             return this
         }
 
         /**
-         * Add fields tags to report.
+         * Add fields by tags to report.
          */
-        fun addFields(vararg newFields: String) : Builder {
-            fieldsTags.addAll(newFields)
+        @PublicApi
+        fun addFields(vararg fieldsTags: String) : Builder {
+            this.fieldsTags.addAll(fieldsTags)
             return this
         }
 
         /**
-         * Remove fields tags from report.
+         * Remove fields by tags from report.
          */
-        fun removeFields(vararg fieldsToRemove: String) : Builder {
-            fieldsTags.removeAll(fieldsToRemove)
+        @PublicApi
+        fun removeFields(vararg fieldsTagsToRemove: String) : Builder {
+            fieldsTags.removeAll(fieldsTagsToRemove)
             return this
         }
 
         /**
          * Add custom fields to report.
          */
+        @PublicApi
         fun addCustomFields(vararg customFields: ReportField) : Builder {
             this.customFields.addAll(customFields)
             return this
