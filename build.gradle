@@ -27,39 +27,20 @@ bukkit {
 repositories {
     flatDir { dirs 'libs' }
 
-    maven {
-        name 'dmulloy2-repo'
-        url 'http://repo.dmulloy2.net/nexus/repository/public/'
-    }
-
-    maven {
-        name 'md5-public'
-        url 'http://repo.md-5.net/content/groups/public/'
-    }
-
-    maven {
-        name 'vault-repo'
-        url 'http://nexus.hc.to/content/repositories/pub_releases/'
-    }
+    jcenter()
+    dmulloy2()
+    md5()
+    vault()
+    placeholderapi()
 
     maven {
         name 'keyle-repo'
         url 'http://repo.keyle.de/'
-    }
-
-    maven {
-        name 'placeholderapi-repo'
-        url 'http://repo.extendedclip.com/content/repositories/placeholderapi/'
-    }
+    } 
 
     maven {
         name 'ec-repo'
-        url 'https://raw.github.com/EndlessCodeGroup/mvn-repo/master/'
-    }
-
-    maven {
-        name 'bintray-ec'
-        url 'https://dl.bintray.com/endlesscode/repo'
+        url 'https://gitlab.com/endlesscodegroup/mvn-repo/raw/master/'
     }
 }
 
@@ -82,7 +63,7 @@ dependencies {
     compileOnly('me.baks:RPGPlayerLeveling:3.7.2')
     compileOnly('com.sucy:SkillAPI:3.102')
     compileOnly('me.leothepro555:Skills')
-    compileOnly('ru.endlesscode.inspector:inspector-bukkit:0.5.0')
+    compileOnly('ru.endlesscode.inspector:inspector-bukkit:0.6.0')
     testImplementation('junit:junit:4.12')
 }
 
