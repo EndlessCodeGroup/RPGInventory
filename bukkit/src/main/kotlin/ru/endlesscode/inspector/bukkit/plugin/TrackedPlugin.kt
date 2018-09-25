@@ -32,15 +32,23 @@ abstract class TrackedPlugin @JvmOverloads constructor(
 
     companion object {
         private const val TAG = "[Inspector]"
+        private const val DEFAULT_CONFIG = "inspector.yml"
     }
 
-    override val focusedPackage: String = javaClass.`package`.name
-    override val environment: ReportEnvironment = BukkitEnvironment(this, envProperties)
+    val reporter: Reporter = createReporter()
+    val inspector: Inspector = Inspector(inspectorConfigFile)
 
-    val reporter: Reporter
+    override val focusedPackage: String = javaClass.`package`.name
+    override val environment: ReportEnvironment = BukkitEnvironment(this, inspector, envProperties)
 
     @PublicApi
     val lifecycle: PluginLifecycle
+
+    /**
+     * Returns
+     */
+    protected open val inspectorConfigFile: File
+        get() = dataFolder.resolve(DEFAULT_CONFIG)
 
     init {
         try {
@@ -53,8 +61,7 @@ abstract class TrackedPlugin @JvmOverloads constructor(
             throw e
         }
 
-        reporter = createReporter()
-        reporter.enabled = Inspector.isEnabled
+        reporter.enabled = inspector.isEnabled
         reporter.addHandler(
                 beforeReport = { message, exceptionData ->
                     logger.log(Level.WARNING, "$TAG $message", exceptionData.exception)
