@@ -122,15 +122,15 @@ abstract class PluginLifecycle : PluginBase() {
 
     // For compatibility with JavaPlugin
 
-    fun getCommand(name: String): PluginCommand? = holder._getCommand(name)
+    fun getCommand(name: String): PluginCommand? = holder.directGetCommand(name)
 
-    protected fun getTextResource(file: String): Reader? = holder._getTextResource(file)
+    protected fun getTextResource(file: String): Reader? = holder.directGetTextResource(file)
 
-    protected fun getFile(): File = holder._getFile()
+    protected fun getFile(): File = holder.directGetFile()
 
-    protected fun getClassLoader(): ClassLoader = holder._getClassLoader()
+    protected fun getClassLoader(): ClassLoader = holder.directGetClassLoader()
 
     protected fun setEnabled(enabled: Boolean) {
-        holder._setEnabled(enabled)
+        holder.directSetEnabled(enabled)
     }
 }

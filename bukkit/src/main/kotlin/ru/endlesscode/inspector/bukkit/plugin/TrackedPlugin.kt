@@ -154,15 +154,15 @@ abstract class TrackedPlugin @JvmOverloads constructor(
 
     // Methods to make visible for PluginLifecycle
 
-    internal fun _getFile(): File = file
+    internal fun directGetFile(): File = file
 
-    internal fun _getClassLoader(): ClassLoader = classLoader
+    internal fun directGetClassLoader(): ClassLoader = classLoader
 
-    internal fun _getTextResource(file: String): Reader? = super.getTextResource(file)
+    internal fun directGetTextResource(file: String): Reader? = super.getTextResource(file)
 
-    internal fun _getCommand(name: String): PluginCommand? = super.getCommand(name)
+    internal fun directGetCommand(name: String): PluginCommand? = super.getCommand(name)
 
-    internal fun _setEnabled(enabled: Boolean) {
+    internal fun directSetEnabled(enabled: Boolean) {
         isEnabled = enabled
     }
 }
