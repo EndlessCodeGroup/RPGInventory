@@ -58,18 +58,21 @@ class TrackedScheduler(
         return scheduleSyncRepeatingTask(plugin, task as Runnable, delay, period)
     }
 
+    @Deprecated("""This name is misleading, as it does not schedule "a sync" task, but rather, "an async" task""")
     override fun scheduleAsyncDelayedTask(plugin: Plugin, task: Runnable): Int {
         return scheduleTracked(task) {
             delegate.scheduleAsyncDelayedTask(plugin, it)
         }
     }
 
+    @Deprecated("""This name is misleading, as it does not schedule "a sync" task, but rather, "an async" task""")
     override fun scheduleAsyncDelayedTask(plugin: Plugin, task: Runnable, delay: Long): Int {
         return scheduleTracked(task) {
             delegate.scheduleAsyncDelayedTask(plugin, it, delay)
         }
     }
 
+    @Deprecated("""This name is misleading, as it does not schedule "a sync" task, but rather, "an async" task""")
     override fun scheduleAsyncRepeatingTask(plugin: Plugin, task: Runnable, delay: Long, period: Long): Int {
         return scheduleTracked(task) {
             delegate.scheduleAsyncRepeatingTask(plugin, it, delay, period)

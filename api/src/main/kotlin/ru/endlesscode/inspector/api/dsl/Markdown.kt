@@ -20,7 +20,7 @@ internal abstract class Group(
         private val firstLine: String?,
         private val lastLine: String? = firstLine
 ) : Element {
-    protected val children = arrayListOf<Element>()
+    private val children = arrayListOf<Element>()
 
     protected fun <T : Group> initGroup(group: T, init: T.() -> Unit): T {
         group.init()

@@ -2,6 +2,7 @@ package ru.endlesscode.inspector.api.report
 
 import kotlinx.coroutines.experimental.Job
 import kotlinx.coroutines.experimental.launch
+import ru.endlesscode.inspector.api.PublicApi
 import ru.endlesscode.inspector.api.dsl.markdown
 import ru.endlesscode.inspector.api.service.HastebinStorage
 import ru.endlesscode.inspector.api.service.TextStorage
@@ -145,6 +146,7 @@ class DiscordReporter private constructor(
          * @param id Webhook id (it contains only digits).
          * @param token Token for webhook (contains digits and small latin letters).
          */
+        @PublicApi
         fun hook(id: String, token: String) : Builder {
             this.id = id
             this.token = token
@@ -156,6 +158,7 @@ class DiscordReporter private constructor(
          *
          * @param username The username.
          */
+        @PublicApi
         fun setUsername(username: String) : Builder {
             this.username = username
             return this
@@ -166,6 +169,7 @@ class DiscordReporter private constructor(
          *
          * @param avatarUrl The avatar url. Starting with protocol and including all slashes.
          */
+        @PublicApi
         fun setAvatar(avatarUrl: String) : Builder {
             this.avatarUrl = avatarUrl
             return this
