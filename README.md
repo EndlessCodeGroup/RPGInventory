@@ -13,7 +13,7 @@ It sends:
 
 ## For server owners
 Just copy plugin to `plugins/` folder.
-Also you can disable sending of information about server core and installed plugins in the Inspector's config.
+Also you can disable sending of information about server core and installed plugins in the `inspector.yml` that stored in directory of the each plugin that uses Inspector.
 
 ### Config example
 ```yaml
@@ -91,3 +91,7 @@ public class MyTrackedPlugin extends TrackedPlugin {
 You can see example of plugin migration here: endlesscodegroup/rpginventory/rpginventory@33bca425
 
 > **NOTE:** At this moment available only Discord Reporter, but will be added more reporters soon.
+
+### Bundle Inspector
+
+*Docs will be added soon...*
