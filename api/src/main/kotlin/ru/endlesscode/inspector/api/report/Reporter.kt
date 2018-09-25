@@ -7,6 +7,12 @@ interface Reporter {
     val focus: ReporterFocus
 
     /**
+     * Enable or disable reporter
+     * @see CachingReporter.report
+     */
+    var enabled: Boolean
+
+    /**
      * Alias for [addHandler] method.
      */
     fun addHandler(

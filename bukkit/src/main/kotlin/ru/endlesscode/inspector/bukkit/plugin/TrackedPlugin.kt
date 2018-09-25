@@ -6,11 +6,11 @@ import org.bukkit.command.PluginCommand
 import org.bukkit.configuration.file.FileConfiguration
 import org.bukkit.generator.ChunkGenerator
 import org.bukkit.plugin.java.JavaPlugin
+import ru.endlesscode.inspector.api.PublicApi
 import ru.endlesscode.inspector.api.report.ReportEnvironment
 import ru.endlesscode.inspector.api.report.ReportedException
 import ru.endlesscode.inspector.api.report.Reporter
 import ru.endlesscode.inspector.api.report.ReporterFocus
-import ru.endlesscode.inspector.api.report.SilentReporter
 import ru.endlesscode.inspector.bukkit.Inspector
 import ru.endlesscode.inspector.bukkit.report.BukkitEnvironment
 import java.io.File
@@ -34,6 +34,8 @@ abstract class TrackedPlugin @JvmOverloads constructor(
     override val environment: ReportEnvironment = BukkitEnvironment(this, envProperties)
 
     val reporter: Reporter
+
+    @PublicApi
     val lifecycle: PluginLifecycle
 
     init {
@@ -47,7 +49,8 @@ abstract class TrackedPlugin @JvmOverloads constructor(
             throw e
         }
 
-        reporter = if (Inspector.GLOBAL.isEnabled) createReporter() else SilentReporter
+        reporter = createReporter()
+        reporter.enabled = Inspector.GLOBAL.isEnabled
         reporter.addHandler(
                 beforeReport = { message, exceptionData ->
                     logger.log(Level.WARNING, "${Inspector.TAG} $message", exceptionData.exception)

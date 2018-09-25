@@ -1,7 +1,5 @@
 package ru.endlesscode.inspector.api.report
 
-import kotlinx.coroutines.experimental.Job
-import kotlinx.coroutines.experimental.launch
 import ru.endlesscode.inspector.api.PublicApi
 import ru.endlesscode.inspector.api.dsl.markdown
 import ru.endlesscode.inspector.api.service.HastebinStorage
@@ -21,7 +19,7 @@ class DiscordReporter private constructor(
         private val username: String,
         private val avatarUrl: String,
         private val fields: Set<ReportField>
-) : FilteringReporter() {
+) : CachingReporter() {
 
     companion object {
         const val DEFAULT_AVATAR_URL = "https://gitlab.com/endlesscodegroup/inspector/raw/master/images/inspector_icon_256.png"
@@ -31,30 +29,27 @@ class DiscordReporter private constructor(
 
     private val url = "https://discordapp.com/api/webhooks/$id/$token"
 
-    override fun reportFiltered(
+    override suspend fun report(
             title: String,
             exceptionData: ExceptionData,
             onSuccess: (String, ExceptionData) -> Unit,
             onError: (Throwable) -> Unit
-    ): Job {
+    ) {
         val exception = exceptionData.exception
+        try {
+            val fullReport = buildFullMessage(title, fields, exception)
+            val fullReportUrl = textStorage.storeText(fullReport)
+            val message = buildShortMessage(
+                title = title,
+                fields = fields,
+                shortStackTrace = exception.getFocusedRootStackTrace(focus.focusedPackage),
+                fullReportUrl = fullReportUrl
+            )
 
-        return launch {
-            try {
-                val fullReport = buildFullMessage(title, fields, exception)
-                val fullReportUrl = textStorage.storeText(fullReport)
-                val message = buildShortMessage(
-                        title = title,
-                        fields = fields,
-                        shortStackTrace = exception.getFocusedRootStackTrace(focus.focusedPackage),
-                        fullReportUrl = fullReportUrl
-                )
-
-                sendMessage(message, onError)
-                onSuccess(title, exceptionData)
-            } catch (e: Exception) {
-                onError(e)
-            }
+            sendMessage(message, onError)
+            onSuccess(title, exceptionData)
+        } catch (e: Exception) {
+            onError(e)
         }
     }
 
