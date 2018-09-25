@@ -30,12 +30,3 @@
     java.lang.Object writeReplace();
     java.lang.Object readResolve();
 }
-
--dontwarn com.comphenix.protocol.**
--dontwarn com.google.**
--dontwarn com.sun.**
--dontwarn org.slf4j.**
--dontwarn org.dom4j.**
--dontwarn javax.servlet.**
--dontwarn javax.annotation.**
--dontwarn ru.endlesscode.inspector.shade.org.reflections.vfs.**

@@ -7,7 +7,8 @@ interface Reporter {
     val focus: ReporterFocus
 
     /**
-     * Enable or disable reporter
+     * Enable or disable reporter.
+     *
      * @see CachingReporter.report
      */
     var enabled: Boolean
@@ -36,28 +37,22 @@ interface Reporter {
     }
 
     /**
-     * Add handler to reporter.
+     * Add given [handler] to the reporter.
      *
-     * @param handler The handler
-     * @see [ReportHandler]
+     * @see ReportHandler
      */
     fun addHandler(handler: ReportHandler)
 
     /**
-     * Report about exception with message (asynchronously).
-     *
-     * @param message The message that describes when exception thrown
-     * @param exception The exception
+     * Report about [exception] with the [message] that describes when exception thrown (asynchronously).
      */
     fun report(message: String, exception: Exception) {
         report(message, exception, async = true)
     }
 
     /**
-     * Report about exception with message.
+     * Report about [exception] with the [message] that describes when exception thrown.
      *
-     * @param message The message that describes when exception thrown
-     * @param exception The exception
      * @param async Asynchronously or not
      */
     fun report(message: String, exception: Exception, async: Boolean)

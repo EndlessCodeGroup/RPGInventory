@@ -2,7 +2,7 @@ package ru.endlesscode.inspector.bukkit.report
 
 import org.bukkit.plugin.Plugin
 import ru.endlesscode.inspector.api.report.ListField
-import ru.endlesscode.inspector.bukkit.Inspector
+import ru.endlesscode.inspector.bukkit.InspectorConfig
 import ru.endlesscode.inspector.bukkit.util.printableForm
 
 class PluginListField(plugins: List<Plugin>, interestPluginsNames: List<String>) : ListField<String>(
@@ -17,5 +17,5 @@ class PluginListField(plugins: List<Plugin>, interestPluginsNames: List<String>)
             interestPlugins.map { it.printableForm }
         },
         getSummary = { "<${it.size} plugins>" },
-        shouldShow = { Inspector.GLOBAL.shouldSendData(DataType.PLUGINS) }
+    shouldShow = { InspectorConfig.shouldSendData(DataType.PLUGINS) }
 )

@@ -12,6 +12,7 @@ import ru.endlesscode.inspector.api.report.ReportedException
 import ru.endlesscode.inspector.api.report.Reporter
 import ru.endlesscode.inspector.api.report.ReporterFocus
 import ru.endlesscode.inspector.bukkit.Inspector
+import ru.endlesscode.inspector.bukkit.InspectorConfig
 import ru.endlesscode.inspector.bukkit.report.BukkitEnvironment
 import java.io.File
 import java.io.InputStream
@@ -50,7 +51,7 @@ abstract class TrackedPlugin @JvmOverloads constructor(
         }
 
         reporter = createReporter()
-        reporter.enabled = Inspector.GLOBAL.isEnabled
+        reporter.enabled = InspectorConfig.isEnabled
         reporter.addHandler(
                 beforeReport = { message, exceptionData ->
                     logger.log(Level.WARNING, "${Inspector.TAG} $message", exceptionData.exception)

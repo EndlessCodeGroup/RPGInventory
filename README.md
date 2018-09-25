@@ -1,7 +1,6 @@
 # Inspector
 
 ![Inspector Example](https://gitlab.com/endlesscodegroup/inspector/raw/develop/images/example.png)  
-![Event Logging Example](https://gitlab.com/endlesscodegroup/inspector/raw/develop/images/event_log_example.png)
 
 Inspector helps developers to track all exceptions and crashes of theirs plugins.
 It automatically sends reports to the developer with all needed information about the environment.
@@ -11,10 +10,6 @@ It sends:
 - Server core and version
 - List of plugins with versions
 - Exception stacktrace
-
-Also it contains some tools:
-- EventLogger - tool to log events
-- PacketsLogger - tool to log packets (needs ProtocolLib)
 
 ## For server owners
 Just copy plugin to `plugins/` folder.
@@ -28,45 +23,6 @@ Reporter:
   data:
     core: true    # Info about server core
     plugins: true # Plugins list
-
-# Events logger it is the tool that helps developers to debug events
-EventsLogger:
-  enabled: false
-  # What we need to log
-  # Here you can use super classes to configure event groups
-  log:
-  - Event                               # Log all events
-  - PlayerStatisticIncrementEvent:100   # Skip this event 100 times
-  - PlayerMoveEvent:20                  
-  - -ChunkEvent                         # Don't log all events that extends ChunkEvent
-  - -BlockEvent                          
-  - -VehicleEvent                       
-  - -EntityAirChangeEvent               # Don't log the event
-
-# Packets logger it is the tool that helps developers to debug packets
-PacketsLogger:
-  enabled: false
-  # What we need to log
-  # Format: <protocol>[.<source>[.<name>]]
-  # Minecraft protocol: https://wiki.vg/Protocol
-  # ProtocolLib packet types: https://github.com/aadnk/ProtocolLib/blob/master/modules/API/src/main/java/com/comphenix/protocol/PacketType.java
-  log:
-  - Handshake                           # Log all protocols
-  - Status
-  - Login
-  - Play
-  - Play.Client.POSITION:20             # Skip this packet 20 times
-  - -Play.Client.LOOK                   # Don't want these frequent events
-  - -Play.Server.MAP_CHUNK
-  - -Play.Server.UPDATE_TIME
-  - -Play.Server.ENTITY_HEAD_ROTATION
-  - -Play.Server.ENTITY_VELOCITY
-  - -Play.Server.ENTITY_TELEPORT
-  - -Play.Server.ENTITY_METADATA
-  - -Play.Server.ENTITY_LOOK
-  - -Play.Server.ENTITY_STATUS
-  - -Play.Server.REL_ENTITY_MOVE
-  - -Play.Server.REL_ENTITY_MOVE_LOOK
 ```
 
 ## For plugin developers
@@ -88,7 +44,7 @@ repositories {
 }
 
 dependencies {
-    compileOnly "ru.endlesscode.inspector:inspector-bukkit:0.5.0"
+    compileOnly "ru.endlesscode.inspector:inspector-bukkit:0.6.0"
 }
 ```
 

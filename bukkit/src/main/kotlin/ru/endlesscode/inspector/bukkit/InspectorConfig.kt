@@ -2,17 +2,16 @@ package ru.endlesscode.inspector.bukkit
 
 import ru.endlesscode.inspector.bukkit.report.DataType
 
-class InspectorConfig(
-        val version: String
-) {
+object InspectorConfig {
+
+    @JvmStatic
+    val version: String = "0.6.0"
 
     internal var isEnabled: Boolean = true
     internal var sendData = mutableMapOf(
             DataType.CORE to true,
             DataType.PLUGINS to true
     )
-    internal var isEventsLoggerEnabled: Boolean = false
-    internal var isPacketsLoggerEnabled: Boolean = false
 
-    fun shouldSendData(dataType: DataType) = sendData.getValue(dataType)
+    internal fun shouldSendData(dataType: DataType) = sendData.getValue(dataType)
 }
