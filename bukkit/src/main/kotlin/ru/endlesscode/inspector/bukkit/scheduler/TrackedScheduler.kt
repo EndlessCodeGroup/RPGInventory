@@ -4,6 +4,7 @@ import org.bukkit.plugin.Plugin
 import org.bukkit.scheduler.BukkitRunnable
 import org.bukkit.scheduler.BukkitScheduler
 import org.bukkit.scheduler.BukkitTask
+import ru.endlesscode.inspector.api.PublicApi
 import ru.endlesscode.inspector.api.report.Reporter
 import ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin
 
@@ -12,6 +13,7 @@ class TrackedScheduler(
     private val reporter: Reporter
 ) : BukkitScheduler by delegate {
 
+    @PublicApi
     constructor(plugin: TrackedPlugin) : this(plugin.server.scheduler, plugin.reporter)
 
     override fun scheduleSyncDelayedTask(plugin: Plugin, task: Runnable): Int {

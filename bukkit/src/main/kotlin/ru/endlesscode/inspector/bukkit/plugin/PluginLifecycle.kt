@@ -9,6 +9,7 @@ import org.bukkit.generator.ChunkGenerator
 import org.bukkit.plugin.PluginBase
 import org.bukkit.plugin.PluginDescriptionFile
 import org.bukkit.plugin.PluginLoader
+import ru.endlesscode.inspector.api.PublicApi
 import ru.endlesscode.inspector.api.report.Reporter
 import java.io.File
 import java.io.InputStream
@@ -17,6 +18,7 @@ import java.util.logging.Logger
 
 abstract class PluginLifecycle : PluginBase() {
 
+    @PublicApi
     val reporter: Reporter
         get() = holder.reporter
 
@@ -124,12 +126,16 @@ abstract class PluginLifecycle : PluginBase() {
 
     fun getCommand(name: String): PluginCommand? = holder.directGetCommand(name)
 
+    @PublicApi
     protected fun getTextResource(file: String): Reader? = holder.directGetTextResource(file)
 
+    @PublicApi
     protected fun getFile(): File = holder.directGetFile()
 
+    @PublicApi
     protected fun getClassLoader(): ClassLoader = holder.directGetClassLoader()
 
+    @PublicApi
     protected fun setEnabled(enabled: Boolean) {
         holder.directSetEnabled(enabled)
     }

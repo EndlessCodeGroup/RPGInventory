@@ -1,5 +1,6 @@
 package ru.endlesscode.inspector.api.report
 
+import ru.endlesscode.inspector.api.PublicApi
 
 interface Reporter {
 
@@ -94,6 +95,7 @@ interface Reporter {
          *
          * @param focus The focus
          */
+        @PublicApi
         fun focusOn(focus: ReporterFocus) : Builder {
             this.focus = focus
             fieldsTags.addAll(focus.environment.defaultFieldsTags)
@@ -103,6 +105,7 @@ interface Reporter {
         /**
          * Set fields by tags to report.
          */
+        @PublicApi
         fun setFields(vararg newFieldsTags: String) : Builder {
             // TODO: Add check of tag existence may be
             fieldsTags = newFieldsTags.toMutableList()
@@ -112,6 +115,7 @@ interface Reporter {
         /**
          * Add fields by tags to report.
          */
+        @PublicApi
         fun addFields(vararg fieldsTags: String) : Builder {
             this.fieldsTags.addAll(fieldsTags)
             return this
@@ -120,6 +124,7 @@ interface Reporter {
         /**
          * Remove fields by tags from report.
          */
+        @PublicApi
         fun removeFields(vararg fieldsTagsToRemove: String) : Builder {
             fieldsTags.removeAll(fieldsTagsToRemove)
             return this
@@ -128,6 +133,7 @@ interface Reporter {
         /**
          * Add custom fields to report.
          */
+        @PublicApi
         fun addCustomFields(vararg customFields: ReportField) : Builder {
             this.customFields.addAll(customFields)
             return this
