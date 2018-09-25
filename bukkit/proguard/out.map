@@ -460,48 +460,48 @@ ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin -> ru.endlesscode.inspector
     45:45:ru.endlesscode.inspector.bukkit.plugin.PluginLifecycle getLifecycle() -> getLifecycle
     51:51:java.io.File getInspectorConfigFile() -> getInspectorConfigFile
     ru.endlesscode.inspector.api.report.Reporter createReporter() -> createReporter
-    81:81:org.bukkit.configuration.file.FileConfiguration getConfig() -> getConfig
-    85:86:void reloadConfig() -> reloadConfig
-    89:90:void saveConfig() -> saveConfig
-    93:94:void saveDefaultConfig() -> saveDefaultConfig
-    97:98:void saveResource(java.lang.String,boolean) -> saveResource
-    101:101:java.io.InputStream getResource(java.lang.String) -> getResource
-    105:105:org.bukkit.command.PluginCommand getCommand(java.lang.String) -> getCommand
-    116:116:boolean onCommand(org.bukkit.command.CommandSender,org.bukkit.command.Command,java.lang.String,java.lang.String[]) -> onCommand
-    127:127:java.util.List onTabComplete(org.bukkit.command.CommandSender,org.bukkit.command.Command,java.lang.String,java.lang.String[]) -> onTabComplete
-    133:136:void onLoad() -> onLoad
-    139:142:void onEnable() -> onEnable
-    145:148:void onDisable() -> onDisable
-    151:151:org.bukkit.generator.ChunkGenerator getDefaultWorldGenerator(java.lang.String,java.lang.String) -> getDefaultWorldGenerator
-    157:157:java.lang.String toString() -> toString
-    161:165:java.lang.Object track(java.lang.String,ru.endlesscode.inspector.shade.kotlin.jvm.functions.Function0) -> a
-    160:160:java.lang.Object track$default(ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin,java.lang.String,ru.endlesscode.inspector.shade.kotlin.jvm.functions.Function0,int,java.lang.Object) -> a
-    171:171:java.io.File directGetFile$Inspector() -> directGetFile$Inspector
-    173:173:java.lang.ClassLoader directGetClassLoader$Inspector() -> directGetClassLoader$Inspector
-    175:175:java.io.Reader directGetTextResource$Inspector(java.lang.String) -> directGetTextResource$Inspector
-    177:177:org.bukkit.command.PluginCommand directGetCommand$Inspector(java.lang.String) -> directGetCommand$Inspector
-    180:181:void directSetEnabled$Inspector(boolean) -> directSetEnabled$Inspector
-    28:72:void <init>(java.lang.Class,ru.endlesscode.inspector.bukkit.report.BukkitEnvironment$Properties) -> <init>
+    82:82:org.bukkit.configuration.file.FileConfiguration getConfig() -> getConfig
+    86:87:void reloadConfig() -> reloadConfig
+    90:91:void saveConfig() -> saveConfig
+    94:95:void saveDefaultConfig() -> saveDefaultConfig
+    98:99:void saveResource(java.lang.String,boolean) -> saveResource
+    102:102:java.io.InputStream getResource(java.lang.String) -> getResource
+    106:106:org.bukkit.command.PluginCommand getCommand(java.lang.String) -> getCommand
+    117:117:boolean onCommand(org.bukkit.command.CommandSender,org.bukkit.command.Command,java.lang.String,java.lang.String[]) -> onCommand
+    128:128:java.util.List onTabComplete(org.bukkit.command.CommandSender,org.bukkit.command.Command,java.lang.String,java.lang.String[]) -> onTabComplete
+    134:137:void onLoad() -> onLoad
+    140:143:void onEnable() -> onEnable
+    146:149:void onDisable() -> onDisable
+    152:152:org.bukkit.generator.ChunkGenerator getDefaultWorldGenerator(java.lang.String,java.lang.String) -> getDefaultWorldGenerator
+    158:158:java.lang.String toString() -> toString
+    162:166:java.lang.Object track(java.lang.String,ru.endlesscode.inspector.shade.kotlin.jvm.functions.Function0) -> a
+    161:161:java.lang.Object track$default(ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin,java.lang.String,ru.endlesscode.inspector.shade.kotlin.jvm.functions.Function0,int,java.lang.Object) -> a
+    172:172:java.io.File directGetFile$Inspector() -> directGetFile$Inspector
+    174:174:java.lang.ClassLoader directGetClassLoader$Inspector() -> directGetClassLoader$Inspector
+    176:176:java.io.Reader directGetTextResource$Inspector(java.lang.String) -> directGetTextResource$Inspector
+    178:178:org.bukkit.command.PluginCommand directGetCommand$Inspector(java.lang.String) -> directGetCommand$Inspector
+    181:182:void directSetEnabled$Inspector(boolean) -> directSetEnabled$Inspector
+    28:73:void <init>(java.lang.Class,ru.endlesscode.inspector.bukkit.report.BukkitEnvironment$Properties) -> <init>
     30:30:void <init>(java.lang.Class,ru.endlesscode.inspector.bukkit.report.BukkitEnvironment$Properties,int,ru.endlesscode.inspector.shade.kotlin.jvm.internal.DefaultConstructorMarker) -> <init>
     void <init>(java.lang.Class) -> <init>
     void <clinit>() -> <clinit>
 ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin$1 -> ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin$1:
     ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin this$0 -> a
     28:28:java.lang.Object invoke(java.lang.Object,java.lang.Object) -> a
-    1067:1068:void invoke(java.lang.String,ru.endlesscode.inspector.api.report.ExceptionData):67:68 -> a
-    1067:1068:java.lang.Object invoke(java.lang.Object,java.lang.Object):28 -> a
+    1068:1069:void invoke(java.lang.String,ru.endlesscode.inspector.api.report.ExceptionData):68:69 -> a
+    1068:1069:java.lang.Object invoke(java.lang.Object,java.lang.Object):28 -> a
     void <init>(ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin) -> <init>
 ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin$2 -> ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin$2:
     ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin this$0 -> a
     28:28:java.lang.Object invoke(java.lang.Object,java.lang.Object) -> a
-    1070:1071:void invoke(java.lang.String,ru.endlesscode.inspector.api.report.ExceptionData):70:71 -> a
-    1070:1071:java.lang.Object invoke(java.lang.Object,java.lang.Object):28 -> a
+    1071:1072:void invoke(java.lang.String,ru.endlesscode.inspector.api.report.ExceptionData):71:72 -> a
+    1071:1072:java.lang.Object invoke(java.lang.Object,java.lang.Object):28 -> a
     void <init>(ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin) -> <init>
 ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin$3 -> ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin$3:
     ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin this$0 -> a
     28:28:java.lang.Object invoke(java.lang.Object) -> a
-    1073:1074:void invoke(java.lang.Throwable):73:74 -> a
-    1073:1074:java.lang.Object invoke(java.lang.Object):28 -> a
+    1074:1075:void invoke(java.lang.Throwable):74:75 -> a
+    1074:1075:java.lang.Object invoke(java.lang.Object):28 -> a
     void <init>(ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin) -> <init>
 ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin$Companion -> ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin$Companion:
     33:33:void <init>() -> <init>
@@ -510,16 +510,16 @@ ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin$getCommand$1 -> ru.endlessc
     ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin this$0 -> a
     java.lang.String $name -> b
     28:28:java.lang.Object invoke() -> a
-    1106:1106:org.bukkit.command.PluginCommand invoke():106:106 -> a
-    1106:1106:java.lang.Object invoke():28 -> a
+    1107:1107:org.bukkit.command.PluginCommand invoke():107:107 -> a
+    1107:1107:java.lang.Object invoke():28 -> a
     void <init>(ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin,java.lang.String) -> <init>
 ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin$getDefaultWorldGenerator$1 -> ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin$b:
     ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin this$0 -> a
     java.lang.String $worldName -> b
     java.lang.String $id -> c
     28:28:java.lang.Object invoke() -> a
-    1152:1152:org.bukkit.generator.ChunkGenerator invoke():152:152 -> a
-    1152:1152:java.lang.Object invoke():28 -> a
+    1153:1153:org.bukkit.generator.ChunkGenerator invoke():153:153 -> a
+    1153:1153:java.lang.Object invoke():28 -> a
     void <init>(ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin,java.lang.String,java.lang.String) -> <init>
 ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin$onCommand$1 -> ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin$c:
     ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin this$0 -> a
@@ -528,26 +528,26 @@ ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin$onCommand$1 -> ru.endlessco
     java.lang.String $label -> d
     java.lang.String[] $args -> e
     28:28:java.lang.Object invoke() -> a
-    1117:1117:boolean invoke():117:117 -> a
-    1117:1117:java.lang.Object invoke():28 -> a
+    1118:1118:boolean invoke():118:118 -> a
+    1118:1118:java.lang.Object invoke():28 -> a
     void <init>(ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin,org.bukkit.command.CommandSender,org.bukkit.command.Command,java.lang.String,java.lang.String[]) -> <init>
 ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin$onDisable$1 -> ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin$d:
     ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin this$0 -> a
     28:28:java.lang.Object invoke() -> a
-    1146:1147:void invoke():146:147 -> a
-    1146:1147:java.lang.Object invoke():28 -> a
+    1147:1148:void invoke():147:148 -> a
+    1147:1148:java.lang.Object invoke():28 -> a
     void <init>(ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin) -> <init>
 ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin$onEnable$1 -> ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin$e:
     ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin this$0 -> a
     28:28:java.lang.Object invoke() -> a
-    1140:1141:void invoke():140:141 -> a
-    1140:1141:java.lang.Object invoke():28 -> a
+    1141:1142:void invoke():141:142 -> a
+    1141:1142:java.lang.Object invoke():28 -> a
     void <init>(ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin) -> <init>
 ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin$onLoad$1 -> ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin$f:
     ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin this$0 -> a
     28:28:java.lang.Object invoke() -> a
-    1134:1135:void invoke():134:135 -> a
-    1134:1135:java.lang.Object invoke():28 -> a
+    1135:1136:void invoke():135:136 -> a
+    1135:1136:java.lang.Object invoke():28 -> a
     void <init>(ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin) -> <init>
 ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin$onTabComplete$1 -> ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin$g:
     ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin this$0 -> a
@@ -556,8 +556,8 @@ ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin$onTabComplete$1 -> ru.endle
     java.lang.String $alias -> d
     java.lang.String[] $args -> e
     28:28:java.lang.Object invoke() -> a
-    1128:1128:java.util.List invoke():128:128 -> a
-    1128:1128:java.lang.Object invoke():28 -> a
+    1129:1129:java.util.List invoke():129:129 -> a
+    1129:1129:java.lang.Object invoke():28 -> a
     void <init>(ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin,org.bukkit.command.CommandSender,org.bukkit.command.Command,java.lang.String,java.lang.String[]) -> <init>
 ru.endlesscode.inspector.bukkit.plugin.TrackedPluginLoader -> ru.endlesscode.inspector.bukkit.plugin.TrackedPluginLoader:
     org.bukkit.plugin.PluginLoader delegate -> a

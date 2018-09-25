@@ -35,7 +35,7 @@ abstract class TrackedPlugin @JvmOverloads constructor(
         private const val DEFAULT_CONFIG = "inspector.yml"
     }
 
-    val reporter: Reporter = createReporter()
+    val reporter: Reporter
     val inspector: Inspector = Inspector(inspectorConfigFile)
 
     override val focusedPackage: String = javaClass.`package`.name
@@ -61,6 +61,7 @@ abstract class TrackedPlugin @JvmOverloads constructor(
             throw e
         }
 
+        reporter = createReporter()
         reporter.enabled = inspector.isEnabled
         reporter.addHandler(
                 beforeReport = { message, exceptionData ->
