@@ -39,7 +39,7 @@ To add Inspector to the plugin you should:
 ```groovy
 repositories { 
     maven { 
-        url "https://dl.bintray.com/endlesscode/repo" 
+        jcenter()
     } 
 }
 
