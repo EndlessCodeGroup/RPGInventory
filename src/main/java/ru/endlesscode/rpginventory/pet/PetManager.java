@@ -30,7 +30,14 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.*;
+import org.bukkit.entity.Animals;
+import org.bukkit.entity.Horse;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Ocelot;
+import org.bukkit.entity.Pig;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.Tameable;
+import org.bukkit.entity.Wolf;
 import org.bukkit.inventory.HorseInventory;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -47,10 +54,15 @@ import ru.endlesscode.rpginventory.inventory.slot.SlotManager;
 import ru.endlesscode.rpginventory.utils.EffectUtils;
 import ru.endlesscode.rpginventory.utils.ItemUtils;
 import ru.endlesscode.rpginventory.utils.LocationUtils;
+import ru.endlesscode.rpginventory.utils.Log;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * Created by OsipXD on 26.08.2015
@@ -104,8 +116,8 @@ public class PetManager {
             return false;
         }
 
-        RPGInventory.getPluginLogger().info(PetManager.PETS.size() + " pet(s) has been loaded");
-        RPGInventory.getPluginLogger().info(PetManager.PET_FOOD.size() + " food(s) has been loaded");
+        Log.i("{0} pet(s) has been loaded", PetManager.PETS.size());
+        Log.i("{0} food(s) has been loaded", PetManager.PET_FOOD.size());
 
         // Register events
         instance.getServer().getPluginManager().registerEvents(new PetListener(), instance);
@@ -119,9 +131,7 @@ public class PetManager {
             PetType petType = new PetType(config);
             PetManager.PETS.put(name, petType);
         } catch (Exception e) {
-            String message = String.format(
-                    "Pet '%s' can't be added: %s", name, e.getLocalizedMessage());
-            RPGInventory.getPluginLogger().warning(message);
+            Log.w("Pet '{0}' can't be added: {1}", name, e.getLocalizedMessage());
         }
     }
 
@@ -130,9 +140,7 @@ public class PetManager {
             PetFood pet = new PetFood(config);
             PetManager.PET_FOOD.put(name, pet);
         } catch (Exception e) {
-            String message = String.format(
-                    "Pet food '%s' can't be added: %s", name, e.getLocalizedMessage());
-            RPGInventory.getPluginLogger().warning(message);
+            Log.w("Pet food '{0}' can't be added: {1}", name, e.getLocalizedMessage());
         }
     }
 

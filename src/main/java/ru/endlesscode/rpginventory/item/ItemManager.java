@@ -35,6 +35,7 @@ import ru.endlesscode.rpginventory.pet.PetManager;
 import ru.endlesscode.rpginventory.pet.PetType;
 import ru.endlesscode.rpginventory.utils.InventoryUtils;
 import ru.endlesscode.rpginventory.utils.ItemUtils;
+import ru.endlesscode.rpginventory.utils.Log;
 import ru.endlesscode.rpginventory.utils.PlayerUtils;
 import ru.endlesscode.rpginventory.utils.StringUtils;
 
@@ -81,7 +82,7 @@ public class ItemManager {
             return false;
         }
 
-        RPGInventory.getPluginLogger().info(CUSTOM_ITEMS.size() + " item(s) has been loaded");
+        Log.i("{0} item(s) has been loaded", CUSTOM_ITEMS.size());
 
         instance.getServer().getPluginManager().registerEvents(new ItemListener(), instance);
         return true;
@@ -92,8 +93,7 @@ public class ItemManager {
             CustomItem customItem = new CustomItem(name, config);
             CUSTOM_ITEMS.put(name, customItem);
         } catch (Exception e) {
-            String message = String.format("Item '%s' can't be added: %s", name, e.getLocalizedMessage());
-            RPGInventory.getPluginLogger().warning(message);
+            Log.w("Item '{0}' can't be added: {1}", name, e.getLocalizedMessage());
         }
     }
 

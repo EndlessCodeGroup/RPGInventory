@@ -26,7 +26,6 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import ru.endlesscode.rpginventory.RPGInventory;
 import ru.endlesscode.rpginventory.inventory.backpack.BackpackManager;
 import ru.endlesscode.rpginventory.inventory.backpack.BackpackType;
 import ru.endlesscode.rpginventory.item.CustomItem;
@@ -119,7 +118,7 @@ public class ItemUtils {
         String[] textures = texture.split(":");
 
         if (Material.getMaterial(textures[0]) == null) {
-            RPGInventory.getPluginLogger().warning("Material " + textures[0] + " not found");
+            Log.w("Material {0} not found", textures[0]);
             return new ItemStack(Material.AIR);
         }
 

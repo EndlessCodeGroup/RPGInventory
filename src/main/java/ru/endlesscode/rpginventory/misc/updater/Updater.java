@@ -21,11 +21,11 @@ package ru.endlesscode.rpginventory.misc.updater;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
-import org.jetbrains.annotations.*;
+import org.jetbrains.annotations.NotNull;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
-import ru.endlesscode.rpginventory.RPGInventory;
+import ru.endlesscode.rpginventory.utils.Log;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -295,8 +295,8 @@ public class Updater {
         try {
             return tryToRead();
         } catch (@NotNull final IOException | NullPointerException e) {
-            RPGInventory.getPluginLogger().severe("The updater could not contact " + HOST + " for check updates.");
-            RPGInventory.getPluginLogger().severe("The site experiencing temporary downtime.");
+            Log.s("The updater could not contact {0} for check updates.", HOST);
+            Log.s("The site experiencing temporary downtime.");
             this.result = UpdateResult.FAIL_DBO;
             return false;
         }

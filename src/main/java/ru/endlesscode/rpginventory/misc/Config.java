@@ -21,6 +21,7 @@ package ru.endlesscode.rpginventory.misc;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import ru.endlesscode.rpginventory.RPGInventory;
+import ru.endlesscode.rpginventory.utils.Log;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -60,7 +61,7 @@ public class Config {
         try {
             config.save(configFile.toFile());
         } catch (IOException e) {
-            RPGInventory.getPluginLogger().warning(e.getMessage());
+            Log.w(e);
         }
     }
 }

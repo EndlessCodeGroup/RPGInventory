@@ -36,6 +36,7 @@ import ru.endlesscode.rpginventory.inventory.slot.Slot;
 import ru.endlesscode.rpginventory.inventory.slot.SlotManager;
 import ru.endlesscode.rpginventory.misc.Config;
 import ru.endlesscode.rpginventory.utils.ItemUtils;
+import ru.endlesscode.rpginventory.utils.Log;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -89,8 +90,8 @@ public class BackpackManager {
             return false;
         }
 
-        RPGInventory.getPluginLogger().info(BACKPACK_TYPES.size() + " backpack type(s) has been loaded");
-        RPGInventory.getPluginLogger().info(BACKPACKS.size() + " backpack(s) has been loaded");
+        Log.i("{0} backpack type(s) has been loaded", BACKPACK_TYPES.size());
+        Log.i("{0} backpack(s) has been loaded", BACKPACKS.size());
 
         BACKPACK_LIMIT = Config.getConfig().getInt("backpacks.limit", 0);
 
@@ -104,9 +105,7 @@ public class BackpackManager {
             BackpackType backpackType = new BackpackType(config);
             BACKPACK_TYPES.put(name, backpackType);
         } catch (Exception e) {
-            String message = String.format(
-                    "Backpack '%s' can't be added: %s", name, e.getLocalizedMessage());
-            RPGInventory.getPluginLogger().warning(message);
+            Log.w("Backpack '{0}' can't be added: {1}", name, e.getLocalizedMessage());
         }
     }
 
@@ -194,9 +193,7 @@ public class BackpackManager {
         try {
             loadBackpack(path);
         } catch (IOException e) {
-            RPGInventory.getPluginLogger().warning(String.format(
-                    "Error: %s (on loading backpack %s)", e.getLocalizedMessage(), path.getFileName().toString()
-            ));
+            Log.w("Error: {0} (on loading backpack {1})", e.getLocalizedMessage(), path.getFileName().toString());
         }
     }
 
