@@ -88,7 +88,7 @@ public class PetManager {
         SLOT_PET = SlotManager.instance().getPetSlot() != null ? SlotManager.instance().getPetSlot().getSlotId() : -1;
 
         if (!PetManager.isEnabled()) {
-            instance.getLogger().info("Slot for pets not found");
+            Log.i("Slot for pets not found");
             return false;
         }
 
@@ -124,7 +124,7 @@ public class PetManager {
         }
 
         if (PETS.isEmpty()) {
-            instance.getLogger().info("No one configured pet found");
+            Log.i("No one configured pet found");
             return false;
         }
 
@@ -242,7 +242,7 @@ public class PetManager {
                                 horsePet.setCarryingChest(true);
                             } catch (UnsupportedOperationException ignored) {
                                 //org.bukkit.craftbukkit.entity.CraftHorse.setCarryingChest (CraftHorse.class:56)
-                                RPGInventory.getInstance().getLogger().warning("Failed to add a chest to the horse.");
+                                Log.w("Failed to add a chest to the horse.");
                             }
                         }
 
