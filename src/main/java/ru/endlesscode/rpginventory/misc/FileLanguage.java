@@ -136,7 +136,9 @@ public class FileLanguage {
 
     private void validateLocaleFile() {
         Properties properties = new Properties();
-        try (InputStreamReader isr = new InputStreamReader(this.plugin.getResource("lang/en.lang"), StandardCharsets.UTF_8)) {
+        InputStream defaultLocale = this.plugin.getResource("lang/en.lang");
+        // FIXME: Theoretically defaultLocale can be null
+        try (InputStreamReader isr = new InputStreamReader(defaultLocale, StandardCharsets.UTF_8)) {
             properties.load(isr);
         } catch (IOException e) {
             Log.w(e, "Failed to read inbuilt locale file");
