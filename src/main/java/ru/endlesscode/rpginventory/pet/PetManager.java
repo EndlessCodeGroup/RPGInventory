@@ -70,6 +70,9 @@ import java.util.UUID;
  * All rights reserved 2014 - 2016 © «EndlessCode Group»
  */
 public class PetManager {
+
+    private static final String CONFIG_NAME = "pets.yml";
+
     private static final String METADATA_KEY_PET_OWNER = "rpginventory:petowner";
     private static final Map<String, PetType> PETS = new HashMap<>();
     private static final Map<String, PetFood> PET_FOOD = new HashMap<>();
@@ -90,21 +93,30 @@ public class PetManager {
         }
 
         try {
-            Path petsFile = RPGInventory.getInstance().getDataPath().resolve("pets.yml");
+            Path petsFile = RPGInventory.getInstance().getDataPath().resolve(CONFIG_NAME);
             if (Files.notExists(petsFile)) {
-                RPGInventory.getInstance().saveResource("pets.yml", false);
+                RPGInventory.getInstance().saveResource(CONFIG_NAME, false);
             }
 
             FileConfiguration petsConfig = YamlConfiguration.loadConfiguration(petsFile.toFile());
 
-            PetManager.PETS.clear();
-            for (String key : petsConfig.getConfigurationSection("pets").getKeys(false)) {
-                tryToAddPet(key, petsConfig.getConfigurationSection("pets." + key));
+            @Nullable final ConfigurationSection pets = petsConfig.getConfigurationSection("pets");
+            if (pets == null) {
+                Log.s("Section 'pets' not found in {0}", CONFIG_NAME);
+                return false;
             }
 
-            PetManager.PET_FOOD.clear();
-            for (String key : petsConfig.getConfigurationSection("food").getKeys(false)) {
-                tryToAddPetFood(key, petsConfig.getConfigurationSection("food." + key));
+            for (String key : pets.getKeys(false)) {
+                tryToAddPet(key, pets.getConfigurationSection(key));
+            }
+
+            @Nullable final ConfigurationSection food = petsConfig.getConfigurationSection("food");
+            if (food == null) {
+                Log.s("Section 'food' not found in {0}", CONFIG_NAME);
+            } else {
+                for (String key : food.getKeys(false)) {
+                    tryToAddPetFood(key, food.getConfigurationSection(key));
+                }
             }
         } catch (Exception e) {
             instance.getReporter().report("Error on PetManager initialization", e);

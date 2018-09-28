@@ -53,6 +53,9 @@ import java.util.UUID;
  * All rights reserved 2014 - 2016 © «EndlessCode Group»
  */
 public class BackpackManager {
+
+    private static final String CONFIG_NAME = "backpacks.yml";
+
     private static final HashMap<String, BackpackType> BACKPACK_TYPES = new HashMap<>();
     private static final HashMap<UUID, Backpack> BACKPACKS = new HashMap<>();
     private static int BACKPACK_LIMIT;
@@ -67,37 +70,42 @@ public class BackpackManager {
         reporter = instance.getReporter();
 
         try {
-            Path petsFile = RPGInventory.getInstance().getDataPath().resolve("backpacks.yml");
+            Path petsFile = RPGInventory.getInstance().getDataPath().resolve(CONFIG_NAME);
             if (Files.notExists(petsFile)) {
-                RPGInventory.getInstance().saveResource("backpacks.yml", false);
+                RPGInventory.getInstance().saveResource(CONFIG_NAME, false);
             }
 
             FileConfiguration petsConfig = YamlConfiguration.loadConfiguration(petsFile.toFile());
 
-            BACKPACK_TYPES.clear();
-            for (String key : petsConfig.getConfigurationSection("backpacks").getKeys(false)) {
-                tryToAddBackpack(key, petsConfig.getConfigurationSection("backpacks." + key));
+            @Nullable final ConfigurationSection backpacks = petsConfig.getConfigurationSection("backpacks");
+            if (backpacks == null) {
+                Log.s("Section 'backpacks' not found in {0}", CONFIG_NAME);
+                return false;
+            }
+
+            for (String key : backpacks.getKeys(false)) {
+                tryToAddBackpack(key, backpacks.getConfigurationSection(key));
+            }
+
+            if (BACKPACK_TYPES.isEmpty()) {
+                instance.getLogger().info("No one backpack type found");
+                return false;
             }
 
             BackpackManager.loadBackpacks();
+
+            Log.i("{0} backpack type(s) has been loaded", BACKPACK_TYPES.size());
+            Log.i("{0} backpack(s) has been loaded", BACKPACKS.size());
+
+            BACKPACK_LIMIT = Config.getConfig().getInt("backpacks.limit", 0);
+
+            // Register events
+            instance.getServer().getPluginManager().registerEvents(new BackpackListener(), instance);
+            return true;
         } catch (Exception e) {
             reporter.report("Error on BackpackManager initialization", e);
             return false;
         }
-
-        if (BACKPACK_TYPES.isEmpty()) {
-            instance.getLogger().info("No one backpack type found");
-            return false;
-        }
-
-        Log.i("{0} backpack type(s) has been loaded", BACKPACK_TYPES.size());
-        Log.i("{0} backpack(s) has been loaded", BACKPACKS.size());
-
-        BACKPACK_LIMIT = Config.getConfig().getInt("backpacks.limit", 0);
-
-        // Register events
-        instance.getServer().getPluginManager().registerEvents(new BackpackListener(), instance);
-        return true;
     }
 
     private static void tryToAddBackpack(String name, @NotNull ConfigurationSection config) {

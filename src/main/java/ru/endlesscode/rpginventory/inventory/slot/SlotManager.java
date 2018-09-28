@@ -40,6 +40,9 @@ import java.util.Objects;
  * All rights reserved 2014 - 2016 © «EndlessCode Group»
  */
 public class SlotManager {
+
+    private static final String CONFIG_NAME = "slots.yml";
+
     @Nullable
     private static SlotManager slotManager = null;
 
@@ -51,15 +54,21 @@ public class SlotManager {
     private final FileConfiguration slotsConfig;
 
     private SlotManager() {
-        this.slotsFile = RPGInventory.getInstance().getDataPath().resolve("slots.yml");
+        this.slotsFile = RPGInventory.getInstance().getDataPath().resolve(CONFIG_NAME);
         if (Files.notExists(slotsFile)) {
-            RPGInventory.getInstance().saveResource("slots.yml", false);
+            RPGInventory.getInstance().saveResource(CONFIG_NAME, false);
         }
 
         this.slotsConfig = YamlConfiguration.loadConfiguration(slotsFile.toFile());
-        final ConfigurationSection slots = this.slotsConfig.getConfigurationSection("slots");
+
+        @Nullable final ConfigurationSection slots = this.slotsConfig.getConfigurationSection("slots");
+        if (slots == null) {
+            Log.s("Section 'slots' not found in {0}", CONFIG_NAME);
+            return;
+        }
+
         for (String slotName : slots.getKeys(false)) {
-            ConfigurationSection slotConfiguration = slots.getConfigurationSection(slotName);
+            final ConfigurationSection slotConfiguration = slots.getConfigurationSection(slotName);
             Slot.SlotType slotType = Slot.SlotType.valueOf(slotConfiguration.getString("type"));
             Slot slot;
             if (slotType == Slot.SlotType.ACTION) {
