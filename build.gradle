@@ -53,7 +53,7 @@ dependencies {
     compileOnly('net.milkbowl.vault:VaultAPI:1.6') {
         exclude group: 'org.bukkit'
     }
-    compileOnly('com.comphenix.protocol:ProtocolLib-API:4.4.0-SNAPSHOT')
+    compileOnly('com.comphenix.protocol:ProtocolLib-API:4.4.0')
     compileOnly('org.jetbrains:annotations:15.0')
     compileOnly('me.clip:placeholderapi:2.6.0')
     compileOnly('me.robin:BattleLevelsAPI:6.9.1')

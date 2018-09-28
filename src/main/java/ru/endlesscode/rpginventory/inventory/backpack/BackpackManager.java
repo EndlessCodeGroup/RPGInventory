@@ -35,6 +35,7 @@ import ru.endlesscode.rpginventory.inventory.InventoryManager;
 import ru.endlesscode.rpginventory.inventory.slot.Slot;
 import ru.endlesscode.rpginventory.inventory.slot.SlotManager;
 import ru.endlesscode.rpginventory.misc.Config;
+import ru.endlesscode.rpginventory.utils.FileUtils;
 import ru.endlesscode.rpginventory.utils.ItemUtils;
 import ru.endlesscode.rpginventory.utils.Log;
 
@@ -201,7 +202,9 @@ public class BackpackManager {
         try {
             loadBackpack(path);
         } catch (IOException e) {
-            Log.w("Error: {0} (on loading backpack {1})", e.getLocalizedMessage(), path.getFileName().toString());
+            FileUtils.resolveException(path);
+            Log.s("Error on loading backpack {0}", path.getFileName().toString());
+            Log.s("Will be created new backpack. Old file was renamed.");
         }
     }
 

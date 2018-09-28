@@ -51,6 +51,7 @@ import ru.endlesscode.rpginventory.pet.PetType;
 import ru.endlesscode.rpginventory.utils.EffectUtils;
 import ru.endlesscode.rpginventory.utils.InventoryUtils;
 import ru.endlesscode.rpginventory.utils.ItemUtils;
+import ru.endlesscode.rpginventory.utils.Log;
 import ru.endlesscode.rpginventory.utils.PlayerUtils;
 import ru.endlesscode.rpginventory.utils.StringUtils;
 
@@ -94,7 +95,8 @@ public class InventoryManager {
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public static boolean validateUpdate(Player player, ActionType actionType, @NotNull Slot slot, ItemStack item) {
         return actionType == ActionType.GET || actionType == ActionType.DROP
-                || actionType == ActionType.SET && slot.isValidItem(item) && ItemManager.allowedForPlayer(player, item, true);
+                || actionType == ActionType.SET && slot.isValidItem(item)
+                && ItemManager.allowedForPlayer(player, item, true);
     }
 
     @NotNull
@@ -495,10 +497,16 @@ public class InventoryManager {
             // Load inventory from file
             Path file = folder.resolve(player.getUniqueId() + ".inv");
 
-            PlayerWrapper playerWrapper;
+            PlayerWrapper playerWrapper = null;
             if (Files.exists(file)) {
-                playerWrapper = InventorySerializer.loadPlayer(player, file);
-            } else {
+                playerWrapper = InventorySerializer.loadPlayerOrNull(player, file);
+                if (playerWrapper == null) {
+                    Log.s("Error on loading {0}'s inventory.", player.getDisplayName());
+                    Log.s("Will be created new inventory. Old file was renamed.");
+                }
+            }
+
+            if (playerWrapper == null) {
                 playerWrapper = new PlayerWrapper(player);
                 playerWrapper.setBuyedSlots(0);
             }
@@ -511,14 +519,14 @@ public class InventoryManager {
             }
 
             InventoryManager.INVENTORIES.put(player.getUniqueId(), playerWrapper);
+
+            InventoryLocker.lockSlots(player);
+            PetManager.initPlayer(player);
+
+            RPGInventory.getInstance().getServer().getPluginManager().callEvent(new PlayerInventoryLoadEvent.Post(player));
         } catch (IOException e) {
             reporter.report("Error on inventory load", e);
         }
-
-        InventoryLocker.lockSlots(player);
-        PetManager.initPlayer(player);
-
-        RPGInventory.getInstance().getServer().getPluginManager().callEvent(new PlayerInventoryLoadEvent.Post(player));
     }
 
     public static void unloadPlayerInventory(@NotNull Player player) {
@@ -561,7 +569,7 @@ public class InventoryManager {
     public static PlayerWrapper get(@NotNull OfflinePlayer player) {
         PlayerWrapper playerWrapper = InventoryManager.INVENTORIES.get(player.getUniqueId());
         if (playerWrapper == null) {
-            throw new IllegalStateException("" + player.getName() + "'s inventory should be initialized!");
+            throw new IllegalStateException(player.getName() + "'s inventory should be initialized!");
         }
 
         return playerWrapper;

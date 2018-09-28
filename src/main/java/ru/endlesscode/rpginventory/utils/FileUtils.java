@@ -20,6 +20,11 @@ package ru.endlesscode.rpginventory.utils;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
+
 /**
  * Created by OsipXD on 07.12.2015
  * It is part of the RpgInventory.
@@ -31,4 +36,22 @@ public class FileUtils {
     public static String stripExtension(String fileName) {
         return fileName.substring(0, fileName.lastIndexOf('.'));
     }
+
+    public static void resolveException(Path path) {
+        try {
+            final byte[] bytes = Files.readAllBytes(path);
+            boolean isAllBytesAreZero = true;
+            for (byte b : bytes) {
+                if (b != 0) {
+                    isAllBytesAreZero = false;
+                    break;
+                }
+            }
+
+            String newFileName = path.getFileName().toString().concat(isAllBytesAreZero ? ".gone" : ".broken");
+            Files.move(path, path.getParent().resolve(newFileName), StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException ignored) {
+        }
+    }
+
 }
