@@ -37,7 +37,7 @@ class TrackedPluginManager(
 
         val registeredListeners = realPlugin.pluginLoader.createRegisteredListeners(listener, realPlugin)
         for ((key, listeners) in registeredListeners) {
-            val wrapped = wrapAllListeners(listeners)
+            val wrapped = listeners.map(::wrapListener)
             EventsUtils.getEventListeners(key).registerAll(wrapped)
         }
     }
@@ -75,25 +75,13 @@ class TrackedPluginManager(
         delegate.enablePlugin(plugin.realPlugin)
     }
 
-    private fun wrapAllListeners(listeners: Iterable<RegisteredListener>): List<RegisteredListener> {
-        val wrapped = arrayListOf<RegisteredListener>()
-        val it = listeners.iterator()
-        while (it.hasNext()) {
-            val originalListener = it.next()
-            val wrappedListener = wrapListener(originalListener)
-            wrapped.add(wrappedListener)
-        }
-
-        return wrapped
-    }
-
     private fun wrapListener(delegate: RegisteredListener): RegisteredListener {
         return object : RegisteredListener(
-                delegate.listener,
-                EventsUtils.NULL_EXECUTOR,
-                delegate.priority,
-                delegate.plugin,
-                delegate.isIgnoringCancelled
+            delegate.listener,
+            EventsUtils.NULL_EXECUTOR,
+            delegate.priority,
+            delegate.plugin,
+            delegate.isIgnoringCancelled
         ) {
             override fun callEvent(event: Event) {
                 trackEvent(event) {

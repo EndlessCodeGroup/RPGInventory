@@ -2,6 +2,7 @@ package ru.endlesscode.inspector.bukkit
 
 import org.bukkit.configuration.file.FileConfiguration
 import org.bukkit.configuration.file.YamlConfiguration
+import ru.endlesscode.inspector.api.PublicApi
 import ru.endlesscode.inspector.bukkit.report.DataType
 import java.io.File
 
@@ -31,6 +32,7 @@ class Inspector(private val configFile: File) {
     /**
      * Reload config from disk.
      */
+    @PublicApi
     fun reload() {
         this.config = YamlConfiguration.loadConfiguration(configFile).apply {
             val defaultConfigStream = javaClass.getResourceAsStream("config.yml") ?: return
