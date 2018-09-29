@@ -4,7 +4,6 @@ import org.bukkit.plugin.Plugin
 import ru.endlesscode.inspector.api.report.ReportEnvironment
 import ru.endlesscode.inspector.api.report.TextField
 import ru.endlesscode.inspector.bukkit.Inspector
-import ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin
 import ru.endlesscode.inspector.bukkit.util.printableForm
 
 
@@ -39,7 +38,7 @@ class BukkitEnvironment(
         ) { inspector.shouldSendData(DataType.PLUGINS) },
 
         TAG_INSPECTOR_VERSION to TextField(TAG_INSPECTOR_VERSION, Inspector.version),
-        TAG_REPORTER_ID to TextField(TAG_REPORTER_ID, inspector.reporterId.toString())
+        TAG_REPORTER_ID to TextField(TAG_REPORTER_ID, inspector.serverId.toString())
     )
 
     override val defaultFieldsTags: List<String> = listOf(

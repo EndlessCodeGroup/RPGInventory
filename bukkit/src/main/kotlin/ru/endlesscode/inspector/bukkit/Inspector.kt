@@ -9,11 +9,14 @@ import ru.endlesscode.inspector.bukkit.util.buildPathToFile
 import java.io.File
 import java.util.UUID
 
+/**
+ * Class that represents Inspector's configurations.
+ */
 class Inspector(private val configFile: File, private val globalConfigFile: File) {
 
     companion object {
         /**
-         * Used Inspector version
+         * Version of Inspector.
          */
         @JvmStatic
         val version: String = "0.7.0"
@@ -21,12 +24,19 @@ class Inspector(private val configFile: File, private val globalConfigFile: File
         private const val DEFAULT_CONFIG_NAME = "inspector.yml"
     }
 
-    internal var isEnabled: Boolean = true
-    lateinit var reporterId: UUID
+    /**
+     * Enabling of Inspector.
+     */
+    var isEnabled: Boolean = true
+
+    /**
+     * Unique ID of server. It can be used to determine what reports sent from the same server.
+     */
+    lateinit var serverId: UUID
 
     private var sendData = mutableMapOf(
-            DataType.CORE to true,
-            DataType.PLUGINS to true
+        DataType.CORE to true,
+        DataType.PLUGINS to true
     )
 
     private var config: FileConfiguration? = null
@@ -45,7 +55,7 @@ class Inspector(private val configFile: File, private val globalConfigFile: File
     ) : this(plugin.dataFolder.resolve(configName), plugin.dataFolder.parentFile.resolve("Inspector/config.yml"))
 
     /**
-     * Reload config from disk.
+     * Reload config from the disk.
      */
     @PublicApi
     fun reload() {
@@ -62,7 +72,11 @@ class Inspector(private val configFile: File, private val globalConfigFile: File
         globalConfig?.save(globalConfigFile)
     }
 
-    internal fun shouldSendData(dataType: DataType) = sendData.getValue(dataType)
+    /**
+     * Checks that sending of the data with specified [type][dataType], enabled in config.
+     * Returns `true` if sending is enabled, otherwise `false`.
+     */
+    fun shouldSendData(dataType: DataType): Boolean = sendData.getValue(dataType)
 
     private fun loadConfig(configFile: File, defaultConfig: YamlConfiguration): FileConfiguration {
         return YamlConfiguration.loadConfiguration(configFile).apply {
@@ -75,7 +89,7 @@ class Inspector(private val configFile: File, private val globalConfigFile: File
         isEnabled = getBoolean("Reporter.enabled", true)
         sendData[DataType.CORE] = getBoolean("Reporter.data.core", true)
         sendData[DataType.PLUGINS] = getBoolean("Reporter.data.plugins", true)
-        reporterId = globalConfig?.getString("Reporter.id")?.let(UUID::fromString) ?: UUID.randomUUID()
+        serverId = globalConfig?.getString("Reporter.server")?.let(UUID::fromString) ?: UUID.randomUUID()
     }
 
     private fun getBoolean(path: String, defValue: Boolean = true): Boolean {
