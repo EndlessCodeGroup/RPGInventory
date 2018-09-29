@@ -18,6 +18,7 @@ class BukkitEnvironment(
         const val TAG_CORE = "Server core"
         const val TAG_PLUGIN_LIST = "Installed plugins"
         const val TAG_INSPECTOR_VERSION = "Inspector version"
+        const val TAG_REPORTER_ID = "Reporter ID"
 
         @JvmStatic
         internal val EMPTY_PROPERTIES = Properties()
@@ -36,10 +37,14 @@ class BukkitEnvironment(
             plugin.server.pluginManager.plugins.asList(),
             properties.interestPluginsNames
         ) { inspector.shouldSendData(DataType.PLUGINS) },
-        TAG_INSPECTOR_VERSION to TextField(TAG_INSPECTOR_VERSION, Inspector.version)
+
+        TAG_INSPECTOR_VERSION to TextField(TAG_INSPECTOR_VERSION, Inspector.version),
+        TAG_REPORTER_ID to TextField(TAG_REPORTER_ID, inspector.reporterId.toString())
     )
 
-    override val defaultFieldsTags: List<String> = listOf(TAG_PLUGIN, TAG_CORE, TAG_PLUGIN_LIST, TAG_INSPECTOR_VERSION)
+    override val defaultFieldsTags: List<String> = listOf(
+        TAG_PLUGIN, TAG_CORE, TAG_PLUGIN_LIST, TAG_INSPECTOR_VERSION, TAG_REPORTER_ID
+    )
 
     override val isInspectorEnabled: Boolean
         get() = inspector.isEnabled

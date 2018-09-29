@@ -7,6 +7,7 @@ import ru.endlesscode.inspector.api.PublicApi
 import ru.endlesscode.inspector.bukkit.report.DataType
 import ru.endlesscode.inspector.bukkit.util.buildPathToFile
 import java.io.File
+import java.util.UUID
 
 class Inspector(private val configFile: File, private val globalConfigFile: File) {
 
@@ -21,6 +22,7 @@ class Inspector(private val configFile: File, private val globalConfigFile: File
     }
 
     internal var isEnabled: Boolean = true
+    lateinit var reporterId: UUID
 
     private var sendData = mutableMapOf(
             DataType.CORE to true,
@@ -55,6 +57,9 @@ class Inspector(private val configFile: File, private val globalConfigFile: File
         }
 
         copyValuesFromConfig()
+
+        config?.save(configFile)
+        globalConfig?.save(globalConfigFile)
     }
 
     internal fun shouldSendData(dataType: DataType) = sendData.getValue(dataType)
@@ -63,7 +68,6 @@ class Inspector(private val configFile: File, private val globalConfigFile: File
         return YamlConfiguration.loadConfiguration(configFile).apply {
             defaults = defaultConfig
             options().copyDefaults(true)
-            save(configFile)
         }
     }
 
@@ -71,6 +75,7 @@ class Inspector(private val configFile: File, private val globalConfigFile: File
         isEnabled = getBoolean("Reporter.enabled", true)
         sendData[DataType.CORE] = getBoolean("Reporter.data.core", true)
         sendData[DataType.PLUGINS] = getBoolean("Reporter.data.plugins", true)
+        reporterId = globalConfig?.getString("Reporter.id")?.let(UUID::fromString) ?: UUID.randomUUID()
     }
 
     private fun getBoolean(path: String, defValue: Boolean = true): Boolean {
