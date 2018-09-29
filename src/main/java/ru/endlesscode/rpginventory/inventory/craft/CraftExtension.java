@@ -45,7 +45,7 @@ public class CraftExtension {
         this.name = name;
         this.capItem = CraftManager.getCapItem().clone();
         ItemMeta meta = capItem.getItemMeta();
-        meta.setDisplayName(StringUtils.coloredLine(config.getString("name")));
+        meta.setDisplayName(StringUtils.coloredLine(config.getString("name", name)));
         if (config.contains("lore")) {
             meta.setLore(StringUtils.coloredLines(config.getStringList("lore")));
         }

@@ -62,6 +62,7 @@ public class CraftManager {
                 return false;
             }
 
+            EXTENSIONS.clear();
             for (String extensionName : extensions.getKeys(false)) {
                 EXTENSIONS.add(new CraftExtension(extensionName, extensions.getConfigurationSection(extensionName)));
             }

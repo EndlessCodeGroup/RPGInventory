@@ -84,6 +84,7 @@ public class BackpackManager {
                 return false;
             }
 
+            BACKPACK_TYPES.clear();
             for (String key : backpacks.getKeys(false)) {
                 tryToAddBackpack(key, backpacks.getConfigurationSection(key));
             }
@@ -93,6 +94,7 @@ public class BackpackManager {
                 return false;
             }
 
+            BACKPACKS.clear();
             BackpackManager.loadBackpacks();
 
             Log.i("{0} backpack type(s) has been loaded", BACKPACK_TYPES.size());

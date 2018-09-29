@@ -106,6 +106,7 @@ public class PetManager {
                 return false;
             }
 
+            PETS.clear();
             for (String key : pets.getKeys(false)) {
                 tryToAddPet(key, pets.getConfigurationSection(key));
             }
@@ -114,6 +115,7 @@ public class PetManager {
             if (food == null) {
                 Log.s("Section 'food' not found in {0}", CONFIG_NAME);
             } else {
+                PET_FOOD.clear();
                 for (String key : food.getKeys(false)) {
                     tryToAddPetFood(key, food.getConfigurationSection(key));
                 }

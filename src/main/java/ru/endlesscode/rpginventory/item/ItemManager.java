@@ -77,6 +77,7 @@ public class ItemManager {
                 return false;
             }
 
+            CUSTOM_ITEMS.clear();
             for (String key : items.getKeys(false)) {
                 tryToAddItem(key, items.getConfigurationSection(key));
             }

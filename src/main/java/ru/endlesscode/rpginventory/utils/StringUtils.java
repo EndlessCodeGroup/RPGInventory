@@ -33,6 +33,7 @@ import ru.endlesscode.rpginventory.item.ItemManager;
 import ru.endlesscode.rpginventory.item.ItemStat;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
@@ -48,7 +49,11 @@ public class StringUtils {
     }
 
     @NotNull
-    public static List<String> coloredLines(List<String> lines) {
+    public static List<String> coloredLines(@Nullable List<String> lines) {
+        if (lines == null) {
+            return Collections.emptyList();
+        }
+
         List<String> coloredLines = new ArrayList<>(lines.size());
         for (String line : lines) {
             coloredLines.add(StringUtils.coloredLine(line));
