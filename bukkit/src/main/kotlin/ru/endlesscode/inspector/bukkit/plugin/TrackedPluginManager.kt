@@ -9,6 +9,7 @@ import org.bukkit.plugin.IllegalPluginAccessException
 import org.bukkit.plugin.Plugin
 import org.bukkit.plugin.PluginManager
 import org.bukkit.plugin.RegisteredListener
+import org.bukkit.plugin.TimedRegisteredListener
 import ru.endlesscode.inspector.api.PublicApi
 import ru.endlesscode.inspector.api.report.Reporter
 import ru.endlesscode.inspector.bukkit.util.EventsUtils
@@ -76,7 +77,30 @@ class TrackedPluginManager(
     }
 
     private fun wrapListener(delegate: RegisteredListener): RegisteredListener {
+        return when (delegate) {
+            is TimedRegisteredListener -> wrapTimedRegisteredListener(delegate)
+            else -> wrapRegisteredListener(delegate)
+        }
+    }
+
+    private fun wrapRegisteredListener(delegate: RegisteredListener): RegisteredListener {
         return object : RegisteredListener(
+            delegate.listener,
+            EventsUtils.NULL_EXECUTOR,
+            delegate.priority,
+            delegate.plugin,
+            delegate.isIgnoringCancelled
+        ) {
+            override fun callEvent(event: Event) {
+                trackEvent(event) {
+                    delegate.callEvent(event)
+                }
+            }
+        }
+    }
+
+    private fun wrapTimedRegisteredListener(delegate: TimedRegisteredListener): TimedRegisteredListener {
+        return object : TimedRegisteredListener(
             delegate.listener,
             EventsUtils.NULL_EXECUTOR,
             delegate.priority,
