@@ -20,10 +20,10 @@ class BukkitEnvironment(
         const val TAG_REPORTER_ID = "Reporter ID"
 
         @JvmStatic
-        internal val EMPTY_PROPERTIES = Properties()
+        internal val DEFAULT_PROPERTIES = Properties()
     }
 
-    public val inspector = Inspector(plugin)
+    public val inspector = Inspector(plugin, properties.configName)
 
     override val fields = mapOf(
         TAG_PLUGIN to TextField(TAG_PLUGIN, plugin.printableForm),
@@ -49,9 +49,15 @@ class BukkitEnvironment(
         get() = inspector.isEnabled
 
     /**
-     * Contains properties for environment customization
+     * Contains properties for environment customization.
+     *
+     * @param interestPluginsNames Names of the plugins that should be added to report. Empty list
+     * means that we need to receive full list of plugins (this value used by default).
+     * @param configName Name of config file that will be used for Inspector'sconfig. This file will
+     * be stored in your plugin's folder. By default - "inspector.yml"
      */
     class Properties @JvmOverloads constructor(
-        val interestPluginsNames: List<String> = emptyList()
+        val interestPluginsNames: List<String> = emptyList(),
+        val configName: String = "inspector.yml"
     )
 }

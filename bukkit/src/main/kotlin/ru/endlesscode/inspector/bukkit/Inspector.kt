@@ -20,8 +20,6 @@ class Inspector(private val configFile: File, private val globalConfigFile: File
          */
         @JvmStatic
         val version: String = "0.7.0"
-
-        private const val DEFAULT_CONFIG_NAME = "inspector.yml"
     }
 
     /**
@@ -51,7 +49,7 @@ class Inspector(private val configFile: File, private val globalConfigFile: File
 
     constructor(
         plugin: Plugin,
-        configName: String = DEFAULT_CONFIG_NAME
+        configName: String
     ) : this(plugin.dataFolder.resolve(configName), plugin.dataFolder.parentFile.resolve("Inspector/config.yml"))
 
     /**

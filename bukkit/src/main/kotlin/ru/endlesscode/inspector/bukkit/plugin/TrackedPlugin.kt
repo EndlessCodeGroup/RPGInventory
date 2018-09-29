@@ -26,7 +26,7 @@ import java.util.logging.Level
 @Suppress("LeakingThis")
 abstract class TrackedPlugin @JvmOverloads constructor(
     lifecycleClass: Class<out PluginLifecycle>,
-    envProperties: BukkitEnvironment.Properties = BukkitEnvironment.EMPTY_PROPERTIES
+    envProperties: BukkitEnvironment.Properties = BukkitEnvironment.DEFAULT_PROPERTIES
 ) : JavaPlugin(), ReporterFocus {
 
     companion object {
