@@ -10,7 +10,6 @@ import ru.endlesscode.inspector.bukkit.util.printableForm
 
 class BukkitEnvironment(
     plugin: Plugin,
-    inspector: Inspector,
     properties: BukkitEnvironment.Properties
 ) : ReportEnvironment {
 
@@ -23,6 +22,8 @@ class BukkitEnvironment(
         @JvmStatic
         internal val EMPTY_PROPERTIES = Properties()
     }
+
+    public val inspector = Inspector(plugin)
 
     override val fields = mapOf(
         TAG_PLUGIN to TextField(TAG_PLUGIN, plugin.printableForm),
@@ -40,6 +41,8 @@ class BukkitEnvironment(
 
     override val defaultFieldsTags: List<String> = listOf(TAG_PLUGIN, TAG_CORE, TAG_PLUGIN_LIST, TAG_INSPECTOR_VERSION)
 
+    override val isInspectorEnabled: Boolean
+        get() = inspector.isEnabled
 
     /**
      * Contains properties for environment customization
