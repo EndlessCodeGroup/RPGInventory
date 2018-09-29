@@ -30,7 +30,7 @@ description = "Catch and report all exceptions"
 allprojects {
     ext.pluginName = "Inspector"
     ext.apiProject = project(":api")
-    ext.inspectorVersion = "0.6"
+    ext.inspectorVersion = "0.7"
 }
 
 // Common configurations for all subprojects

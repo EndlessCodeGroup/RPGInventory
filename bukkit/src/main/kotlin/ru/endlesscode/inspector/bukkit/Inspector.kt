@@ -13,7 +13,7 @@ class Inspector(private val configFile: File) {
          * Used Inspector version
          */
         @JvmStatic
-        val version: String = "0.6.0"
+        val version: String = "0.7.0"
     }
 
     internal var isEnabled: Boolean = true
