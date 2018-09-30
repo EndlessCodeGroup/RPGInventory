@@ -18,9 +18,10 @@ task("proguard", proguard.gradle.ProGuardTask::class) {
     // Specify the input jars, output jars, and library jars.
     val shadowJar = (tasks.get("shadowJar") as Jar)
     val jarFile = shadowJar.archivePath
-    val outPath = jarFile.parentFile.resolve("Inspector-$version-min.jar")
+    val minifiedJar: File by project.extra
+
     injars(jarFile.path)
-    outjars(outPath)
+    outjars(minifiedJar)
 
     val providedLibs = project.configurations["compileOnly"]
     for (lib in providedLibs) {

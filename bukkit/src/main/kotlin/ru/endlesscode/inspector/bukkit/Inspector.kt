@@ -1,11 +1,10 @@
 package ru.endlesscode.inspector.bukkit
 
-import org.bukkit.configuration.file.FileConfiguration
 import org.bukkit.configuration.file.YamlConfiguration
 import org.bukkit.plugin.Plugin
 import ru.endlesscode.inspector.api.PublicApi
 import ru.endlesscode.inspector.bukkit.report.DataType
-import ru.endlesscode.inspector.bukkit.util.buildPathToFile
+import ru.endlesscode.inspector.bukkit.util.FileUtil
 import java.io.File
 import java.util.UUID
 
@@ -20,6 +19,9 @@ class Inspector(private val configFile: File, private val globalConfigFile: File
          */
         @JvmStatic
         val version: String = "0.7.0"
+
+        // Preserved value for case if global config not contains server ID yet
+        private val newServerId by lazy { UUID.randomUUID() }
     }
 
     /**
@@ -30,19 +32,21 @@ class Inspector(private val configFile: File, private val globalConfigFile: File
     /**
      * Unique ID of server. It can be used to determine what reports sent from the same server.
      */
-    lateinit var serverId: UUID
+    var serverId: UUID
 
     private var sendData = mutableMapOf(
         DataType.CORE to true,
         DataType.PLUGINS to true
     )
 
-    private var config: FileConfiguration? = null
-    private var globalConfig: FileConfiguration? = null
+    private val config = YamlConfiguration()
+    private val globalConfig = YamlConfiguration()
 
     init {
-        configFile.buildPathToFile()
-        globalConfigFile.buildPathToFile()
+        FileUtil.createFileIfNotExists(configFile)
+        FileUtil.createFileIfNotExists(globalConfigFile)
+
+        serverId = readServerId()
 
         reload()
     }
@@ -57,40 +61,34 @@ class Inspector(private val configFile: File, private val globalConfigFile: File
      */
     @PublicApi
     fun reload() {
-        val defaultConfigStream = javaClass.getResourceAsStream("config.yml") ?: return
-        defaultConfigStream.use {
-            val defaultConfig = YamlConfiguration.loadConfiguration(it.reader())
-            config = loadConfig(configFile, defaultConfig)
-            globalConfig = loadConfig(globalConfigFile, defaultConfig)
-        }
+        config.load(configFile)
+        globalConfig.load(globalConfigFile)
 
-        copyValuesFromConfig()
+        readValuesFromConfig()
 
-        config?.save(configFile)
-        globalConfig?.save(globalConfigFile)
+        config.save(configFile)
+        globalConfig.save(globalConfigFile)
     }
 
     /**
      * Checks that sending of the data with specified [type][dataType], enabled in config.
-     * Returns `true` if sending is enabled, otherwise `false`.
+     * @return `true` if sending is enabled, otherwise `false`.
      */
     fun shouldSendData(dataType: DataType): Boolean = sendData.getValue(dataType)
 
-    private fun loadConfig(configFile: File, defaultConfig: YamlConfiguration): FileConfiguration {
-        return YamlConfiguration.loadConfiguration(configFile).apply {
-            defaults = defaultConfig
-            options().copyDefaults(true)
-        }
+    private fun readValuesFromConfig() {
+        isEnabled = readBoolean("Reporter.enabled")
+        sendData[DataType.CORE] = readBoolean("Reporter.data.core")
+        sendData[DataType.PLUGINS] = readBoolean("Reporter.data.plugins")
+        serverId = readServerId()
     }
 
-    private fun copyValuesFromConfig() {
-        isEnabled = getBoolean("Reporter.enabled", true)
-        sendData[DataType.CORE] = getBoolean("Reporter.data.core", true)
-        sendData[DataType.PLUGINS] = getBoolean("Reporter.data.plugins", true)
-        serverId = globalConfig?.getString("Reporter.server")?.let(UUID::fromString) ?: UUID.randomUUID()
+    private fun readBoolean(path: String): Boolean {
+        // Assumes that `false` more important than `true` and `true` is default value.
+        return config.getBoolean(path, true) || globalConfig.getBoolean(path, true)
     }
 
-    private fun getBoolean(path: String, defValue: Boolean = true): Boolean {
-        return config?.getBoolean(path, defValue) ?: defValue || globalConfig?.getBoolean(path, defValue) ?: defValue
+    private fun readServerId(): UUID {
+        return globalConfig.getString("Reporter.server")?.let(UUID::fromString) ?: newServerId
     }
 }

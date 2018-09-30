@@ -386,7 +386,8 @@ ru.endlesscode.inspector.bukkit.Inspector$Companion -> ru.endlesscode.inspector.
     10:10:void <init>() -> <init>
     10:10:void <init>(ru.endlesscode.inspector.shade.kotlin.jvm.internal.DefaultConstructorMarker) -> <init>
 ru.endlesscode.inspector.bukkit.InspectorPlugin -> ru.endlesscode.inspector.bukkit.InspectorPlugin:
-    8:8:void <init>() -> <init>
+    12:20:void onLoad() -> onLoad
+    9:9:void <init>() -> <init>
 ru.endlesscode.inspector.bukkit.command.TrackedCommandExecutor -> ru.endlesscode.inspector.bukkit.command.TrackedCommandExecutor:
     org.bukkit.command.CommandExecutor delegate -> a
     ru.endlesscode.inspector.api.report.Reporter reporter -> b

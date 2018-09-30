@@ -26,7 +26,7 @@ apply plugin: "com.jfrog.bintray"
 bintray {
     user = project.getProperty("bintrayUser") ?: System.getenv("BINTRAY_USER")
     key = project.getProperty("bintrayApiKey") ?: System.getenv("BINTRAY_API_KEY")
-    publications = ["api", "bukkit"]
+    publications = ["api", "bukkit", "bukkitRuntime"]
 
     pkg {
         repo = "repo"
