@@ -111,12 +111,10 @@ public class RPGInventory extends PluginLifecycle {
         return instance.classSystem;
     }
 
-    public RPGInventory() {
-        super();
-
+    @Override
+    public void init() {
         instance = this;
-
-        Log.init(getLogger());
+        Log.init(this.getLogger());
     }
 
     @Override
