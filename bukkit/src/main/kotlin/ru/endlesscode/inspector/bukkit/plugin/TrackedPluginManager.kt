@@ -73,7 +73,7 @@ class TrackedPluginManager(
     }
 
     override fun disablePlugin(plugin: Plugin) {
-        delegate.enablePlugin(plugin.realPlugin)
+        delegate.disablePlugin(plugin.realPlugin)
     }
 
     private fun wrapListener(delegate: RegisteredListener): RegisteredListener {
