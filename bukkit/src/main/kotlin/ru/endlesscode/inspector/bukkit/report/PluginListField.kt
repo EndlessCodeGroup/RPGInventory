@@ -17,8 +17,16 @@ class PluginListField(
             plugins.filter { it.name in interestPluginsNames }
         }
 
-        interestPlugins.map { it.printableForm }
+        val result = mutableListOf<String>()
+        interestPlugins.mapTo(result) { it.printableForm }
+
+        val skipCount = plugins.size - interestPlugins.size
+        if (skipCount > 0) {
+            result.add("<skipped $skipCount plugins>")
+        }
+
+        result
     },
-    getSummary = { "<${it.size} plugins>" },
+    getSummary = { "<${plugins.size} plugins>" },
     shouldShow = shouldShow
 )

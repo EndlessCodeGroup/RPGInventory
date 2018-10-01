@@ -11,7 +11,6 @@ import ru.endlesscode.inspector.api.report.ReportEnvironment
 import ru.endlesscode.inspector.api.report.ReportedException
 import ru.endlesscode.inspector.api.report.Reporter
 import ru.endlesscode.inspector.api.report.ReporterFocus
-import ru.endlesscode.inspector.bukkit.Inspector
 import ru.endlesscode.inspector.bukkit.report.BukkitEnvironment
 import java.io.File
 import java.io.InputStream
@@ -27,28 +26,20 @@ import java.util.logging.Level
 @Suppress("LeakingThis")
 abstract class TrackedPlugin @JvmOverloads constructor(
     lifecycleClass: Class<out PluginLifecycle>,
-    envProperties: BukkitEnvironment.Properties = BukkitEnvironment.EMPTY_PROPERTIES
+    envProperties: BukkitEnvironment.Properties = BukkitEnvironment.DEFAULT_PROPERTIES
 ) : JavaPlugin(), ReporterFocus {
 
     companion object {
         private const val TAG = "[Inspector]"
-        private const val DEFAULT_CONFIG = "inspector.yml"
     }
 
     val reporter: Reporter
-    val inspector: Inspector = Inspector(inspectorConfigFile)
 
     override val focusedPackage: String = javaClass.`package`.name
-    override val environment: ReportEnvironment = BukkitEnvironment(this, inspector, envProperties)
+    override val environment: ReportEnvironment = BukkitEnvironment(this, envProperties)
 
     @PublicApi
     val lifecycle: PluginLifecycle
-
-    /**
-     * Returns
-     */
-    protected open val inspectorConfigFile: File
-        get() = dataFolder.resolve(DEFAULT_CONFIG)
 
     init {
         try {
@@ -62,7 +53,7 @@ abstract class TrackedPlugin @JvmOverloads constructor(
         }
 
         reporter = createReporter()
-        reporter.enabled = inspector.isEnabled
+        reporter.enabled = environment.isInspectorEnabled
         reporter.addHandler(
                 beforeReport = { message, exceptionData ->
                     logger.log(Level.WARNING, "$TAG $message", exceptionData.exception)

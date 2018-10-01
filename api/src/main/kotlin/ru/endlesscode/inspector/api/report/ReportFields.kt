@@ -54,6 +54,6 @@ open class ListField<T>(
     final override val show: Boolean
         get() = shouldShow()
 
-    open protected val list
+    open protected val list: List<T>
         get() = produceList()
 }
