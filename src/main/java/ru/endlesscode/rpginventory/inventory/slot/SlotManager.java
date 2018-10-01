@@ -63,7 +63,7 @@ public class SlotManager {
 
         @Nullable final ConfigurationSection slots = this.slotsConfig.getConfigurationSection("slots");
         if (slots == null) {
-            Log.s("Section 'slots' not found in {0}", CONFIG_NAME);
+            Log.s("Section ''slots'' not found in {0}", CONFIG_NAME);
             return;
         }
 

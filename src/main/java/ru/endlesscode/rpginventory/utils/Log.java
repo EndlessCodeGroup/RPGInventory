@@ -38,7 +38,7 @@ public final class Log {
     }
 
     public static void i(@NotNull String message, Object... args) {
-        logger.info(MessageFormat.format(message, args));
+        logger.info(prepareMessage(message, args));
     }
 
     public static void w(Throwable t) {
@@ -46,14 +46,18 @@ public final class Log {
     }
 
     public static void w(@NotNull String message, Object... args) {
-        logger.warning(MessageFormat.format(message, args));
+        logger.warning(prepareMessage(message, args));
     }
 
     public static void w(Throwable t, @NotNull String message, Object... args) {
-        logger.log(Level.WARNING, MessageFormat.format(message, args), t);
+        logger.log(Level.WARNING, prepareMessage(message, args), t);
     }
 
     public static void s(@NotNull String message, Object... args) {
-        logger.severe(MessageFormat.format(message, args));
+        logger.severe(prepareMessage(message, args));
+    }
+
+    private static String prepareMessage(String message, Object... args) {
+        return MessageFormat.format(message, args);
     }
 }

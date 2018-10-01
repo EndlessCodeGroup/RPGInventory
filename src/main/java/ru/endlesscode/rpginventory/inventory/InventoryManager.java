@@ -501,7 +501,7 @@ public class InventoryManager {
             if (Files.exists(file)) {
                 playerWrapper = InventorySerializer.loadPlayerOrNull(player, file);
                 if (playerWrapper == null) {
-                    Log.s("Error on loading {0}'s inventory.", player.getDisplayName());
+                    Log.s("Error on loading {0}''s inventory.", player.getDisplayName());
                     Log.s("Will be created new inventory. Old file was renamed.");
                 }
             }

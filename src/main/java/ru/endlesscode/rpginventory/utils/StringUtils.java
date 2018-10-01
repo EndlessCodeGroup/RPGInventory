@@ -77,7 +77,7 @@ public class StringUtils {
             try {
                 return PlaceholderAPI.setPlaceholders(player, line);
             } catch (Exception e) {
-                Log.w("Can't set placeholders for line \"{0}\"", line);
+                Log.w("Can''t set placeholders for line \"{0}\"", line);
                 Log.w(e, "Error in PlaceholderAPI, please report about it to PlaceholderAPI author.");
                 return line;
             }

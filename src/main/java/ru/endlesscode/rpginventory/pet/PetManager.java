@@ -102,7 +102,7 @@ public class PetManager {
 
             @Nullable final ConfigurationSection pets = petsConfig.getConfigurationSection("pets");
             if (pets == null) {
-                Log.s("Section 'pets' not found in {0}", CONFIG_NAME);
+                Log.s("Section ''pets'' not found in {0}", CONFIG_NAME);
                 return false;
             }
 
@@ -113,7 +113,7 @@ public class PetManager {
 
             @Nullable final ConfigurationSection food = petsConfig.getConfigurationSection("food");
             if (food == null) {
-                Log.s("Section 'food' not found in {0}", CONFIG_NAME);
+                Log.s("Section ''food'' not found in {0}", CONFIG_NAME);
             } else {
                 PET_FOOD.clear();
                 for (String key : food.getKeys(false)) {
@@ -145,7 +145,7 @@ public class PetManager {
             PetType petType = new PetType(config);
             PetManager.PETS.put(name, petType);
         } catch (Exception e) {
-            Log.w("Pet '{0}' can't be added: {1}", name, e.getLocalizedMessage());
+            Log.w("Pet ''{0}'' can''t be added: {1}", name, e.getLocalizedMessage());
         }
     }
 
@@ -154,7 +154,7 @@ public class PetManager {
             PetFood pet = new PetFood(config);
             PetManager.PET_FOOD.put(name, pet);
         } catch (Exception e) {
-            Log.w("Pet food '{0}' can't be added: {1}", name, e.getLocalizedMessage());
+            Log.w("Pet food ''{0}'' can''t be added: {1}", name, e.getLocalizedMessage());
         }
     }
 
