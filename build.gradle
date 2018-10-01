@@ -1,6 +1,6 @@
 plugins {
     id 'ru.endlesscode.bukkitgradle' version '0.8.0'
-    id 'com.github.johnrengelman.shadow' version '2.0.1'
+    id 'com.github.johnrengelman.shadow' version '4.0.1'
     id 'jacoco'
 }
 
@@ -45,6 +45,7 @@ repositories {
 }
 
 shadowJar {
+    minimize()
     relocate 'com.comphenix.packetwrapper', 'ru.endlesscode.rpginventory.shade.com.comphenix.packetwrapper'
 }
 
@@ -64,6 +65,7 @@ dependencies {
     compileOnly('com.sucy:SkillAPI:3.102')
     compileOnly('me.leothepro555:Skills')
     compileOnly('ru.endlesscode.inspector:inspector-bukkit:0.6.0')
+    implementation('com.comphenix.packetwrapper:PacketWrapper:1.12.1-R0.1-SNAPSHOT')
     testImplementation('junit:junit:4.12')
     testImplementation('org.mockito:mockito-core:2.8.+')
 }
