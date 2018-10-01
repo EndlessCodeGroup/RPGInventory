@@ -20,7 +20,6 @@ task sourcesJar(type: Jar, dependsOn: classes) {
     from sourceSets.main.allSource
     classifier = "sources"
 }
-
 jar.dependsOn sourcesJar
 
 afterEvaluate {

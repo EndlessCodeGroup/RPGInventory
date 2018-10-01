@@ -1,11 +1,14 @@
 -libraryjars <java.home>/lib/rt.jar
 -printmapping out.map
+-verbose
 
 -keepparameternames
 -keepattributes Exceptions,InnerClasses,Signature,Deprecated,SourceFile,LineNumberTable,*Annotation*,EnclosingMethod
+-repackageclasses ru.endlesscode.inspector.shade
 
--keep,includedescriptorclasses public class !ru.endlesscode.inspector.shade.**,ru.endlesscode.inspector.**  {
-      public protected *;
+# We don't need to obfuscate or minify any classes except shade
+-keep,includedescriptorclasses class !ru.endlesscode.inspector.shade.**  {
+    *;
 }
 
 -keepclassmembernames class * {

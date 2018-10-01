@@ -31,18 +31,21 @@ shadowJar {
     relocate("org.intellij", "ru.endlesscode.inspector.shade.org.intellij")
     relocate("org.jetbrains", "ru.endlesscode.inspector.shade.org.jetbrains")
 }
+jar.finalizedBy(shadowJar)
 
-assemble.dependsOn shadowJar
+def proguardDir = new File(project.buildDir, "libs")
+ext.minifiedJar = new File(proguardDir, "$pluginName-$version-all-min.jar")
 
 apply(from: rootProject.file("gradle/publish.gradle"))
 
 publishing {
     publications {
         bukkit(MavenPublication) {
-            artifactId "$rootProject.name-$name"
+            artifactId "$rootProject.name-$project.name"
 
             from components.java
             artifact sourcesJar
+            artifact shadowJar
 
             pom.withXml {
                 def root = asNode()
@@ -57,6 +60,18 @@ publishing {
                 }.each() {
                     it.parent().remove(it)
                 }
+            }
+        }
+        bukkitRuntime(MavenPublication) {
+            artifactId "$rootProject.name-$project.name-runtime"
+
+            artifact minifiedJar
+
+            pom.withXml {
+                def root = asNode()
+                root.appendNode("name", "Inspector Runtime (Bukkit)")
+                root.appendNode("description", "Bukkit implementation of Inspector API (embeddable)")
+                root.children().last() + pomConfig
             }
         }
     }

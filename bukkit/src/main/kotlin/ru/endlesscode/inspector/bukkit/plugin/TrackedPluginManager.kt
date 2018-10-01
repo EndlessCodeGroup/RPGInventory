@@ -9,6 +9,7 @@ import org.bukkit.plugin.IllegalPluginAccessException
 import org.bukkit.plugin.Plugin
 import org.bukkit.plugin.PluginManager
 import org.bukkit.plugin.RegisteredListener
+import org.bukkit.plugin.TimedRegisteredListener
 import ru.endlesscode.inspector.api.PublicApi
 import ru.endlesscode.inspector.api.report.Reporter
 import ru.endlesscode.inspector.bukkit.util.EventsUtils
@@ -37,7 +38,7 @@ class TrackedPluginManager(
 
         val registeredListeners = realPlugin.pluginLoader.createRegisteredListeners(listener, realPlugin)
         for ((key, listeners) in registeredListeners) {
-            val wrapped = wrapAllListeners(listeners)
+            val wrapped = listeners.map(::wrapListener)
             EventsUtils.getEventListeners(key).registerAll(wrapped)
         }
     }
@@ -72,28 +73,39 @@ class TrackedPluginManager(
     }
 
     override fun disablePlugin(plugin: Plugin) {
-        delegate.enablePlugin(plugin.realPlugin)
-    }
-
-    private fun wrapAllListeners(listeners: Iterable<RegisteredListener>): List<RegisteredListener> {
-        val wrapped = arrayListOf<RegisteredListener>()
-        val it = listeners.iterator()
-        while (it.hasNext()) {
-            val originalListener = it.next()
-            val wrappedListener = wrapListener(originalListener)
-            wrapped.add(wrappedListener)
-        }
-
-        return wrapped
+        delegate.disablePlugin(plugin.realPlugin)
     }
 
     private fun wrapListener(delegate: RegisteredListener): RegisteredListener {
+        return when (delegate) {
+            is TimedRegisteredListener -> wrapTimedRegisteredListener(delegate)
+            else -> wrapRegisteredListener(delegate)
+        }
+    }
+
+    private fun wrapRegisteredListener(delegate: RegisteredListener): RegisteredListener {
         return object : RegisteredListener(
-                delegate.listener,
-                EventsUtils.NULL_EXECUTOR,
-                delegate.priority,
-                delegate.plugin,
-                delegate.isIgnoringCancelled
+            delegate.listener,
+            EventsUtils.NULL_EXECUTOR,
+            delegate.priority,
+            delegate.plugin,
+            delegate.isIgnoringCancelled
+        ) {
+            override fun callEvent(event: Event) {
+                trackEvent(event) {
+                    delegate.callEvent(event)
+                }
+            }
+        }
+    }
+
+    private fun wrapTimedRegisteredListener(delegate: TimedRegisteredListener): TimedRegisteredListener {
+        return object : TimedRegisteredListener(
+            delegate.listener,
+            EventsUtils.NULL_EXECUTOR,
+            delegate.priority,
+            delegate.plugin,
+            delegate.isIgnoringCancelled
         ) {
             override fun callEvent(event: Event) {
                 trackEvent(event) {

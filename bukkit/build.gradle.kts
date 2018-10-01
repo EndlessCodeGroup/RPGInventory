@@ -3,7 +3,7 @@ import org.gradle.jvm.tasks.Jar
 // Bukkit implementation build config
 
 plugins {
-    id("com.github.johnrengelman.shadow") version "2.0.4"
+    id("com.github.johnrengelman.shadow") version "4.0.1"
     id("ru.endlesscode.bukkitgradle") version "0.8.0"
     id("maven-publish")
 }
