@@ -56,6 +56,6 @@ configure(subprojects - apiProject) {
 
     // Use api as dependency
     dependencies {
-        compile(apiProject)
+        api(apiProject)
     }
 }
