@@ -19,20 +19,24 @@
 package ru.endlesscode.rpginventory.misc;
 
 import org.bukkit.ChatColor;
-import org.jetbrains.annotations.*;
+import org.jetbrains.annotations.NotNull;
 import ru.endlesscode.rpginventory.RPGInventory;
+import ru.endlesscode.rpginventory.utils.Log;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.nio.file.StandardOpenOption;
 import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
-import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -62,19 +66,13 @@ public class FileLanguage {
         try {
             this.plugin.saveResource(path, true);
         } catch (Exception ex) {
-            this.plugin.getLogger().log(
-                    Level.WARNING, "Failed to load {0}: {1}; using en.lang",
-                    new Object[]{this.langFile.getFileName(), ex.getLocalizedMessage()}
-            );
+            Log.w("Failed to load {0}: {1}; using en.lang", this.langFile.getFileName(), ex.getLocalizedMessage());
 
             try (InputStream is = this.plugin.getResource("lang/en.lang")) {
                 Files.copy(is, Paths.get(this.langFile.toUri()), StandardCopyOption.REPLACE_EXISTING);
             } catch (IOException e) {
-                this.plugin.getLogger().log(
-                        Level.WARNING,
-                        "Failed to write default locale to {0}: {1}; continue without localization.",
-                        new Object[]{this.langFile.getFileName(), e.getLocalizedMessage()}
-                );
+                Log.w("Failed to write default locale to {0}: {1}; continue without localization.",
+                        this.langFile.getFileName(), e.getLocalizedMessage());
             }
         }
     }
@@ -84,11 +82,7 @@ public class FileLanguage {
              InputStreamReader isr = new InputStreamReader(is, StandardCharsets.UTF_8)) {
             this.language.load(isr);
         } catch (IOException e) {
-            this.plugin.getLogger().log(
-                    Level.WARNING,
-                    "Failed to load locale file: {0}; continue without localization.",
-                    e.getLocalizedMessage()
-            );
+            Log.w("Failed to load locale file: {0}; continue without localization.", e.getLocalizedMessage());
         }
     }
 
@@ -99,7 +93,7 @@ public class FileLanguage {
         try {
             lines = Files.readAllLines(path, StandardCharsets.UTF_8);
         } catch (IOException e) {
-            this.plugin.getLogger().log(Level.WARNING, "Failed to read locale file", e);
+            Log.w(e, "Failed to read locale file");
             return;
         }
 
@@ -136,16 +130,18 @@ public class FileLanguage {
                     StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING
             );
         } catch (IOException e) {
-            this.plugin.getLogger().log(Level.WARNING, "Failed to save locale file: {0}", e.getLocalizedMessage());
+            Log.w("Failed to save locale file: {0}", e.getLocalizedMessage());
         }
     }
 
     private void validateLocaleFile() {
         Properties properties = new Properties();
-        try (InputStreamReader isr = new InputStreamReader(this.plugin.getResource("lang/en.lang"), StandardCharsets.UTF_8)) {
+        InputStream defaultLocale = this.plugin.getResource("lang/en.lang");
+        // FIXME: Theoretically defaultLocale can be null
+        try (InputStreamReader isr = new InputStreamReader(defaultLocale, StandardCharsets.UTF_8)) {
             properties.load(isr);
         } catch (IOException e) {
-            this.plugin.getLogger().log(Level.WARNING, "Failed to read inbuilt locale file", e);
+            Log.w(e, "Failed to read inbuilt locale file");
             //Just ignore. We can't help with that shit.
             return;
         }

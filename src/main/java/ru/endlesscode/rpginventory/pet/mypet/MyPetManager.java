@@ -53,6 +53,7 @@ import ru.endlesscode.rpginventory.inventory.InventoryManager;
 import ru.endlesscode.rpginventory.inventory.slot.Slot;
 import ru.endlesscode.rpginventory.inventory.slot.SlotManager;
 import ru.endlesscode.rpginventory.utils.ItemUtils;
+import ru.endlesscode.rpginventory.utils.Log;
 import ru.endlesscode.rpginventory.utils.PlayerUtils;
 
 import java.util.Objects;
@@ -69,7 +70,7 @@ public class MyPetManager implements Listener {
 
     public static boolean init(@NotNull RPGInventory instance) {
         if (MyPetManager.getMyPetSlot() == null) {
-            instance.getLogger().warning("MyPet found, but slot for MyPet not configured!");
+            Log.w("MyPet found, but slot for MyPet not configured!");
             return false;
         }
 

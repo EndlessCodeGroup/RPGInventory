@@ -19,6 +19,7 @@
 package ru.endlesscode.rpginventory.inventory.craft;
 
 import com.comphenix.protocol.ProtocolLibrary;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.MemorySection;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -28,10 +29,10 @@ import ru.endlesscode.rpginventory.RPGInventory;
 import ru.endlesscode.rpginventory.event.listener.CraftListener;
 import ru.endlesscode.rpginventory.misc.Config;
 import ru.endlesscode.rpginventory.utils.ItemUtils;
+import ru.endlesscode.rpginventory.utils.Log;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Created by OsipXD on 29.08.2016
@@ -55,18 +56,24 @@ public class CraftManager {
         try {
             capItem = ItemUtils.getTexturedItem(config.getString("extendable"));
 
-            Set<String> extensionNames = config.getConfigurationSection("extensions").getKeys(false);
-            for (String extensionName : extensionNames) {
-                EXTENSIONS.add(new CraftExtension(extensionName, config.getConfigurationSection("extensions." + extensionName)));
+            @Nullable final ConfigurationSection extensions = config.getConfigurationSection("extensions");
+            if (extensions == null) {
+                Log.s("Section 'extensions' not found in config.yml");
+                return false;
             }
+
+            EXTENSIONS.clear();
+            for (String extensionName : extensions.getKeys(false)) {
+                EXTENSIONS.add(new CraftExtension(extensionName, extensions.getConfigurationSection(extensionName)));
+            }
+
+            // Register listeners
+            ProtocolLibrary.getProtocolManager().addPacketListener(new CraftListener(instance));
+            return true;
         } catch (Exception e) {
             instance.getReporter().report("Error on CraftManager initialization", e);
             return false;
         }
-
-        // Register listeners
-        ProtocolLibrary.getProtocolManager().addPacketListener(new CraftListener(instance));
-        return true;
     }
 
     @NotNull

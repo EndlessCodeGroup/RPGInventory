@@ -26,18 +26,30 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.scheduler.BukkitTask;
-import org.jetbrains.annotations.*;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import ru.endlesscode.rpginventory.misc.Config;
+import ru.endlesscode.rpginventory.utils.Log;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Method;
 import java.net.Proxy;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
-import java.util.logging.Level;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.Set;
+import java.util.UUID;
 import java.util.zip.GZIPOutputStream;
 
 @SuppressWarnings("ALL")
@@ -336,7 +348,7 @@ public class Metrics {
                         firstPost = false;
                     } catch (IOException e) {
                         if (debug) {
-                            Bukkit.getLogger().log(Level.INFO, "[Metrics] " + e.getMessage());
+                            Log.i("[Metrics] {0}", e.getMessage());
                         }
                     }
                 }
@@ -389,7 +401,7 @@ public class Metrics {
             }
         } catch (Exception ex) {
             if (debug) {
-                Bukkit.getLogger().log(Level.INFO, "[Metrics] " + ex.getMessage());
+                Log.i("[Metrics] {0}", ex.getMessage());
             }
         }
 

@@ -20,7 +20,7 @@ package ru.endlesscode.rpginventory.inventory.slot;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.*;
+import org.jetbrains.annotations.NotNull;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
 
 /**

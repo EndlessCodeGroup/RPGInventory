@@ -35,6 +35,7 @@ import ru.endlesscode.rpginventory.pet.PetManager;
 import ru.endlesscode.rpginventory.pet.PetType;
 import ru.endlesscode.rpginventory.utils.InventoryUtils;
 import ru.endlesscode.rpginventory.utils.ItemUtils;
+import ru.endlesscode.rpginventory.utils.Log;
 import ru.endlesscode.rpginventory.utils.PlayerUtils;
 import ru.endlesscode.rpginventory.utils.StringUtils;
 
@@ -51,6 +52,9 @@ import java.util.Map;
  * All rights reserved 2014 - 2016 © «EndlessCode Group»
  */
 public class ItemManager {
+
+    private static final String CONFIG_NAME = "items.yml";
+
     private static final Map<String, CustomItem> CUSTOM_ITEMS = new HashMap<>();
     private static final List<String> LORE_PATTERN = Config.getConfig().getStringList("items.lore-pattern");
     private static final String LORE_SEPARATOR = Config.getConfig().getString("items.separator");
@@ -60,31 +64,37 @@ public class ItemManager {
 
     public static boolean init(@NotNull RPGInventory instance) {
         try {
-            Path itemsFile = RPGInventory.getInstance().getDataPath().resolve("items.yml");
+            Path itemsFile = RPGInventory.getInstance().getDataPath().resolve(CONFIG_NAME);
             if (Files.notExists(itemsFile)) {
-                RPGInventory.getInstance().saveResource("items.yml", false);
+                RPGInventory.getInstance().saveResource(CONFIG_NAME, false);
             }
 
             FileConfiguration itemsConfig = YamlConfiguration.loadConfiguration(itemsFile.toFile());
 
-            CUSTOM_ITEMS.clear();
-            for (String key : itemsConfig.getConfigurationSection("items").getKeys(false)) {
-                tryToAddItem(key, itemsConfig.getConfigurationSection("items." + key));
+            @Nullable final ConfigurationSection items = itemsConfig.getConfigurationSection("items");
+            if (items == null) {
+                Log.s("Section ''items'' not found in {0}", CONFIG_NAME);
+                return false;
             }
+
+            CUSTOM_ITEMS.clear();
+            for (String key : items.getKeys(false)) {
+                tryToAddItem(key, items.getConfigurationSection(key));
+            }
+
+            if (CUSTOM_ITEMS.isEmpty()) {
+                Log.i("No one configured item found");
+                return false;
+            }
+
+            Log.i("{0} item(s) has been loaded", CUSTOM_ITEMS.size());
+
+            instance.getServer().getPluginManager().registerEvents(new ItemListener(), instance);
+            return true;
         } catch (Exception e) {
             instance.getReporter().report("Error on InventoryManager initialization", e);
             return false;
         }
-
-        if (CUSTOM_ITEMS.isEmpty()) {
-            instance.getLogger().info("No one configured item found");
-            return false;
-        }
-
-        RPGInventory.getPluginLogger().info(CUSTOM_ITEMS.size() + " item(s) has been loaded");
-
-        instance.getServer().getPluginManager().registerEvents(new ItemListener(), instance);
-        return true;
     }
 
     private static void tryToAddItem(String name, @NotNull ConfigurationSection config) {
@@ -92,8 +102,7 @@ public class ItemManager {
             CustomItem customItem = new CustomItem(name, config);
             CUSTOM_ITEMS.put(name, customItem);
         } catch (Exception e) {
-            String message = String.format("Item '%s' can't be added: %s", name, e.getLocalizedMessage());
-            RPGInventory.getPluginLogger().warning(message);
+            Log.w("Item ''{0}'' can''t be added: {1}", name, e.getLocalizedMessage());
         }
     }
 

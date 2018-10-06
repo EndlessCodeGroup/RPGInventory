@@ -1,6 +1,6 @@
 plugins {
     id 'ru.endlesscode.bukkitgradle' version '0.8.0'
-    id 'com.github.johnrengelman.shadow' version '2.0.1'
+    id 'com.github.johnrengelman.shadow' version '4.0.1'
     id 'jacoco'
 }
 
@@ -45,7 +45,9 @@ repositories {
 }
 
 shadowJar {
+    minimize()
     relocate 'com.comphenix.packetwrapper', 'ru.endlesscode.rpginventory.shade.com.comphenix.packetwrapper'
+    relocate 'ru.endlesscode.inspector', 'ru.endlesscode.rpginventory.inspector'
 }
 
 dependencies {
@@ -53,7 +55,7 @@ dependencies {
     compileOnly('net.milkbowl.vault:VaultAPI:1.6') {
         exclude group: 'org.bukkit'
     }
-    compileOnly('com.comphenix.protocol:ProtocolLib-API:4.4.0-SNAPSHOT')
+    compileOnly('com.comphenix.protocol:ProtocolLib-API:4.4.0')
     compileOnly('org.jetbrains:annotations:15.0')
     compileOnly('me.clip:placeholderapi:2.6.0')
     compileOnly('me.robin:BattleLevelsAPI:6.9.1')
@@ -63,8 +65,11 @@ dependencies {
     compileOnly('me.baks:RPGPlayerLeveling:3.7.2')
     compileOnly('com.sucy:SkillAPI:3.102')
     compileOnly('me.leothepro555:Skills')
-    compileOnly('ru.endlesscode.inspector:inspector-bukkit:0.6.0')
+    compileOnly('ru.endlesscode.inspector:inspector-bukkit:0.7.0')
+    runtime('ru.endlesscode.inspector:inspector-bukkit-runtime:0.7.0')
+    implementation('com.comphenix.packetwrapper:PacketWrapper:1.12.1-R0.1-SNAPSHOT')
     testImplementation('junit:junit:4.12')
+    testImplementation('org.mockito:mockito-core:2.8.+')
 }
 
 jacocoTestReport {

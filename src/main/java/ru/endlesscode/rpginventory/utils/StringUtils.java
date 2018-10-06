@@ -33,9 +33,9 @@ import ru.endlesscode.rpginventory.item.ItemManager;
 import ru.endlesscode.rpginventory.item.ItemStat;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
-import java.util.logging.Level;
 
 /**
  * Created by OsipXD on 29.08.2015
@@ -49,7 +49,11 @@ public class StringUtils {
     }
 
     @NotNull
-    public static List<String> coloredLines(List<String> lines) {
+    public static List<String> coloredLines(@Nullable List<String> lines) {
+        if (lines == null) {
+            return Collections.emptyList();
+        }
+
         List<String> coloredLines = new ArrayList<>(lines.size());
         for (String line : lines) {
             coloredLines.add(StringUtils.coloredLine(line));
@@ -73,9 +77,8 @@ public class StringUtils {
             try {
                 return PlaceholderAPI.setPlaceholders(player, line);
             } catch (Exception e) {
-                RPGInventory.getPluginLogger().warning("Can't set placeholders for line \"" + line + "\"");
-                RPGInventory.getPluginLogger().log(
-                        Level.WARNING, "Error in PlaceholderAPI, please report about it to PlaceholderAPI author.", e);
+                Log.w("Can''t set placeholders for line \"{0}\"", line);
+                Log.w(e, "Error in PlaceholderAPI, please report about it to PlaceholderAPI author.");
                 return line;
             }
         }
