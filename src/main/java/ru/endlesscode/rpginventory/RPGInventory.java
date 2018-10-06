@@ -47,10 +47,10 @@ import ru.endlesscode.rpginventory.inventory.backpack.BackpackManager;
 import ru.endlesscode.rpginventory.inventory.craft.CraftManager;
 import ru.endlesscode.rpginventory.inventory.slot.SlotManager;
 import ru.endlesscode.rpginventory.item.ItemManager;
-import ru.endlesscode.rpginventory.misc.Config;
+import ru.endlesscode.rpginventory.misc.config.Config;
 import ru.endlesscode.rpginventory.misc.FileLanguage;
 import ru.endlesscode.rpginventory.misc.metrics.Metrics;
-import ru.endlesscode.rpginventory.misc.updater.ConfigUpdater;
+import ru.endlesscode.rpginventory.misc.config.ConfigUpdater;
 import ru.endlesscode.rpginventory.misc.updater.Updater;
 import ru.endlesscode.rpginventory.nms.VersionHandler;
 import ru.endlesscode.rpginventory.pet.PetManager;
@@ -115,11 +115,11 @@ public class RPGInventory extends PluginLifecycle {
     public void init() {
         instance = this;
         Log.init(this.getLogger());
+        Config.init(this);
     }
 
     @Override
     public void onEnable() {
-        Config.loadConfig(this);
         this.updateConfig();
         language = new FileLanguage(this);
 
@@ -199,7 +199,6 @@ public class RPGInventory extends PluginLifecycle {
         if (!Config.getConfig().getBoolean("enabled")) {
             this.onFirstStart();
             Log.w("Plugin is not enabled in config!");
-            this.setEnabled(false);
             return false;
         }
 

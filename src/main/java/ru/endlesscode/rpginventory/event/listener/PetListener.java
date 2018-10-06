@@ -59,7 +59,7 @@ import ru.endlesscode.rpginventory.inventory.PlayerWrapper;
 import ru.endlesscode.rpginventory.inventory.slot.Slot;
 import ru.endlesscode.rpginventory.inventory.slot.SlotManager;
 import ru.endlesscode.rpginventory.item.ItemManager;
-import ru.endlesscode.rpginventory.misc.Config;
+import ru.endlesscode.rpginventory.misc.config.Config;
 import ru.endlesscode.rpginventory.pet.PetFood;
 import ru.endlesscode.rpginventory.pet.PetManager;
 import ru.endlesscode.rpginventory.pet.PetType;
