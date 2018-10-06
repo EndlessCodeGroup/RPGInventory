@@ -11,8 +11,8 @@ enabled: false
 # Language (must be same as the file name in the folder /lang)
 language: en
 
-# Auto-update system
-auto-update: true
+# Check update system
+check-update: true
 
 # This plugin uses MCStats to generate and publish anonymous aggregate usage statistics
 # If you find this is not critical, please leave it enabled
@@ -146,6 +146,12 @@ attack:
 ###############################
 #            Slots            #
 ###############################
+
+# Actions for vanilla armor and craft slots
+#   rpginv  - open RPG inventory
+#   default - do vanilla action
+armor-slots-action: default
+craft-slots-action: rpginv
 
 slots:
   # Slot buying
