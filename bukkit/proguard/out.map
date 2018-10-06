@@ -349,41 +349,47 @@ ru.endlesscode.inspector.bukkit.Inspector -> ru.endlesscode.inspector.bukkit.Ins
     boolean isEnabled -> isEnabled
     java.util.UUID serverId -> serverId
     java.util.Map sendData -> sendData
-    org.bukkit.configuration.file.YamlConfiguration config -> config
     org.bukkit.configuration.file.YamlConfiguration globalConfig -> globalConfig
+    org.bukkit.configuration.file.YamlConfiguration config -> config
     java.io.File configFile -> configFile
     java.io.File globalConfigFile -> globalConfigFile
     java.lang.String version -> version
     ru.endlesscode.inspector.shade.kotlin.Lazy newServerId$delegate -> newServerId$delegate
     ru.endlesscode.inspector.bukkit.Inspector$Companion Companion -> Companion
-    30:30:boolean isEnabled() -> isEnabled
-    30:30:void setEnabled(boolean) -> setEnabled
-    35:35:java.util.UUID getServerId() -> getServerId
-    35:35:void setServerId(java.util.UUID) -> setServerId
-    64:71:void reload() -> reload
-    77:77:boolean shouldSendData(ru.endlesscode.inspector.bukkit.report.DataType) -> shouldSendData
-    80:84:void readValuesFromConfig() -> readValuesFromConfig
-    88:88:boolean readBoolean(java.lang.String) -> readBoolean
-    92:92:java.util.UUID readServerId() -> readServerId
-    14:51:void <init>(java.io.File,java.io.File) -> <init>
-    54:57:void <init>(org.bukkit.plugin.Plugin,java.lang.String) -> <init>
-    21:24:void <clinit>() -> <clinit>
-    14:14:java.lang.String access$getVersion$cp() -> access$getVersion$cp
-    14:14:ru.endlesscode.inspector.shade.kotlin.Lazy access$getNewServerId$cp() -> access$getNewServerId$cp
+    32:32:boolean isEnabled() -> isEnabled
+    32:32:void setEnabled(boolean) -> setEnabled
+    37:37:java.util.UUID getServerId() -> getServerId
+    37:37:void setServerId(java.util.UUID) -> setServerId
+    66:73:void reload() -> reload
+    79:79:boolean shouldSendData(ru.endlesscode.inspector.bukkit.report.DataType) -> shouldSendData
+    82:86:void readValuesFromConfig() -> readValuesFromConfig
+    90:90:boolean readBoolean(java.lang.String) -> readBoolean
+    94:94:java.util.UUID readServerId() -> readServerId
+    16:53:void <init>(java.io.File,java.io.File) -> <init>
+    56:59:void <init>(org.bukkit.plugin.Plugin,java.lang.String) -> <init>
+    23:26:void <clinit>() -> <clinit>
+    16:16:java.lang.String access$getVersion$cp() -> access$getVersion$cp
+    16:16:ru.endlesscode.inspector.shade.kotlin.Lazy access$getNewServerId$cp() -> access$getNewServerId$cp
     java.lang.String getVersion() -> getVersion
 ru.endlesscode.inspector.bukkit.Inspector$Companion -> ru.endlesscode.inspector.bukkit.Inspector$Companion:
     ru.endlesscode.inspector.shade.kotlin.reflect.KProperty[] $$delegatedProperties -> $$delegatedProperties
     void <clinit>() -> <clinit>
     void version$annotations() -> version$annotations
-    21:21:java.lang.String getVersion() -> getVersion
+    23:23:java.lang.String getVersion() -> getVersion
     java.util.UUID getNewServerId() -> getNewServerId
-    16:16:void <init>() -> <init>
-    16:16:java.util.UUID access$getNewServerId$p(ru.endlesscode.inspector.bukkit.Inspector$Companion) -> access$getNewServerId$p
-    16:16:void <init>(ru.endlesscode.inspector.shade.kotlin.jvm.internal.DefaultConstructorMarker) -> <init>
+    18:18:void <init>() -> <init>
+    18:18:java.util.UUID access$getNewServerId$p(ru.endlesscode.inspector.bukkit.Inspector$Companion) -> access$getNewServerId$p
+    18:18:void <init>(ru.endlesscode.inspector.shade.kotlin.jvm.internal.DefaultConstructorMarker) -> <init>
 ru.endlesscode.inspector.bukkit.Inspector$Companion$newServerId$2 -> ru.endlesscode.inspector.bukkit.Inspector$Companion$newServerId$2:
     ru.endlesscode.inspector.bukkit.Inspector$Companion$newServerId$2 INSTANCE -> INSTANCE
+    18:18:java.lang.Object invoke() -> invoke
+    26:26:java.util.UUID invoke() -> invoke
+    void <init>() -> <init>
+    void <clinit>() -> <clinit>
+ru.endlesscode.inspector.bukkit.Inspector$readServerId$1 -> ru.endlesscode.inspector.bukkit.Inspector$readServerId$1:
+    ru.endlesscode.inspector.bukkit.Inspector$readServerId$1 INSTANCE -> INSTANCE
     16:16:java.lang.Object invoke() -> invoke
-    24:24:java.util.UUID invoke() -> invoke
+    94:94:java.util.UUID invoke() -> invoke
     void <init>() -> <init>
     void <clinit>() -> <clinit>
 ru.endlesscode.inspector.bukkit.InspectorPlugin -> ru.endlesscode.inspector.bukkit.InspectorPlugin:
@@ -649,6 +655,10 @@ ru.endlesscode.inspector.bukkit.plugin.TrackedServer -> ru.endlesscode.inspector
     int broadcast(java.lang.String,java.lang.String) -> broadcast
     int broadcastMessage(java.lang.String) -> broadcastMessage
     void clearRecipes() -> clearRecipes
+    org.bukkit.block.data.BlockData createBlockData(java.lang.String) -> createBlockData
+    org.bukkit.block.data.BlockData createBlockData(org.bukkit.Material) -> createBlockData
+    org.bukkit.block.data.BlockData createBlockData(org.bukkit.Material,java.util.function.Consumer) -> createBlockData
+    org.bukkit.block.data.BlockData createBlockData(org.bukkit.Material,java.lang.String) -> createBlockData
     org.bukkit.boss.BossBar createBossBar(java.lang.String,org.bukkit.boss.BarColor,org.bukkit.boss.BarStyle,org.bukkit.boss.BarFlag[]) -> createBossBar
     org.bukkit.generator.ChunkGenerator$ChunkData createChunkData(org.bukkit.World) -> createChunkData
     org.bukkit.inventory.Inventory createInventory(org.bukkit.inventory.InventoryHolder,int) -> createInventory
@@ -681,6 +691,7 @@ ru.endlesscode.inspector.bukkit.plugin.TrackedServer -> ru.endlesscode.inspector
     org.bukkit.inventory.ItemFactory getItemFactory() -> getItemFactory
     java.util.Set getListeningPluginChannels() -> getListeningPluginChannels
     java.util.logging.Logger getLogger() -> getLogger
+    org.bukkit.loot.LootTable getLootTable(org.bukkit.NamespacedKey) -> getLootTable
     org.bukkit.map.MapView getMap(short) -> getMap
     int getMaxPlayers() -> getMaxPlayers
     org.bukkit.plugin.messaging.Messenger getMessenger() -> getMessenger
@@ -706,6 +717,7 @@ ru.endlesscode.inspector.bukkit.plugin.TrackedServer -> ru.endlesscode.inspector
     org.bukkit.plugin.ServicesManager getServicesManager() -> getServicesManager
     java.lang.String getShutdownMessage() -> getShutdownMessage
     int getSpawnRadius() -> getSpawnRadius
+    org.bukkit.Tag getTag(java.lang.String,org.bukkit.NamespacedKey,java.lang.Class) -> getTag
     int getTicksPerAnimalSpawns() -> getTicksPerAnimalSpawns
     int getTicksPerMonsterSpawns() -> getTicksPerMonsterSpawns
     org.bukkit.UnsafeValues getUnsafe() -> getUnsafe
@@ -871,7 +883,6 @@ ru.endlesscode.inspector.bukkit.scheduler.TrackedScheduler -> ru.endlesscode.ins
     11:11:void <init>(org.bukkit.scheduler.BukkitScheduler,ru.endlesscode.inspector.api.report.Reporter) -> <init>
     17:17:void <init>(ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin) -> <init>
     java.util.concurrent.Future callSyncMethod(org.bukkit.plugin.Plugin,java.util.concurrent.Callable) -> callSyncMethod
-    void cancelAllTasks() -> cancelAllTasks
     void cancelTask(int) -> cancelTask
     void cancelTasks(org.bukkit.plugin.Plugin) -> cancelTasks
     java.util.List getActiveWorkers() -> getActiveWorkers
@@ -972,6 +983,9 @@ ru.endlesscode.inspector.bukkit.scheduler.TrackedScheduler$scheduleSyncRepeating
     11:11:java.lang.Object invoke(java.lang.Object) -> invoke
     49:49:int invoke(java.lang.Runnable) -> invoke
     void <init>(ru.endlesscode.inspector.bukkit.scheduler.TrackedScheduler,org.bukkit.plugin.Plugin,long,long) -> <init>
+ru.endlesscode.inspector.bukkit.util.ConfigurationsKt -> ru.endlesscode.inspector.bukkit.util.ConfigurationsKt:
+    8:10:boolean getBooleanOrPut(org.bukkit.configuration.file.FileConfiguration,java.lang.String,boolean) -> getBooleanOrPut
+    15:17:java.util.UUID getUuidOrPut(org.bukkit.configuration.file.FileConfiguration,java.lang.String,ru.endlesscode.inspector.shade.kotlin.jvm.functions.Function0) -> getUuidOrPut
 ru.endlesscode.inspector.bukkit.util.EventsUtils -> ru.endlesscode.inspector.bukkit.util.EventsUtils:
     org.bukkit.plugin.EventExecutor NULL_EXECUTOR -> NULL_EXECUTOR
     ru.endlesscode.inspector.bukkit.util.EventsUtils INSTANCE -> INSTANCE
