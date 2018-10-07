@@ -5,6 +5,8 @@ import org.bukkit.plugin.Plugin
 import ru.endlesscode.inspector.api.PublicApi
 import ru.endlesscode.inspector.bukkit.report.DataType
 import ru.endlesscode.inspector.bukkit.util.FileUtil
+import ru.endlesscode.inspector.bukkit.util.getBooleanOrPut
+import ru.endlesscode.inspector.bukkit.util.getUuidOrPut
 import java.io.File
 import java.util.UUID
 
@@ -18,7 +20,7 @@ class Inspector(private val configFile: File, private val globalConfigFile: File
          * Version of Inspector.
          */
         @JvmStatic
-        val version: String = "0.7.0"
+        val version: String = "0.7.1"
 
         // Preserved value for case if global config not contains server ID yet
         private val newServerId by lazy { UUID.randomUUID() }
@@ -39,12 +41,12 @@ class Inspector(private val configFile: File, private val globalConfigFile: File
         DataType.PLUGINS to true
     )
 
-    private val config = YamlConfiguration()
     private val globalConfig = YamlConfiguration()
+    private val config = YamlConfiguration()
 
     init {
-        FileUtil.createFileIfNotExists(configFile)
         FileUtil.createFileIfNotExists(globalConfigFile)
+        FileUtil.createFileIfNotExists(configFile)
 
         serverId = readServerId()
 
@@ -61,13 +63,13 @@ class Inspector(private val configFile: File, private val globalConfigFile: File
      */
     @PublicApi
     fun reload() {
-        config.load(configFile)
         globalConfig.load(globalConfigFile)
+        config.load(configFile)
 
         readValuesFromConfig()
 
-        config.save(configFile)
         globalConfig.save(globalConfigFile)
+        config.save(configFile)
     }
 
     /**
@@ -85,10 +87,10 @@ class Inspector(private val configFile: File, private val globalConfigFile: File
 
     private fun readBoolean(path: String): Boolean {
         // Assumes that `false` more important than `true` and `true` is default value.
-        return config.getBoolean(path, true) || globalConfig.getBoolean(path, true)
+        return config.getBooleanOrPut(path, true) && globalConfig.getBooleanOrPut(path, true)
     }
 
     private fun readServerId(): UUID {
-        return globalConfig.getString("Reporter.server")?.let(UUID::fromString) ?: newServerId
+        return globalConfig.getUuidOrPut("Reporter.server") { newServerId }
     }
 }

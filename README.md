@@ -65,7 +65,7 @@ shadowJar {
 tasks.build.dependsOn tasks.shadowJar
 
 // Here you can change version of inspector
-ext.inspectorVerson = "0.7.0"
+ext.inspectorVerson = "0.7.1"
 
 // Add Inspector as dependency
 // 'inspector-bukkit' contains Inspector code without libs, obfuscation and relocations. We need it to see clear sources.
