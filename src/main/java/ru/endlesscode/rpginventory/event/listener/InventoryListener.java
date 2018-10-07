@@ -215,8 +215,9 @@ public class InventoryListener implements Listener {
                     return;
                 }
 
-                // Shield slot is QUICKBAR and has rawId - 45 o.O
-                if (rawSlotId >= 1 && rawSlotId <= 8 || rawSlotId == 45) {
+                final boolean isCraftSlot = rawSlotId >= 1 && rawSlotId <= 4;
+                if (rawSlotId == 45 // Shield slot has rawId 45
+                        || isCraftSlot && Config.craftSlotsAction == VanillaSlotAction.RPGINV) {
                     event.setCancelled(true);
                     return;
                 }
