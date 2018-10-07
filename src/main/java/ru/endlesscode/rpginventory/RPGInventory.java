@@ -121,6 +121,7 @@ public class RPGInventory extends PluginLifecycle {
     @Override
     public void onEnable() {
         this.updateConfig();
+        Config.reload();
         language = new FileLanguage(this);
 
         if (!this.checkRequirements()) {
@@ -399,7 +400,6 @@ public class RPGInventory extends PluginLifecycle {
             Config.getConfig().set("version", null);
             Config.getConfig().set("version", version.toString());
             Config.save();
-            Config.reload();
         }
     }
 

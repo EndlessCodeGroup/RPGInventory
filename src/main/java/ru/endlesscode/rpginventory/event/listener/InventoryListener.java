@@ -63,6 +63,7 @@ import ru.endlesscode.rpginventory.inventory.slot.Slot;
 import ru.endlesscode.rpginventory.inventory.slot.SlotManager;
 import ru.endlesscode.rpginventory.item.ItemManager;
 import ru.endlesscode.rpginventory.misc.config.Config;
+import ru.endlesscode.rpginventory.misc.config.VanillaSlotAction;
 import ru.endlesscode.rpginventory.pet.PetManager;
 import ru.endlesscode.rpginventory.pet.mypet.MyPetManager;
 import ru.endlesscode.rpginventory.utils.InventoryUtils;
@@ -214,8 +215,9 @@ public class InventoryListener implements Listener {
                     return;
                 }
 
-                // Shield slot is QUICKBAR and has rawId - 45 o.O
-                if (rawSlotId >= 1 && rawSlotId <= 8 || rawSlotId == 45) {
+                final boolean isCraftSlot = rawSlotId >= 1 && rawSlotId <= 4;
+                if (rawSlotId == 45 // Shield slot has rawId 45
+                        || isCraftSlot && Config.craftSlotsAction == VanillaSlotAction.RPGINV) {
                     event.setCancelled(true);
                     return;
                 }
@@ -261,7 +263,7 @@ public class InventoryListener implements Listener {
             return;
         }
 
-        // Crafting area
+        // Crafting inventory is Player's vanilla inventory
         if (inventory.getType() == InventoryType.CRAFTING) {
             PlayerWrapper playerWrapper = InventoryManager.get(player);
 
@@ -269,32 +271,25 @@ public class InventoryListener implements Listener {
                 return;
             }
 
+            boolean openRpgInventory = false;
             switch (event.getSlotType()) {
                 case CRAFTING:
-                    //Force cancellation of an event if player has an ItemStack in the cursor.
-                    if (event.getCursor() != null) {
-                        event.setCancelled(true);
-                    }
-
-                    //Without this stupid shit we already get click in the our inventory on bukkit 1.9.4
-                    //Ofc, player picking up item in the clicked slot (1, 2, 3, 4, depends on clicked slot in the small crafting grid)
-                    //Fixes #142.
-                    new TrackedBukkitRunnable() {
-                        @Override
-                        public void run() {
-                            playerWrapper.openInventory(true);
-                        }
-                    }.runTaskLater(RPGInventory.getInstance(), 0);
+                case RESULT:
+                    openRpgInventory = Config.craftSlotsAction == VanillaSlotAction.RPGINV;
+                    break;
                 case QUICKBAR:
                     // Shield slot is QUICKBAR and has rawId - 45 o.O
-                    if (rawSlot != 45) {
-                        break;
-                    }
+                    openRpgInventory = rawSlot == 45 && Config.armorSlotsAction == VanillaSlotAction.RPGINV;
+                    break;
                 case ARMOR:
-                case RESULT:
-                    event.setCancelled(true);
-                    return;
+                    openRpgInventory = Config.armorSlotsAction == VanillaSlotAction.RPGINV;
             }
+
+            if (openRpgInventory) {
+                playerWrapper.openInventoryDeferred(true);
+                event.setCancelled(true);
+            }
+            return;
         }
 
         // In RPG Inventory or quick slot
