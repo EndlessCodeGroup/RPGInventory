@@ -21,6 +21,7 @@ package ru.endlesscode.rpginventory.misc;
 import org.bukkit.ChatColor;
 import org.jetbrains.annotations.NotNull;
 import ru.endlesscode.rpginventory.RPGInventory;
+import ru.endlesscode.rpginventory.misc.config.Config;
 import ru.endlesscode.rpginventory.utils.Log;
 
 import java.io.IOException;
