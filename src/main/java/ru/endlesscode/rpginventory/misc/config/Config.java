@@ -33,6 +33,10 @@ import java.nio.file.StandardCopyOption;
 
 public class Config {
 
+    /* Config options */
+    public static VanillaSlotAction craftSlotsAction = VanillaSlotAction.RPGINV;
+    public static VanillaSlotAction armorSlotsAction = VanillaSlotAction.DEFAULT;
+
     private static FileConfiguration config = new YamlConfiguration();
     private static Path configFile;
 
@@ -59,6 +63,7 @@ public class Config {
             Log.w(e, "Error on load config.yml");
         }
 
+        copyOptionsFromConfig();
         save();
     }
 
@@ -82,5 +87,10 @@ public class Config {
 
         config.setDefaults(YamlConfiguration.loadConfiguration(exampleConfigPath.toFile()));
         config.options().copyDefaults(true);
+    }
+
+    private static void copyOptionsFromConfig() {
+        craftSlotsAction = VanillaSlotAction.parseString(config.getString("craft-slots-action"));
+        armorSlotsAction = VanillaSlotAction.parseString(config.getString("armor-slots-action"));
     }
 }
