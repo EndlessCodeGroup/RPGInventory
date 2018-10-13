@@ -111,6 +111,11 @@ public class SlotManager {
             return false;
         }
 
+        if (slot.getSlotType() == Slot.SlotType.MYPET && !RPGInventory.isMyPetHooked()) {
+            Log.w("MyPet slot can't be used without MyPet installed.");
+            return false;
+        }
+
         for (Slot existingSlot : this.slots) {
             for (int slotId : slot.getSlotIds()) {
                 if (existingSlot.getSlotIds().contains(slotId)) {

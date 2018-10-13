@@ -75,7 +75,8 @@ public class RPGInventory extends PluginLifecycle {
     private PlayerUtils.ClassSystem classSystem;
 
     private FileLanguage language;
-    private boolean pApiHooked;
+    private boolean placeholderApiHooked = false;
+    private boolean myPetHooked = false;
 
     public static RPGInventory getInstance() {
         return instance;
@@ -99,8 +100,13 @@ public class RPGInventory extends PluginLifecycle {
     }
 
     @Contract(pure = true)
-    public static boolean placeholderApiHooked() {
-        return instance.pApiHooked;
+    public static boolean isPlaceholderApiHooked() {
+        return instance.placeholderApiHooked;
+    }
+
+    @Contract(pure = true)
+    public static boolean isMyPetHooked() {
+        return instance.myPetHooked;
     }
 
     public static PlayerUtils.LevelSystem getLevelSystem() {
@@ -132,10 +138,10 @@ public class RPGInventory extends PluginLifecycle {
         // Hook Placeholder API
         if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
             new StringUtils.Placeholders().hook();
-            pApiHooked = true;
+            placeholderApiHooked = true;
             Log.i("Placeholder API hooked!");
         } else {
-            pApiHooked = false;
+            placeholderApiHooked = false;
         }
 
         // Load modules
@@ -147,7 +153,10 @@ public class RPGInventory extends PluginLifecycle {
 
         // Hook MyPet
         if (Bukkit.getPluginManager().isPluginEnabled("MyPet") && MyPetManager.init(this)) {
+            myPetHooked = true;
             Log.i("MyPet hooked!");
+        } else {
+            myPetHooked = false;
         }
 
         // Registering other listeners

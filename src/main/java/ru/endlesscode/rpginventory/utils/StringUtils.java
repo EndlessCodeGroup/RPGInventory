@@ -73,7 +73,7 @@ public class StringUtils {
     @NotNull
     public static String setPlaceholders(@NotNull Player player, @NotNull String line) {
         // Using Placeholder API
-        if (RPGInventory.placeholderApiHooked()) {
+        if (RPGInventory.isPlaceholderApiHooked()) {
             try {
                 return PlaceholderAPI.setPlaceholders(player, line);
             } catch (Exception e) {
