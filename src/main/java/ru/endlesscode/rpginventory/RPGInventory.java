@@ -52,7 +52,7 @@ import ru.endlesscode.rpginventory.misc.FileLanguage;
 import ru.endlesscode.rpginventory.misc.Metrics;
 import ru.endlesscode.rpginventory.misc.config.ConfigUpdater;
 import ru.endlesscode.rpginventory.misc.Updater;
-import ru.endlesscode.rpginventory.nms.VersionHandler;
+import ru.endlesscode.rpginventory.compat.VersionHandler;
 import ru.endlesscode.rpginventory.pet.PetManager;
 import ru.endlesscode.rpginventory.pet.mypet.MyPetManager;
 import ru.endlesscode.rpginventory.utils.Log;

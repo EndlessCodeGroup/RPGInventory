@@ -21,7 +21,6 @@ package ru.endlesscode.rpginventory.event.listener;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
-import org.bukkit.Sound;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -52,6 +51,7 @@ import org.jetbrains.annotations.Nullable;
 import ru.endlesscode.inspector.bukkit.scheduler.TrackedBukkitRunnable;
 import ru.endlesscode.rpginventory.RPGInventory;
 import ru.endlesscode.rpginventory.api.InventoryAPI;
+import ru.endlesscode.rpginventory.compat.Sound;
 import ru.endlesscode.rpginventory.event.PlayerInventoryLoadEvent;
 import ru.endlesscode.rpginventory.inventory.ActionType;
 import ru.endlesscode.rpginventory.inventory.InventoryLocker;
@@ -183,7 +183,7 @@ public class InventoryListener implements Listener {
                 player.getInventory().setItem(slotId, event.getItem().getItemStack());
                 event.getItem().remove();
 
-                player.playSound(player.getLocation(), Sound.ENTITY_ITEM_PICKUP, .3f, 1.7f);
+                player.playSound(player.getLocation(), Sound.ITEM_PICKUP.bukkitSound(), .3f, 1.7f);
                 if (Config.getConfig().getBoolean("attack.auto-held")) {
                     player.getInventory().setHeldItemSlot(quickSlot.getQuickSlot());
                 }
