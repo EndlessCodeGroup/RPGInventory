@@ -24,7 +24,6 @@ import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.wrappers.EnumWrappers;
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import org.bukkit.Location;
-import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
@@ -32,6 +31,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ru.endlesscode.inspector.bukkit.scheduler.TrackedBukkitRunnable;
 import ru.endlesscode.rpginventory.RPGInventory;
+import ru.endlesscode.rpginventory.compat.Sound;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
@@ -42,6 +42,7 @@ import java.util.List;
  * All rights reserved 2014 - 2016 © «EndlessCode Group»
  */
 public class EffectUtils {
+
     public static void playParticlesToAll(EnumWrappers.Particle particle, int particleNum, @NotNull Location location) {
         playParticlesToAll(particle, particleNum, location, 30.0D);
     }
@@ -77,14 +78,14 @@ public class EffectUtils {
     public static void playSpawnEffect(Entity entity) {
         Location loc = entity.getLocation();
 
-        entity.getWorld().playSound(loc, Sound.ENTITY_ENDERMEN_TELEPORT, 1, (float) (1.2 + Math.random() * 0.4));
+        entity.getWorld().playSound(loc, Sound.ENDERMAN_TELEPORT.bukkitSound(), 1, (float) (1.2 + Math.random() * 0.4));
         playParticlesToAll(EnumWrappers.Particle.EXPLOSION_LARGE, 3, loc);
     }
 
     public static void playDespawnEffect(Entity entity) {
         Location loc = entity.getLocation();
 
-        entity.getWorld().playSound(loc, Sound.ENTITY_ENDERMEN_TELEPORT, 1, (float) (0.6 + Math.random() * 0.4));
+        entity.getWorld().playSound(loc, Sound.ENDERMAN_TELEPORT.bukkitSound(), 1, (float) (0.6 + Math.random() * 0.4));
         playParticlesToAll(EnumWrappers.Particle.SMOKE_NORMAL, 3, loc);
     }
 

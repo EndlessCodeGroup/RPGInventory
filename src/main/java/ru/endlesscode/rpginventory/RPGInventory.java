@@ -52,7 +52,7 @@ import ru.endlesscode.rpginventory.misc.FileLanguage;
 import ru.endlesscode.rpginventory.misc.Metrics;
 import ru.endlesscode.rpginventory.misc.config.ConfigUpdater;
 import ru.endlesscode.rpginventory.misc.Updater;
-import ru.endlesscode.rpginventory.nms.VersionHandler;
+import ru.endlesscode.rpginventory.compat.VersionHandler;
 import ru.endlesscode.rpginventory.pet.PetManager;
 import ru.endlesscode.rpginventory.pet.mypet.MyPetManager;
 import ru.endlesscode.rpginventory.utils.Log;
@@ -215,6 +215,8 @@ public class RPGInventory extends PluginLifecycle {
         // Check version compatibility
         if (!VersionHandler.checkVersion()) {
             Log.w("This version of RPG Inventory is not tested with \"{0}\"!", Bukkit.getBukkitVersion());
+        } else if (VersionHandler.is1_13()) {
+            Log.w("Support of {0} is experimental! Use RPGInventory with caution.", Bukkit.getBukkitVersion());
         }
 
         // Check resource-pack settings
