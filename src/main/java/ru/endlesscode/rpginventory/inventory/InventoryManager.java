@@ -534,8 +534,6 @@ public class InventoryManager {
             return;
         }
 
-        player.closeInventory();
-
         InventoryManager.INVENTORIES.get(player.getUniqueId()).onUnload();
         savePlayerInventory(player);
         InventoryLocker.unlockSlots(player);
