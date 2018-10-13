@@ -80,7 +80,9 @@ public class InventoryManager {
         try {
             InventoryManager.FILL_SLOT = ItemUtils.getTexturedItem(Config.getConfig().getString("fill"));
             ItemMeta meta = InventoryManager.FILL_SLOT.getItemMeta();
-            meta.setDisplayName(" ");
+            if (meta != null) {
+                meta.setDisplayName(" ");
+            }
             InventoryManager.FILL_SLOT.setItemMeta(meta);
         } catch (Exception e) {
             reporter.report("Error on InventoryManager initialization", e);

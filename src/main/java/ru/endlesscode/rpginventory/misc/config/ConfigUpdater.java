@@ -187,7 +187,7 @@ public class ConfigUpdater {
             config.set("health", null);
         }
 
-        if (configVersion.compareTo("2.1.11") < 0) {
+        if (configVersion.compareTo("2.2.0") < 0) {
             config.set("armor-slots-action", "default");
             config.set("craft-slots-action", "rpginv");
         }
