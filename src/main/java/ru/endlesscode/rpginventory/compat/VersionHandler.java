@@ -47,9 +47,13 @@ public class VersionHandler {
         return Bukkit.getBukkitVersion().contains("1.12");
     }
 
-    public static boolean checkVersion() {
-        return is1_9() || is1_10() || is1_11() || is1_12();
+    // 1.13.x
+    public static boolean is1_13() {
+        return Bukkit.getBukkitVersion().contains("1.13");
+    }
 
+    public static boolean checkVersion() {
+        return is1_9() || is1_10() || is1_11() || is1_12() || is1_13();
     }
 
     public static boolean isUpper1_12() {

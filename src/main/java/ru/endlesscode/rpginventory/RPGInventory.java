@@ -215,6 +215,8 @@ public class RPGInventory extends PluginLifecycle {
         // Check version compatibility
         if (!VersionHandler.checkVersion()) {
             Log.w("This version of RPG Inventory is not tested with \"{0}\"!", Bukkit.getBukkitVersion());
+        } else if (VersionHandler.is1_13()) {
+            Log.w("Support of {0} is experimental! Use RPGInventory with caution.", Bukkit.getBukkitVersion());
         }
 
         // Check resource-pack settings
