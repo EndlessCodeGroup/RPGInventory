@@ -26,9 +26,9 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import ru.endlesscode.rpginventory.RPGInventory;
 import ru.endlesscode.rpginventory.utils.InventoryUtils;
 import ru.endlesscode.rpginventory.utils.ItemUtils;
+import ru.endlesscode.rpginventory.utils.Log;
 import ru.endlesscode.rpginventory.utils.StringUtils;
 
 import java.util.ArrayList;
@@ -70,7 +70,7 @@ public class Slot {
             this.quickSlot = 9; // Shield slot ID
         } else if (slotType != SlotType.ACTIVE && quickSlot == -1 || !slotType.isAllowQuick() || slotIds.size() > 1) {
             if (config.contains("quickbar")) {
-                RPGInventory.getPluginLogger().warning("Option \"quickbar\" is ignored for slot \"" + name + "\"!");
+                Log.w("Option \"quickbar\" is ignored for slot \"{0}\"!", name);
             }
             this.quickSlot = -1;
         } else {
@@ -87,7 +87,7 @@ public class Slot {
             }
         } else {
             if (config.contains("items")) {
-                RPGInventory.getPluginLogger().warning("Option \"items\" is ignored for slot \"" + name + "\"!");
+                Log.w("Option \"items\" is ignored for slot \"{0}\"!", name);
             }
 
             if (slotType == SlotType.ELYTRA) {

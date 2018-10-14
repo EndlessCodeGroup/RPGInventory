@@ -1,8 +1,10 @@
 plugins {
-    id 'ru.endlesscode.bukkitgradle' version '0.8.0'
-    id 'com.github.johnrengelman.shadow' version '2.0.1'
+    id 'ru.endlesscode.bukkitgradle' version '0.8.1'
+    id 'com.github.johnrengelman.shadow' version '4.0.1'
     id 'jacoco'
 }
+
+apply from: 'gradle/nullability.gradle'
 
 group = 'ru.endlesscode'
 version = pluginVersion
@@ -25,52 +27,37 @@ bukkit {
 repositories {
     flatDir { dirs 'libs' }
 
-    maven {
-        name 'dmulloy2-repo'
-        url 'http://repo.dmulloy2.net/nexus/repository/public/'
-    }
-
-    maven {
-        name 'md5-public'
-        url 'http://repo.md-5.net/content/groups/public/'
-    }
-
-    maven {
-        name 'vault-repo'
-        url 'http://nexus.hc.to/content/repositories/pub_releases/'
-    }
+    jcenter()
+    dmulloy2()
+    md5()
+    vault()
+    placeholderapi()
 
     maven {
         name 'keyle-repo'
         url 'http://repo.keyle.de/'
-    }
-
-    maven {
-        name 'placeholderapi-repo'
-        url 'http://repo.extendedclip.com/content/repositories/placeholderapi/'
-    }
+    } 
 
     maven {
         name 'ec-repo'
-        url 'https://raw.github.com/EndlessCodeGroup/mvn-repo/master/'
-    }
-
-    maven {
-        name 'bintray-ec'
-        url 'https://dl.bintray.com/endlesscode/repo'
+        url 'https://gitlab.com/endlesscodegroup/mvn-repo/raw/master/'
     }
 }
 
 shadowJar {
+    minimize()
     relocate 'com.comphenix.packetwrapper', 'ru.endlesscode.rpginventory.shade.com.comphenix.packetwrapper'
+    relocate 'ru.endlesscode.inspector', 'ru.endlesscode.rpginventory.inspector'
 }
+
+ext.inspectorVersion = "0.7.1"
 
 dependencies {
     compileOnly(bukkit())
     compileOnly('net.milkbowl.vault:VaultAPI:1.6') {
         exclude group: 'org.bukkit'
     }
-    compileOnly('com.comphenix.protocol:ProtocolLib-API:4.4.0-SNAPSHOT')
+    compileOnly('com.comphenix.protocol:ProtocolLib-API:4.4.0')
     compileOnly('org.jetbrains:annotations:15.0')
     compileOnly('me.clip:placeholderapi:2.6.0')
     compileOnly('me.robin:BattleLevelsAPI:6.9.1')
@@ -80,8 +67,11 @@ dependencies {
     compileOnly('me.baks:RPGPlayerLeveling:3.7.2')
     compileOnly('com.sucy:SkillAPI:3.102')
     compileOnly('me.leothepro555:Skills')
-    compileOnly('ru.endlesscode.inspector:inspector-bukkit:0.5.0')
+    compileOnly("ru.endlesscode.inspector:inspector-bukkit:$inspectorVersion")
+    runtime("ru.endlesscode.inspector:inspector-bukkit-runtime:$inspectorVersion")
+    implementation('com.comphenix.packetwrapper:PacketWrapper:1.12.1-R0.1-SNAPSHOT')
     testImplementation('junit:junit:4.12')
+    testImplementation('org.mockito:mockito-core:2.8.+')
 }
 
 jacocoTestReport {

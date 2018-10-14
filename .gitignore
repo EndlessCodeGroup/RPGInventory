@@ -43,6 +43,7 @@ gradle-app.setting
 # gradle/wrapper/gradle-wrapper.properties
 
 !/libs/*.jar
+!/antlibs/*.jar
 
 # Local files
 local.properties

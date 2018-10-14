@@ -21,7 +21,6 @@ package ru.endlesscode.rpginventory.event.listener;
 import com.comphenix.packetwrapper.WrapperPlayServerWindowItems;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketEvent;
-
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -32,15 +31,14 @@ import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
-
-import java.util.List;
-
-import org.jetbrains.annotations.*;
+import org.jetbrains.annotations.NotNull;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
 import ru.endlesscode.rpginventory.inventory.craft.CraftExtension;
 import ru.endlesscode.rpginventory.inventory.craft.CraftManager;
-import ru.endlesscode.rpginventory.misc.Config;
+import ru.endlesscode.rpginventory.misc.config.Config;
 import ru.endlesscode.rpginventory.utils.PlayerUtils;
+
+import java.util.List;
 
 /**
  * Created by OsipXD on 29.08.2016

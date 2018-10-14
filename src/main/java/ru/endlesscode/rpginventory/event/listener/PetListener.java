@@ -23,7 +23,6 @@ import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.Sound;
 import org.bukkit.entity.AnimalTamer;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Horse;
@@ -54,12 +53,13 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import ru.endlesscode.inspector.bukkit.scheduler.TrackedBukkitRunnable;
 import ru.endlesscode.rpginventory.RPGInventory;
+import ru.endlesscode.rpginventory.compat.Sound;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
 import ru.endlesscode.rpginventory.inventory.PlayerWrapper;
 import ru.endlesscode.rpginventory.inventory.slot.Slot;
 import ru.endlesscode.rpginventory.inventory.slot.SlotManager;
 import ru.endlesscode.rpginventory.item.ItemManager;
-import ru.endlesscode.rpginventory.misc.Config;
+import ru.endlesscode.rpginventory.misc.config.Config;
 import ru.endlesscode.rpginventory.pet.PetFood;
 import ru.endlesscode.rpginventory.pet.PetManager;
 import ru.endlesscode.rpginventory.pet.PetType;
@@ -205,7 +205,7 @@ public class PetListener implements Listener {
             itemInHand.setAmount(itemInHand.getAmount() - 1);
             player.getEquipment().setItemInMainHand(itemInHand);
 
-            pet.getWorld().playSound(pet.getLocation(), Sound.ENTITY_GENERIC_EAT, 1.0f, (float) (1.0 + Math.random() * 0.4));
+            pet.getWorld().playSound(pet.getLocation(), Sound.EAT.bukkitSound(), 1.0f, (float) (1.0 + Math.random() * 0.4));
         }
     }
 

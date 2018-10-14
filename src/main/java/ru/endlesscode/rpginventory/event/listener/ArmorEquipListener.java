@@ -42,6 +42,8 @@ import ru.endlesscode.rpginventory.inventory.ArmorType;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
 import ru.endlesscode.rpginventory.inventory.slot.Slot;
 import ru.endlesscode.rpginventory.inventory.slot.SlotManager;
+import ru.endlesscode.rpginventory.misc.config.Config;
+import ru.endlesscode.rpginventory.misc.config.VanillaSlotAction;
 import ru.endlesscode.rpginventory.utils.InventoryUtils;
 import ru.endlesscode.rpginventory.utils.ItemUtils;
 import ru.endlesscode.rpginventory.utils.PlayerUtils;
@@ -98,7 +100,8 @@ public class ArmorEquipListener implements Listener {
     @EventHandler(ignoreCancelled = true)
     public void onNormalEquip(@NotNull InventoryClickEvent event) {
         Player player = (Player) event.getWhoClicked();
-        if (!InventoryManager.playerIsLoaded(player) || InventoryAPI.isRPGInventory(event.getInventory())) {
+        if (!InventoryManager.playerIsLoaded(player) || InventoryAPI.isRPGInventory(event.getInventory())
+                || Config.armorSlotsAction == VanillaSlotAction.RPGINV) {
             return;
         }
 

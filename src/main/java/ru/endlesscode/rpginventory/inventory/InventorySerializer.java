@@ -21,10 +21,16 @@ package ru.endlesscode.rpginventory.inventory;
 import com.comphenix.protocol.wrappers.nbt.NbtCompound;
 import com.comphenix.protocol.wrappers.nbt.NbtFactory;
 import com.comphenix.protocol.wrappers.nbt.io.NbtBinarySerializer;
-
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import ru.endlesscode.rpginventory.inventory.slot.Slot;
+import ru.endlesscode.rpginventory.inventory.slot.SlotManager;
+import ru.endlesscode.rpginventory.misc.config.Config;
+import ru.endlesscode.rpginventory.utils.FileUtils;
+import ru.endlesscode.rpginventory.utils.ItemUtils;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -35,12 +41,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
-
-import org.jetbrains.annotations.*;
-import ru.endlesscode.rpginventory.inventory.slot.Slot;
-import ru.endlesscode.rpginventory.inventory.slot.SlotManager;
-import ru.endlesscode.rpginventory.misc.Config;
-import ru.endlesscode.rpginventory.utils.ItemUtils;
 
 class InventorySerializer {
     static void savePlayer(@NotNull PlayerWrapper playerWrapper, @NotNull Path file) throws IOException {
@@ -78,6 +78,16 @@ class InventorySerializer {
             playerNbt.put("buyed-slots", playerWrapper.getBuyedGenericSlots());
 
             NbtBinarySerializer.DEFAULT.serialize(playerNbt, dataOutput);
+        }
+    }
+
+    @Nullable
+    static PlayerWrapper loadPlayerOrNull(Player player, @NotNull Path file) {
+        try {
+            return loadPlayer(player, file);
+        } catch (IOException e) {
+            FileUtils.resolveException(file);
+            return null;
         }
     }
 

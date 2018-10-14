@@ -34,8 +34,10 @@ import ru.endlesscode.rpginventory.event.listener.BackpackListener;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
 import ru.endlesscode.rpginventory.inventory.slot.Slot;
 import ru.endlesscode.rpginventory.inventory.slot.SlotManager;
-import ru.endlesscode.rpginventory.misc.Config;
+import ru.endlesscode.rpginventory.misc.config.Config;
+import ru.endlesscode.rpginventory.utils.FileUtils;
 import ru.endlesscode.rpginventory.utils.ItemUtils;
+import ru.endlesscode.rpginventory.utils.Log;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -52,6 +54,9 @@ import java.util.UUID;
  * All rights reserved 2014 - 2016 © «EndlessCode Group»
  */
 public class BackpackManager {
+
+    private static final String CONFIG_NAME = "backpacks.yml";
+
     private static final HashMap<String, BackpackType> BACKPACK_TYPES = new HashMap<>();
     private static final HashMap<UUID, Backpack> BACKPACKS = new HashMap<>();
     private static int BACKPACK_LIMIT;
@@ -66,37 +71,44 @@ public class BackpackManager {
         reporter = instance.getReporter();
 
         try {
-            Path petsFile = RPGInventory.getInstance().getDataPath().resolve("backpacks.yml");
+            Path petsFile = RPGInventory.getInstance().getDataPath().resolve(CONFIG_NAME);
             if (Files.notExists(petsFile)) {
-                RPGInventory.getInstance().saveResource("backpacks.yml", false);
+                RPGInventory.getInstance().saveResource(CONFIG_NAME, false);
             }
 
             FileConfiguration petsConfig = YamlConfiguration.loadConfiguration(petsFile.toFile());
 
-            BACKPACK_TYPES.clear();
-            for (String key : petsConfig.getConfigurationSection("backpacks").getKeys(false)) {
-                tryToAddBackpack(key, petsConfig.getConfigurationSection("backpacks." + key));
+            @Nullable final ConfigurationSection backpacks = petsConfig.getConfigurationSection("backpacks");
+            if (backpacks == null) {
+                Log.s("Section ''backpacks'' not found in {0}", CONFIG_NAME);
+                return false;
             }
 
+            BACKPACK_TYPES.clear();
+            for (String key : backpacks.getKeys(false)) {
+                tryToAddBackpack(key, backpacks.getConfigurationSection(key));
+            }
+
+            if (BACKPACK_TYPES.isEmpty()) {
+                Log.i("No one backpack type found");
+                return false;
+            }
+
+            BACKPACKS.clear();
             BackpackManager.loadBackpacks();
+
+            Log.i("{0} backpack type(s) has been loaded", BACKPACK_TYPES.size());
+            Log.i("{0} backpack(s) has been loaded", BACKPACKS.size());
+
+            BACKPACK_LIMIT = Config.getConfig().getInt("backpacks.limit", 0);
+
+            // Register events
+            instance.getServer().getPluginManager().registerEvents(new BackpackListener(), instance);
+            return true;
         } catch (Exception e) {
             reporter.report("Error on BackpackManager initialization", e);
             return false;
         }
-
-        if (BACKPACK_TYPES.isEmpty()) {
-            instance.getLogger().info("No one backpack type found");
-            return false;
-        }
-
-        RPGInventory.getPluginLogger().info(BACKPACK_TYPES.size() + " backpack type(s) has been loaded");
-        RPGInventory.getPluginLogger().info(BACKPACKS.size() + " backpack(s) has been loaded");
-
-        BACKPACK_LIMIT = Config.getConfig().getInt("backpacks.limit", 0);
-
-        // Register events
-        instance.getServer().getPluginManager().registerEvents(new BackpackListener(), instance);
-        return true;
     }
 
     private static void tryToAddBackpack(String name, @NotNull ConfigurationSection config) {
@@ -104,9 +116,7 @@ public class BackpackManager {
             BackpackType backpackType = new BackpackType(config);
             BACKPACK_TYPES.put(name, backpackType);
         } catch (Exception e) {
-            String message = String.format(
-                    "Backpack '%s' can't be added: %s", name, e.getLocalizedMessage());
-            RPGInventory.getPluginLogger().warning(message);
+            Log.w("Backpack ''{0}'' can''t be added: {1}", name, e.getLocalizedMessage());
         }
     }
 
@@ -194,9 +204,9 @@ public class BackpackManager {
         try {
             loadBackpack(path);
         } catch (IOException e) {
-            RPGInventory.getPluginLogger().warning(String.format(
-                    "Error: %s (on loading backpack %s)", e.getLocalizedMessage(), path.getFileName().toString()
-            ));
+            FileUtils.resolveException(path);
+            Log.s("Error on loading backpack {0}", path.getFileName().toString());
+            Log.s("Will be created new backpack. Old file was renamed.");
         }
     }
 

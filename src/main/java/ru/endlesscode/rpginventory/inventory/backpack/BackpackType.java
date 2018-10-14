@@ -21,18 +21,17 @@ package ru.endlesscode.rpginventory.inventory.backpack;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
-
-import org.jetbrains.annotations.*;
+import org.jetbrains.annotations.NotNull;
 import ru.endlesscode.rpginventory.RPGInventory;
 import ru.endlesscode.rpginventory.item.TexturedItem;
 import ru.endlesscode.rpginventory.misc.FileLanguage;
 import ru.endlesscode.rpginventory.utils.ItemUtils;
 import ru.endlesscode.rpginventory.utils.StringUtils;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by OsipXD on 05.10.2015
@@ -53,9 +52,9 @@ public class BackpackType extends TexturedItem {
         super(config.getString("item"));
 
         this.id = config.getName();
-        this.name = StringUtils.coloredLine(config.getString("name"));
+        this.name = StringUtils.coloredLine(config.getString("name", id));
         this.lore = StringUtils.coloredLines(config.getStringList("lore"));
-        this.size = config.getInt("size") < 56 ? config.getInt("size") : 56;
+        this.size = config.getInt("size", 56) < 56 ? config.getInt("size") : 56;
 
         this.createItem();
     }

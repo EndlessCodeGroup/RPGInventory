@@ -47,14 +47,15 @@ import ru.endlesscode.rpginventory.inventory.backpack.BackpackManager;
 import ru.endlesscode.rpginventory.inventory.craft.CraftManager;
 import ru.endlesscode.rpginventory.inventory.slot.SlotManager;
 import ru.endlesscode.rpginventory.item.ItemManager;
-import ru.endlesscode.rpginventory.misc.Config;
+import ru.endlesscode.rpginventory.misc.config.Config;
 import ru.endlesscode.rpginventory.misc.FileLanguage;
-import ru.endlesscode.rpginventory.misc.metrics.Metrics;
-import ru.endlesscode.rpginventory.misc.updater.ConfigUpdater;
-import ru.endlesscode.rpginventory.misc.updater.Updater;
-import ru.endlesscode.rpginventory.nms.VersionHandler;
+import ru.endlesscode.rpginventory.misc.Metrics;
+import ru.endlesscode.rpginventory.misc.config.ConfigUpdater;
+import ru.endlesscode.rpginventory.misc.Updater;
+import ru.endlesscode.rpginventory.compat.VersionHandler;
 import ru.endlesscode.rpginventory.pet.PetManager;
 import ru.endlesscode.rpginventory.pet.mypet.MyPetManager;
+import ru.endlesscode.rpginventory.utils.Log;
 import ru.endlesscode.rpginventory.utils.PlayerUtils;
 import ru.endlesscode.rpginventory.utils.ResourcePackUtils;
 import ru.endlesscode.rpginventory.utils.StringUtils;
@@ -63,7 +64,6 @@ import ru.endlesscode.rpginventory.utils.Version;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Arrays;
-import java.util.logging.Logger;
 
 public class RPGInventory extends PluginLifecycle {
     private static RPGInventory instance;
@@ -75,7 +75,8 @@ public class RPGInventory extends PluginLifecycle {
     private PlayerUtils.ClassSystem classSystem;
 
     private FileLanguage language;
-    private boolean pApiHooked;
+    private boolean placeholderApiHooked = false;
+    private boolean myPetHooked = false;
 
     public static RPGInventory getInstance() {
         return instance;
@@ -94,18 +95,18 @@ public class RPGInventory extends PluginLifecycle {
     }
 
     @Contract(pure = true)
-    public static Logger getPluginLogger() {
-        return instance.getLogger();
-    }
-
-    @Contract(pure = true)
     public static boolean economyConnected() {
         return instance.economy != null;
     }
 
     @Contract(pure = true)
-    public static boolean placeholderApiHooked() {
-        return instance.pApiHooked;
+    public static boolean isPlaceholderApiHooked() {
+        return instance.placeholderApiHooked;
+    }
+
+    @Contract(pure = true)
+    public static boolean isMyPetHooked() {
+        return instance.myPetHooked;
     }
 
     public static PlayerUtils.LevelSystem getLevelSystem() {
@@ -116,16 +117,17 @@ public class RPGInventory extends PluginLifecycle {
         return instance.classSystem;
     }
 
-    public RPGInventory() {
-        super();
-
+    @Override
+    public void init() {
         instance = this;
+        Log.init(this.getLogger());
+        Config.init(this);
     }
 
     @Override
     public void onEnable() {
-        Config.loadConfig(this);
         this.updateConfig();
+        Config.reload();
         language = new FileLanguage(this);
 
         if (!this.checkRequirements()) {
@@ -136,22 +138,25 @@ public class RPGInventory extends PluginLifecycle {
         // Hook Placeholder API
         if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
             new StringUtils.Placeholders().hook();
-            pApiHooked = true;
-            this.getLogger().info("Placeholder API hooked!");
+            placeholderApiHooked = true;
+            Log.i("Placeholder API hooked!");
         } else {
-            pApiHooked = false;
+            placeholderApiHooked = false;
         }
 
         // Load modules
-        this.getLogger().info(CraftManager.init(this) ? "Craft extensions is enabled." : "Craft extensions isn't loaded.");
-        this.getLogger().info(InventoryLocker.init(this) ? "Inventory lock system is enabled." : "Inventory lock system isn't loaded.");
-        this.getLogger().info(ItemManager.init(this) ? "Item system is enabled." : "Item system isn't loaded.");
-        this.getLogger().info(PetManager.init(this) ? "Pet system is enabled." : "Pet system isn't loaded.");
-        this.getLogger().info(BackpackManager.init(this) ? "Backpack system is enabled." : "Backpack system isn't loaded.");
+        Log.i(CraftManager.init(this) ? "Craft extensions is enabled." : "Craft extensions isn't loaded.");
+        Log.i(InventoryLocker.init(this) ? "Inventory lock system is enabled." : "Inventory lock system isn't loaded.");
+        Log.i(ItemManager.init(this) ? "Item system is enabled." : "Item system isn't loaded.");
+        Log.i(PetManager.init(this) ? "Pet system is enabled." : "Pet system isn't loaded.");
+        Log.i(BackpackManager.init(this) ? "Backpack system is enabled." : "Backpack system isn't loaded.");
 
         // Hook MyPet
         if (Bukkit.getPluginManager().isPluginEnabled("MyPet") && MyPetManager.init(this)) {
-            this.getLogger().info("MyPet hooked!");
+            myPetHooked = true;
+            Log.i("MyPet hooked!");
+        } else {
+            myPetHooked = false;
         }
 
         // Registering other listeners
@@ -175,7 +180,7 @@ public class RPGInventory extends PluginLifecycle {
                             event.setCancelled(true);
                         }
                     });
-            this.getLogger().info("Recipe book conflicts with RPGInventory and was disabled.");
+            Log.i("Recipe book conflicts with RPGInventory and was disabled.");
         }
 
         protocolManager.addPacketListener(new PlayerLoader(this));
@@ -203,55 +208,56 @@ public class RPGInventory extends PluginLifecycle {
         // Check if plugin is enabled
         if (!Config.getConfig().getBoolean("enabled")) {
             this.onFirstStart();
-            this.getLogger().warning("Plugin is not enabled in config!");
-            this.setEnabled(false);
+            Log.w("Plugin is not enabled in config!");
             return false;
         }
 
         // Check version compatibility
         if (!VersionHandler.checkVersion()) {
-            this.getLogger().warning("This version of RPG Inventory is not tested with \"" + Bukkit.getBukkitVersion() + "\"!");
+            Log.w("This version of RPG Inventory is not tested with \"{0}\"!", Bukkit.getBukkitVersion());
+        } else if (VersionHandler.is1_13()) {
+            Log.w("Support of {0} is experimental! Use RPGInventory with caution.", Bukkit.getBukkitVersion());
         }
 
         // Check resource-pack settings
         if (Config.getConfig().getBoolean("resource-pack.enabled", true)) {
             String rpUrl = Config.getConfig().getString("resource-pack.url");
             if (rpUrl.equals("PUT_YOUR_URL_HERE")) {
-                this.getLogger().warning("Set resource-pack's url in config!");
+                Log.w("Set resource-pack's url in config!");
                 this.getPluginLoader().disablePlugin(this);
                 return false;
             }
 
             if (Config.getConfig().getString("resource-pack.hash").equals("PUT_YOUR_HASH_HERE")) {
-                this.getLogger().warning("Your resource pack hash incorrect!");
+                Log.w("Your resource pack hash incorrect!");
             }
 
             try {
                 ResourcePackUtils.validateUrl(rpUrl);
             } catch (Exception e) {
                 String[] messageLines = e.getLocalizedMessage().split("\n");
-                this.getLogger().warning("");
-                this.getLogger().warning("######### Something wrong with your RP link! #########");
+                Log.w("");
+                Log.w("######### Something wrong with your RP link! #########");
                 for (String line : messageLines) {
-                    this.getLogger().warning("# " + line);
+                    Log.w("# {0}", line);
                 }
-                this.getLogger().warning("######################################################");
-                this.getLogger().warning("");
+                Log.w("######################################################");
+                Log.w("");
             }
         }
 
         // Check dependencies
         if (this.setupPermissions()) {
-            this.getLogger().info("Permissions hooked: " + perms.getName());
+            Log.i("Permissions hooked: {0}", perms.getName());
         } else {
-            this.getLogger().warning("Permissions not found!");
+            Log.w("Permissions not found!");
             return false;
         }
 
         if (this.setupEconomy()) {
-            this.getLogger().info("Economy hooked: " + economy.getName());
+            Log.i("Economy hooked: {0}", economy.getName());
         } else {
-            this.getLogger().warning("Economy not found!");
+            Log.w("Economy not found!");
         }
 
         initLevelSystem();
@@ -265,8 +271,8 @@ public class RPGInventory extends PluginLifecycle {
         try {
             levelSystem = PlayerUtils.LevelSystem.valueOf(levelSystemName);
         } catch (IllegalArgumentException e) {
-            this.getLogger().warning("Unknown level system: " + levelSystemName + ". Used EXP by default.");
-            this.getLogger().warning("Available level systems: " + Arrays.toString(PlayerUtils.LevelSystem.values()));
+            Log.w("Unknown level system: {0}. Used EXP by default.", levelSystemName);
+            Log.w("Available level systems: {0}", Arrays.toString(PlayerUtils.LevelSystem.values()));
             levelSystem = PlayerUtils.LevelSystem.EXP;
         }
     }
@@ -276,8 +282,8 @@ public class RPGInventory extends PluginLifecycle {
         try {
             classSystem = PlayerUtils.ClassSystem.valueOf(classSystemName);
         } catch (IllegalArgumentException e) {
-            this.getLogger().warning("Unknown class system: " + classSystemName + ". Used PERMISSIONS by default.");
-            this.getLogger().warning("Available class systems: " + Arrays.toString(PlayerUtils.LevelSystem.values()));
+            Log.w("Unknown class system: {0}. Used PERMISSIONS by default.", classSystemName);
+            Log.w("Available class systems: {0}", Arrays.toString(PlayerUtils.LevelSystem.values()));
             classSystem = PlayerUtils.ClassSystem.PERMISSIONS;
         }
     }
@@ -285,14 +291,14 @@ public class RPGInventory extends PluginLifecycle {
     private void checkThatSystemsLoaded() {
         PluginManager pm = this.getServer().getPluginManager();
         if (levelSystem != PlayerUtils.LevelSystem.EXP && !pm.isPluginEnabled(levelSystem.getPluginName())) {
-            this.getLogger().warning("Level-system " + levelSystem.getPluginName() + " is not enabled!");
-            this.getLogger().warning("Will be used EXP by default");
+            Log.w("Level-system {0} is not enabled!", levelSystem.getPluginName());
+            Log.w("Will be used EXP by default");
             levelSystem = PlayerUtils.LevelSystem.EXP;
         }
 
         if (classSystem != PlayerUtils.ClassSystem.PERMISSIONS && !pm.isPluginEnabled(classSystem.getPluginName())) {
-            this.getLogger().warning("Class-system " + classSystem.getPluginName() + " is not enabled!");
-            this.getLogger().warning("Will be used PERMISSIONS by default");
+            Log.w("Class-system {0} is not enabled!", classSystem.getPluginName());
+            Log.w("Will be used PERMISSIONS by default");
             classSystem = PlayerUtils.ClassSystem.PERMISSIONS;
         }
     }
@@ -316,7 +322,7 @@ public class RPGInventory extends PluginLifecycle {
             return;
         }
 
-        this.getLogger().info("Saving players inventories...");
+        Log.i("Saving players inventories...");
         for (Player player : this.getServer().getOnlinePlayers()) {
             InventoryManager.unloadPlayerInventory(player);
         }
@@ -327,7 +333,7 @@ public class RPGInventory extends PluginLifecycle {
             return;
         }
 
-        this.getLogger().info("Loading players inventories...");
+        Log.i("Loading players inventories...");
         for (Player player : this.getServer().getOnlinePlayers()) {
             InventoryManager.loadPlayerInventory(player);
         }
@@ -405,7 +411,6 @@ public class RPGInventory extends PluginLifecycle {
             Config.getConfig().set("version", null);
             Config.getConfig().set("version", version.toString());
             Config.save();
-            Config.reload();
         }
     }
 

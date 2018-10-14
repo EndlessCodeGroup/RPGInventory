@@ -30,7 +30,14 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.*;
+import org.bukkit.entity.Animals;
+import org.bukkit.entity.Horse;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Ocelot;
+import org.bukkit.entity.Pig;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.Tameable;
+import org.bukkit.entity.Wolf;
 import org.bukkit.inventory.HorseInventory;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -47,10 +54,15 @@ import ru.endlesscode.rpginventory.inventory.slot.SlotManager;
 import ru.endlesscode.rpginventory.utils.EffectUtils;
 import ru.endlesscode.rpginventory.utils.ItemUtils;
 import ru.endlesscode.rpginventory.utils.LocationUtils;
+import ru.endlesscode.rpginventory.utils.Log;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * Created by OsipXD on 26.08.2015
@@ -58,6 +70,9 @@ import java.util.*;
  * All rights reserved 2014 - 2016 © «EndlessCode Group»
  */
 public class PetManager {
+
+    private static final String CONFIG_NAME = "pets.yml";
+
     private static final String METADATA_KEY_PET_OWNER = "rpginventory:petowner";
     private static final Map<String, PetType> PETS = new HashMap<>();
     private static final Map<String, PetFood> PET_FOOD = new HashMap<>();
@@ -73,26 +88,37 @@ public class PetManager {
         SLOT_PET = SlotManager.instance().getPetSlot() != null ? SlotManager.instance().getPetSlot().getSlotId() : -1;
 
         if (!PetManager.isEnabled()) {
-            instance.getLogger().info("Slot for pets not found");
+            Log.i("Slot for pets not found");
             return false;
         }
 
         try {
-            Path petsFile = RPGInventory.getInstance().getDataPath().resolve("pets.yml");
+            Path petsFile = RPGInventory.getInstance().getDataPath().resolve(CONFIG_NAME);
             if (Files.notExists(petsFile)) {
-                RPGInventory.getInstance().saveResource("pets.yml", false);
+                RPGInventory.getInstance().saveResource(CONFIG_NAME, false);
             }
 
             FileConfiguration petsConfig = YamlConfiguration.loadConfiguration(petsFile.toFile());
 
-            PetManager.PETS.clear();
-            for (String key : petsConfig.getConfigurationSection("pets").getKeys(false)) {
-                tryToAddPet(key, petsConfig.getConfigurationSection("pets." + key));
+            @Nullable final ConfigurationSection pets = petsConfig.getConfigurationSection("pets");
+            if (pets == null) {
+                Log.s("Section ''pets'' not found in {0}", CONFIG_NAME);
+                return false;
             }
 
-            PetManager.PET_FOOD.clear();
-            for (String key : petsConfig.getConfigurationSection("food").getKeys(false)) {
-                tryToAddPetFood(key, petsConfig.getConfigurationSection("food." + key));
+            PETS.clear();
+            for (String key : pets.getKeys(false)) {
+                tryToAddPet(key, pets.getConfigurationSection(key));
+            }
+
+            @Nullable final ConfigurationSection food = petsConfig.getConfigurationSection("food");
+            if (food == null) {
+                Log.s("Section ''food'' not found in {0}", CONFIG_NAME);
+            } else {
+                PET_FOOD.clear();
+                for (String key : food.getKeys(false)) {
+                    tryToAddPetFood(key, food.getConfigurationSection(key));
+                }
             }
         } catch (Exception e) {
             instance.getReporter().report("Error on PetManager initialization", e);
@@ -100,12 +126,12 @@ public class PetManager {
         }
 
         if (PETS.isEmpty()) {
-            instance.getLogger().info("No one configured pet found");
+            Log.i("No one configured pet found");
             return false;
         }
 
-        RPGInventory.getPluginLogger().info(PetManager.PETS.size() + " pet(s) has been loaded");
-        RPGInventory.getPluginLogger().info(PetManager.PET_FOOD.size() + " food(s) has been loaded");
+        Log.i("{0} pet(s) has been loaded", PetManager.PETS.size());
+        Log.i("{0} food(s) has been loaded", PetManager.PET_FOOD.size());
 
         // Register events
         instance.getServer().getPluginManager().registerEvents(new PetListener(), instance);
@@ -119,9 +145,7 @@ public class PetManager {
             PetType petType = new PetType(config);
             PetManager.PETS.put(name, petType);
         } catch (Exception e) {
-            String message = String.format(
-                    "Pet '%s' can't be added: %s", name, e.getLocalizedMessage());
-            RPGInventory.getPluginLogger().warning(message);
+            Log.w("Pet ''{0}'' can''t be added: {1}", name, e.getLocalizedMessage());
         }
     }
 
@@ -130,9 +154,7 @@ public class PetManager {
             PetFood pet = new PetFood(config);
             PetManager.PET_FOOD.put(name, pet);
         } catch (Exception e) {
-            String message = String.format(
-                    "Pet food '%s' can't be added: %s", name, e.getLocalizedMessage());
-            RPGInventory.getPluginLogger().warning(message);
+            Log.w("Pet food ''{0}'' can''t be added: {1}", name, e.getLocalizedMessage());
         }
     }
 
@@ -222,7 +244,7 @@ public class PetManager {
                                 horsePet.setCarryingChest(true);
                             } catch (UnsupportedOperationException ignored) {
                                 //org.bukkit.craftbukkit.entity.CraftHorse.setCarryingChest (CraftHorse.class:56)
-                                RPGInventory.getInstance().getLogger().warning("Failed to add a chest to the horse.");
+                                Log.w("Failed to add a chest to the horse.");
                             }
                         }
 

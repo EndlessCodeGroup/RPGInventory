@@ -20,7 +20,6 @@ package ru.endlesscode.rpginventory.event.listener;
 
 import com.comphenix.protocol.wrappers.EnumWrappers;
 import org.bukkit.Material;
-import org.bukkit.Sound;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -47,6 +46,7 @@ import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 import ru.endlesscode.inspector.bukkit.scheduler.TrackedBukkitRunnable;
 import ru.endlesscode.rpginventory.RPGInventory;
+import ru.endlesscode.rpginventory.compat.Sound;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
 import ru.endlesscode.rpginventory.inventory.slot.Slot;
 import ru.endlesscode.rpginventory.inventory.slot.SlotManager;
@@ -54,7 +54,7 @@ import ru.endlesscode.rpginventory.item.CustomItem;
 import ru.endlesscode.rpginventory.item.ItemManager;
 import ru.endlesscode.rpginventory.item.ItemStat;
 import ru.endlesscode.rpginventory.item.Modifier;
-import ru.endlesscode.rpginventory.misc.Config;
+import ru.endlesscode.rpginventory.misc.config.Config;
 import ru.endlesscode.rpginventory.utils.EffectUtils;
 import ru.endlesscode.rpginventory.utils.ItemUtils;
 import ru.endlesscode.rpginventory.utils.PlayerUtils;
@@ -150,8 +150,12 @@ public class ItemListener implements Listener {
         double critChance = ItemManager.getModifier(damager, ItemStat.StatType.CRIT_CHANCE).getMultiplier() - 1.0;
         if (Math.random() <= critChance) {
             damage *= ItemManager.getModifier(damager, ItemStat.StatType.CRIT_DAMAGE).getMultiplier();
-            damager.getWorld().playSound(event.getEntity().getLocation(), Sound.ENTITY_PLAYER_ATTACK_CRIT,
-                    1, (float) (0.5 + Math.random() * 0.4));
+            damager.getWorld().playSound(
+                    event.getEntity().getLocation(),
+                    Sound.SUCCESSFUL_HIT.bukkitSound(),
+                    1,
+                    (float) (0.5 + Math.random() * 0.4)
+            );
             EffectUtils.playParticlesToAll(EnumWrappers.Particle.CRIT, 10, event.getEntity().getLocation());
         }
 

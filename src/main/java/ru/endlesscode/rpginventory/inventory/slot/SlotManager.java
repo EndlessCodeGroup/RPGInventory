@@ -25,6 +25,7 @@ import org.bukkit.event.inventory.InventoryType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ru.endlesscode.rpginventory.RPGInventory;
+import ru.endlesscode.rpginventory.utils.Log;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -32,7 +33,6 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.logging.Level;
 
 /**
  * Created by OsipXD on 05.09.2015
@@ -40,6 +40,9 @@ import java.util.logging.Level;
  * All rights reserved 2014 - 2016 © «EndlessCode Group»
  */
 public class SlotManager {
+
+    private static final String CONFIG_NAME = "slots.yml";
+
     @Nullable
     private static SlotManager slotManager = null;
 
@@ -51,15 +54,21 @@ public class SlotManager {
     private final FileConfiguration slotsConfig;
 
     private SlotManager() {
-        this.slotsFile = RPGInventory.getInstance().getDataPath().resolve("slots.yml");
+        this.slotsFile = RPGInventory.getInstance().getDataPath().resolve(CONFIG_NAME);
         if (Files.notExists(slotsFile)) {
-            RPGInventory.getInstance().saveResource("slots.yml", false);
+            RPGInventory.getInstance().saveResource(CONFIG_NAME, false);
         }
 
         this.slotsConfig = YamlConfiguration.loadConfiguration(slotsFile.toFile());
-        final ConfigurationSection slots = this.slotsConfig.getConfigurationSection("slots");
+
+        @Nullable final ConfigurationSection slots = this.slotsConfig.getConfigurationSection("slots");
+        if (slots == null) {
+            Log.s("Section ''slots'' not found in {0}", CONFIG_NAME);
+            return;
+        }
+
         for (String slotName : slots.getKeys(false)) {
-            ConfigurationSection slotConfiguration = slots.getConfigurationSection(slotName);
+            final ConfigurationSection slotConfiguration = slots.getConfigurationSection(slotName);
             Slot.SlotType slotType = Slot.SlotType.valueOf(slotConfiguration.getString("type"));
             Slot slot;
             if (slotType == Slot.SlotType.ACTION) {
@@ -71,7 +80,7 @@ public class SlotManager {
             if (this.validateSlot(slot)) {
                 this.slots.add(slot);
             } else {
-                RPGInventory.getPluginLogger().warning("Slot \"" + slot.getName() + "\" was not been added.");
+                Log.w("Slot \"{0}\" was not been added.", slot.getName());
             }
         }
     }
@@ -80,7 +89,7 @@ public class SlotManager {
         try {
             SlotManager.slotManager = new SlotManager();
         } catch (Exception e) {
-            RPGInventory.getPluginLogger().log(Level.WARNING, "Failed to initialize SlotManager", e);
+            Log.w(e, "Failed to initialize SlotManager");
             return false;
         }
 
@@ -94,21 +103,23 @@ public class SlotManager {
 
     private boolean validateSlot(Slot slot) {
         if (slot.getSlotType().isReadItemList() && slot.itemListIsEmpty()) {
-            RPGInventory.getPluginLogger().warning("Slot with type " + slot.getSlotType()
-                    + " must contains list of allowed items");
+            Log.w("Slot with type {0} must contains list of allowed items", slot.getSlotType());
         }
 
         if (!slot.getSlotType().isAllowMultiSlots() && slot.getSlotIds().size() > 1) {
-            RPGInventory.getPluginLogger().warning("Slot with type " + slot.getSlotType()
-                    + " can not contain more than one slotId");
+            Log.w("Slot with type {0} can not contain more than one slotId", slot.getSlotType());
+            return false;
+        }
+
+        if (slot.getSlotType() == Slot.SlotType.MYPET && !RPGInventory.isMyPetHooked()) {
+            Log.w("MyPet slot can't be used without MyPet installed.");
             return false;
         }
 
         for (Slot existingSlot : this.slots) {
             for (int slotId : slot.getSlotIds()) {
                 if (existingSlot.getSlotIds().contains(slotId)) {
-                    RPGInventory.getPluginLogger().warning("Slot " + slotId + " is occupied by "
-                            + existingSlot.getName());
+                    Log.w("Slot {0} is occupied by {1}", slotId, existingSlot.getName());
                     return false;
                 }
             }
@@ -117,15 +128,13 @@ public class SlotManager {
                 int slotId = slot.getQuickSlot();
                 int existingSlotId = existingSlot.getQuickSlot();
                 if (slotId == existingSlotId) {
-                    RPGInventory.getPluginLogger().warning("Quickbar slot " + slotId + " is occupied by "
-                            + existingSlot.getName());
+                    Log.w("Quickbar slot {0} is occupied by {1}", slotId, existingSlot.getName());
                     return false;
                 }
             }
 
             if (slot.getSlotType().isUnique() && slot.getSlotType() == existingSlot.getSlotType()) {
-                RPGInventory.getPluginLogger().warning("You can not create more then one slot with type " +
-                        slot.getSlotType() + "!");
+                Log.w("You can not create more then one slot with type {0}!", slot.getSlotType());
                 return false;
             }
         }

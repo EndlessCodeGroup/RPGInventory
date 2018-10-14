@@ -21,7 +21,6 @@ package ru.endlesscode.rpginventory.event.listener;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
-import org.bukkit.Sound;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -52,6 +51,7 @@ import org.jetbrains.annotations.Nullable;
 import ru.endlesscode.inspector.bukkit.scheduler.TrackedBukkitRunnable;
 import ru.endlesscode.rpginventory.RPGInventory;
 import ru.endlesscode.rpginventory.api.InventoryAPI;
+import ru.endlesscode.rpginventory.compat.Sound;
 import ru.endlesscode.rpginventory.event.PlayerInventoryLoadEvent;
 import ru.endlesscode.rpginventory.inventory.ActionType;
 import ru.endlesscode.rpginventory.inventory.InventoryLocker;
@@ -62,7 +62,8 @@ import ru.endlesscode.rpginventory.inventory.slot.ActionSlot;
 import ru.endlesscode.rpginventory.inventory.slot.Slot;
 import ru.endlesscode.rpginventory.inventory.slot.SlotManager;
 import ru.endlesscode.rpginventory.item.ItemManager;
-import ru.endlesscode.rpginventory.misc.Config;
+import ru.endlesscode.rpginventory.misc.config.Config;
+import ru.endlesscode.rpginventory.misc.config.VanillaSlotAction;
 import ru.endlesscode.rpginventory.pet.PetManager;
 import ru.endlesscode.rpginventory.pet.mypet.MyPetManager;
 import ru.endlesscode.rpginventory.utils.InventoryUtils;
@@ -182,7 +183,7 @@ public class InventoryListener implements Listener {
                 player.getInventory().setItem(slotId, event.getItem().getItemStack());
                 event.getItem().remove();
 
-                player.playSound(player.getLocation(), Sound.ENTITY_ITEM_PICKUP, .3f, 1.7f);
+                player.playSound(player.getLocation(), Sound.ITEM_PICKUP.bukkitSound(), .3f, 1.7f);
                 if (Config.getConfig().getBoolean("attack.auto-held")) {
                     player.getInventory().setHeldItemSlot(quickSlot.getQuickSlot());
                 }
@@ -214,8 +215,9 @@ public class InventoryListener implements Listener {
                     return;
                 }
 
-                // Shield slot is QUICKBAR and has rawId - 45 o.O
-                if (rawSlotId >= 1 && rawSlotId <= 8 || rawSlotId == 45) {
+                final boolean isCraftSlot = rawSlotId >= 1 && rawSlotId <= 4;
+                if (rawSlotId == 45 // Shield slot has rawId 45
+                        || isCraftSlot && Config.craftSlotsAction == VanillaSlotAction.RPGINV) {
                     event.setCancelled(true);
                     return;
                 }
@@ -261,7 +263,7 @@ public class InventoryListener implements Listener {
             return;
         }
 
-        // Crafting area
+        // Crafting inventory is Player's vanilla inventory
         if (inventory.getType() == InventoryType.CRAFTING) {
             PlayerWrapper playerWrapper = InventoryManager.get(player);
 
@@ -269,27 +271,25 @@ public class InventoryListener implements Listener {
                 return;
             }
 
+            boolean openRpgInventory = false;
             switch (event.getSlotType()) {
                 case CRAFTING:
-                    //Without this stupid shit we already get click in the our inventory on bukkit 1.9.4
-                    //Ofc, player picking up item in the clicked slot (1, 2, 3, 4, depends on clicked slot in the small crafting grid)
-                    //Fixes #142.
-                    new TrackedBukkitRunnable() {
-                        @Override
-                        public void run() {
-                            playerWrapper.openInventory(true);
-                        }
-                    }.runTaskLater(RPGInventory.getInstance(), 0);
+                case RESULT:
+                    openRpgInventory = Config.craftSlotsAction == VanillaSlotAction.RPGINV;
+                    break;
                 case QUICKBAR:
                     // Shield slot is QUICKBAR and has rawId - 45 o.O
-                    if (rawSlot != 45) {
-                        break;
-                    }
+                    openRpgInventory = rawSlot == 45 && Config.armorSlotsAction == VanillaSlotAction.RPGINV;
+                    break;
                 case ARMOR:
-                case RESULT:
-                    event.setCancelled(true);
-                    return;
+                    openRpgInventory = Config.armorSlotsAction == VanillaSlotAction.RPGINV;
             }
+
+            if (openRpgInventory) {
+                playerWrapper.openInventoryDeferred(true);
+                event.setCancelled(true);
+            }
+            return;
         }
 
         // In RPG Inventory or quick slot
