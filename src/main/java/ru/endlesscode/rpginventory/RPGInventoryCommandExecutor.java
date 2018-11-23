@@ -208,9 +208,9 @@ final class RPGInventoryCommandExecutor implements CommandExecutor {
         ItemCommandEvent event = new ItemCommandEvent(player, item);
         Bukkit.getPluginManager().callEvent(event);
 
-        if(event.isCancelled()){
-           message = "&cItem command was cancelled";
-        }else if (player.getInventory().addItem(event.getItem()).isEmpty()) {
+        if (event.isCancelled()) {
+            message = "&cItem command was cancelled";
+        } else if (player.getInventory().addItem(event.getItem()).isEmpty()) {
             message = "&3" + prefix + " has been given to " + player.getName();
         } else {
             message = "&c" + player.getName() + " has no empty slots in the inventory.";

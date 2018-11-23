@@ -18,11 +18,11 @@ public class ItemCommandEvent extends PlayerEvent implements Cancellable {
         this.item = item;
     }
 
-    public ItemStack getItem(){
+    public ItemStack getItem() {
         return item;
     }
 
-    public void setItem(ItemStack item){
+    public void setItem(ItemStack item) {
         this.item = item;
     }
 
