@@ -1,22 +1,17 @@
 buildscript {
-    val localProps = java.util.Properties()
-    localProps.load(file("local.properties").inputStream())
-    val proguardPath = localProps.getProperty("proguard.dir") ?: "SPECIFY proguard.dir PROPERTY"
-
-    repositories {
-        flatDir {
-            dirs(proguardPath)
-        }
+    val proguardVersion = "6.0.1"
+    dependencies {
+        classpath("net.sf.proguard:proguard-gradle:$proguardVersion")
     }
 
-    dependencies {
-        classpath(":proguard")
+    repositories {
+        mavenCentral()
     }
 }
 
 task("proguard", proguard.gradle.ProGuardTask::class) {
     // Specify the input jars, output jars, and library jars.
-    val shadowJar = (tasks.get("shadowJar") as Jar)
+    val shadowJar = (tasks["shadowJar"] as Jar)
     val jarFile = shadowJar.archivePath
     val minifiedJar: File by project.extra
 
