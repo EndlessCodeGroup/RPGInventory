@@ -4,7 +4,7 @@
 def junitVersion = "4.12"
 def mockitoVersion = "2.8.+"
 def powermockVersion = "1.7.+"
-def coroutinesVersion = "0.24.+"
+def coroutinesVersion = "1.0.1"
 
 // Groups
 def powermockGroup = "org.powermock"
@@ -43,11 +43,10 @@ ext {
 
 // Helping
 
-private static def kotlin(name) {
+private static String kotlin(name) {
     return "org.jetbrains.kotlin:kotlin-$name"
 }
 
-private static def dep(group, module, version) {
+private static String dep(group, module, version) {
     return "$group:$module:$version"
 }
-

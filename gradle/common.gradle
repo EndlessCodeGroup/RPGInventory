@@ -9,13 +9,6 @@ archivesBaseName = "$pluginName-$name"
 // Java version
 sourceCompatibility = targetCompatibility = "1.8"
 
-// Enable coroutines
-kotlin {
-    experimental {
-        coroutines 'enable'
-    }
-}
-
 task sourcesJar(type: Jar, dependsOn: classes) {
     from sourceSets.main.allSource
     classifier = "sources"
