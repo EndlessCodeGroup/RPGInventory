@@ -1,5 +1,5 @@
 buildscript {
-    val proguardVersion = "6.0.1"
+    val proguardVersion = "6.0.3"
     dependencies {
         classpath("net.sf.proguard:proguard-gradle:$proguardVersion")
     }
