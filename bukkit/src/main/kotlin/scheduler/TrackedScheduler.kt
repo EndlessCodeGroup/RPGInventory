@@ -8,6 +8,7 @@ import ru.endlesscode.inspector.api.PublicApi
 import ru.endlesscode.inspector.api.report.Reporter
 import ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin
 
+@Suppress("DEPRECATION")
 class TrackedScheduler(
     private val delegate: BukkitScheduler,
     private val reporter: Reporter
