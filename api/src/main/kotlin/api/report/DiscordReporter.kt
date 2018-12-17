@@ -1,5 +1,7 @@
 package ru.endlesscode.inspector.api.report
 
+import com.github.kittinunf.fuel.httpPost
+import com.github.kittinunf.result.failure
 import ru.endlesscode.inspector.api.PublicApi
 import ru.endlesscode.inspector.api.dsl.markdown
 import ru.endlesscode.inspector.api.service.HastebinStorage
@@ -95,11 +97,9 @@ class DiscordReporter private constructor(
     }
 
     private fun sendMessage(content: String, onError: (Throwable) -> Unit) {
-        khttp.async.post(
-                url = url,
-                json = mapOf("username" to username, "avatar_url" to avatarUrl, "content" to content),
-                onError = onError
-        )
+        url.httpPost()
+            .jsonBody("""{"username": "$username", "avatar_url": "$avatarUrl", "content": "$content"}""")
+            .response { _, _, result -> result.failure(onError) }
     }
 
     /**

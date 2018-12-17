@@ -5,10 +5,12 @@ def junitVersion = "4.12"
 def mockitoVersion = "2.8.+"
 def powermockVersion = "1.7.+"
 def coroutinesVersion = "1.0.1"
+def fuelVersion = "1.16.0"
 
 // Groups
 def powermockGroup = "org.powermock"
 def kotlinxGroup = "org.jetbrains.kotlinx"
+def fuelGroup = "com.github.kittinunf.fuel"
 
 ext {
     // All these dependencies will be used with scope `compileOnly`
@@ -20,7 +22,8 @@ ext {
 
     apiDeps = [
             // Dependencies used only in API
-            khttp : dep("com.github.jkcclemens", "khttp", "master-SNAPSHOT")
+            fuel            : dep(fuelGroup, "fuel", fuelVersion),
+            fuelCoroutines  : dep(fuelGroup, "fuel-coroutines", fuelVersion)
     ]
 
     bukkitDeps = [

@@ -7,10 +7,7 @@ def patchVersion = 0
 version = "$inspectorVersion.$patchVersion"
 
 dependencies {
-    implementation(apiDeps.khttp) {
-        exclude(group: "org.jetbrains.spek")
-        exclude(group: "org.jetbrains.kotlin")
-    }
+    applyDeps(apiDeps) { implementation(it) }
 }
 
 apply(from: rootProject.file("gradle/publish.gradle"))

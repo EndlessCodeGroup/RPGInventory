@@ -65,9 +65,9 @@ abstract class CachingReporter : Reporter {
      * @param onError Will be called on error during report
      */
     abstract suspend fun report(
-            title: String,
-            exceptionData: ExceptionData,
-            onSuccess: (String, ExceptionData) -> Unit,
-            onError: (Throwable) -> Unit
+        title: String,
+        exceptionData: ExceptionData,
+        onSuccess: (String, ExceptionData) -> Unit,
+        onError: (Throwable) -> Unit
     )
 }

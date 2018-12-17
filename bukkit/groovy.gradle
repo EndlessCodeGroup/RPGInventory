@@ -21,12 +21,14 @@ repositories {
 }
 
 dependencies {
-    compileOnly(bukkit())
+    compileOnly(bukkit()) {
+        exclude group: "junit"
+    }
 }
 
 shadowJar {
     relocate("kotlin", "ru.endlesscode.inspector.shade.kotlin")
-    relocate("khttp", "ru.endlesscode.inspector.shade.khttp")
+    relocate("com.github.kittinunf", "ru.endlesscode.inspector.shade.com.github.kittinunf")
     relocate("org.json", "ru.endlesscode.inspector.shade.org.json")
     relocate("org.intellij", "ru.endlesscode.inspector.shade.org.intellij")
     relocate("org.jetbrains", "ru.endlesscode.inspector.shade.org.jetbrains")
