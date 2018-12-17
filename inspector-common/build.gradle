@@ -14,8 +14,8 @@ apply(from: rootProject.file("gradle/publish.gradle"))
 
 publishing {
     publications {
-        api(MavenPublication) {
-            artifactId "$rootProject.name-$name"
+        common(MavenPublication) {
+            artifactId "$project.name"
 
             from components.java
             artifact sourcesJar

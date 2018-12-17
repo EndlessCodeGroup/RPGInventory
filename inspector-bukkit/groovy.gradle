@@ -43,7 +43,7 @@ apply(from: rootProject.file("gradle/publish.gradle"))
 publishing {
     publications {
         bukkit(MavenPublication) {
-            artifactId "$rootProject.name-$project.name"
+            artifactId "$project.name"
 
             from components.java
             artifact sourcesJar
@@ -65,7 +65,7 @@ publishing {
             }
         }
         bukkitRuntime(MavenPublication) {
-            artifactId "$rootProject.name-$project.name-runtime"
+            artifactId "$project.name-runtime"
 
             artifact minifiedJar
 

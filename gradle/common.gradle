@@ -4,7 +4,7 @@ apply from: rootProject.file("gradle/dependencies.gradle")
 
 group = "ru.endlesscode.${rootProject.name}"
 description = rootProject.description
-archivesBaseName = "$pluginName-$name"
+archivesBaseName = "$project.name"
 
 // Java version
 sourceCompatibility = targetCompatibility = "1.8"
