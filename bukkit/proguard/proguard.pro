@@ -2,6 +2,7 @@
 -printmapping out.map
 -verbose
 
+-dontobfuscate
 -keepparameternames
 -keepattributes Exceptions,InnerClasses,Signature,Deprecated,SourceFile,LineNumberTable,*Annotation*,EnclosingMethod
 -repackageclasses ru.endlesscode.inspector.shade
@@ -33,3 +34,6 @@
     java.lang.Object writeReplace();
     java.lang.Object readResolve();
 }
+
+# We use method getHandlerList() to inject our handler to all events.
+-keep class * extends org.bukkit.event.Event { org.bukkit.event.HandlerList getHandlerList(); }
