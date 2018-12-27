@@ -149,9 +149,7 @@ class DiscordReporter private constructor(
         }
 
         /**
-         * Set username that will be used as reporter username in Discord.
-         *
-         * @param username The username.
+         * Set [username] that will be used as reporter username in Discord.
          */
         @PublicApi
         fun setUsername(username: String) : Builder {
@@ -160,9 +158,7 @@ class DiscordReporter private constructor(
         }
 
         /**
-         * Set URL of avatar that will be used as reporter avatar in Discord.
-         *
-         * @param avatarUrl The avatar url. Starting with protocol and including all slashes.
+         * Set [avatarUrl] that will be used as reporter avatar in Discord. Starting with protocol and including all slashes.
          */
         @PublicApi
         fun setAvatar(avatarUrl: String) : Builder {
