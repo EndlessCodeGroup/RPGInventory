@@ -1,0 +1,35 @@
+plugins {
+    id("maven-publish")
+}
+
+def patchVersion = 0
+version = "$inspectorVersion.$patchVersion"
+
+dependencies {
+    compileOnly(commonProject)
+    
+    implementation(deps.sentry)
+}
+
+apply(from: rootProject.file("gradle/publish.gradle"))
+
+publishing {
+    publications {
+        sentry(MavenPublication) {
+            artifactId "$project.name"
+
+            from components.java
+            artifact sourcesJar
+
+            pom.withXml {
+                def root = asNode()
+                root.appendNode("name", "Inspector Sentry Integration")
+                root.appendNode("description", "Sentry reporter for Inspector")
+                root.children().last() + pomConfig
+
+                // Remove dependencies in API's POM
+                root.remove(root.dependencies)
+            }
+        }
+    }
+}

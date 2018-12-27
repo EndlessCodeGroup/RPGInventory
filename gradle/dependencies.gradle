@@ -6,6 +6,7 @@ def mockitoVersion = "2.8.+"
 def powermockVersion = "1.7.+"
 def coroutinesVersion = "1.1.0"
 def fuelVersion = "1.16.0"
+def sentryVersion = "1.7.16"
 
 // Groups
 def powermockGroup = "org.powermock"
@@ -26,8 +27,8 @@ ext {
             fuelCoroutines  : dep(fuelGroup, "fuel-coroutines", fuelVersion)
     ]
 
-    bukkitDeps = [
-            // Dependencies (except Bukkit API) used only in Bukkit implementation
+    deps = [
+            sentry : dep("io.sentry", "sentry", sentryVersion)
     ]
 
     // These dependencies will be used with scope `testImplementation`
