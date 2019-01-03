@@ -46,7 +46,7 @@ class BukkitEnvironment(
             ) { inspector.shouldSendData(DataType.CORE) },
 
             TAG_PLUGIN_LIST to PluginListField(
-                plugin.server.pluginManager.plugins.asList(),
+                { plugin.server.pluginManager.plugins.asList() },
                 properties.interestPluginsNames
             ) { inspector.shouldSendData(DataType.PLUGINS) },
 
