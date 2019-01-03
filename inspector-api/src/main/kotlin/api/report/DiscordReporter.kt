@@ -7,6 +7,7 @@ import ru.endlesscode.inspector.api.dsl.markdown
 import ru.endlesscode.inspector.api.service.HastebinStorage
 import ru.endlesscode.inspector.api.service.TextStorage
 import ru.endlesscode.inspector.util.getFocusedRootStackTrace
+import ru.endlesscode.inspector.util.json
 import ru.endlesscode.inspector.util.stackTraceText
 
 
@@ -97,10 +98,22 @@ class DiscordReporter private constructor(
     }
 
     private fun sendMessage(content: String, onError: (Throwable) -> Unit) {
+        val body = json(
+            "username" to username,
+            "avatar_url" to avatarUrl,
+            "content" to content
+        )
+
         url.httpPost()
             .header("user-agent" to "Inspector")
-            .jsonBody("""{"username": "$username", "avatar_url": "$avatarUrl", "content": "$content"}""")
-            .response { _, _, result -> result.failure(onError) }
+            .jsonBody(body)
+            .response { request, response, result ->
+                result.failure {
+                    println(request)
+                    println(response)
+                    onError(it)
+                }
+            }
     }
 
     /**
