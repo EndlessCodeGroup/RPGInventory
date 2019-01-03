@@ -2,14 +2,12 @@
 
 // Versions
 def junitVersion = "4.12"
-def mockitoVersion = "2.8.+"
-def powermockVersion = "1.7.+"
+def mockitoVersion = "2.23.4"
 def coroutinesVersion = "1.1.0"
 def fuelVersion = "1.16.0"
 def sentryVersion = "1.7.16"
 
 // Groups
-def powermockGroup = "org.powermock"
 def kotlinxGroup = "org.jetbrains.kotlinx"
 def fuelGroup = "com.github.kittinunf.fuel"
 
@@ -34,9 +32,7 @@ ext {
     // These dependencies will be used with scope `testImplementation`
     testingDeps = [
             junit               : dep("junit", "junit", junitVersion),
-            mockito             : dep("org.mockito", "mockito-core", mockitoVersion),
-            powermockJunit      : dep(powermockGroup, "powermock-module-junit4", powermockVersion),
-            powermockMockito    : dep(powermockGroup, "powermock-api-mockito2", powermockVersion)
+            mockito             : dep("org.mockito", "mockito-core", mockitoVersion)
     ]
 
     // Apply all dependencies from map
