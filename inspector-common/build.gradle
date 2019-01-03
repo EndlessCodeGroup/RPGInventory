@@ -3,9 +3,6 @@ plugins {
     id("maven-publish")
 }
 
-def patchVersion = 0
-version = "$inspectorVersion.$patchVersion"
-
 dependencies {
     applyDeps(apiDeps) { implementation(it) }
 }

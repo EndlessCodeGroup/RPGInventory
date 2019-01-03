@@ -8,10 +8,6 @@ plugins {
     id("maven-publish")
 }
 
-val inspectorVersion: String by extra
-val minorVersion = 1
-version = "$inspectorVersion.$minorVersion"
-
 // TODO: Port it to Kotlin DSL
 apply(from = "groovy.gradle")
 

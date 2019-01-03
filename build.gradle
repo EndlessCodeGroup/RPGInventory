@@ -31,13 +31,14 @@ description = "Catch and report all exceptions"
 allprojects {
     ext.pluginName = "Inspector"
     ext.commonProject = project(":inspector-common")
-    ext.inspectorVersion = "0.7"
 }
 
 // Common configurations for all subprojects
 subprojects {
     apply(plugin: "kotlin")
     apply(from: rootProject.file("gradle/common.gradle"))
+    
+    version = "0.8.0-SNAPSHOT"
 
     tasks.withType(KotlinCompile).all {
         kotlinOptions {
