@@ -22,7 +22,7 @@ repositories {
 
 dependencies {
     compileOnly(bukkit()) {
-        exclude group: "junit"
+        transitive = false
     }
 }
 
@@ -43,8 +43,6 @@ apply(from: rootProject.file("gradle/publish.gradle"))
 publishing {
     publications {
         bukkit(MavenPublication) {
-            artifactId "$project.name"
-
             from components.java
             artifact sourcesJar
             artifact shadowJar
@@ -54,14 +52,6 @@ publishing {
                 root.appendNode("name", "Inspector (Bukkit)")
                 root.appendNode("description", "Bukkit implementation of Inspector API")
                 root.children().last() + pomConfig
-
-                // Remove not needed dependencies
-                def artifactsToFilter = ["kotlin-stdlib-jdk8", "kotlinx-coroutines-core"]
-                root.dependencies.'*'.findAll() {
-                    it.artifactId.text() in artifactsToFilter
-                }.each() {
-                    it.parent().remove(it)
-                }
             }
         }
         bukkitRuntime(MavenPublication) {

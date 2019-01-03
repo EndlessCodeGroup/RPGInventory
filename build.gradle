@@ -58,6 +58,7 @@ configure(project(":inspector-bukkit")) {
 
     // Use api as dependency
     dependencies {
-        api(commonProject)
+        // Can't use api configuration because of https://youtrack.jetbrains.com/issue/KT-28355
+        compile(commonProject)
     }
 }

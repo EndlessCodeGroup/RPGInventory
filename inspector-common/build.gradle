@@ -12,8 +12,6 @@ apply(from: rootProject.file("gradle/publish.gradle"))
 publishing {
     publications {
         common(MavenPublication) {
-            artifactId "$project.name"
-
             from components.java
             artifact sourcesJar
 
@@ -21,10 +19,7 @@ publishing {
                 def root = asNode()
                 root.appendNode("name", "Inspector API")
                 root.appendNode("description", project.description)
-                root.children().last() + pomConfig
-
-                // Remove dependencies in API's POM
-                root.remove(root.dependencies)
+                root.children().last() + pomConfig 
             }
         }
     }
