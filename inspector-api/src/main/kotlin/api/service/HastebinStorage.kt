@@ -1,31 +1,38 @@
 package ru.endlesscode.inspector.api.service
 
-import awaitString
+import awaitStringResult
+import com.github.kittinunf.fuel.core.FuelError
 import com.github.kittinunf.fuel.httpPost
 
 class HastebinStorage : TextStorage {
 
     companion object {
         private const val HOST = "https://hastebin.com"
+        private const val ERROR_PLACEHOLDER = "<loading to Hastebin failed>"
 
         private val keyRegex = Regex(""""key":"([\d|\w]+)"""")
     }
 
     override suspend fun storeText(text: String): String {
-        return try {
-            val json = "$HOST/documents".httpPost()
-                .header("content-type" to "text/plain")
-                .body(text)
-                .awaitString()
-                .replace(" ", "")
+        return "$HOST/documents".httpPost()
+            .header(
+                "content-type" to "text/plain",
+                "user-agent" to "Inspector"
+            )
+            .body(text)
+            .awaitStringResult()
+            .fold(::onSuccess, ::onFailure)
+    }
 
-            val key = keyRegex.find(json)?.groupValues?.get(1) ?: error("Can't parse JSON: $json")
+    private fun onSuccess(rawJson: String): String {
+        val json = rawJson.replace(" ", "")
+        val key = keyRegex.find(json)?.groupValues?.get(1)
 
-            "$HOST/$key.txt"
-        } catch (e: Exception) {
-            e.printStackTrace()
+        return if (key != null) "$HOST/$key.txt" else ERROR_PLACEHOLDER
+    }
 
-            "<loading to Hastebin failed>"
-        }
+    private fun onFailure(error: FuelError): String {
+        println(error.response)
+        return ERROR_PLACEHOLDER
     }
 }

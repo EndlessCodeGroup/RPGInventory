@@ -98,6 +98,7 @@ class DiscordReporter private constructor(
 
     private fun sendMessage(content: String, onError: (Throwable) -> Unit) {
         url.httpPost()
+            .header("user-agent" to "Inspector")
             .jsonBody("""{"username": "$username", "avatar_url": "$avatarUrl", "content": "$content"}""")
             .response { _, _, result -> result.failure(onError) }
     }
