@@ -30,7 +30,7 @@ description = "Catch and report all exceptions"
 
 allprojects {
     ext.pluginName = "Inspector"
-    ext.commonProject = project(":inspector-common")
+    ext.apiProject = project(":inspector-api")
 }
 
 // Common configurations for all subprojects
@@ -51,14 +51,14 @@ subprojects {
 }
 
 // Configuration for API implementations
-configure(project(":inspector-bukkit")) {
+configure(subprojects - apiProject) {
 
     // Finish configuring API first
-    evaluationDependsOn(commonProject.path)
+    evaluationDependsOn(apiProject.path)
 
     // Use api as dependency
     dependencies {
         // Can't use api configuration because of https://youtrack.jetbrains.com/issue/KT-28355
-        compile(commonProject)
+        compile(apiProject)
     }
 }

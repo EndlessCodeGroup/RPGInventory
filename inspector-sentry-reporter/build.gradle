@@ -3,8 +3,6 @@ plugins {
 }
 
 dependencies {
-    compileOnly(commonProject)
-    
     implementation(deps.sentry)
 }
 
@@ -13,8 +11,6 @@ apply(from: rootProject.file("gradle/publish.gradle"))
 publishing {
     publications {
         sentry(MavenPublication) {
-            artifactId "$project.name"
-
             from components.java
             artifact sourcesJar
 
@@ -23,9 +19,6 @@ publishing {
                 root.appendNode("name", "Inspector Sentry Integration")
                 root.appendNode("description", "Sentry reporter for Inspector")
                 root.children().last() + pomConfig
-
-                // Remove dependencies in API's POM
-                root.remove(root.dependencies)
             }
         }
     }
