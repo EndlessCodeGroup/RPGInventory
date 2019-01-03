@@ -2,6 +2,7 @@ package ru.endlesscode.inspector.bukkit.plugin
 
 import org.bukkit.Server
 import org.bukkit.command.Command
+import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
 import org.bukkit.command.PluginCommand
 import org.bukkit.configuration.file.FileConfiguration
@@ -11,6 +12,7 @@ import org.bukkit.plugin.PluginDescriptionFile
 import org.bukkit.plugin.PluginLoader
 import ru.endlesscode.inspector.api.PublicApi
 import ru.endlesscode.inspector.api.report.Reporter
+import ru.endlesscode.inspector.bukkit.command.TrackedCommandExecutor
 import java.io.File
 import java.io.InputStream
 import java.io.Reader
@@ -120,6 +122,14 @@ abstract class PluginLifecycle : PluginBase() {
 
     override fun toString(): String {
         return this.description.fullName
+    }
+
+    /**
+     * Helper function to simplify CommandExecutor wrapping.
+     */
+    @PublicApi
+    protected fun track(executor: CommandExecutor): CommandExecutor {
+        return TrackedCommandExecutor(executor, reporter)
     }
 
     // For compatibility with JavaPlugin
