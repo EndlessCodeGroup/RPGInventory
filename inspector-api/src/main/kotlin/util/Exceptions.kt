@@ -31,7 +31,7 @@ fun Throwable.getFocusedStackTrace(focusedPackage: String): String {
         var skipCount = 0
         var focusedPackageFound = false
         for (element in stackTrace) {
-            if (element.className.startsWith(focusedPackage)) {
+            if (element.className.startsWith("$focusedPackage.")) {
                 appendSkipCount(skipCount)
                 appendLine(element.toString(), prefix = "  at ")
                 skipCount = 0
