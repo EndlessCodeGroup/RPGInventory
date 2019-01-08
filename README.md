@@ -55,16 +55,24 @@ repositories {
     jcenter() 
 }
 
-// shadowJar is jar with classifier 'all' that contain all libs that needed in runtime
-// (dependencies scoped as compileOnly will not be embedded)
+// Enable shadowJar minimization to reduce plugin size.
+// Read more: https://imperceptiblethoughts.com/shadow/configuration/minimizing/
 shadowJar {
-    // To avoid possible conflicts we should relocate embedded dependencies to own unique package
-    relocate("ru.endlesscode.inspector", "[YOUR_PLUGIN_PACKAGE_HERE].inspector")
+    minimize()
 }
-// Automatically run shadowJar making on every build
-tasks.build.dependsOn tasks.shadowJar
 
-// Here you can change version of inspector
+// To avoid possible conflicts we should relocate embedded dependencies to own unique package
+// Easiest variant is use automatically relocating
+// Read more: https://imperceptiblethoughts.com/shadow/configuration/relocation/#automatically-relocating-dependencies
+task relocateShadowJar(type: ConfigureShadowRelocation) {
+    target = tasks.shadowJar
+    prefix = "shadow.[PLACE_HERE_YOUR_PLUGIN_PACKAGE]"
+}
+tasks.shadowJar.dependsOn tasks.relocateShadowJar
+// Automatically run shadowJar making on every assemble
+tasks.build.assemble tasks.shadowJar
+
+// Here you can change preferred version of inspector
 ext.inspectorVerson = "0.8.0"
 
 // Add Inspector as dependency
