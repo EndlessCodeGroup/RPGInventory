@@ -22,9 +22,9 @@ interface ReportHandler {
     fun onSuccess(message: String, exceptionData: ExceptionData)
 
     /**
-     * Called on error during reporting.
+     * Called when an exception occurs while attempting to report an error.
      *
-     * @param throwable The throwable that was thrown on report
+     * @param throwable The exception that occured on report
      */
     fun onError(throwable: Throwable)
 }

@@ -12,12 +12,12 @@ import ru.endlesscode.inspector.util.similarTo
 abstract class CachingReporter : Reporter {
 
     private val reportedCauses = mutableListOf<Throwable>()
-    private val handlers = mutableListOf<ReportHandler>()
+    private val handlers = CompoundReportHandler()
 
     override var enabled: Boolean = true
 
     override fun addHandler(handler: ReportHandler) {
-        handlers.add(handler)
+        handlers.addHandler(handler)
     }
 
     final override fun report(message: String, exception: Exception, async: Boolean) {
@@ -29,9 +29,9 @@ abstract class CachingReporter : Reporter {
         rememberCause(cause)
 
         val exceptionData = ExceptionData(exception)
-        beforeReport(message, exceptionData)
+        handlers.beforeReport(message, exceptionData)
 
-        val reportJob = GlobalScope.launch { report(message, exceptionData, ::onSuccess, ::onError) }
+        val reportJob = GlobalScope.launch { report(message, exceptionData, handlers::onSuccess, handlers::onError) }
         if (!async) {
             runBlocking { reportJob.join() }
         }
@@ -43,18 +43,6 @@ abstract class CachingReporter : Reporter {
 
     private fun rememberCause(cause: Throwable) {
         reportedCauses.add(cause)
-    }
-
-    private fun beforeReport(message: String, exceptionData: ExceptionData) {
-        handlers.forEach { it.beforeReport(message, exceptionData) }
-    }
-
-    private fun onSuccess(message: String, exceptionData: ExceptionData) {
-        handlers.forEach { it.onSuccess(message, exceptionData) }
-    }
-
-    private fun onError(throwable: Throwable) {
-        handlers.forEach { it.onError(throwable) }
     }
 
     /**
