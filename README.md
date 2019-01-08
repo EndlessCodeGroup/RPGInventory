@@ -65,14 +65,14 @@ shadowJar {
 tasks.build.dependsOn tasks.shadowJar
 
 // Here you can change version of inspector
-ext.inspectorVerson = "0.7.1"
+ext.inspectorVerson = "0.8.0"
 
 // Add Inspector as dependency
-// 'inspector-bukkit' contains Inspector code without libs, obfuscation and relocations. We need it to see clear sources.
-// 'inspector-bukkit-runtime' is ready to bundle minified and obfuscated jar with all required libs
+// 'inspector-bukkit' - implementation of Inspector for Bukkit.
+// 'inspector-sentry-reporter' - reporter that we want to use (read below about available reporters)
 dependencies {
-    compileOnly "ru.endlesscode.inspector:inspector-bukkit:$inspectorVerson"
-    runtime "ru.endlesscode.inspector:inspector-bukkit-runtime:$inspectorVerson"
+    implementation "ru.endlesscode.inspector:inspector-bukkit:$inspectorVerson"
+    implementation "ru.endlesscode.inspector:inspector-sentry-reporter:$inspectorVerson"
 }
 ```
 
@@ -119,13 +119,18 @@ public class MyTrackedPlugin extends TrackedPlugin {
     
     @Override
     public Reporter createReporter() {
-        return new DiscordReporter.Builder()
-                .hook("<DISCORD_WEBHOOK_ID>", "<DISCORD_WEBHOOK_TOKEN>")
+        String publicKey = "[YOUR_PUBLIC_KEY_HERE]";
+        String projectId = "[YOUR_PROJECT_ID_HERE]";
+
+        // Note that you should add needed reporter as dependency first.
+        return new SentryReporter.Builder()
+                .setDataSourceName(publicKey, projectId)
                 .focusOn(this) // Reporter will be focused on this plugin
                 .build();
-        // For more reporter customization see DiscordReporter.Builder and Reporter.Builder classes
     }
 }
 ```
 
-> **NOTE:** At this moment available only Discord Reporter, but will be added more reporters soon.
+#### Available Reporters
+- [inspector-sentry-reporter](inspector-sentry-reporter): Report exceptions to [Sentry](https://sentry.io/) *(recommended way)*
+- DiscordReporter: Send reports to Discord channel
