@@ -7,6 +7,7 @@ import io.sentry.event.Event
 import io.sentry.event.EventBuilder
 import io.sentry.event.interfaces.ExceptionInterface
 import ru.endlesscode.inspector.api.PublicApi
+import java.util.UUID
 
 
 /**
@@ -22,26 +23,38 @@ class SentryReporter private constructor(
 
     private var sentry: SentryClient
 
+    private val handlers = CompoundReportHandler()
+    private val pendingExceptions = mutableMapOf<UUID, ExceptionData>()
+
     init {
         Sentry.init(dsn)
 
         sentry = checkNotNull(Sentry.getStoredClient())
         sentry.addEventSendCallback(object : EventSendCallback {
             override fun onSuccess(event: Event) {
-                TODO()
+                val reportedException = removePendingException(event.id)
+                if (reportedException != null) {
+                    handlers.onSuccess(event.message, reportedException)
+                }
             }
 
             override fun onFailure(event: Event, exception: Exception) {
-                TODO()
+                val isErrorReport = removePendingException(event.id) != null
+                if (isErrorReport) {
+                    handlers.onError(exception)
+                }
             }
         })
     }
 
     override fun addHandler(handler: ReportHandler) {
-        TODO()
+        handlers.addHandler(handler)
     }
 
     override fun report(message: String, exception: Exception, async: Boolean) {
+        val exceptionData = ExceptionData(exception)
+        handlers.beforeReport(message, exceptionData)
+
         val event = EventBuilder()
             .withMessage(message)
             .withRelease(focus.environment.appVersion)
@@ -53,8 +66,15 @@ class SentryReporter private constructor(
             }
             .build()
 
+        addPendingException(event.id, exceptionData)
         sentry.sendEvent(event)
     }
+
+    private fun addPendingException(id: UUID, exception: ExceptionData) {
+        pendingExceptions[id] = exception
+    }
+
+    private fun removePendingException(id: UUID): ExceptionData? = pendingExceptions.remove(id)
 
     /**
      * Builder that should be used to build [SentryReporter].
