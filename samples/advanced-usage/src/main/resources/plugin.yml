@@ -1,0 +1,3 @@
+commands:
+  crash:
+    description: Command that should throw exception

@@ -5,12 +5,13 @@ import ru.endlesscode.inspector.api.report.ListField
 import ru.endlesscode.inspector.bukkit.util.printableForm
 
 class PluginListField(
-    plugins: List<Plugin>,
+    getPlugins: () -> List<Plugin>,
     interestPluginsNames: List<String>,
     shouldShow: ListField<String>.() -> Boolean = { true }
 ) : ListField<String>(
     BukkitEnvironment.TAG_PLUGIN_LIST,
     produceList = {
+        val plugins = getPlugins()
         val interestPlugins = if (interestPluginsNames.isEmpty()) {
             plugins
         } else {
@@ -27,6 +28,6 @@ class PluginListField(
 
         result
     },
-    getSummary = { "<${plugins.size} plugins>" },
+    getSummary = { "<${getPlugins().size} plugins>" },
     shouldShow = shouldShow
 )

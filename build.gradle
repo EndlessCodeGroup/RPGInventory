@@ -11,7 +11,7 @@ buildscript {
 
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
-        classpath "com.jfrog.bintray.gradle:gradle-bintray-plugin:1+"
+        classpath "com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4"
 
         constraints {
             classpath("org.apache.httpcomponents:httpclient:4.5.2") {
@@ -22,21 +22,23 @@ buildscript {
 }
 
 plugins {
-    id "base"
+    id("base")
+    id("com.github.ben-manes.versions") version "0.20.0"
 }
 
 description = "Catch and report all exceptions"
 
 allprojects {
     ext.pluginName = "Inspector"
-    ext.commonProject = project(":inspector-common")
-    ext.inspectorVersion = "0.7"
+    ext.apiProject = project(":inspector-api")
 }
 
 // Common configurations for all subprojects
 subprojects {
     apply(plugin: "kotlin")
     apply(from: rootProject.file("gradle/common.gradle"))
+    
+    version = "0.8.0-SNAPSHOT"
 
     tasks.withType(KotlinCompile).all {
         kotlinOptions {
@@ -49,13 +51,14 @@ subprojects {
 }
 
 // Configuration for API implementations
-configure(project(":inspector-bukkit")) {
+configure(subprojects - apiProject) {
 
     // Finish configuring API first
-    evaluationDependsOn(commonProject.path)
+    evaluationDependsOn(apiProject.path)
 
     // Use api as dependency
     dependencies {
-        api(commonProject)
+        // Can't use api configuration because of https://youtrack.jetbrains.com/issue/KT-28355
+        compile(apiProject)
     }
 }

@@ -1,0 +1,25 @@
+plugins {
+    id("maven-publish")
+}
+
+dependencies {
+    implementation(deps.sentry)
+}
+
+apply(from: rootProject.file("gradle/publish.gradle"))
+
+publishing {
+    publications {
+        sentry(MavenPublication) {
+            from components.java
+            artifact sourcesJar
+
+            pom.withXml {
+                def root = asNode()
+                root.appendNode("name", "Inspector Sentry Integration")
+                root.appendNode("description", "Sentry reporter for Inspector")
+                root.children().last() + pomConfig
+            }
+        }
+    }
+}

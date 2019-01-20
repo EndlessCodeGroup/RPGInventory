@@ -1,0 +1,26 @@
+// API build config
+plugins {
+    id("maven-publish")
+}
+
+dependencies {
+    applyDeps(apiDeps) { implementation(it) }
+}
+
+apply(from: rootProject.file("gradle/publish.gradle"))
+
+publishing {
+    publications {
+        common(MavenPublication) {
+            from components.java
+            artifact sourcesJar
+
+            pom.withXml {
+                def root = asNode()
+                root.appendNode("name", "Inspector API")
+                root.appendNode("description", project.description)
+                root.children().last() + pomConfig 
+            }
+        }
+    }
+}

@@ -1,0 +1,50 @@
+import com.github.jengelman.gradle.plugins.shadow.tasks.ConfigureShadowRelocation
+
+plugins {
+    id 'ru.endlesscode.bukkitgradle' version '0.8.1'
+    id 'com.github.johnrengelman.shadow' version '4.0.3'
+}
+
+group = "com.example"
+description = "My Bukkit plugin with Discord Reporter"
+version = "0.1-SNAPSHOT"
+
+// Read more about BukkitGradle: https://github.com/EndlessCodeGroup/BukkitGradle
+bukkit {
+    version = "1.12.2"
+
+    meta {
+        name = "MyPlugin"
+        url = "http://www.example.com"
+        authors = ["osipxd"]
+    }
+
+    run {
+        core = "spigot"
+        eula = true
+    }
+}
+
+shadowJar {
+    minimize()
+}
+
+task relocateShadowJar(type: ConfigureShadowRelocation) {
+    target = tasks.shadowJar
+    prefix = "shadow.com.example.myplugin"
+}
+tasks.shadowJar.dependsOn tasks.relocateShadowJar
+tasks.assemble.dependsOn tasks.shadowJar
+
+ext.inspectorVerson = "0.8.0-SNAPSHOT"
+
+dependencies {
+    compileOnly(bukkit()) {
+        transitive = false
+    }
+    implementation "ru.endlesscode.inspector:inspector-bukkit:$inspectorVerson"
+}
+
+repositories {
+    jcenter()
+}

@@ -24,7 +24,9 @@ class BukkitEnvironment(
         internal val DEFAULT_PROPERTIES = Properties()
     }
 
-    public val inspector = Inspector(plugin, properties.configName)
+    val inspector = Inspector(plugin, properties.configName)
+
+    override val appVersion: String = plugin.description.version
 
     override val fields: Map<String, ReportField>
 
@@ -44,7 +46,7 @@ class BukkitEnvironment(
             ) { inspector.shouldSendData(DataType.CORE) },
 
             TAG_PLUGIN_LIST to PluginListField(
-                plugin.server.pluginManager.plugins.asList(),
+                { plugin.server.pluginManager.plugins.asList() },
                 properties.interestPluginsNames
             ) { inspector.shouldSendData(DataType.PLUGINS) },
 
