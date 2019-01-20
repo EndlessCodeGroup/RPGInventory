@@ -10,5 +10,3 @@ plugins {
 
 // TODO: Port it to Kotlin DSL
 apply(from = "groovy.gradle")
-
-apply(from = "proguard.gradle.kts")

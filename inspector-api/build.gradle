@@ -7,11 +7,12 @@ dependencies {
     applyDeps(apiDeps) { implementation(it) }
 }
 
+ext.publicationName = "api"
 apply(from: rootProject.file("gradle/publish.gradle"))
 
 publishing {
     publications {
-        common(MavenPublication) {
+        api(MavenPublication) {
             from components.java
             artifact sourcesJar
 

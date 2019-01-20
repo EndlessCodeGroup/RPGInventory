@@ -6,6 +6,7 @@ dependencies {
     implementation(deps.sentry)
 }
 
+ext.publicationName = "sentry"
 apply(from: rootProject.file("gradle/publish.gradle"))
 
 publishing {
