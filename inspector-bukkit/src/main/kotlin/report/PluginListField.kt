@@ -1,7 +1,7 @@
 package ru.endlesscode.inspector.bukkit.report
 
 import org.bukkit.plugin.Plugin
-import ru.endlesscode.inspector.api.report.ListField
+import ru.endlesscode.inspector.report.ListField
 import ru.endlesscode.inspector.bukkit.util.printableForm
 
 class PluginListField(

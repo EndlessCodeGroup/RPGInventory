@@ -1,11 +1,11 @@
-package ru.endlesscode.inspector.api.report
+package ru.endlesscode.inspector.report
 
 import com.github.kittinunf.fuel.httpPost
 import com.github.kittinunf.result.failure
-import ru.endlesscode.inspector.api.PublicApi
-import ru.endlesscode.inspector.api.dsl.markdown
-import ru.endlesscode.inspector.api.service.HastebinStorage
-import ru.endlesscode.inspector.api.service.TextStorage
+import ru.endlesscode.inspector.PublicApi
+import ru.endlesscode.inspector.dsl.markdown
+import ru.endlesscode.inspector.service.HastebinStorage
+import ru.endlesscode.inspector.service.TextStorage
 import ru.endlesscode.inspector.util.getFocusedRootStackTrace
 import ru.endlesscode.inspector.util.json
 import ru.endlesscode.inspector.util.stackTraceText
@@ -15,13 +15,13 @@ import ru.endlesscode.inspector.util.stackTraceText
  * Reporter that uses Discord Webhook to write reports.
  */
 class DiscordReporter private constructor(
-        override val focus: ReporterFocus,
-        id: String,
-        token: String,
-        private val textStorage: TextStorage,
-        private val username: String,
-        private val avatarUrl: String,
-        private val fields: Set<ReportField>
+    override val focus: ReporterFocus,
+    id: String,
+    token: String,
+    private val textStorage: TextStorage,
+    private val username: String,
+    private val avatarUrl: String,
+    private val fields: Set<ReportField>
 ) : CachingReporter() {
 
     companion object {
@@ -33,10 +33,10 @@ class DiscordReporter private constructor(
     private val url = "https://discordapp.com/api/webhooks/$id/$token"
 
     override suspend fun report(
-            title: String,
-            exceptionData: ExceptionData,
-            onSuccess: (String, ExceptionData) -> Unit,
-            onError: (Throwable) -> Unit
+        title: String,
+        exceptionData: ExceptionData,
+        onSuccess: (String, ExceptionData) -> Unit,
+        onError: (Throwable) -> Unit
     ) {
         val exception = exceptionData.exception
         try {
@@ -57,9 +57,9 @@ class DiscordReporter private constructor(
     }
 
     private fun buildFullMessage(
-            title: String,
-            fields: Set<ReportField>,
-            exception: Exception
+        title: String,
+        fields: Set<ReportField>,
+        exception: Exception
     ): String {
         return buildString {
             append(title)
@@ -75,10 +75,10 @@ class DiscordReporter private constructor(
     }
 
     private fun buildShortMessage(
-            title: String,
-            fields: Set<ReportField>,
-            shortStackTrace: String,
-            fullReportUrl: String
+        title: String,
+        fields: Set<ReportField>,
+        shortStackTrace: String,
+        fullReportUrl: String
     ): String {
         return markdown {
             val fieldsValues = fields.map { field ->
@@ -139,13 +139,13 @@ class DiscordReporter private constructor(
             }
 
             return DiscordReporter(
-                    focus = focus,
-                    id = id,
-                    textStorage = textStorage,
-                    token = token,
-                    username = username,
-                    avatarUrl = avatarUrl,
-                    fields = fields
+                focus = focus,
+                id = id,
+                textStorage = textStorage,
+                token = token,
+                username = username,
+                avatarUrl = avatarUrl,
+                fields = fields
             )
         }
 
@@ -156,7 +156,7 @@ class DiscordReporter private constructor(
          * @param token Token for webhook (contains digits and small latin letters).
          */
         @PublicApi
-        fun hook(id: String, token: String) : Builder {
+        fun hook(id: String, token: String): Builder {
             this.id = id
             this.token = token
             return this
@@ -166,7 +166,7 @@ class DiscordReporter private constructor(
          * Set [username] that will be used as reporter username in Discord.
          */
         @PublicApi
-        fun setUsername(username: String) : Builder {
+        fun setUsername(username: String): Builder {
             this.username = username
             return this
         }
@@ -175,7 +175,7 @@ class DiscordReporter private constructor(
          * Set [avatarUrl] that will be used as reporter avatar in Discord. Starting with protocol and including all slashes.
          */
         @PublicApi
-        fun setAvatar(avatarUrl: String) : Builder {
+        fun setAvatar(avatarUrl: String): Builder {
             this.avatarUrl = avatarUrl
             return this
         }

@@ -43,6 +43,7 @@ dependencies {
         transitive = false
     }
     implementation "ru.endlesscode.inspector:inspector-bukkit:$inspectorVerson"
+    implementation "ru.endlesscode.inspector:inspector-discord-reporter:$inspectorVerson"
 }
 
 repositories {

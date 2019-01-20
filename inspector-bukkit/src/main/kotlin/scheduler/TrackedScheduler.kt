@@ -4,8 +4,8 @@ import org.bukkit.plugin.Plugin
 import org.bukkit.scheduler.BukkitRunnable
 import org.bukkit.scheduler.BukkitScheduler
 import org.bukkit.scheduler.BukkitTask
-import ru.endlesscode.inspector.api.PublicApi
-import ru.endlesscode.inspector.api.report.Reporter
+import ru.endlesscode.inspector.PublicApi
+import ru.endlesscode.inspector.report.Reporter
 import ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin
 
 @Suppress("DEPRECATION")

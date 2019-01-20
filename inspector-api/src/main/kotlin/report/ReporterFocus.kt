@@ -1,4 +1,4 @@
-package ru.endlesscode.inspector.api.report
+package ru.endlesscode.inspector.report
 
 /**
  * Interface that helps reporter focus on needed theme.

@@ -3,8 +3,8 @@ package ru.endlesscode.inspector.bukkit.command
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
-import ru.endlesscode.inspector.api.report.ReportedException
-import ru.endlesscode.inspector.api.report.Reporter
+import ru.endlesscode.inspector.report.ReportedException
+import ru.endlesscode.inspector.report.Reporter
 
 
 class TrackedCommandExecutor(

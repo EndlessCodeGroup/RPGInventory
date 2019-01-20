@@ -1,4 +1,4 @@
-package ru.endlesscode.inspector.api
+package ru.endlesscode.inspector
 
 @Target(AnnotationTarget.CLASS, AnnotationTarget.CONSTRUCTOR, AnnotationTarget.FUNCTION, AnnotationTarget.PROPERTY)
 @Retention(AnnotationRetention.SOURCE)

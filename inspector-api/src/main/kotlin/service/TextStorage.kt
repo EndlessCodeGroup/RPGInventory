@@ -1,4 +1,4 @@
-package ru.endlesscode.inspector.api.service
+package ru.endlesscode.inspector.service
 
 interface TextStorage {
 

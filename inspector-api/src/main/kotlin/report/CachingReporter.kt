@@ -1,4 +1,4 @@
-package ru.endlesscode.inspector.api.report
+package ru.endlesscode.inspector.report
 
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch

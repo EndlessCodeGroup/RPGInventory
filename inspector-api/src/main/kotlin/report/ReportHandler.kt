@@ -1,4 +1,4 @@
-package ru.endlesscode.inspector.api.report
+package ru.endlesscode.inspector.report
 
 /**
  * Report handler. Used for tracking report process.

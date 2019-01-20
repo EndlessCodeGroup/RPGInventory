@@ -10,8 +10,8 @@ import org.bukkit.plugin.Plugin
 import org.bukkit.plugin.PluginManager
 import org.bukkit.plugin.RegisteredListener
 import org.bukkit.plugin.TimedRegisteredListener
-import ru.endlesscode.inspector.api.PublicApi
-import ru.endlesscode.inspector.api.report.Reporter
+import ru.endlesscode.inspector.PublicApi
+import ru.endlesscode.inspector.report.Reporter
 import ru.endlesscode.inspector.bukkit.util.EventsUtils
 import ru.endlesscode.inspector.bukkit.util.realPlugin
 
