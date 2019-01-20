@@ -141,4 +141,4 @@ public class MyTrackedPlugin extends TrackedPlugin {
 
 #### Available Reporters
 - [inspector-sentry-reporter](inspector-sentry-reporter): Report exceptions to [Sentry](https://sentry.io/) *(recommended way)*
-- DiscordReporter: Send reports to Discord channel
+- [inspector-discord-reporter](inspector-discord-reporter): Send reports to Discord channel
