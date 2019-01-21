@@ -5,8 +5,8 @@ var bintrayApiKey = "API_KEY_HERE"
 
 val isRunningOnCI = System.getenv("CI") == "true"
 if (isRunningOnCI) {
-    bintrayUser = System.getenv("BINTRAY_USER")
-    bintrayApiKey = System.getenv("BINTRAY_API_KEY")
+    bintrayUser = System.getenv("BINTRAY_USER") ?: bintrayUser
+    bintrayApiKey = System.getenv("BINTRAY_API_KEY") ?: bintrayApiKey
 } else {
     val secretProperties = Properties()
     val file = rootProject.file("secret.properties")
