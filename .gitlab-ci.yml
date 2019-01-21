@@ -6,12 +6,24 @@ variables:
 before_script:
 - export GRADLE_USER_HOME=`pwd`/.gradle
 
-cache:
-  key: "$CI_COMMIT_REF_NAME"
-  paths:
-  - build
-  - .gradle
-
 build:
   stage: build
   script: gradle --build-cache assemble
+  cache:
+    key: "$CI_COMMIT_REF_NAME"
+    policy: push
+    paths:
+      - build
+      - .gradle
+
+bintray:
+  stage: deploy
+  script: gradle bintrayUpload
+  cache:
+    key: "$CI_COMMIT_REF_NAME"
+    policy: pull
+    paths:
+      - build
+      - .gradle
+  only:
+    - tags
