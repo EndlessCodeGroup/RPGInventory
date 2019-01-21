@@ -15,24 +15,24 @@ ext {
     // All these dependencies will be used with scope `compileOnly`
     commonDeps = [
             // Dependencies used in all subprojects
-            kotlinStdlib : kotlin("stdlib-jdk8"),
-            coroutines   : dep(kotlinxGroup, "kotlinx-coroutines-core", coroutinesVersion)
+            kotlinStdlib    : kotlin("stdlib-jdk8"),
+            coroutines      : dep(kotlinxGroup, "kotlinx-coroutines-core", coroutinesVersion)
     ]
 
     apiDeps = [
             // Dependencies used only in API
+    ]
+
+    deps = [
+            sentry          : dep("io.sentry", "sentry", sentryVersion),
             fuel            : dep(fuelGroup, "fuel", fuelVersion),
             fuelCoroutines  : dep(fuelGroup, "fuel-coroutines", fuelVersion)
     ]
 
-    deps = [
-            sentry : dep("io.sentry", "sentry", sentryVersion)
-    ]
-
     // These dependencies will be used with scope `testImplementation`
     testingDeps = [
-            junit               : dep("junit", "junit", junitVersion),
-            mockito             : dep("org.mockito", "mockito-core", mockitoVersion)
+            junit           : dep("junit", "junit", junitVersion),
+            mockito         : dep("org.mockito", "mockito-core", mockitoVersion)
     ]
 
     // Apply all dependencies from map

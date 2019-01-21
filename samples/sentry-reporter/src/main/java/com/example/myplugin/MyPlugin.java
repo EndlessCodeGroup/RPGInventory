@@ -1,7 +1,7 @@
 package com.example.myplugin;
 
-import ru.endlesscode.inspector.api.report.Reporter;
-import ru.endlesscode.inspector.api.report.SentryReporter;
+import ru.endlesscode.inspector.report.Reporter;
+import ru.endlesscode.inspector.report.SentryReporter;
 import ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin;
 
 public class MyPlugin extends TrackedPlugin {

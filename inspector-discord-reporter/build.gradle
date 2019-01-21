@@ -3,22 +3,23 @@ plugins {
 }
 
 dependencies {
-    implementation(deps.sentry)
+    implementation(deps.fuel)
+    implementation(deps.fuelCoroutines)
 }
 
-ext.publicationName = "sentry"
+ext.publicationName = "discord"
 apply(from: rootProject.file("gradle/publish.gradle"))
 
 publishing {
     publications {
-        sentry(MavenPublication) {
+        discord(MavenPublication) {
             from components.java
             artifact sourcesJar
 
             pom.withXml {
                 def root = asNode()
-                root.appendNode("name", "Inspector Sentry Integration")
-                root.appendNode("description", "Sentry reporter for Inspector")
+                root.appendNode("name", "Inspector Discord Integration")
+                root.appendNode("description", "Discord reporter for Inspector")
                 root.children().last() + pomConfig
             }
         }

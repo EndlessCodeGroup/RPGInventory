@@ -1,5 +1,4 @@
-package ru.endlesscode.inspector.api.dsl
-
+package ru.endlesscode.inspector.dsl
 
 internal interface Element {
     fun render(builder: StringBuilder, indent: String = "")
@@ -15,7 +14,7 @@ internal class Line(private val text: String) : Element {
 internal annotation class MarkdownMarker
 
 @MarkdownMarker
-internal abstract class Group(
+abstract class Group(
         private val indent: String,
         private val firstLine: String?,
         private val lastLine: String? = firstLine
@@ -51,7 +50,7 @@ internal abstract class Group(
     }
 }
 
-internal abstract class TextGroup : Group(indent = "", firstLine = null) {
+abstract class TextGroup : Group(indent = "", firstLine = null) {
 
     fun b(text: String): String {
         return "**$text**"
@@ -66,12 +65,12 @@ internal abstract class TextGroup : Group(indent = "", firstLine = null) {
     }
 }
 
-internal class Markdown : TextGroup() {
+class Markdown : TextGroup() {
     fun code(lang: String = "", init: Code.() -> Unit) = initGroup(Code(lang), init)
 }
 
-internal class Code(lang: String) : Group(indent = "", firstLine = "```$lang", lastLine = "```")
+class Code(lang: String) : Group(indent = "", firstLine = "```$lang", lastLine = "```")
 
-internal fun markdown(init: Markdown.() -> Unit): Markdown {
+fun markdown(init: Markdown.() -> Unit): Markdown {
     return Markdown().also(init)
 }

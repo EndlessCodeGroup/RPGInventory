@@ -26,18 +26,7 @@ dependencies {
     }
 }
 
-shadowJar {
-    relocate("kotlin", "ru.endlesscode.inspector.shade.kotlin")
-    relocate("com.github.kittinunf", "ru.endlesscode.inspector.shade.com.github.kittinunf")
-    relocate("org.json", "ru.endlesscode.inspector.shade.org.json")
-    relocate("org.intellij", "ru.endlesscode.inspector.shade.org.intellij")
-    relocate("org.jetbrains", "ru.endlesscode.inspector.shade.org.jetbrains")
-}
-jar.finalizedBy(shadowJar)
-
-def proguardDir = new File(project.buildDir, "libs")
-ext.minifiedJar = new File(proguardDir, "$pluginName-$version-all-min.jar")
-
+ext.publicationName = "bukkit"
 apply(from: rootProject.file("gradle/publish.gradle"))
 
 publishing {
@@ -51,18 +40,6 @@ publishing {
                 def root = asNode()
                 root.appendNode("name", "Inspector (Bukkit)")
                 root.appendNode("description", "Bukkit implementation of Inspector API")
-                root.children().last() + pomConfig
-            }
-        }
-        bukkitRuntime(MavenPublication) {
-            artifactId "$project.name-runtime"
-
-            artifact minifiedJar
-
-            pom.withXml {
-                def root = asNode()
-                root.appendNode("name", "Inspector Runtime (Bukkit)")
-                root.appendNode("description", "Bukkit implementation of Inspector API (embeddable)")
                 root.children().last() + pomConfig
             }
         }

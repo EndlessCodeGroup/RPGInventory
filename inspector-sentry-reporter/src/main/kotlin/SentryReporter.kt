@@ -1,4 +1,4 @@
-package ru.endlesscode.inspector.api.report
+package ru.endlesscode.inspector.report
 
 import io.sentry.Sentry
 import io.sentry.SentryClient
@@ -6,7 +6,7 @@ import io.sentry.connection.EventSendCallback
 import io.sentry.event.Event
 import io.sentry.event.EventBuilder
 import io.sentry.event.interfaces.ExceptionInterface
-import ru.endlesscode.inspector.api.PublicApi
+import ru.endlesscode.inspector.PublicApi
 import java.util.UUID
 
 
@@ -14,9 +14,9 @@ import java.util.UUID
  * Reporter that sends reports to Sentry.
  */
 class SentryReporter private constructor(
-        override val focus: ReporterFocus,
-        dsn: String,
-        private val fields: Set<ReportField>
+    override val focus: ReporterFocus,
+    dsn: String,
+    private val fields: Set<ReportField>
 ) : Reporter {
 
     override var enabled: Boolean = true

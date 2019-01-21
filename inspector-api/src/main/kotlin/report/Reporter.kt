@@ -1,6 +1,6 @@
-package ru.endlesscode.inspector.api.report
+package ru.endlesscode.inspector.report
 
-import ru.endlesscode.inspector.api.PublicApi
+import ru.endlesscode.inspector.PublicApi
 
 interface Reporter {
 

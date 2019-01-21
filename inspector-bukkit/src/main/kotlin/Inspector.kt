@@ -2,7 +2,7 @@ package ru.endlesscode.inspector.bukkit
 
 import org.bukkit.configuration.file.YamlConfiguration
 import org.bukkit.plugin.Plugin
-import ru.endlesscode.inspector.api.PublicApi
+import ru.endlesscode.inspector.PublicApi
 import ru.endlesscode.inspector.bukkit.report.DataType
 import ru.endlesscode.inspector.bukkit.util.FileUtil
 import ru.endlesscode.inspector.bukkit.util.getBooleanOrPut

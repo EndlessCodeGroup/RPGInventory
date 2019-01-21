@@ -6,11 +6,11 @@ import org.bukkit.command.PluginCommand
 import org.bukkit.configuration.file.FileConfiguration
 import org.bukkit.generator.ChunkGenerator
 import org.bukkit.plugin.java.JavaPlugin
-import ru.endlesscode.inspector.api.PublicApi
-import ru.endlesscode.inspector.api.report.ReportEnvironment
-import ru.endlesscode.inspector.api.report.ReportedException
-import ru.endlesscode.inspector.api.report.Reporter
-import ru.endlesscode.inspector.api.report.ReporterFocus
+import ru.endlesscode.inspector.PublicApi
+import ru.endlesscode.inspector.report.ReportEnvironment
+import ru.endlesscode.inspector.report.ReportedException
+import ru.endlesscode.inspector.report.Reporter
+import ru.endlesscode.inspector.report.ReporterFocus
 import ru.endlesscode.inspector.bukkit.report.BukkitEnvironment
 import java.io.File
 import java.io.InputStream

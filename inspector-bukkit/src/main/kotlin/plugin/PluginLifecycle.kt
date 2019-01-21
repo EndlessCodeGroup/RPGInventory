@@ -10,8 +10,8 @@ import org.bukkit.generator.ChunkGenerator
 import org.bukkit.plugin.PluginBase
 import org.bukkit.plugin.PluginDescriptionFile
 import org.bukkit.plugin.PluginLoader
-import ru.endlesscode.inspector.api.PublicApi
-import ru.endlesscode.inspector.api.report.Reporter
+import ru.endlesscode.inspector.PublicApi
+import ru.endlesscode.inspector.report.Reporter
 import ru.endlesscode.inspector.bukkit.command.TrackedCommandExecutor
 import java.io.File
 import java.io.InputStream
