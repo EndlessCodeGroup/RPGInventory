@@ -33,6 +33,8 @@ allprojects {
     ext.apiProject = project(":inspector-api")
 }
 
+apply(from: rootProject.file("gradle/bintray.gradle.kts"))
+
 // Common configurations for all subprojects
 subprojects {
     apply(plugin: "kotlin")
