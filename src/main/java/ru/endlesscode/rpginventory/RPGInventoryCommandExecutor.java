@@ -18,7 +18,6 @@
 
 package ru.endlesscode.rpginventory;
 
-import main.java.ru.endlesscode.rpginventory.event.ItemCommandEvent;
 import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -29,6 +28,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginManager;
 import org.jetbrains.annotations.NotNull;
 import ru.endlesscode.rpginventory.api.InventoryAPI;
+import ru.endlesscode.rpginventory.event.ItemCommandEvent;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
 import ru.endlesscode.rpginventory.inventory.backpack.BackpackManager;
 import ru.endlesscode.rpginventory.item.ItemManager;

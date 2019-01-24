@@ -1,4 +1,4 @@
-package main.java.ru.endlesscode.rpginventory.event;
+package ru.endlesscode.rpginventory.event;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
