@@ -125,7 +125,7 @@ public class VersionTest {
         new Version(1, 0, -1);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = NullPointerException.class)
     public void shouldThrowExceptionWhenPassedNullQualifier() {
         new Version(1, 0, 0, null);
     }

@@ -62,7 +62,7 @@ public final class Version implements Comparable<Version> {
         this.major = major;
         this.minor = minor;
         this.patch = patch;
-        this.qualifier = qualifier;
+        this.qualifier = Objects.requireNonNull(qualifier, "'qualifier' shouldn't be null");
     }
 
     /**

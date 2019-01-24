@@ -5,8 +5,6 @@ plugins {
     id 'jacoco'
 }
 
-apply from: 'gradle/nullability.gradle'
-
 group = 'ru.endlesscode'
 version = pluginVersion
 description = pluginDesc
