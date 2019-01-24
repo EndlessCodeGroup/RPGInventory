@@ -1,3 +1,3 @@
-include(":api", ":bukkit")
+include(":inspector-api", ":inspector-bukkit", ":inspector-sentry-reporter", ":inspector-discord-reporter")
 
 rootProject.name = "inspector"

@@ -1,0 +1,47 @@
+def repoUrl = "https://gitlab.com/endlesscodegroup/inspector"
+
+bukkit {
+    version = "1.13"
+
+    meta {
+        name = pluginName
+        main = "$group.${project.name}.${pluginName}Plugin"
+        authors = ["OsipXD", "EndlessCodeGroup"]
+        url = repoUrl
+    }
+
+    run {
+        core = "spigot"
+        eula = true
+    }
+}
+
+repositories {
+    dmulloy2()
+}
+
+dependencies {
+    compileOnly(bukkit()) {
+        transitive = false
+    }
+}
+
+ext.publicationName = "bukkit"
+apply(from: rootProject.file("gradle/publish.gradle"))
+
+publishing {
+    publications {
+        bukkit(MavenPublication) {
+            from components.java
+            artifact sourcesJar
+            artifact shadowJar
+
+            pom.withXml {
+                def root = asNode()
+                root.appendNode("name", "Inspector (Bukkit)")
+                root.appendNode("description", "Bukkit implementation of Inspector API")
+                root.children().last() + pomConfig
+            }
+        }
+    }
+}

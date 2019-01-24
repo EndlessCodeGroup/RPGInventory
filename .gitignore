@@ -1,6 +1,9 @@
 # Created by .ignore support plugin (hsz.mobi)
 ### JetBrains template
 
+## Project files
+*.iml
+
 ## Directory-based project format:
 .idea/**
 # Keep scopes and copyrights

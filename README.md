@@ -47,7 +47,7 @@ Also, for more coverage, you should:
 plugins {
     // Add shadow plugin to make shadowJar
     // See: http://imperceptiblethoughts.com/shadow/
-    id 'com.github.johnrengelman.shadow' version '4.0.1'
+    id 'com.github.johnrengelman.shadow' version '4.0.4'
 }
 
 // Inspector published at jcenter, so we need to add it to repositories
@@ -55,24 +55,41 @@ repositories {
     jcenter() 
 }
 
-// shadowJar is jar with classifier 'all' that contain all libs that needed in runtime
-// (dependencies scoped as compileOnly will not be embedded)
 shadowJar {
+    // Enable shadowJar minimization to reduce plugin size.
+    // Read more: https://imperceptiblethoughts.com/shadow/configuration/minimizing/
+    minimize()
+  
     // To avoid possible conflicts we should relocate embedded dependencies to own unique package
-    relocate("ru.endlesscode.inspector", "[YOUR_PLUGIN_PACKAGE_HERE].inspector")
+    // Here we use manual relocating, but easiest (and slower) variant is use automatically relocating.
+    // Read more: https://imperceptiblethoughts.com/shadow/configuration/relocation/#automatically-relocating-dependencies
+    def shadowPackage = "shadow.[PLACE_HERE_YOUR_PLUGIN_PACKAGE]"
+    relocate "ru.endlesscode.inspector", "${shadowPackage}.inspector"
+    relocate "org.jetbrains.annotations", "${shadowPackage}.annotations"
+    relocate "kotlinx", "${shadowPackage}.kotlinx"
+    relocate "kotlin", "${shadowPackage}.kotlin"
+    
+    // If you use inspector-sentry-reporter:
+    relocate "io.sentry", "${shadowPackage}.sentry"
+    relocate "org.slf4j", "${shadowPackage}.slf4j"
+    relocate "com.fasterxml.jackson.core", "${shadowPackage}.jackson"
+    
+    // If you use inspector-discord-reporter:
+    relocate "com.github.kittinunf", "${shadowPackage}.kittinunf"
 }
-// Automatically run shadowJar making on every build
-tasks.build.dependsOn tasks.shadowJar
 
-// Here you can change version of inspector
-ext.inspectorVerson = "0.7.1"
+// Automatically run shadowJar making on assemble
+tasks.build.assemble tasks.shadowJar
+
+// Here you can change preferred version of inspector
+ext.inspectorVerson = "0.8.0"
 
 // Add Inspector as dependency
-// 'inspector-bukkit' contains Inspector code without libs, obfuscation and relocations. We need it to see clear sources.
-// 'inspector-bukkit-runtime' is ready to bundle minified and obfuscated jar with all required libs
+// 'inspector-bukkit' - implementation of Inspector for Bukkit.
+// 'inspector-sentry-reporter' - reporter that we want to use (read below about available reporters)
 dependencies {
-    compileOnly "ru.endlesscode.inspector:inspector-bukkit:$inspectorVerson"
-    runtime "ru.endlesscode.inspector:inspector-bukkit-runtime:$inspectorVerson"
+    implementation "ru.endlesscode.inspector:inspector-bukkit:$inspectorVerson"
+    implementation "ru.endlesscode.inspector:inspector-sentry-reporter:$inspectorVerson"
 }
 ```
 
@@ -119,13 +136,18 @@ public class MyTrackedPlugin extends TrackedPlugin {
     
     @Override
     public Reporter createReporter() {
-        return new DiscordReporter.Builder()
-                .hook("<DISCORD_WEBHOOK_ID>", "<DISCORD_WEBHOOK_TOKEN>")
+        String publicKey = "[YOUR_PUBLIC_KEY_HERE]";
+        String projectId = "[YOUR_PROJECT_ID_HERE]";
+
+        // Note that you should add needed reporter as dependency first.
+        return new SentryReporter.Builder()
+                .setDataSourceName(publicKey, projectId)
                 .focusOn(this) // Reporter will be focused on this plugin
                 .build();
-        // For more reporter customization see DiscordReporter.Builder and Reporter.Builder classes
     }
 }
 ```
 
-> **NOTE:** At this moment available only Discord Reporter, but will be added more reporters soon.
+#### Available Reporters
+- [inspector-sentry-reporter](inspector-sentry-reporter): Report exceptions to [Sentry](https://sentry.io/) *(recommended way)*
+- [inspector-discord-reporter](inspector-discord-reporter): Send reports to Discord channel

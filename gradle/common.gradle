@@ -4,17 +4,10 @@ apply from: rootProject.file("gradle/dependencies.gradle")
 
 group = "ru.endlesscode.${rootProject.name}"
 description = rootProject.description
-archivesBaseName = "$pluginName-$name"
+archivesBaseName = "$project.name"
 
 // Java version
 sourceCompatibility = targetCompatibility = "1.8"
-
-// Enable coroutines
-kotlin {
-    experimental {
-        coroutines 'enable'
-    }
-}
 
 task sourcesJar(type: Jar, dependsOn: classes) {
     from sourceSets.main.allSource
@@ -30,7 +23,6 @@ afterEvaluate {
 repositories {
     mavenCentral()
     jcenter()
-    maven { url = "https://jitpack.io" }
 }
 
 dependencies {

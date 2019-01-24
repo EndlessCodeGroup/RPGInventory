@@ -24,9 +24,9 @@ ext.pomConfig = {
 apply plugin: "com.jfrog.bintray"
 
 bintray {
-    user = project.getProperty("bintrayUser") ?: System.getenv("BINTRAY_USER")
-    key = project.getProperty("bintrayApiKey") ?: System.getenv("BINTRAY_API_KEY")
-    publications = ["api", "bukkit", "bukkitRuntime"]
+    user = bintrayUser
+    key = bintrayApiKey
+    publications = [publicationName]
 
     pkg {
         repo = "repo"

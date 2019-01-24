@@ -2,37 +2,37 @@
 
 // Versions
 def junitVersion = "4.12"
-def mockitoVersion = "2.8.+"
-def powermockVersion = "1.7.+"
-def coroutinesVersion = "0.24.+"
+def mockitoVersion = "2.23.4"
+def coroutinesVersion = "1.1.0"
+def fuelVersion = "1.16.0"
+def sentryVersion = "1.7.16"
 
 // Groups
-def powermockGroup = "org.powermock"
 def kotlinxGroup = "org.jetbrains.kotlinx"
+def fuelGroup = "com.github.kittinunf.fuel"
 
 ext {
     // All these dependencies will be used with scope `compileOnly`
     commonDeps = [
             // Dependencies used in all subprojects
-            kotlinStdlib : kotlin("stdlib-jdk8"),
-            coroutines   : dep(kotlinxGroup, "kotlinx-coroutines-core", coroutinesVersion)
+            kotlinStdlib    : kotlin("stdlib-jdk8"),
+            coroutines      : dep(kotlinxGroup, "kotlinx-coroutines-core", coroutinesVersion)
     ]
 
     apiDeps = [
             // Dependencies used only in API
-            khttp : dep("com.github.jkcclemens", "khttp", "master-SNAPSHOT")
     ]
 
-    bukkitDeps = [
-            // Dependencies (except Bukkit API) used only in Bukkit implementation
+    deps = [
+            sentry          : dep("io.sentry", "sentry", sentryVersion),
+            fuel            : dep(fuelGroup, "fuel", fuelVersion),
+            fuelCoroutines  : dep(fuelGroup, "fuel-coroutines", fuelVersion)
     ]
 
     // These dependencies will be used with scope `testImplementation`
     testingDeps = [
-            junit               : dep("junit", "junit", junitVersion),
-            mockito             : dep("org.mockito", "mockito-core", mockitoVersion),
-            powermockJunit      : dep(powermockGroup, "powermock-module-junit4", powermockVersion),
-            powermockMockito    : dep(powermockGroup, "powermock-api-mockito2", powermockVersion)
+            junit           : dep("junit", "junit", junitVersion),
+            mockito         : dep("org.mockito", "mockito-core", mockitoVersion)
     ]
 
     // Apply all dependencies from map
@@ -43,11 +43,10 @@ ext {
 
 // Helping
 
-private static def kotlin(name) {
+private static String kotlin(name) {
     return "org.jetbrains.kotlin:kotlin-$name"
 }
 
-private static def dep(group, module, version) {
+private static String dep(group, module, version) {
     return "$group:$module:$version"
 }
-
