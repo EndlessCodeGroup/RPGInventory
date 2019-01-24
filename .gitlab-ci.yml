@@ -27,4 +27,3 @@ bintray:
       - .gradle
   only:
     - tags
-    - master
