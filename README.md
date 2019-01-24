@@ -47,7 +47,7 @@ Also, for more coverage, you should:
 plugins {
     // Add shadow plugin to make shadowJar
     // See: http://imperceptiblethoughts.com/shadow/
-    id 'com.github.johnrengelman.shadow' version '4.0.1'
+    id 'com.github.johnrengelman.shadow' version '4.0.4'
 }
 
 // Inspector published at jcenter, so we need to add it to repositories
@@ -55,21 +55,30 @@ repositories {
     jcenter() 
 }
 
-// Enable shadowJar minimization to reduce plugin size.
-// Read more: https://imperceptiblethoughts.com/shadow/configuration/minimizing/
 shadowJar {
+    // Enable shadowJar minimization to reduce plugin size.
+    // Read more: https://imperceptiblethoughts.com/shadow/configuration/minimizing/
     minimize()
+  
+    // To avoid possible conflicts we should relocate embedded dependencies to own unique package
+    // Here we use manual relocating, but easiest (and slower) variant is use automatically relocating.
+    // Read more: https://imperceptiblethoughts.com/shadow/configuration/relocation/#automatically-relocating-dependencies
+    def shadowPackage = "shadow.[PLACE_HERE_YOUR_PLUGIN_PACKAGE]"
+    relocate "ru.endlesscode.inspector", "${shadowPackage}.inspector"
+    relocate "org.jetbrains.annotations", "${shadowPackage}.annotations"
+    relocate "kotlinx", "${shadowPackage}.kotlinx"
+    relocate "kotlin", "${shadowPackage}.kotlin"
+    
+    // If you use inspector-sentry-reporter:
+    relocate "io.sentry", "${shadowPackage}.sentry"
+    relocate "org.slf4j", "${shadowPackage}.slf4j"
+    relocate "com.fasterxml.jackson.core", "${shadowPackage}.jackson"
+    
+    // If you use inspector-discord-reporter:
+    relocate "com.github.kittinunf", "${shadowPackage}.kittinunf"
 }
 
-// To avoid possible conflicts we should relocate embedded dependencies to own unique package
-// Easiest variant is use automatically relocating
-// Read more: https://imperceptiblethoughts.com/shadow/configuration/relocation/#automatically-relocating-dependencies
-task relocateShadowJar(type: ConfigureShadowRelocation) {
-    target = tasks.shadowJar
-    prefix = "shadow.[PLACE_HERE_YOUR_PLUGIN_PACKAGE]"
-}
-tasks.shadowJar.dependsOn tasks.relocateShadowJar
-// Automatically run shadowJar making on every assemble
+// Automatically run shadowJar making on assemble
 tasks.build.assemble tasks.shadowJar
 
 // Here you can change preferred version of inspector
