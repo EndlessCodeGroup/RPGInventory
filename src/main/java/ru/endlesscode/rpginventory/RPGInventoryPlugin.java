@@ -19,9 +19,9 @@
 package ru.endlesscode.rpginventory;
 
 import org.jetbrains.annotations.NotNull;
-import ru.endlesscode.inspector.api.report.DiscordReporter;
-import ru.endlesscode.inspector.api.report.Reporter;
 import ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin;
+import ru.endlesscode.inspector.report.DiscordReporter;
+import ru.endlesscode.inspector.report.Reporter;
 
 @SuppressWarnings("unused")
 public class RPGInventoryPlugin extends TrackedPlugin {

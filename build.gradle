@@ -47,11 +47,18 @@ repositories {
 
 shadowJar {
     minimize()
-    relocate 'com.comphenix.packetwrapper', 'ru.endlesscode.rpginventory.shade.com.comphenix.packetwrapper'
-    relocate 'ru.endlesscode.inspector', 'ru.endlesscode.rpginventory.inspector'
+    
+    def shadowPackage = "shade.ru.endlesscode.rpginventory"
+    relocate "com.comphenix.packetwrapper", "${shadowPackage}.packetwrapper"
+    
+    // inspector
+    relocate "ru.endlesscode.inspector", "${shadowPackage}.inspector"
+    relocate "org.jetbrains.annotations", "${shadowPackage}.annotations"
+    relocate "kotlinx", "${shadowPackage}.kotlinx"
+    relocate "kotlin", "${shadowPackage}.kotlin"
 }
 
-ext.inspectorVersion = "0.7.1"
+ext.inspectorVersion = "0.8.0"
 
 dependencies {
     compileOnly(bukkit())
@@ -68,8 +75,8 @@ dependencies {
     compileOnly('me.baks:RPGPlayerLeveling:3.7.2')
     compileOnly('com.sucy:SkillAPI:3.102')
     compileOnly('me.leothepro555:Skills')
-    compileOnly("ru.endlesscode.inspector:inspector-bukkit:$inspectorVersion")
-    runtime("ru.endlesscode.inspector:inspector-bukkit-runtime:$inspectorVersion")
+    implementation("ru.endlesscode.inspector:inspector-bukkit:$inspectorVersion")
+    implementation("ru.endlesscode.inspector:inspector-discord-reporter:$inspectorVersion")
     implementation('com.comphenix.packetwrapper:PacketWrapper:1.12.1-R0.1-SNAPSHOT')
     testImplementation('junit:junit:4.12')
     testImplementation('org.mockito:mockito-core:2.8.+')
@@ -83,5 +90,5 @@ jacocoTestReport {
 }
 
 // Add custom tasks
-jar.dependsOn shadowJar
-check.dependsOn jacocoTestReport
+tasks.assemble.dependsOn tasks.shadowJar
+tasks.check.dependsOn tasks.jacocoTestReport

@@ -28,7 +28,7 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import ru.endlesscode.inspector.api.report.Reporter;
+import ru.endlesscode.inspector.report.Reporter;
 import ru.endlesscode.rpginventory.RPGInventory;
 import ru.endlesscode.rpginventory.event.listener.BackpackListener;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
