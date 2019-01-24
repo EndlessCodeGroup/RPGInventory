@@ -54,6 +54,11 @@ shadowJar {
     relocate "org.jetbrains.annotations", "${shadowPackage}.annotations"
     relocate "kotlinx", "${shadowPackage}.kotlinx"
     relocate "kotlin", "${shadowPackage}.kotlin"
+
+    // inspector-sentry-reporter
+    relocate "io.sentry", "${shadowPackage}.sentry"
+    relocate "org.slf4j", "${shadowPackage}.slf4j"
+    relocate "com.fasterxml.jackson.core", "${shadowPackage}.jackson"
 }
 
 ext.inspectorVersion = "0.8.0"
@@ -74,7 +79,7 @@ dependencies {
     compileOnly('com.sucy:SkillAPI:3.102')
     compileOnly('me.leothepro555:Skills')
     implementation("ru.endlesscode.inspector:inspector-bukkit:$inspectorVersion")
-    implementation("ru.endlesscode.inspector:inspector-discord-reporter:$inspectorVersion")
+    implementation("ru.endlesscode.inspector:inspector-sentry-reporter:$inspectorVersion")
     implementation('com.comphenix.packetwrapper:PacketWrapper:1.12.1-R0.1-SNAPSHOT')
     testImplementation('junit:junit:4.12')
     testImplementation('org.mockito:mockito-core:2.8.+')
