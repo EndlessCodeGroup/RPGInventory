@@ -34,7 +34,6 @@ publishing {
         bukkit(MavenPublication) {
             from components.java
             artifact sourcesJar
-            artifact shadowJar
 
             pom.withXml {
                 def root = asNode()
