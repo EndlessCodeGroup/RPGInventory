@@ -1,0 +1,37 @@
+buildscript {
+    def proguardVersion = "6.0.3"
+    dependencies {
+        classpath("net.sf.proguard:proguard-gradle:$proguardVersion")
+    }
+
+    repositories {
+        mavenCentral()
+    }
+}
+
+task minimizeJar(type: proguard.gradle.ProGuardTask, dependsOn: shadowJar) {
+    // We will minimize result of shadowJar task
+    def jarFile = (tasks.shadowJar as Jar).archivePath
+    
+    // Specify the input jars and output jars
+    injars(jarFile.path)
+    outjars("${jarFile.parent}/MyPlugin.min.jar")
+
+    // Don't obfuscate/minimize calls of provided libraries
+    libraryjars("${System.properties.'java.home'}/lib/rt.jar")
+    def providedLibs = project.configurations.compileOnly
+    for (lib in providedLibs) {
+        libraryjars(lib.path)
+    }
+
+    // More logs
+    verbose
+    
+    // Proguard warnings will not stop build
+    ignorewarnings
+    
+    // Import static configurations
+    configuration("proguard/proguard-rules.pro")
+}
+
+tasks.assemble.dependsOn tasks.minimizeJar

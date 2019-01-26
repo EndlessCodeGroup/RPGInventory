@@ -1,0 +1,54 @@
+plugins {
+    id 'ru.endlesscode.bukkitgradle' version '0.8.1'
+    id 'com.github.johnrengelman.shadow' version '4.0.4'
+}
+
+group = "com.example"
+description = "My Bukkit plugin with Discord Reporter and ProGuard minimization"
+version = "0.1-SNAPSHOT"
+
+// Read more about BukkitGradle: https://github.com/EndlessCodeGroup/BukkitGradle
+bukkit {
+    version = "1.12.2"
+
+    meta {
+        name = "MyPlugin"
+        url = "http://www.example.com"
+        authors = ["osipxd"]
+    }
+
+    run {
+        core = "spigot"
+        eula = true
+    }
+}
+
+shadowJar {
+    // Better to disable shadowJar minimization if you use ProGuard
+    //minimize()
+
+    def shadowPackage = "shadow.com.example.myplugin"
+    relocate "ru.endlesscode.inspector", "${shadowPackage}.inspector"
+    relocate "org.jetbrains.annotations", "${shadowPackage}.annotations"
+    relocate "kotlinx", "${shadowPackage}.kotlinx"
+    relocate "kotlin", "${shadowPackage}.kotlin"
+    relocate "com.github.kittinunf", "${shadowPackage}.kittinunf"
+}
+tasks.assemble.dependsOn tasks.shadowJar
+
+ext.inspectorVerson = "0.8.0"
+
+dependencies {
+    compileOnly(bukkit()) {
+        transitive = false
+    }
+    implementation "ru.endlesscode.inspector:inspector-bukkit:$inspectorVerson"
+    implementation "ru.endlesscode.inspector:inspector-discord-reporter:$inspectorVerson"
+}
+
+repositories {
+    jcenter()
+}
+
+// Add ProGuard minimization task
+apply(from: file("proguard.gradle"))
