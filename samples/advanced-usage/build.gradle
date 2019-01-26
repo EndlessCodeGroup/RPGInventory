@@ -29,6 +29,7 @@ shadowJar {
     minimize()
 }
 
+// Here we use automatic relocation
 task relocateShadowJar(type: ConfigureShadowRelocation) {
     target = tasks.shadowJar
     prefix = "shadow.com.example.myplugin"
@@ -36,7 +37,7 @@ task relocateShadowJar(type: ConfigureShadowRelocation) {
 tasks.shadowJar.dependsOn tasks.relocateShadowJar
 tasks.assemble.dependsOn tasks.shadowJar
 
-ext.inspectorVerson = "0.8.0-SNAPSHOT"
+ext.inspectorVerson = "0.8.0"
 
 dependencies {
     compileOnly(bukkit()) {
