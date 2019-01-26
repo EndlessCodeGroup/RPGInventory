@@ -64,7 +64,11 @@ shadowJar {
 ext.inspectorVersion = "0.8.0"
 
 dependencies {
-    compileOnly(bukkit())
+    compileOnly(bukkit()) {
+        exclude group: 'junit'
+        exclude module: 'gson'
+        exclude module: 'snakeyaml'
+    }
     compileOnly('net.milkbowl.vault:VaultAPI:1.6') {
         exclude group: 'org.bukkit'
     }
@@ -95,3 +99,7 @@ jacocoTestReport {
 // Add custom tasks
 tasks.assemble.dependsOn tasks.shadowJar
 tasks.check.dependsOn tasks.jacocoTestReport
+
+// Add ProGuard minimization task
+// TODO: minimized Jar not works, fix it
+apply(from: file("proguard.gradle"))
