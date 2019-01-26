@@ -171,7 +171,7 @@ slots:
       item: DIAMOND_HOE:3
       name: "&a&lYour stats"
       lore:
-      - "&2&lMax HP: &3%MAX_HP% &7: &e%PLUGIN_HP% &f(RPGInventory) &7+ &6%OTHER_HP% &f(Other plugins)"
+        - "&2&lHP: &3%HP%/%MAX_HP%"
       - "&c&lDamage: &7%DAMAGE% &f(Weapon) &7| %BOW_DAMAGE% &f(Bow) &7| %HAND_DAMAGE% &f(Hand)"
       - "&6&lCrit Damage: &7%CRIT_DAMAGE% &6&lCrit Chance: &7%CRIT_CHANCE%"
       - "&3&lArmor: &7%ARMOR%"
