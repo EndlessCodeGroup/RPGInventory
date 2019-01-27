@@ -40,6 +40,36 @@
                         </goals>
                         <configuration>
                             <minimizeJar>true</minimizeJar>
+                            <relocations>
+                                <relocation>
+                                    <pattern>ru.endlesscode.inspector</pattern>
+                                    <shadedPattern>shadow.com.example.myplugin.inspector</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>org.jetbrains.annotations</pattern>
+                                    <shadedPattern>shadow.com.example.myplugin.annotations</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>kotlin</pattern>
+                                    <shadedPattern>shadow.com.example.myplugin.kotlin</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>kotlinx</pattern>
+                                    <shadedPattern>shadow.com.example.myplugin.kotlinx</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>io.sentry</pattern>
+                                    <shadedPattern>shadow.com.example.myplugin.sentry</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>org.slf4j</pattern>
+                                    <shadedPattern>shadow.com.example.myplugin.slf4j</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>com.fasterxml.jackson.core</pattern>
+                                    <shadedPattern>shadow.com.example.myplugin.jackson</shadedPattern>
+                                </relocation>
+                            </relocations>
                         </configuration>
                     </execution>
                 </executions>
