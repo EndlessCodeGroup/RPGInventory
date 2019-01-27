@@ -102,9 +102,11 @@ public class PlayerLoader extends PacketAdapter implements Listener {
                     @Override
                     public void run() {
                         InventoryManager.loadPlayerInventory(player);
-                        //noinspection deprecation
-                        EntityDamageEvent event = new EntityDamageEvent(player, EntityDamageEvent.DamageCause.FALL, damage);
-                        Bukkit.getPluginManager().callEvent(event);
+                        if (damage > 0) {
+                            //noinspection deprecation
+                            EntityDamageEvent event = new EntityDamageEvent(player, EntityDamageEvent.DamageCause.FALL, damage);
+                            Bukkit.getPluginManager().callEvent(event);
+                        }
                         player.removePotionEffect(PotionEffectType.BLINDNESS);
                     }
                 }.runTaskLater(RPGInventory.getInstance(), 1);
