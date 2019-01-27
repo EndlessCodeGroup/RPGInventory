@@ -18,8 +18,8 @@
 
 package ru.endlesscode.rpginventory.event.listener;
 
-import com.comphenix.protocol.wrappers.EnumWrappers;
 import org.bukkit.Material;
+import org.bukkit.Particle;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -156,7 +156,7 @@ public class ItemListener implements Listener {
                     1,
                     (float) (0.5 + Math.random() * 0.4)
             );
-            EffectUtils.playParticlesToAll(EnumWrappers.Particle.CRIT, 10, event.getEntity().getLocation());
+            EffectUtils.playParticlesToAll(Particle.CRIT, 10, event.getEntity().getLocation());
         }
 
         event.setDamage(EntityDamageEvent.DamageModifier.BASE, damage);

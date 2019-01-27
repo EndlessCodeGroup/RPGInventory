@@ -19,11 +19,11 @@
 package ru.endlesscode.rpginventory.utils;
 
 import com.comphenix.packetwrapper.WrapperPlayServerTitle;
-import com.comphenix.packetwrapper.WrapperPlayServerWorldParticles;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.wrappers.EnumWrappers;
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import org.bukkit.Location;
+import org.bukkit.Particle;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
@@ -43,50 +43,36 @@ import java.util.List;
  */
 public class EffectUtils {
 
-    public static void playParticlesToAll(EnumWrappers.Particle particle, int particleNum, @NotNull Location location) {
+    public static void playParticlesToAll(Particle particle, int particleNum, @NotNull Location location) {
         playParticlesToAll(particle, particleNum, location, 30.0D);
     }
 
-    private static void playParticlesToAll(EnumWrappers.Particle particle, int particleNum, @NotNull Location location, double distance) {
+    private static void playParticlesToAll(Particle particle, int particleNum, @NotNull Location location, double distance) {
         playParticlesToAll(particle, particleNum, location, LocationUtils.getRandomVector(), distance);
     }
 
-    private static void playParticlesToAll(EnumWrappers.Particle particle, int particleNum, @NotNull Location location, @NotNull Vector direction, double distance) {
+    private static void playParticlesToAll(Particle particle, int particleNum, @NotNull Location location, @NotNull Vector direction, double distance) {
         for (Player player : LocationUtils.getNearbyPlayers(location, distance)) {
             playParticles(player, particle, particleNum, location, direction);
         }
     }
 
-    private static void playParticles(Player player, EnumWrappers.Particle particle, int particleNum, Location location, Vector direction) {
-        WrapperPlayServerWorldParticles particles = new WrapperPlayServerWorldParticles();
-        particles.setParticleType(particle);
-        particles.setNumberOfParticles(particleNum);
-        particles.setX((float) location.getX());
-        particles.setY((float) location.getY());
-        particles.setZ((float) location.getZ());
-        particles.setOffsetX((float) direction.getX());
-        particles.setOffsetY((float) direction.getY());
-        particles.setOffsetZ((float) direction.getZ());
-
-        try {
-            ProtocolLibrary.getProtocolManager().sendServerPacket(player, particles.getHandle());
-        } catch (InvocationTargetException e) {
-            throw new IllegalStateException("Unable to send packet", e);
-        }
+    private static void playParticles(Player player, Particle particle, int particleNum, Location location, Vector direction) {
+        player.spawnParticle(particle, location, particleNum, direction.getX(), direction.getY(), direction.getZ());
     }
 
     public static void playSpawnEffect(Entity entity) {
         Location loc = entity.getLocation();
 
         entity.getWorld().playSound(loc, Sound.ENDERMAN_TELEPORT.bukkitSound(), 1, (float) (1.2 + Math.random() * 0.4));
-        playParticlesToAll(EnumWrappers.Particle.EXPLOSION_LARGE, 3, loc);
+        playParticlesToAll(Particle.EXPLOSION_LARGE, 3, loc);
     }
 
     public static void playDespawnEffect(Entity entity) {
         Location loc = entity.getLocation();
 
         entity.getWorld().playSound(loc, Sound.ENDERMAN_TELEPORT.bukkitSound(), 1, (float) (0.6 + Math.random() * 0.4));
-        playParticlesToAll(EnumWrappers.Particle.SMOKE_NORMAL, 3, loc);
+        playParticlesToAll(Particle.SMOKE_NORMAL, 3, loc);
     }
 
 
