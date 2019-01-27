@@ -3,7 +3,7 @@
 ![Inspector Example](https://gitlab.com/endlesscodegroup/inspector/raw/develop/images/example.png)  
 
 Inspector helps developers to track all exceptions and crashes of theirs plugins.
-It automatically sends reports to the developer with all needed information about the environment.
+It automatically sends reports to a developer with all needed information about an environment.
 
 It sends not sensitive data:
 - Plugin name and version
@@ -13,7 +13,7 @@ It sends not sensitive data:
 
 Also, it sends some sensitive data that can be disabled from sending:
 - Server core and version
-- List of plugins with theirs versions
+- List of plugins with versions
 
 ## For server owners
 This is not a plugin and can't be installed with copying to `plugins` directory.
