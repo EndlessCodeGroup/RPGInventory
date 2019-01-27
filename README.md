@@ -15,6 +15,11 @@ Also, it sends some sensitive data that can be disabled from sending:
 - Server core and version
 - List of plugins with versions
 
+### Navigation
+- [samples](samples): Samples of usage Inspector
+- [inspector-sentry-reporter](inspector-sentry-reporter): Report exceptions to [Sentry](https://sentry.io/) *(recommended reporter)*
+- [inspector-discord-reporter](inspector-discord-reporter): Send reports to Discord channel
+
 ## For server owners
 This is not a plugin and can't be installed with copying to `plugins` directory.
 But you can configure it.
@@ -86,7 +91,7 @@ ext.inspectorVerson = "0.8.0"
 
 // Add Inspector as dependency
 // 'inspector-bukkit' - implementation of Inspector for Bukkit.
-// 'inspector-sentry-reporter' - reporter that we want to use (read below about available reporters)
+// 'inspector-sentry-reporter' - reporter that we want to use (read above about available reporters)
 dependencies {
     implementation "ru.endlesscode.inspector:inspector-bukkit:$inspectorVerson"
     implementation "ru.endlesscode.inspector:inspector-sentry-reporter:$inspectorVerson"
@@ -147,7 +152,3 @@ public class MyTrackedPlugin extends TrackedPlugin {
     }
 }
 ```
-
-#### Available Reporters
-- [inspector-sentry-reporter](inspector-sentry-reporter): Report exceptions to [Sentry](https://sentry.io/) *(recommended way)*
-- [inspector-discord-reporter](inspector-discord-reporter): Send reports to Discord channel
