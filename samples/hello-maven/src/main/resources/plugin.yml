@@ -1,0 +1,8 @@
+name: MyPlugin
+version: ${project.version}
+main: com.example.myplugin.MyPlugin
+api-version: 1.13
+description: My Plugin with Inspector, build with Maven
+commands:
+  report:
+    description: Command that should throw exception and report about it
