@@ -19,9 +19,9 @@
 package ru.endlesscode.rpginventory;
 
 import org.jetbrains.annotations.NotNull;
-import ru.endlesscode.inspector.api.report.DiscordReporter;
-import ru.endlesscode.inspector.api.report.Reporter;
 import ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin;
+import ru.endlesscode.inspector.report.Reporter;
+import ru.endlesscode.inspector.report.SentryReporter;
 
 @SuppressWarnings("unused")
 public class RPGInventoryPlugin extends TrackedPlugin {
@@ -32,11 +32,11 @@ public class RPGInventoryPlugin extends TrackedPlugin {
 
     @Override
     protected final @NotNull Reporter createReporter() {
-        String id = "460142275171975168";
-        String token = "yEl4EUYWB5yuraU0IgriK92NyUC5NSPtoBIfUAdRFbupSBE5wqODxc8vRJ7Fo6Sr_B6Y";
+        String id = "1331962";
+        String key = "3364f9220f04483a9903023e5b3dbaae";
 
-        return new DiscordReporter.Builder()
-                .hook(id, token)
+        return new SentryReporter.Builder()
+                .setDataSourceName(key, id)
                 .focusOn(this)
                 .build();
     }

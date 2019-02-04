@@ -19,6 +19,7 @@
 package ru.endlesscode.rpginventory;
 
 import net.milkbowl.vault.permission.Permission;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -27,6 +28,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginManager;
 import org.jetbrains.annotations.NotNull;
 import ru.endlesscode.rpginventory.api.InventoryAPI;
+import ru.endlesscode.rpginventory.event.ItemCommandEvent;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
 import ru.endlesscode.rpginventory.inventory.backpack.BackpackManager;
 import ru.endlesscode.rpginventory.item.ItemManager;
@@ -202,7 +204,13 @@ final class RPGInventoryCommandExecutor implements CommandExecutor {
 
     private void giveItemToPlayer(@NotNull CommandSender sender, Player player, ItemStack item, String prefix) {
         String message;
-        if (player.getInventory().addItem(item).isEmpty()) {
+
+        ItemCommandEvent event = new ItemCommandEvent(player, item);
+        Bukkit.getPluginManager().callEvent(event);
+
+        if (event.isCancelled()) {
+            message = "&cItem command was cancelled";
+        } else if (player.getInventory().addItem(event.getItem()).isEmpty()) {
             message = "&3" + prefix + " has been given to " + player.getName();
         } else {
             message = "&c" + player.getName() + " has no empty slots in the inventory.";

@@ -288,8 +288,8 @@ public class InventoryListener implements Listener {
             if (openRpgInventory) {
                 playerWrapper.openInventoryDeferred(true);
                 event.setCancelled(true);
+                return;
             }
-            return;
         }
 
         // In RPG Inventory or quick slot
