@@ -7,11 +7,12 @@ import org.bukkit.configuration.file.FileConfiguration
 import org.bukkit.generator.ChunkGenerator
 import org.bukkit.plugin.java.JavaPlugin
 import ru.endlesscode.inspector.PublicApi
+import ru.endlesscode.inspector.bukkit.report.BukkitEnvironment
+import ru.endlesscode.inspector.bukkit.report.BukkitUnwrapReporter
 import ru.endlesscode.inspector.report.ReportEnvironment
 import ru.endlesscode.inspector.report.ReportedException
 import ru.endlesscode.inspector.report.Reporter
 import ru.endlesscode.inspector.report.ReporterFocus
-import ru.endlesscode.inspector.bukkit.report.BukkitEnvironment
 import java.io.File
 import java.io.InputStream
 import java.io.Reader
@@ -52,7 +53,7 @@ abstract class TrackedPlugin @JvmOverloads constructor(
             throw e
         }
 
-        reporter = createReporter()
+        reporter = BukkitUnwrapReporter(createReporter())
         reporter.enabled = environment.isInspectorEnabled
         reporter.addHandler(
                 beforeReport = { message, exceptionData ->
