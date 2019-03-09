@@ -1,5 +1,7 @@
 package ru.endlesscode.inspector.report
 
+import io.sentry.DefaultSentryClientFactory.IN_APP_FRAMES_OPTION
+import io.sentry.DefaultSentryClientFactory.UNCAUGHT_HANDLER_ENABLED_OPTION
 import io.sentry.Sentry
 import io.sentry.SentryClient
 import io.sentry.connection.EventSendCallback
@@ -136,7 +138,8 @@ class SentryReporter private constructor(
             }
 
             val options = mutableMapOf(
-                "stacktrace.app.packages" to focus.focusedPackage
+                IN_APP_FRAMES_OPTION to focus.focusedPackage,
+                UNCAUGHT_HANDLER_ENABLED_OPTION to "false"
             )
             options.putAll(this.options)
 
