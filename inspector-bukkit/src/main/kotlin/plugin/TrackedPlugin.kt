@@ -13,10 +13,18 @@ import ru.endlesscode.inspector.report.ReportEnvironment
 import ru.endlesscode.inspector.report.ReportedException
 import ru.endlesscode.inspector.report.Reporter
 import ru.endlesscode.inspector.report.ReporterFocus
+import ru.endlesscode.inspector.util.stackTraceText
 import java.io.File
 import java.io.InputStream
 import java.io.Reader
+import java.nio.file.Files
+import java.nio.file.Paths
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.logging.FileHandler
+import java.util.logging.Formatter
 import java.util.logging.Level
+import java.util.logging.LogRecord
 
 
 /**
@@ -43,6 +51,8 @@ abstract class TrackedPlugin @JvmOverloads constructor(
     val lifecycle: PluginLifecycle
 
     init {
+        initLogger()
+
         try {
             lifecycle = lifecycleClass.newInstance()
             lifecycle.holder = this
@@ -56,16 +66,34 @@ abstract class TrackedPlugin @JvmOverloads constructor(
         reporter = BukkitUnwrapReporter(createReporter())
         reporter.enabled = environment.isInspectorEnabled
         reporter.addHandler(
-                beforeReport = { message, exceptionData ->
-                    logger.log(Level.WARNING, "$TAG $message", exceptionData.exception)
-                },
-                onSuccess = { _, _ ->
-                    logger.warning("$TAG Error was reported to author!")
-                },
-                onError = {
-                    logger.severe("$TAG Error on report: ${it.localizedMessage}")
-                }
+            beforeReport = { message, data ->
+                logger.log(Level.FINE, "$TAG $message", data.exception)
+            },
+            onSuccess = { message, _ ->
+                logger.warning("$TAG $message")
+                logger.warning("$TAG Error was reported to author!")
+            },
+            onError = {
+                logger.warning("$TAG Error on report: ${it.localizedMessage}")
+                logger.log(Level.FINE, TAG, it)
+            }
         )
+    }
+
+    private fun initLogger() {
+        val logsDir = Files.createDirectories(Paths.get("${dataFolder.path}/logs"))
+        val fileHandler = FileHandler("$logsDir/latest.log", true).apply {
+            level = Level.ALL
+            formatter = object : Formatter() {
+                val timeFormatter = SimpleDateFormat("dd/MM/yy HH:mm:ss")
+
+                override fun format(record: LogRecord): String {
+                    val message = "[${timeFormatter.format(Date(record.millis))} ${record.level}]: ${record.message}\n"
+                    return record.thrown?.stackTraceText?.let { "$message$it" } ?: message
+                }
+            }
+        }
+        logger.addHandler(fileHandler)
     }
 
     protected abstract fun createReporter(): Reporter
