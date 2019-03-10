@@ -34,9 +34,6 @@ import ru.endlesscode.rpginventory.pet.PetFood;
 import ru.endlesscode.rpginventory.pet.PetManager;
 import ru.endlesscode.rpginventory.pet.PetType;
 
-import java.util.Arrays;
-import java.util.List;
-
 /**
  * Created by OsipXD on 28.08.2015
  * It is part of the RpgInventory.
@@ -50,15 +47,6 @@ public class ItemUtils {
     public static final String ITEM_TAG = "rpginv.id";
     public static final String FOOD_TAG = "food.id";
     public static final String PET_TAG = "pet.id";
-
-    private static final List<Material> itemsWithDurability = Arrays.asList(
-            Material.WOOD_AXE, Material.WOOD_PICKAXE, Material.WOOD_HOE, Material.WOOD_SWORD,
-            Material.STONE_AXE, Material.STONE_PICKAXE, Material.STONE_HOE, Material.STONE_SWORD,
-            Material.IRON_AXE, Material.IRON_PICKAXE, Material.IRON_HOE, Material.IRON_SWORD,
-            Material.GOLD_AXE, Material.GOLD_PICKAXE, Material.GOLD_HOE, Material.GOLD_SWORD,
-            Material.DIAMOND_AXE, Material.DIAMOND_PICKAXE, Material.DIAMOND_HOE, Material.DIAMOND_SWORD,
-            Material.BOW, Material.FLINT_AND_STEEL, Material.SHEARS, Material.FISHING_ROD
-    );
 
     @NotNull
     public static ItemStack setTag(ItemStack item, @NotNull String tag, @NotNull String value) {
@@ -150,7 +138,7 @@ public class ItemUtils {
     }
 
     private static boolean isItemHasDurability(ItemStack item) {
-        return itemsWithDurability.contains(item.getType());
+        return item.getType().getMaxDurability() > 0;
     }
 
     public static NbtCompound itemStackToNBT(ItemStack originalItem, String name) {
