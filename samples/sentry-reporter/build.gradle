@@ -37,7 +37,7 @@ shadowJar {
 }
 tasks.assemble.dependsOn tasks.shadowJar
 
-ext.inspectorVerson = "0.8.0"
+ext.inspectorVerson = "0.8.1"
 
 dependencies {
     compileOnly(bukkit()) {

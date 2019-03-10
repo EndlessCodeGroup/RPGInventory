@@ -40,7 +40,7 @@ subprojects {
     apply(plugin: "kotlin")
     apply(from: rootProject.file("gradle/common.gradle"))
     
-    version = "0.8.0"
+    version = "0.8.1"
 
     tasks.withType(KotlinCompile).all {
         kotlinOptions {

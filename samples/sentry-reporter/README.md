@@ -4,7 +4,7 @@ Reporter that sends reports to [Sentry](https://sentry.io/).
 ### Gradle
 ```groovy
 dependencies {
-    implementation "ru.endlesscode.inspector:inspector-sentry-reporter:0.8.0"
+    implementation "ru.endlesscode.inspector:inspector-sentry-reporter:0.8.1"
 }
 ```
 
