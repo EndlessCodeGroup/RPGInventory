@@ -16,10 +16,6 @@ bukkit {
     }
 }
 
-repositories {
-    dmulloy2()
-}
-
 dependencies {
     compileOnly(bukkit()) {
         transitive = false

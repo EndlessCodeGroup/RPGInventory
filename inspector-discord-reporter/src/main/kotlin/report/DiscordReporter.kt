@@ -1,5 +1,6 @@
 package ru.endlesscode.inspector.report
 
+import com.github.kittinunf.fuel.core.extensions.jsonBody
 import com.github.kittinunf.fuel.httpPost
 import com.github.kittinunf.result.failure
 import ru.endlesscode.inspector.PublicApi

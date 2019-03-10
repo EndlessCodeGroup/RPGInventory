@@ -1,5 +1,3 @@
-import org.gradle.jvm.tasks.Jar
-
 // Bukkit implementation build config
 
 plugins {

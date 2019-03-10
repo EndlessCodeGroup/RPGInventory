@@ -1,12 +1,10 @@
-import com.github.jengelman.gradle.plugins.shadow.tasks.ConfigureShadowRelocation
-
 plugins {
     id 'ru.endlesscode.bukkitgradle' version '0.8.1'
     id 'com.github.johnrengelman.shadow' version '4.0.4'
 }
 
 group = "com.example"
-description = "My Bukkit plugin with Discord Reporter"
+description = "My Bukkit plugin with Discord Reporter and ProGuard minimization"
 version = "0.1-SNAPSHOT"
 
 // Read more about BukkitGradle: https://github.com/EndlessCodeGroup/BukkitGradle
@@ -26,15 +24,16 @@ bukkit {
 }
 
 shadowJar {
-    minimize()
-}
+    // Better to disable shadowJar minimization if you use ProGuard
+    //minimize()
 
-// Here we use automatic relocation
-task relocateShadowJar(type: ConfigureShadowRelocation) {
-    target = tasks.shadowJar
-    prefix = "shadow.com.example.myplugin"
+    def shadowPackage = "shadow.com.example.myplugin"
+    relocate "ru.endlesscode.inspector", "${shadowPackage}.inspector"
+    relocate "org.jetbrains.annotations", "${shadowPackage}.annotations"
+    relocate "kotlinx", "${shadowPackage}.kotlinx"
+    relocate "kotlin", "${shadowPackage}.kotlin"
+    relocate "com.github.kittinunf", "${shadowPackage}.kittinunf"
 }
-tasks.shadowJar.dependsOn tasks.relocateShadowJar
 tasks.assemble.dependsOn tasks.shadowJar
 
 ext.inspectorVerson = "0.8.1"
@@ -50,3 +49,6 @@ dependencies {
 repositories {
     jcenter()
 }
+
+// Add ProGuard minimization task
+apply(from: file("proguard.gradle"))

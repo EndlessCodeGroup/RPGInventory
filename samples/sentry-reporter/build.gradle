@@ -1,8 +1,6 @@
-import com.github.jengelman.gradle.plugins.shadow.tasks.ConfigureShadowRelocation
-
 plugins {
     id 'ru.endlesscode.bukkitgradle' version '0.8.1'
-    id 'com.github.johnrengelman.shadow' version '4.0.3'
+    id 'com.github.johnrengelman.shadow' version '4.0.4'
 }
 
 group = "com.example"
@@ -27,16 +25,19 @@ bukkit {
 
 shadowJar {
     minimize()
-}
 
-task relocateShadowJar(type: ConfigureShadowRelocation) {
-    target = tasks.shadowJar
-    prefix = "shadow.com.example.myplugin"
+    def shadowPackage = "shadow.com.example.myplugin"
+    relocate "ru.endlesscode.inspector", "${shadowPackage}.inspector"
+    relocate "org.jetbrains.annotations", "${shadowPackage}.annotations"
+    relocate "kotlinx", "${shadowPackage}.kotlinx"
+    relocate "kotlin", "${shadowPackage}.kotlin"
+    relocate "io.sentry", "${shadowPackage}.sentry"
+    relocate "org.slf4j", "${shadowPackage}.slf4j"
+    relocate "com.fasterxml.jackson.core", "${shadowPackage}.jackson"
 }
-tasks.shadowJar.dependsOn tasks.relocateShadowJar
 tasks.assemble.dependsOn tasks.shadowJar
 
-ext.inspectorVerson = "0.8.0-SNAPSHOT"
+ext.inspectorVerson = "0.8.1"
 
 dependencies {
     compileOnly(bukkit()) {
