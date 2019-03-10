@@ -153,8 +153,7 @@ public class BackpackManager {
         if (!BACKPACKS.containsKey(uuid)) {
             if (uuid == null) {
                 backpack = type.createBackpack();
-                ItemUtils.setTag(
-                        bpItem, ItemUtils.BACKPACK_UID_TAG, backpack.getUniqueId().toString());
+                ItemUtils.setTag(bpItem, ItemUtils.BACKPACK_UID_TAG, backpack.getUniqueId().toString());
             } else {
                 backpack = type.createBackpack(uuid);
             }
