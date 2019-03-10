@@ -1,7 +1,7 @@
 package ru.endlesscode.inspector.service
 
-import awaitStringResult
 import com.github.kittinunf.fuel.core.FuelError
+import com.github.kittinunf.fuel.coroutines.awaitStringResult
 import com.github.kittinunf.fuel.httpPost
 
 class HastebinStorage : TextStorage {
