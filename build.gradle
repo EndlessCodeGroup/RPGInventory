@@ -61,7 +61,7 @@ shadowJar {
     relocate "com.fasterxml.jackson.core", "${shadowPackage}.jackson"
 }
 
-ext.inspectorVersion = "0.8.0"
+ext.inspectorVersion = "0.8.1"
 
 dependencies {
     compileOnly(bukkit()) {
@@ -76,7 +76,7 @@ dependencies {
     compileOnly('org.jetbrains:annotations:15.0')
     compileOnly('me.clip:placeholderapi:2.9.2')
     compileOnly('me.robin:BattleLevelsAPI:6.9.1')
-    compileOnly('com.herocraftonline.heroes:Heroes:1.5.5.6')
+    compileOnly('com.herocraftonline.heroes:Heroes:1.5.5.7')
     compileOnly('de.keyle:mypet:2.3.3')
     compileOnly('org.tobiyas:RacesAndClasses:1.2.0')
     compileOnly('me.baks:RPGPlayerLeveling:3.7.2')
@@ -86,7 +86,7 @@ dependencies {
     implementation("ru.endlesscode.inspector:inspector-sentry-reporter:$inspectorVersion")
     implementation('com.comphenix.packetwrapper:PacketWrapper:1.12.1-R0.1-SNAPSHOT')
     testImplementation('junit:junit:4.12')
-    testImplementation('org.mockito:mockito-core:2.8.+')
+    testImplementation('org.mockito:mockito-core:2.25.0')
 }
 
 jacocoTestReport {
