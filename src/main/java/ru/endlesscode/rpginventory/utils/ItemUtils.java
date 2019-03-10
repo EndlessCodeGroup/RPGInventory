@@ -40,8 +40,10 @@ import ru.endlesscode.rpginventory.pet.PetType;
  * All rights reserved 2014 - 2016 © «EndlessCode Group»
  */
 public class ItemUtils {
+    public static final String ENTITY_TAG = "EntityTag";
     public static final String UNBREAKABLE_TAG = "Unbreakable";
     public static final String HIDE_FLAGS_TAG = "HideFlags";
+
     public static final String BACKPACK_UID_TAG = "backpack.uid";
     public static final String BACKPACK_TAG = "backpack.id";
     public static final String ITEM_TAG = "rpginv.id";
@@ -110,20 +112,21 @@ public class ItemUtils {
     public static ItemStack getTexturedItem(String texture) {
         String[] textures = texture.split(":");
 
-        if (Material.getMaterial(textures[0]) == null) {
+        Material material = Material.getMaterial(textures[0]);
+        if (material == null) {
             Log.w("Material {0} not found", textures[0]);
             return new ItemStack(Material.AIR);
         }
 
-        ItemStack item = toBukkitItemStack(new ItemStack(Material.getMaterial(textures[0])));
+        ItemStack item = toBukkitItemStack(new ItemStack(material));
         if (isEmpty(item)) {
             return new ItemStack(Material.AIR);
         }
 
-        if (textures.length == 2) {
+        if (textures.length > 1) {
             if (item.getType() == Material.MONSTER_EGG) {
                 NbtCompound nbt = NbtFactory.asCompound(NbtFactory.fromItemTag(item));
-                nbt.put("EntityTag", NbtFactory.ofCompound("temp").put("id", textures[1]));
+                nbt.put(ENTITY_TAG, NbtFactory.ofCompound("temp").put("id", textures[1]));
             } else {
                 item.setDurability(Short.parseShort(textures[1]));
 
