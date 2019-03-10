@@ -15,6 +15,9 @@ Also, it sends some sensitive data that can be disabled from sending:
 - Server core and version
 - List of plugins with versions
 
+> NOTE: Inspector filters all tracked exceptions from console to not bother server owners.
+But all plugin-related logs will be saved to log file in the plugin folder.
+
 ### Navigation
 - [samples](samples): Samples of usage Inspector
 - [inspector-sentry-reporter](inspector-sentry-reporter): Report exceptions to [Sentry](https://sentry.io/) *(recommended reporter)*
