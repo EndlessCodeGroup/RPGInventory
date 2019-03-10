@@ -26,7 +26,7 @@ bukkit {
 shadowJar {
     minimize()
 
-    def shadowPackage = "shadow.[PLACE_HERE_YOUR_PLUGIN_PACKAGE]"
+    def shadowPackage = "shadow.com.example.myplugin"
     relocate "ru.endlesscode.inspector", "${shadowPackage}.inspector"
     relocate "org.jetbrains.annotations", "${shadowPackage}.annotations"
     relocate "kotlinx", "${shadowPackage}.kotlinx"
