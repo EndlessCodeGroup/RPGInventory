@@ -172,7 +172,7 @@ public class RPGInventory extends PluginLifecycle {
 
         ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
         // Workaround for 1.12+
-        if (VersionHandler.isUpper1_12()) {
+        if (VersionHandler.getVersionCode() >= VersionHandler.VERSION_1_12) {
             protocolManager.addPacketListener(
                     new PacketAdapter(this, PacketType.Play.Server.RECIPES) {
                         @Override
@@ -213,9 +213,9 @@ public class RPGInventory extends PluginLifecycle {
         }
 
         // Check version compatibility
-        if (!VersionHandler.checkVersion()) {
+        if (VersionHandler.isNotSupportedVersion()) {
             Log.w("This version of RPG Inventory is not tested with \"{0}\"!", Bukkit.getBukkitVersion());
-        } else if (VersionHandler.is1_13()) {
+        } else if (VersionHandler.getVersionCode() >= VersionHandler.VERSION_1_13) {
             Log.w("Support of {0} is experimental! Use RPGInventory with caution.", Bukkit.getBukkitVersion());
         }
 
