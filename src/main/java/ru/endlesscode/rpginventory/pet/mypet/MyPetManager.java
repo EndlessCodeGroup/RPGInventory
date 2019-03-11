@@ -30,7 +30,6 @@ import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.repository.PlayerManager;
 import de.Keyle.MyPet.api.repository.RepositoryCallback;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -45,6 +44,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ru.endlesscode.inspector.bukkit.scheduler.TrackedBukkitRunnable;
 import ru.endlesscode.rpginventory.RPGInventory;
+import ru.endlesscode.rpginventory.compat.CompatMaterial;
 import ru.endlesscode.rpginventory.event.PetEquipEvent;
 import ru.endlesscode.rpginventory.event.PetUnequipEvent;
 import ru.endlesscode.rpginventory.event.PlayerInventoryLoadEvent;
@@ -251,7 +251,7 @@ public class MyPetManager implements Listener {
             return;
         }
 
-        ItemStack petItem = new ItemStack(Material.MONSTER_EGG);
+        ItemStack petItem = new ItemStack(CompatMaterial.getMaterial("MONSTER_EGG"));
         ItemMeta meta = petItem.getItemMeta();
         meta.setDisplayName(RPGInventory.getLanguage().getMessage("mypet.egg", event.getMyPet().getPetName()));
         petItem.setItemMeta(meta);

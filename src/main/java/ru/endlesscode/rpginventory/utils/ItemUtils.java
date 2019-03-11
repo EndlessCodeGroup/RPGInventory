@@ -26,6 +26,7 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import ru.endlesscode.rpginventory.compat.CompatMaterial;
 import ru.endlesscode.rpginventory.inventory.backpack.BackpackManager;
 import ru.endlesscode.rpginventory.inventory.backpack.BackpackType;
 import ru.endlesscode.rpginventory.item.CustomItem;
@@ -112,7 +113,7 @@ public class ItemUtils {
     public static ItemStack getTexturedItem(String texture) {
         String[] textures = texture.split(":");
 
-        Material material = Material.getMaterial(textures[0]);
+        Material material = CompatMaterial.getMaterialOrNull(textures[0]);
         if (material == null) {
             Log.w("Material {0} not found", textures[0]);
             return new ItemStack(Material.AIR);
@@ -124,7 +125,8 @@ public class ItemUtils {
         }
 
         if (textures.length > 1) {
-            if (item.getType() == Material.MONSTER_EGG) {
+            // MONSTER_EGG before 1.13
+            if (item.getType().name().equals("MONSTER_EGG")) {
                 NbtCompound nbt = NbtFactory.asCompound(NbtFactory.fromItemTag(item));
                 nbt.put(ENTITY_TAG, NbtFactory.ofCompound("temp").put("id", textures[1]));
             } else {

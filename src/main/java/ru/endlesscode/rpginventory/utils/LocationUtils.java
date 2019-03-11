@@ -19,7 +19,6 @@
 package ru.endlesscode.rpginventory.utils;
 
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -39,8 +38,8 @@ import java.util.Random;
  * All rights reserved 2014 - 2016 © «EndlessCode Group»
  */
 public class LocationUtils {
-    private static final List<Material> UNSAFE_BLOCK_MATERIALS = Arrays.asList(
-            Material.LADDER, Material.LAVA, Material.STATIONARY_LAVA, Material.CACTUS, Material.FIRE
+    private static final List<String> UNSAFE_BLOCK_MATERIALS = Arrays.asList(
+            "LADDER", "LAVA", "STATIONARY_LAVA", "LEGACY_STATIONARY_LAVA", "CACTUS", "GREEN_CACTUS", "FIRE"
     );
     private static final Random RANDOM = new Random();
 
@@ -148,6 +147,6 @@ public class LocationUtils {
     }
 
     public static boolean isSafeLocation(@Nullable Location location) {
-        return location != null && !LocationUtils.UNSAFE_BLOCK_MATERIALS.contains(location.getBlock().getType());
+        return location != null && !LocationUtils.UNSAFE_BLOCK_MATERIALS.contains(location.getBlock().getType().name());
     }
 }

@@ -10,7 +10,7 @@ version = pluginVersion
 description = pluginDesc
 
 bukkit {
-    version = '1.12.2'
+    version = '1.13.2'
 
     meta {
         main = "ru.endlesscode.rpginventory.RPGInventoryPlugin"
@@ -18,7 +18,7 @@ bukkit {
     }
 
     run {
-        core = "paper"
+        core = "spigot"
         eula = true
     }
 }

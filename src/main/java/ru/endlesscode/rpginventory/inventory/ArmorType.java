@@ -49,34 +49,14 @@ public enum ArmorType {
             return CHESTPLATE;
         }
 
-        switch (item.getType()) {
-            case LEATHER_HELMET:
-            case CHAINMAIL_HELMET:
-            case IRON_HELMET:
-            case GOLD_HELMET:
-            case DIAMOND_HELMET:
-                return HELMET;
-            case LEATHER_CHESTPLATE:
-            case CHAINMAIL_CHESTPLATE:
-            case IRON_CHESTPLATE:
-            case GOLD_CHESTPLATE:
-            case DIAMOND_CHESTPLATE:
-                return CHESTPLATE;
-            case LEATHER_LEGGINGS:
-            case CHAINMAIL_LEGGINGS:
-            case IRON_LEGGINGS:
-            case GOLD_LEGGINGS:
-            case DIAMOND_LEGGINGS:
-                return LEGGINGS;
-            case LEATHER_BOOTS:
-            case CHAINMAIL_BOOTS:
-            case IRON_BOOTS:
-            case GOLD_BOOTS:
-            case DIAMOND_BOOTS:
-                return BOOTS;
-        }
+        String[] typeParts = item.getType().name().split("_");
+        String armorType = typeParts[typeParts.length - 1];
 
-        return UNKNOWN;
+        try {
+            return ArmorType.valueOf(armorType);
+        } catch (IllegalArgumentException exception) {
+            return UNKNOWN;
+        }
     }
 
     @Nullable
