@@ -6,17 +6,13 @@
 ###############################
 
 # Plugin enabling
-enabled: false
+enabled: true
 
 # Language (must be same as the file name in the folder /lang)
 language: en
 
 # Check update system
 check-update: true
-
-# This plugin uses MCStats to generate and publish anonymous aggregate usage statistics
-# If you find this is not critical, please leave it enabled
-metrics: true
 
 # Worlds settings
 worlds:
@@ -87,9 +83,8 @@ containers:
 #             GUI             #
 ###############################
 
-# Resource-pack options
 resource-pack:
-  enabled: true
+  enabled: false
 
   # Delay between player join and request of texture downloading (in seconds)
   # NOTE: Don't change it if you don't know what you doing
@@ -102,14 +97,13 @@ resource-pack:
   # Hash (works as identifier of RP)
   hash: PUT_YOUR_HASH_HERE
 
-# Join messages
 join-messages:
   # Delay in seconds for every message
   delay: 3
 
   # Default message on every join
   default:
-    enabled: true
+    enabled: false
     title: "&l&2Welcome to server!"
     text:
     - "&6Glad to see you, &3%PLAYER%"
@@ -117,7 +111,7 @@ join-messages:
 
   # Message on first join and if player declined resource-pack
   rp-info:
-    enabled: true
+    enabled: false
     title: "&l&4It is important!"
     text:
     - "&6You should &callow &6resource pack to play on this server"
@@ -131,13 +125,13 @@ join-messages:
 
 attack:
   # Damage is applied only if a player has in his hands a weapon (from weapon slot)
-  require-weapon: true
+  require-weapon: false
 
   # When you deal damage, your hand automatically switches to weapon slot
-  force-weapon: true
+  force-weapon: false
 
   # When you picked up a weapon, your hand automatically switches to it
-  auto-held: true
+  auto-held: false
 
   # Allow to damage own pet
   own-pet: false
@@ -155,7 +149,7 @@ craft-slots-action: rpginv
 
 slots:
   # Slot buying
-  enabled: true
+  enabled: false
 
   # Texture of locked slot
   locked: DIAMOND_HOE:19
@@ -197,7 +191,7 @@ slots:
 # Settings of craft system
 craft:
   # Enable craft extensions
-  enabled: true
+  enabled: false
 
   # Enable for workbench
   workbench: true
