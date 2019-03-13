@@ -1,11 +1,4 @@
 #version: 2.0 | Do not remove this line!
-firststart: \n\
-&3============================== RPGInventory ================================\n\
-&cPre koriscenja &6RpgInventory &cDodajte promenjene teksture u vas server!\n\
-I sredite stvari koje mogu biti stavljene u novi inventory,\n\
-posle toga u config napisite stavite true na enabled:\n\
-&3============================================================================
-
 title: RPG Inventory
 
 locked.name: &c&lZakljucan slot

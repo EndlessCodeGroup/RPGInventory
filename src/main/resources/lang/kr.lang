@@ -1,11 +1,4 @@
 #version: 2.0 | Do not remove this line!
-firststart: \n\
-&3============================== RPGInventory ================================\n\
-&cBefore using &eRPGInventory&c, add changed textures to your server resource-pack\n\
-and configure items that can be put in the inventory slots. After that,\n\
-set value in the config &eenabled: true\n\
-&3============================================================================
-
 title: &l인벤토리
 
 locked.name: &c&l잠긴 슬릇

@@ -1,11 +1,4 @@
 #version: 2.0 | Do not remove this line!
-firststart: \n\
-&3============================== RPGInventory ================================\n\
-&cAntes de usar &eRPGInventory&c, adicione um pacote de recursos\n\
-e configure os items que podem ser colocados em cada espaço do inventario.\n\
-Depois modifique valor o da configuracão a &eenabled: true\n\
-&3============================================================================
-
 title: RPG Inventory
 
 locked.name: &c&lEspaço bloqueado

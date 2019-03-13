@@ -1,11 +1,4 @@
 #version: 2.0 | Do not remove this line!
-firststart: \n\
-&3============================== RPGInventory ================================\n\
-&eRPGInventory&c pluginini kullanmadan önce, değiştirilmiş kaynak paketini\n\
-ve değiştirilmiş eşyaları konacak bölmeleri yapmalısın.!\n\
-Bundan sonra config.yml den enabled ayarını true yap!\n\
-&3============================================================================
-
 title: RPG Envanteri
 
 locked.name: &c&lKilitli Bölme

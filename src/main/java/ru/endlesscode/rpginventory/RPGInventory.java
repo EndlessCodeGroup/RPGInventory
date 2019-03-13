@@ -206,8 +206,7 @@ public class RPGInventory extends PluginLifecycle {
     private boolean checkRequirements() {
         // Check if plugin is enabled
         if (!Config.getConfig().getBoolean("enabled")) {
-            this.onFirstStart();
-            Log.w("Plugin is not enabled in config!");
+            Log.w("RPGInventory is disabled in the config!");
             return false;
         }
 
@@ -332,10 +331,6 @@ public class RPGInventory extends PluginLifecycle {
         for (Player player : this.getServer().getOnlinePlayers()) {
             InventoryManager.loadPlayerInventory(player);
         }
-    }
-
-    private void onFirstStart() {
-        StringUtils.coloredConsole(RPGInventory.getLanguage().getMessage("firststart"));
     }
 
     private boolean setupPermissions() {

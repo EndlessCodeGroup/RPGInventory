@@ -1,11 +1,4 @@
 #version: 2.0 | Do not remove this line!
-firststart: \n\
-&3============================== RPGInventory ================================\n\
-&cBefore using &eRPGInventory&c, add changed textures to the resource-pack\n\
-and configure items that can be put in the inventory slots. After that,\n\
-set value in the config &eenabled: true\n\
-&3============================================================================
-
 title: RPG Inventar
 
 locked.name: &c&lZamceny slot
