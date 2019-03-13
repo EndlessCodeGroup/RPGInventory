@@ -41,6 +41,11 @@ repositories {
         name 'ec-repo'
         url 'https://gitlab.com/endlesscodegroup/mvn-repo/raw/master/'
     }
+
+    maven {
+        name 'codemc-repo'
+        url 'https://repo.codemc.org/repository/maven-public/'
+    }
 }
 
 shadowJar {
@@ -59,6 +64,9 @@ shadowJar {
     relocate "io.sentry", "${shadowPackage}.sentry"
     relocate "org.slf4j", "${shadowPackage}.slf4j"
     relocate "com.fasterxml.jackson.core", "${shadowPackage}.jackson"
+    
+    // bstats
+    relocate "org.bstats.bukkit", "${shadowPackage}.bstats"
 }
 
 ext.inspectorVersion = "0.8.1"
@@ -85,6 +93,7 @@ dependencies {
     implementation("ru.endlesscode.inspector:inspector-bukkit:$inspectorVersion")
     implementation("ru.endlesscode.inspector:inspector-sentry-reporter:$inspectorVersion")
     implementation('com.comphenix.packetwrapper:PacketWrapper:1.12.1-R0.1-SNAPSHOT')
+    implementation('org.bstats:bstats-bukkit-lite:1.4')
     testImplementation('junit:junit:4.12')
     testImplementation('org.mockito:mockito-core:2.25.0')
 }

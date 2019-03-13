@@ -25,6 +25,7 @@ import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketEvent;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
+import org.bstats.bukkit.MetricsLite;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
@@ -49,7 +50,6 @@ import ru.endlesscode.rpginventory.inventory.craft.CraftManager;
 import ru.endlesscode.rpginventory.inventory.slot.SlotManager;
 import ru.endlesscode.rpginventory.item.ItemManager;
 import ru.endlesscode.rpginventory.misc.FileLanguage;
-import ru.endlesscode.rpginventory.misc.Metrics;
 import ru.endlesscode.rpginventory.misc.Updater;
 import ru.endlesscode.rpginventory.misc.config.Config;
 import ru.endlesscode.rpginventory.misc.config.ConfigUpdater;
@@ -61,7 +61,6 @@ import ru.endlesscode.rpginventory.utils.ResourcePackUtils;
 import ru.endlesscode.rpginventory.utils.StringUtils;
 import ru.endlesscode.rpginventory.utils.Version;
 
-import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Arrays;
 
@@ -310,11 +309,7 @@ public class RPGInventory extends PluginLifecycle {
     }
 
     private void startMetrics() {
-        try {
-            Metrics metrics = new Metrics(this);
-            metrics.start();
-        } catch (IOException ignored) {
-        }
+        new MetricsLite(this);
     }
 
     private void savePlayers() {
