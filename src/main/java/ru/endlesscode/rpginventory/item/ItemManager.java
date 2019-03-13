@@ -102,7 +102,8 @@ public class ItemManager {
             CustomItem customItem = new CustomItem(name, config);
             CUSTOM_ITEMS.put(name, customItem);
         } catch (Exception e) {
-            Log.w("Item ''{0}'' can''t be added: {1}", name, e.getLocalizedMessage());
+            Log.w("Item ''{0}'' can''t be added: {1}", name, e.toString());
+            Log.d(e);
         }
     }
 

@@ -145,7 +145,8 @@ public class PetManager {
             PetType petType = new PetType(config);
             PetManager.PETS.put(name, petType);
         } catch (Exception e) {
-            Log.w("Pet ''{0}'' can''t be added: {1}", name, e.getLocalizedMessage());
+            Log.w("Pet ''{0}'' can''t be added: {1}", name, e.toString());
+            Log.d(e);
         }
     }
 
@@ -154,7 +155,8 @@ public class PetManager {
             PetFood pet = new PetFood(config);
             PetManager.PET_FOOD.put(name, pet);
         } catch (Exception e) {
-            Log.w("Pet food ''{0}'' can''t be added: {1}", name, e.getLocalizedMessage());
+            Log.w("Pet food ''{0}'' can''t be added: {1}", name, e.toString());
+            Log.d(e);
         }
     }
 

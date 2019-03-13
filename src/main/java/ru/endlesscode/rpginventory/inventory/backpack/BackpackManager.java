@@ -116,7 +116,8 @@ public class BackpackManager {
             BackpackType backpackType = new BackpackType(config);
             BACKPACK_TYPES.put(name, backpackType);
         } catch (Exception e) {
-            Log.w("Backpack ''{0}'' can''t be added: {1}", name, e.getLocalizedMessage());
+            Log.w("Backpack ''{0}'' can''t be added: {1}", name, e.toString());
+            Log.d(e);
         }
     }
 

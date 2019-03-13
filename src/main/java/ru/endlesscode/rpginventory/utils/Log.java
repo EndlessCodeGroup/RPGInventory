@@ -53,6 +53,10 @@ public final class Log {
         logger.log(Level.WARNING, prepareMessage(message, args), t);
     }
 
+    public static void d(Throwable t) {
+        logger.log(Level.FINE, "", t);
+    }
+
     public static void s(@NotNull String message, Object... args) {
         logger.severe(prepareMessage(message, args));
     }
