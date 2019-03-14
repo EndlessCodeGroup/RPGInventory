@@ -12,6 +12,16 @@ public class CompatMaterial {
         return Objects.requireNonNull(getMaterialOrNull(name));
     }
 
+    @NotNull
+    public static Material getMaterialOrAir(String name) {
+        Material material = getMaterialOrNull(name);
+        if (material == null) {
+            return Material.AIR;
+        } else {
+            return material;
+        }
+    }
+
     @Nullable
     public static Material getMaterialOrNull(String name) {
         Material material = Material.getMaterial(name);

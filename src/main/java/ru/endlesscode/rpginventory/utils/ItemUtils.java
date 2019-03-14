@@ -164,7 +164,7 @@ public class ItemUtils {
 
     @NotNull
     public static ItemStack nbtToItemStack(NbtCompound nbt) {
-        ItemStack item = new ItemStack(Material.valueOf(nbt.getString("material")));
+        ItemStack item = new ItemStack(CompatMaterial.getMaterialOrAir(nbt.getString("material")));
 
         if (!isEmpty(item)) {
             item.setAmount(nbt.getInteger("amount"));
