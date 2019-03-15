@@ -56,6 +56,7 @@ import ru.endlesscode.rpginventory.utils.EffectUtils;
 import ru.endlesscode.rpginventory.utils.ItemUtils;
 import ru.endlesscode.rpginventory.utils.LocationUtils;
 import ru.endlesscode.rpginventory.utils.Log;
+import ru.endlesscode.rpginventory.utils.SafeEnums;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -85,7 +86,6 @@ public class PetManager {
     }
 
     public static boolean init(@NotNull RPGInventory instance) {
-        //noinspection ConstantConditions
         SLOT_PET = SlotManager.instance().getPetSlot() != null ? SlotManager.instance().getPetSlot().getSlotId() : -1;
 
         if (!PetManager.isEnabled()) {
@@ -233,6 +233,7 @@ public class PetManager {
         EffectUtils.playSpawnEffect(pet);
         Map<String, String> features = petType.getFeatures();
 
+        boolean hasInitializationErrors = false;
         switch (petType.getRole()) {
             case MOUNT:
                 switch (pet.getType()) {
@@ -261,11 +262,19 @@ public class PetManager {
                             }
                         }
 
-                        String color = features.getOrDefault("COLOR", "BROWN");
-                        String style = features.getOrDefault("STYLE", "NONE");
+                        Horse.Color color = SafeEnums.getHorseColor(features.getOrDefault("COLOR", "BROWN"));
+                        if (color != null) {
+                            horsePet.setColor(color);
+                        } else {
+                            hasInitializationErrors = true;
+                        }
 
-                        horsePet.setColor(Horse.Color.valueOf(color));
-                        horsePet.setStyle(Horse.Style.valueOf(style));
+                        Horse.Style style = SafeEnums.getHorseStyle(features.getOrDefault("STYLE", "NONE"));
+                        if (style != null) {
+                            horsePet.setStyle(style);
+                        } else {
+                            hasInitializationErrors = true;
+                        }
 
                         break;
                     case PIG:
@@ -279,13 +288,22 @@ public class PetManager {
                     case WOLF:
                         Wolf wolfPet = (Wolf) pet;
                         if (features.containsKey("COLLAR")) {
-                            wolfPet.setCollarColor(DyeColor.valueOf(features.get("COLLAR")));
+                            DyeColor collarColor = SafeEnums.getDyeColor(features.get("COLLAR"));
+                            if (collarColor != null) {
+                                wolfPet.setCollarColor(collarColor);
+                            } else {
+                                hasInitializationErrors = true;
+                            }
                         }
                         break;
                     case OCELOT:
                         Ocelot ocelotPet = (Ocelot) pet;
-                        String type = features.getOrDefault("TYPE", "WILD_OCELOT");
-                        ocelotPet.setCatType(Ocelot.Type.valueOf(type));
+                        Ocelot.Type type = SafeEnums.getOcelotType(features.getOrDefault("TYPE", "WILD_OCELOT"));
+                        if (type != null) {
+                            ocelotPet.setCatType(type);
+                        } else {
+                            hasInitializationErrors = true;
+                        }
                 }
         }
 
@@ -314,6 +332,10 @@ public class PetManager {
         speedAttribute.setBaseValue(petType.getSpeed());
 
         pet.setMetadata(PetManager.METADATA_KEY_PET_OWNER, new FixedMetadataValue(RPGInventory.getInstance(), player.getUniqueId()));
+
+        if (hasInitializationErrors) {
+            Log.w("The pet ''{0}'' has errors on initialization and can be differ from expected result.", pet.getCustomName());
+        }
 
         InventoryManager.get(player).setPet(pet);
     }
