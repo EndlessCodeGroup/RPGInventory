@@ -58,11 +58,11 @@ import ru.endlesscode.rpginventory.pet.mypet.MyPetManager;
 import ru.endlesscode.rpginventory.utils.Log;
 import ru.endlesscode.rpginventory.utils.PlayerUtils;
 import ru.endlesscode.rpginventory.utils.ResourcePackUtils;
+import ru.endlesscode.rpginventory.utils.SafeEnums;
 import ru.endlesscode.rpginventory.utils.StringUtils;
 import ru.endlesscode.rpginventory.utils.Version;
 
 import java.nio.file.Path;
-import java.util.Arrays;
 
 public class RPGInventory extends PluginLifecycle {
     private static RPGInventory instance;
@@ -270,25 +270,13 @@ public class RPGInventory extends PluginLifecycle {
     }
 
     private void initLevelSystem() {
-        String levelSystemName = Config.getConfig().getString("level-system");
-        try {
-            levelSystem = PlayerUtils.LevelSystem.valueOf(levelSystemName);
-        } catch (IllegalArgumentException e) {
-            Log.w("Unknown level system: {0}. Used EXP by default.", levelSystemName);
-            Log.w("Available level systems: {0}", Arrays.toString(PlayerUtils.LevelSystem.values()));
-            levelSystem = PlayerUtils.LevelSystem.EXP;
-        }
+        this.levelSystem = SafeEnums.valueOfOrDefault(PlayerUtils.LevelSystem.class,
+                Config.getConfig().getString("level-system"), PlayerUtils.LevelSystem.EXP, "level system");
     }
 
     private void initClassSystem() {
-        String classSystemName = Config.getConfig().getString("class-system");
-        try {
-            classSystem = PlayerUtils.ClassSystem.valueOf(classSystemName);
-        } catch (IllegalArgumentException e) {
-            Log.w("Unknown class system: {0}. Used PERMISSIONS by default.", classSystemName);
-            Log.w("Available class systems: {0}", Arrays.toString(PlayerUtils.LevelSystem.values()));
-            classSystem = PlayerUtils.ClassSystem.PERMISSIONS;
-        }
+        this.classSystem = SafeEnums.valueOfOrDefault(PlayerUtils.ClassSystem.class,
+                Config.getConfig().getString("class-system"), PlayerUtils.ClassSystem.PERMISSIONS, "class-system");
     }
 
     private void checkThatSystemsLoaded() {

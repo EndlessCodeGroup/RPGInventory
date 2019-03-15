@@ -27,6 +27,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
 import ru.endlesscode.rpginventory.utils.ItemUtils;
+import ru.endlesscode.rpginventory.utils.SafeEnums;
 import ru.endlesscode.rpginventory.utils.StringUtils;
 
 import java.util.ArrayList;
@@ -63,12 +64,16 @@ public class CustomItem extends ClassedItem {
     CustomItem(String id, @NotNull ConfigurationSection config) {
         super(config, config.getString("texture"));
 
-        Rarity rarity = Rarity.valueOf(config.getString("rarity"));
+        Rarity rarity = SafeEnums.valueOfOrDefault(Rarity.class, config.getString("rarity"), Rarity.COMMON);
         this.name = StringUtils.coloredLine(rarity.getColor() + config.getString("name"));
 
         if (config.contains("stats")) {
             for (String stat : config.getStringList("stats")) {
-                this.stats.add(new ItemStat(ItemStat.StatType.valueOf(stat.split(" ")[0]), stat.split(" ")[1]));
+                String[] statParts = stat.split(" ");
+                ItemStat.StatType statType = SafeEnums.valueOf(ItemStat.StatType.class, statParts[0], "stat type");
+                if (statType != null) {
+                    this.stats.add(new ItemStat(statType, statParts[1]));
+                }
             }
         }
 

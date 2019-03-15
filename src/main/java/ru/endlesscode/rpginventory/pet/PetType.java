@@ -29,6 +29,7 @@ import ru.endlesscode.rpginventory.RPGInventory;
 import ru.endlesscode.rpginventory.item.ClassedItem;
 import ru.endlesscode.rpginventory.misc.FileLanguage;
 import ru.endlesscode.rpginventory.utils.ItemUtils;
+import ru.endlesscode.rpginventory.utils.SafeEnums;
 import ru.endlesscode.rpginventory.utils.StringUtils;
 import ru.endlesscode.rpginventory.utils.Utils;
 
@@ -75,7 +76,7 @@ public class PetType extends ClassedItem {
         this.itemName = StringUtils.coloredLine(config.getString("item-name"));
         this.lore = StringUtils.coloredLines(config.getStringList("lore"));
 
-        this.role = Role.valueOf(config.getString("type", "COMPANION"));
+        this.role = SafeEnums.valueOfOrDefault(Role.class, config.getString("type", "COMPANION"), Role.COMPANION);
         this.skin = role.getPossibleSkin(config.getString("skin"));
 
         this.health = config.getDouble("health");

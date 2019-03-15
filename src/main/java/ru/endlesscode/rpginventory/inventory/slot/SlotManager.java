@@ -26,6 +26,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ru.endlesscode.rpginventory.RPGInventory;
 import ru.endlesscode.rpginventory.utils.Log;
+import ru.endlesscode.rpginventory.utils.SafeEnums;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -69,12 +70,13 @@ public class SlotManager {
 
         for (String slotName : slots.getKeys(false)) {
             final ConfigurationSection slotConfiguration = slots.getConfigurationSection(slotName);
-            Slot.SlotType slotType = Slot.SlotType.valueOf(slotConfiguration.getString("type"));
+
+            Slot.SlotType slotType = SafeEnums.valueOfOrDefault(Slot.SlotType.class, slotConfiguration.getString("type"), Slot.SlotType.GENERIC, "slot type");
             Slot slot;
             if (slotType == Slot.SlotType.ACTION) {
                 slot = new ActionSlot(slotName, slotConfiguration);
             } else {
-                slot = new Slot(slotName, slotConfiguration);
+                slot = new Slot(slotName, slotType, slotConfiguration);
             }
 
             if (this.validateSlot(slot)) {

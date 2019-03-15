@@ -42,6 +42,7 @@ import java.util.List;
  */
 public class Slot {
     private final String name;
+    @NotNull
     private final SlotType slotType;
 
     private final List<String> allowed = new ArrayList<>();
@@ -56,9 +57,10 @@ public class Slot {
     private final int quickSlot;
     private final boolean drop;
 
-    public Slot(String name, ConfigurationSection config) {
+    public Slot(String name, @NotNull SlotType slotType, @NotNull ConfigurationSection config) {
         this.name = name;
-        this.slotType = SlotType.valueOf(config.getString("type"));
+
+        this.slotType = slotType;
         final List<Integer> slotList = config.getIntegerList("slot");
         this.slotIds = slotList.isEmpty() ? Collections.singletonList(config.getInt("slot")) : slotList;
         this.requiredLevel = config.getInt("cost.required-level", 0);
@@ -189,6 +191,7 @@ public class Slot {
         return searchItem(this.allowed, item);
     }
 
+    @NotNull
     public SlotType getSlotType() {
         return slotType;
     }

@@ -53,6 +53,7 @@ import ru.endlesscode.rpginventory.utils.InventoryUtils;
 import ru.endlesscode.rpginventory.utils.ItemUtils;
 import ru.endlesscode.rpginventory.utils.Log;
 import ru.endlesscode.rpginventory.utils.PlayerUtils;
+import ru.endlesscode.rpginventory.utils.SafeEnums;
 import ru.endlesscode.rpginventory.utils.StringUtils;
 
 import java.io.IOException;
@@ -63,7 +64,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-@SuppressWarnings("ResultOfMethodCallIgnored")
 public class InventoryManager {
     static final String TITLE = RPGInventory.getLanguage().getMessage("title");
     private static final Map<UUID, PlayerWrapper> INVENTORIES = new HashMap<>();
@@ -601,23 +601,24 @@ public class InventoryManager {
     }
 
     @Contract("null -> false")
-    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public static boolean playerIsLoaded(@Nullable AnimalTamer player) {
         return player != null && InventoryManager.INVENTORIES.containsKey(player.getUniqueId());
     }
 
-    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public static boolean isAllowedWorld(@NotNull World world) {
         List<String> list = Config.getConfig().getStringList("worlds.list");
 
-        switch (ListType.valueOf(Config.getConfig().getString("worlds.mode"))) {
-            case BLACKLIST:
-                return !list.contains(world.getName());
-            case WHITELIST:
-                return list.contains(world.getName());
+        ListType listType = SafeEnums.valueOf(ListType.class, Config.getConfig().getString("worlds.mode"), "list type");
+        if (listType != null) {
+            switch (listType) {
+                case BLACKLIST:
+                    return !list.contains(world.getName());
+                case WHITELIST:
+                    return list.contains(world.getName());
+            }
         }
 
-        return false;
+        return true;
     }
 
     public static boolean buySlot(@NotNull Player player, PlayerWrapper playerWrapper, Slot slot) {
