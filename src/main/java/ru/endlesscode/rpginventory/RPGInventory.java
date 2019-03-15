@@ -233,7 +233,12 @@ public class RPGInventory extends PluginLifecycle {
             try {
                 ResourcePackUtils.validateUrl(rpUrl);
             } catch (Exception e) {
-                String[] messageLines = e.getLocalizedMessage().split("\n");
+                String[] messageLines;
+                if (e.getMessage() != null) {
+                    messageLines = e.getLocalizedMessage().split("\n");
+                } else {
+                    messageLines = new String[]{e.toString()};
+                }
                 Log.w("");
                 Log.w("######### Something wrong with your RP link! #########");
                 for (String line : messageLines) {
