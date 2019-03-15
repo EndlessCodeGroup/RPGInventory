@@ -163,9 +163,16 @@ public class PetListener implements Listener {
             return;
         }
 
-        // Ugly trick to avoid infinite pet spawning when player teleports from non-solid/non-cuboid block
         final Location from = event.getFrom();
         final Location to = event.getTo();
+
+        // Avoid case when pet and player are in different worlds
+        if (!from.getWorld().getName().equals(to.getWorld().getName())) {
+            PetManager.respawnPet(player);
+            return;
+        }
+
+        // Ugly trick to avoid infinite pet spawning when player teleports from non-solid/non-cuboid block
         if (from.getBlockX() != to.getBlockX() || from.getBlockZ() != to.getBlockZ() || from.distance(to) < 0.775D) {
             return;
         }
@@ -177,7 +184,6 @@ public class PetListener implements Listener {
         } else if (LocationUtils.isSafeLocation(player.getLocation())) {
             PetManager.teleportPet(player, to);
         }
-
     }
 
     @EventHandler
