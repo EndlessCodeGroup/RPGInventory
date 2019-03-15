@@ -25,6 +25,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ru.endlesscode.rpginventory.RPGInventory;
+import ru.endlesscode.rpginventory.utils.ItemUtils;
 import ru.endlesscode.rpginventory.utils.StringUtils;
 
 import java.util.ArrayList;
@@ -44,13 +45,8 @@ public class CraftExtension {
 
     CraftExtension(String name, ConfigurationSection config) {
         this.name = name;
-        this.capItem = CraftManager.getCapItem().clone();
-        ItemMeta meta = capItem.getItemMeta();
-        meta.setDisplayName(StringUtils.coloredLine(config.getString("name", name)));
-        if (config.contains("lore")) {
-            meta.setLore(StringUtils.coloredLines(config.getStringList("lore")));
-        }
-        this.capItem.setItemMeta(meta);
+        this.capItem = initCapItem(config);
+
         this.slots = config.getIntegerList("slots");
 
         if (config.contains("includes")) {
@@ -65,6 +61,20 @@ public class CraftExtension {
         } else {
             this.includes = null;
         }
+    }
+
+    private ItemStack initCapItem(@NotNull ConfigurationSection config) {
+        ItemStack capItem = CraftManager.getCapItem().clone();
+        if (!ItemUtils.isEmpty(capItem)) {
+            ItemMeta meta = capItem.getItemMeta();
+            meta.setDisplayName(StringUtils.coloredLine(config.getString("name", name)));
+            if (config.contains("lore")) {
+                meta.setLore(StringUtils.coloredLines(config.getStringList("lore")));
+            }
+            capItem.setItemMeta(meta);
+        }
+
+        return capItem;
     }
 
     public ItemStack getCapItem() {
