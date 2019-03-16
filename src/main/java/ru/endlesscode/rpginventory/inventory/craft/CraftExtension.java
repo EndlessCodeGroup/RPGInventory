@@ -25,7 +25,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ru.endlesscode.rpginventory.RPGInventory;
-import ru.endlesscode.rpginventory.utils.ItemUtils;
 import ru.endlesscode.rpginventory.utils.StringUtils;
 
 import java.util.ArrayList;
@@ -65,14 +64,12 @@ public class CraftExtension {
 
     private ItemStack initCapItem(@NotNull ConfigurationSection config) {
         ItemStack capItem = CraftManager.getTextureOfExtendable().getItemStack();
-        if (ItemUtils.isNotEmpty(capItem)) {
-            ItemMeta meta = capItem.getItemMeta();
-            meta.setDisplayName(StringUtils.coloredLine(config.getString("name", name)));
-            if (config.contains("lore")) {
-                meta.setLore(StringUtils.coloredLines(config.getStringList("lore")));
-            }
-            capItem.setItemMeta(meta);
+        ItemMeta meta = capItem.getItemMeta();
+        meta.setDisplayName(StringUtils.coloredLine(config.getString("name", name)));
+        if (config.contains("lore")) {
+            meta.setLore(StringUtils.coloredLines(config.getStringList("lore")));
         }
+        capItem.setItemMeta(meta);
 
         return capItem;
     }

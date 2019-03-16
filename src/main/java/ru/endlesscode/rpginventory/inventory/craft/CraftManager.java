@@ -53,7 +53,12 @@ public class CraftManager {
         }
 
         try {
-            textureOfExtendable = Texture.parseTexture(config.getString("extendable"));
+            Texture texture = Texture.parseTexture(config.getString("extendable"));
+            if (texture.isEmpty()) {
+                Log.s("Invalid texture in ''craft.extendable''");
+                return false;
+            }
+            textureOfExtendable = texture;
 
             @Nullable final ConfigurationSection extensions = config.getConfigurationSection("extensions");
             if (extensions == null) {

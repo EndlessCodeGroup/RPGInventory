@@ -545,6 +545,10 @@ public class PetManager {
     }
 
     public static ItemStack toPetItem(ItemStack item) {
+        if (ItemUtils.isEmpty(item)) {
+            return item;
+        }
+
         List<String> itemLore = item.getItemMeta().getLore();
         for (PetType petType : PETS.values()) {
             List<String> petItemLore = petType.getSpawnItem().getItemMeta().getLore();
@@ -557,7 +561,7 @@ public class PetManager {
     }
 
     public static boolean isPetItem(@Nullable ItemStack item) {
-        if (item == null || !item.hasItemMeta() || !item.getItemMeta().hasLore()) {
+        if (ItemUtils.isEmpty(item) || !item.hasItemMeta() || !item.getItemMeta().hasLore()) {
             return false;
         }
 
