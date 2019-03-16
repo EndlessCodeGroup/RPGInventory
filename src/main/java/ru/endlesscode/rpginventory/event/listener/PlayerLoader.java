@@ -103,7 +103,6 @@ public class PlayerLoader extends PacketAdapter implements Listener {
                     public void run() {
                         InventoryManager.loadPlayerInventory(player);
                         if (damage > 0) {
-                            //noinspection deprecation
                             EntityDamageEvent event = new EntityDamageEvent(player, EntityDamageEvent.DamageCause.FALL, damage);
                             Bukkit.getPluginManager().callEvent(event);
                         }

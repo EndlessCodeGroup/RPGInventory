@@ -97,7 +97,6 @@ public class PlayerListener implements Listener {
         } else {
             Location toLocation = event.getTo();
             Location newLocation = event.getFrom().clone();
-            //noinspection deprecation
             if (!player.isOnGround()) {
                 newLocation.setY(toLocation.getY());
             }

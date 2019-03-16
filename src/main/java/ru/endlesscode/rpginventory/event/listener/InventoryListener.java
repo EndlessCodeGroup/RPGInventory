@@ -322,7 +322,6 @@ public class InventoryListener implements Listener {
             }
 
             if (slot.getSlotType() == Slot.SlotType.ACTION) {
-                //noinspection ConstantConditions
                 ((ActionSlot) slot).preformAction(player);
                 event.setCancelled(true);
                 return;
