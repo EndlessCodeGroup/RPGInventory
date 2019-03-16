@@ -25,7 +25,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.*;
+import org.jetbrains.annotations.NotNull;
 import ru.endlesscode.rpginventory.inventory.ActionType;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
 import ru.endlesscode.rpginventory.inventory.slot.Slot;
@@ -53,7 +53,7 @@ public class HandSwapListener implements Listener {
         }
 
         if (offHandSlot != null) {
-            if (!ItemUtils.isEmpty(newOffHandItem)
+            if (ItemUtils.isNotEmpty(newOffHandItem)
                     && !InventoryManager.validateUpdate(player, ActionType.SET, offHandSlot, newOffHandItem)) {
                 event.setCancelled(true);
                 return;
@@ -61,7 +61,7 @@ public class HandSwapListener implements Listener {
         }
 
         if (mainHandSlot != null) {
-            if (!ItemUtils.isEmpty(newOffHandItem) && mainHandSlot.isCup(newOffHandItem)) {
+            if (ItemUtils.isNotEmpty(newOffHandItem) && mainHandSlot.isCup(newOffHandItem)) {
                 event.setCancelled(true);
                 return;
             }

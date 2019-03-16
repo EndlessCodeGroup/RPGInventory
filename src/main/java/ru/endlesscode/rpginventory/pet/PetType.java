@@ -95,7 +95,7 @@ public class PetType extends ClassedItem {
 
     @Contract("null -> false")
     public static boolean isPetItem(ItemStack item) {
-        return !ItemUtils.isEmpty(item) && ItemUtils.hasTag(item, ItemUtils.PET_TAG);
+        return ItemUtils.isNotEmpty(item) && ItemUtils.hasTag(item, ItemUtils.PET_TAG);
     }
 
     @Nullable

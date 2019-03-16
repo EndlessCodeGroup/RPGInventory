@@ -92,7 +92,7 @@ public class InventorySaver {
         List<ItemStack> contents = Arrays.asList(player.getInventory().getStorageContents());
         for (int i = 0; i < contents.size(); i++) {
             ItemStack item = contents.get(i);
-            if (!ItemUtils.isEmpty(item) && !drops.contains(item)) {
+            if (ItemUtils.isNotEmpty(item) && !drops.contains(item)) {
                 contents.set(i, null);
             }
         }
@@ -104,7 +104,7 @@ public class InventorySaver {
             for (Slot slot : SlotManager.instance().getQuickSlots()) {
                 ItemStack quickItem = player.getInventory().getItem(slot.getQuickSlot());
 
-                if (!ItemUtils.isEmpty(quickItem) && !slot.isCup(quickItem)) {
+                if (ItemUtils.isNotEmpty(quickItem) && !slot.isCup(quickItem)) {
                     if (slot.isDrop()) {
                         additionalDrops.add(quickItem);
                         contents.set(slot.getQuickSlot(), null);
@@ -161,7 +161,7 @@ public class InventorySaver {
         Slot shieldSlot = SlotManager.instance().getShieldSlot();
         if (shieldSlot != null && (saveItems || !shieldSlot.isDrop())) {
             ItemStack itemInOffHand = player.getEquipment().getItemInOffHand();
-            if (!ItemUtils.isEmpty(itemInOffHand)) {
+            if (ItemUtils.isNotEmpty(itemInOffHand)) {
                 EXTRA.put(player.getUniqueId(), itemInOffHand);
                 drops.remove(itemInOffHand);
             }
@@ -185,7 +185,7 @@ public class InventorySaver {
             for (int i = 0; i < contents.length; i++) {
                 ItemStack item = contents[i];
 
-                if (!ItemUtils.isEmpty(item)) {
+                if (ItemUtils.isNotEmpty(item)) {
                     inventory.setItem(i, item);
                 }
             }

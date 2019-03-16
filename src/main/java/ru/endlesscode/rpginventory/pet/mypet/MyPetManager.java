@@ -134,7 +134,7 @@ public class MyPetManager implements Listener {
                 || action == InventoryAction.SWAP_WITH_CURSOR
                 || actionType == ActionType.DROP;
 
-        return !(!ItemUtils.isEmpty(currentItem) && isAllowedAction)
+        return !(ItemUtils.isNotEmpty(currentItem) && isAllowedAction)
                 || swapMyPets(player, isMyPetItem(currentItem), cursor);
     }
 
@@ -175,7 +175,7 @@ public class MyPetManager implements Listener {
 
     @Contract("null -> false")
     private static boolean isMyPetItem(@Nullable ItemStack item) {
-        return !ItemUtils.isEmpty(item) && ItemUtils.hasTag(item, MYPET_TAG);
+        return ItemUtils.isNotEmpty(item) && ItemUtils.hasTag(item, MYPET_TAG);
     }
 
     private static void deactivateMyPet(@NotNull final Player player) {

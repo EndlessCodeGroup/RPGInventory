@@ -57,7 +57,7 @@ class InventorySerializer {
                 for (int i = 0; i < slotIds.size(); i++) {
                     int slotId = slotIds.get(i);
                     ItemStack itemStack = inventory.getItem(slotId);
-                    if (!ItemUtils.isEmpty(itemStack) && !slot.isCup(itemStack)) {
+                    if (ItemUtils.isNotEmpty(itemStack) && !slot.isCup(itemStack)) {
                         itemList.add(ItemUtils.itemStackToNBT(itemStack, i + ""));
                     }
                 }

@@ -161,7 +161,7 @@ public class Slot {
     }
 
     public boolean isValidItem(@Nullable ItemStack itemStack) {
-        return !ItemUtils.isEmpty(itemStack) && !this.isDenied(itemStack) && this.isAllowed(itemStack);
+        return ItemUtils.isNotEmpty(itemStack) && !this.isDenied(itemStack) && this.isAllowed(itemStack);
     }
 
     public boolean isFree() {

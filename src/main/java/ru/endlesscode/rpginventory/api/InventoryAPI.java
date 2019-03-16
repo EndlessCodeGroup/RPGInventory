@@ -68,7 +68,7 @@ public class InventoryAPI {
         for (Slot slot : SlotManager.instance().getPassiveSlots()) {
             for (int slotId : slot.getSlotIds()) {
                 ItemStack item = inventory.getItem(slotId);
-                if (!ItemUtils.isEmpty(item) && !InventoryManager.isEmptySlot(item)) {
+                if (ItemUtils.isNotEmpty(item) && !InventoryManager.isEmptySlot(item)) {
                     passiveItems.add(item);
                 }
             }
@@ -95,7 +95,7 @@ public class InventoryAPI {
         for (Slot slot : SlotManager.instance().getActiveSlots()) {
             ItemStack item = inventory.getItem(slot.getSlotId());
 
-            if (!ItemUtils.isEmpty(item) && !InventoryManager.isQuickEmptySlot(item)) {
+            if (ItemUtils.isNotEmpty(item) && !InventoryManager.isQuickEmptySlot(item)) {
                 activeItems.add(item);
             }
         }

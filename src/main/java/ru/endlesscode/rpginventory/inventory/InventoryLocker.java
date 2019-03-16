@@ -152,7 +152,7 @@ public class InventoryLocker {
     }
 
     public static boolean isLockedSlot(@Nullable ItemStack item) {
-        return InventoryLocker.isEnabled() && !ItemUtils.isEmpty(item) && ItemUtils.hasTag(item, TAG);
+        return InventoryLocker.isEnabled() && ItemUtils.isNotEmpty(item) && ItemUtils.hasTag(item, TAG);
     }
 
     public static boolean isBuyableSlot(ItemStack currentItem, int line) {

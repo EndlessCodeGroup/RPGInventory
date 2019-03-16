@@ -145,7 +145,7 @@ public class PetListener implements Listener {
         }
 
         ItemStack petItem = InventoryManager.get(player).getInventory().getItem(PetManager.getPetSlotId());
-        if (!ItemUtils.isEmpty(petItem)) {
+        if (ItemUtils.isNotEmpty(petItem)) {
             PetManager.spawnPet(player, petItem);
         }
     }

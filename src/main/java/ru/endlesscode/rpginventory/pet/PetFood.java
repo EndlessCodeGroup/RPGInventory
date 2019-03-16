@@ -63,7 +63,7 @@ public class PetFood extends TexturedItem {
 
     @Contract("null -> false")
     public static boolean isFoodItem(ItemStack itemStack) {
-        return !ItemUtils.isEmpty(itemStack) && ItemUtils.hasTag(itemStack, ItemUtils.FOOD_TAG);
+        return ItemUtils.isNotEmpty(itemStack) && ItemUtils.hasTag(itemStack, ItemUtils.FOOD_TAG);
     }
 
     private void createFoodItem(String id) {

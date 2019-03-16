@@ -227,7 +227,7 @@ public class BackpackManager {
 
     @Contract("null -> false")
     public static boolean isBackpack(ItemStack item) {
-        return !ItemUtils.isEmpty(item) && ItemUtils.hasTag(item, ItemUtils.BACKPACK_TAG);
+        return ItemUtils.isNotEmpty(item) && ItemUtils.hasTag(item, ItemUtils.BACKPACK_TAG);
     }
 
     public static boolean backpackLimitReached(@NotNull Player player) {

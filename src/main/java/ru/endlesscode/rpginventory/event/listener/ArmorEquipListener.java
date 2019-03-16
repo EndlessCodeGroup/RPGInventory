@@ -130,7 +130,7 @@ public class ArmorEquipListener implements Listener {
             // Prevent method when player press number
             if (event.getInventory().getType() == InventoryType.CRAFTING) {
                 ItemStack hotbarItem = player.getInventory().getItem(event.getHotbarButton());
-                if (!ItemUtils.isEmpty(hotbarItem)) {
+                if (ItemUtils.isNotEmpty(hotbarItem)) {
                     event.setCancelled(true);
                 }
             }

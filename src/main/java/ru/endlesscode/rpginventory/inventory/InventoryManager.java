@@ -111,7 +111,7 @@ public class InventoryManager {
     public static boolean validatePet(Player player, InventoryAction action, @Nullable ItemStack currentItem, @NotNull ItemStack cursor) {
         ActionType actionType = ActionType.getTypeOfAction(action);
 
-        if (!ItemUtils.isEmpty(currentItem)
+        if (ItemUtils.isNotEmpty(currentItem)
                 && (actionType == ActionType.GET || action == InventoryAction.SWAP_WITH_CURSOR || actionType == ActionType.DROP)
                 && PetManager.getDeathTime(currentItem) > 0) {
             return false;
