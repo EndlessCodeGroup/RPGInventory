@@ -136,7 +136,7 @@ public class RPGInventory extends PluginLifecycle {
 
         // Hook Placeholder API
         if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
-            new StringUtils.Placeholders().hook();
+            new StringUtils.Placeholders().register();
             placeholderApiHooked = true;
             Log.i("Placeholder API hooked!");
         } else {
