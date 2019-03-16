@@ -221,7 +221,7 @@ public class RPGInventory extends PluginLifecycle {
         if (Config.getConfig().getBoolean("resource-pack.enabled", true)) {
             String rpUrl = Config.getConfig().getString("resource-pack.url");
             if (rpUrl.equals("PUT_YOUR_URL_HERE")) {
-                Log.w("Set resource-pack url in config!");
+                Log.s("Set resource-pack url in config!");
                 this.getPluginLoader().disablePlugin(this);
                 return false;
             }
@@ -253,7 +253,7 @@ public class RPGInventory extends PluginLifecycle {
         if (this.setupPermissions()) {
             Log.i("Permissions hooked: {0}", perms.getName());
         } else {
-            Log.w("Permissions not found!");
+            Log.s("Permissions not found!");
             return false;
         }
 

@@ -116,13 +116,13 @@ public class BackpackManager {
         try {
             Texture texture = Texture.parseTexture(config.getString("item"));
             if (texture.isEmpty()) {
-                Log.w("Backpack ''{0}'' has not been added because its item is not valid.", name);
+                Log.s("Backpack ''{0}'' has not been added because its item is not valid.", name);
                 return;
             }
             BackpackType backpackType = new BackpackType(texture, config);
             BACKPACK_TYPES.put(name, backpackType);
         } catch (Exception e) {
-            Log.w("Backpack ''{0}'' can''t be added: {1}", name, e.toString());
+            Log.s("Backpack ''{0}'' can''t be added: {1}", name, e.toString());
             Log.d(e);
         }
     }

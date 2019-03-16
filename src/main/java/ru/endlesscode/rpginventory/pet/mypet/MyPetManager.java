@@ -70,7 +70,7 @@ public class MyPetManager implements Listener {
 
     public static boolean init(@NotNull RPGInventory instance) {
         if (MyPetManager.getMyPetSlot() == null) {
-            Log.w("MyPet found, but slot for MyPet not configured!");
+            Log.s("MyPet found, but slot for MyPet not configured!");
             return false;
         }
 

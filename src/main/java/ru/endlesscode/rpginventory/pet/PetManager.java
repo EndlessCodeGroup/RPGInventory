@@ -146,13 +146,13 @@ public class PetManager {
         try {
             Texture texture = Texture.parseTexture(config.getString("item"));
             if (texture.isEmpty()) {
-                Log.w("Pet ''{0}'' has not been added because its item is not valid.", name);
+                Log.s("Pet ''{0}'' has not been added because its item is not valid.", name);
                 return;
             }
             PetType petType = new PetType(texture, config);
             PetManager.PETS.put(name, petType);
         } catch (Exception e) {
-            Log.w("Pet ''{0}'' can''t be added: {1}", name, e.toString());
+            Log.s("Pet ''{0}'' can''t be added: {1}", name, e.toString());
             Log.d(e);
         }
     }
@@ -161,13 +161,13 @@ public class PetManager {
         try {
             Texture texture = Texture.parseTexture(config.getString("item"));
             if (texture.isEmpty()) {
-                Log.w("Pet food ''{0}'' has not been added because its item is not valid.", name);
+                Log.s("Pet food ''{0}'' has not been added because its item is not valid.", name);
                 return;
             }
             PetFood pet = new PetFood(texture, config);
             PetManager.PET_FOOD.put(name, pet);
         } catch (Exception e) {
-            Log.w("Pet food ''{0}'' can''t be added: {1}", name, e.toString());
+            Log.s("Pet food ''{0}'' can''t be added: {1}", name, e.toString());
             Log.d(e);
         }
     }
