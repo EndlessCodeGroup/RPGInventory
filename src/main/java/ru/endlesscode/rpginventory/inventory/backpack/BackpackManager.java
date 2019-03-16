@@ -66,6 +66,7 @@ public class BackpackManager {
 
     public static boolean init(@NotNull RPGInventory instance) {
         if (!isEnabled()) {
+            Log.i("Slot for backpacks not found");
             return false;
         }
 

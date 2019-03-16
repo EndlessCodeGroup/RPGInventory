@@ -52,7 +52,14 @@ public class CraftManager {
 
     public static boolean init(@NotNull RPGInventory instance) {
         MemorySection config = (MemorySection) Config.getConfig().get("craft");
-        if (!config.getBoolean("enabled") || !config.contains("extensions")) {
+
+        if (config == null) {
+            Log.w("Section ''craft'' not found in config.yml");
+            return false;
+        }
+
+        if (!config.getBoolean("enabled")) {
+            Log.i("Craft system is disabled in config");
             return false;
         }
 

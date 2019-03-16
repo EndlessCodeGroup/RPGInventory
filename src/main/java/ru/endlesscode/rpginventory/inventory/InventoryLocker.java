@@ -58,6 +58,7 @@ public class InventoryLocker {
 
     public static boolean init(@NotNull RPGInventory instance) {
         if (!isEnabled()) {
+            Log.i("Inventory lock system is disabled in config");
             return false;
         }
 
