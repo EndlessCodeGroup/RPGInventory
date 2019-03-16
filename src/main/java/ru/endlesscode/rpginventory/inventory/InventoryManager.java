@@ -126,7 +126,7 @@ public class InventoryManager {
                     return false;
                 }
 
-                PetManager.spawnPet(event.getPlayer(), event.getPetItem());
+                PetManager.respawnPet(event.getPlayer(), event.getPetItem());
                 return true;
             }
         } else if (actionType == ActionType.GET || actionType == ActionType.DROP) {

@@ -177,11 +177,7 @@ public class PetManager {
             return;
         }
 
-        Inventory inventory = InventoryManager.get(player).getInventory();
-        if (inventory.getItem(SLOT_PET) != null) {
-            ItemStack petItem = inventory.getItem(SLOT_PET);
-            PetManager.spawnPet(player, petItem);
-        }
+        respawnPet(player);
     }
 
     @Contract(pure = true)
@@ -222,10 +218,24 @@ public class PetManager {
         playerWrapper.getPet().teleport(newPetLoc);
     }
 
-    public static void spawnPet(@NotNull final Player player, @NotNull ItemStack petItem) {
+    public static void respawnPet(@Nullable OfflinePlayer player) {
         if (!InventoryManager.playerIsLoaded(player) || !PetManager.isEnabled()) {
             return;
         }
+
+        Inventory inventory = InventoryManager.get(player).getInventory();
+        ItemStack petItem = inventory.getItem(SLOT_PET);
+        if (petItem != null) {
+            respawnPet((Player) player, petItem);
+        }
+    }
+
+    public static void respawnPet(@NotNull final Player player, @NotNull ItemStack petItem) {
+        if (!InventoryManager.playerIsLoaded(player) || !PetManager.isEnabled()) {
+            return;
+        }
+
+        PetManager.despawnPet(player);
 
         final PetType petType = PetManager.getPetFromItem(petItem);
         if (petType == null) {
@@ -237,7 +247,6 @@ public class PetManager {
             return;
         }
 
-        PetManager.despawnPet(player);
         Location petLoc = LocationUtils.getLocationNearPoint(player.getLocation(), 3);
         Animals pet = (Animals) player.getWorld().spawnEntity(petLoc, petType.getSkin());
         pet.teleport(petLoc);
@@ -383,16 +392,6 @@ public class PetManager {
 
         EffectUtils.playDespawnEffect(petEntity);
         petEntity.remove();
-    }
-
-    public static void respawnPet(@Nullable OfflinePlayer player) {
-        if (!InventoryManager.playerIsLoaded(player) || !PetManager.isEnabled()) {
-            return;
-        }
-
-        Inventory inventory = InventoryManager.get(player).getInventory();
-        despawnPet(player);
-        spawnPet((Player) player, inventory.getItem(SLOT_PET));
     }
 
     /**

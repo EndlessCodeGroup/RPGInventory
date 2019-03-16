@@ -279,10 +279,7 @@ public class PlayerWrapper implements InventoryHolder {
         this.flying = false;
 
         if (PetManager.isEnabled() && !this.hasPet()) {
-            ItemStack petItem = inventory.getItem(PetManager.getPetSlotId());
-            if (PetManager.isPetItem(petItem)) {
-                PetManager.spawnPet(player.getPlayer(), petItem);
-            }
+            PetManager.respawnPet(player.getPlayer());
         }
     }
 

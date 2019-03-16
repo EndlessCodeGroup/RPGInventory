@@ -64,7 +64,6 @@ import ru.endlesscode.rpginventory.pet.PetFood;
 import ru.endlesscode.rpginventory.pet.PetManager;
 import ru.endlesscode.rpginventory.pet.PetType;
 import ru.endlesscode.rpginventory.utils.EntityUtils;
-import ru.endlesscode.rpginventory.utils.ItemUtils;
 import ru.endlesscode.rpginventory.utils.LocationUtils;
 import ru.endlesscode.rpginventory.utils.PlayerUtils;
 
@@ -117,7 +116,7 @@ public class PetListener implements Listener {
             if (petSlot != null && petSlot.isCup(inventory.getItem(PetManager.getPetSlotId()))
                     && ItemManager.allowedForPlayer(player, petItem, false)) {
                 inventory.setItem(PetManager.getPetSlotId(), event.getItem());
-                PetManager.spawnPet(player, petItem);
+                PetManager.respawnPet(player, petItem);
                 player.getEquipment().setItemInMainHand(null);
             }
 
@@ -144,10 +143,7 @@ public class PetListener implements Listener {
             return;
         }
 
-        ItemStack petItem = InventoryManager.get(player).getInventory().getItem(PetManager.getPetSlotId());
-        if (ItemUtils.isNotEmpty(petItem)) {
-            PetManager.spawnPet(player, petItem);
-        }
+        PetManager.respawnPet(player);
     }
 
     //Possible fix #110
@@ -180,7 +176,7 @@ public class PetListener implements Listener {
         final double maxDistance = (event.getPlayer().getServer().getViewDistance() / 2.0D) * 15.75D;
         final ItemStack item = InventoryManager.get(player).getInventory().getItem(PetManager.getPetSlotId());
         if (from.distance(to) > maxDistance && item != null) {
-            PetManager.spawnPet(player, item);
+            PetManager.respawnPet(player);
         } else if (LocationUtils.isSafeLocation(player.getLocation())) {
             PetManager.teleportPet(player, to);
         }

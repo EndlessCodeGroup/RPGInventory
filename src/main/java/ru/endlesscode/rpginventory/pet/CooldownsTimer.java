@@ -86,7 +86,7 @@ public class CooldownsTimer extends BukkitRunnable {
             int cooldown = PetManager.getCooldown(originalItemStack);
             if (1 > cooldown) {
                 PetManager.saveDeathTime(originalItemStack, 0);
-                PetManager.spawnPet(player, originalItemStack);
+                PetManager.respawnPet(player, originalItemStack);
                 inventory.setItem(PetManager.getPetSlotId(), originalItemStack);
                 iterator.remove();
             } else if (60 >= cooldown) {

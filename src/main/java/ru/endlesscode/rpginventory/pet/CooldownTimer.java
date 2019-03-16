@@ -87,7 +87,7 @@ class CooldownTimer extends BukkitRunnable {
             }
         } else {
             PetManager.saveDeathTime(this.petItem, 0);
-            PetManager.spawnPet(this.player, this.petItem);
+            PetManager.respawnPet(this.player, this.petItem);
             inventory.setItem(PetManager.getPetSlotId(), this.petItem);
             this.cancel();
         }
