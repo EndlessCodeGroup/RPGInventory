@@ -109,40 +109,7 @@ public class ItemUtils {
         return nbt.containsKey(tag);
     }
 
-    @NotNull
-    public static ItemStack getTexturedItem(String texture) {
-        String[] textures = texture.split(":");
-
-        Material material = CompatMaterial.getMaterialOrNull(textures[0]);
-        if (material == null) {
-            Log.w("Material {0} not found", textures[0]);
-            return new ItemStack(Material.AIR);
-        }
-
-        ItemStack item = toBukkitItemStack(new ItemStack(material));
-        if (isEmpty(item)) {
-            return new ItemStack(Material.AIR);
-        }
-
-        if (textures.length > 1) {
-            // MONSTER_EGG before 1.13
-            if (item.getType().name().equals("MONSTER_EGG")) {
-                NbtCompound nbt = NbtFactory.asCompound(NbtFactory.fromItemTag(item));
-                nbt.put(ENTITY_TAG, NbtFactory.ofCompound("temp").put("id", textures[1]));
-            } else {
-                item.setDurability(Short.parseShort(textures[1]));
-
-                if (isItemHasDurability(item)) {
-                    item = setTag(item, UNBREAKABLE_TAG, "1");
-                    item = setTag(item, HIDE_FLAGS_TAG, "63");
-                }
-            }
-        }
-
-        return item;
-    }
-
-    private static boolean isItemHasDurability(ItemStack item) {
+    public static boolean isItemHasDurability(ItemStack item) {
         return item.getType().getMaxDurability() > 0;
     }
 
@@ -257,8 +224,13 @@ public class ItemUtils {
         return item == null || item.getType() == Material.AIR;
     }
 
+    @Contract("null -> false")
+    public static boolean isNotEmpty(@Nullable ItemStack item) {
+        return item != null && item.getType() != Material.AIR;
+    }
+
     @NotNull
-    private static ItemStack toBukkitItemStack(ItemStack item) {
+    public static ItemStack toBukkitItemStack(ItemStack item) {
         return MinecraftReflection.getBukkitItemStack(item);
     }
 }

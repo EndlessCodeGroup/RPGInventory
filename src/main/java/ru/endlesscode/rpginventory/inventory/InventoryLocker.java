@@ -30,6 +30,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ru.endlesscode.rpginventory.RPGInventory;
 import ru.endlesscode.rpginventory.event.listener.LockerListener;
+import ru.endlesscode.rpginventory.item.Texture;
 import ru.endlesscode.rpginventory.misc.FileLanguage;
 import ru.endlesscode.rpginventory.misc.config.Config;
 import ru.endlesscode.rpginventory.utils.ItemUtils;
@@ -76,7 +77,8 @@ public class InventoryLocker {
     }
 
     private static ItemStack initSlotItem(String slotId) {
-        ItemStack slotItem = ItemUtils.getTexturedItem(Config.getConfig().getString("slots." + slotId));
+        Texture texture = Texture.parseTexture(Config.getConfig().getString("slots." + slotId));
+        ItemStack slotItem = texture.getItemStack();
         if (ItemUtils.isEmpty(slotItem)) {
             Log.w("Texture specified in ''slots.{0}'' must be valid and must not be AIR.", slotId);
             return slotItem;

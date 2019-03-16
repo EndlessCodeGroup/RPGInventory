@@ -34,7 +34,7 @@ public class ClassedItem extends TexturedItem {
     @Nullable
     private final List<String> classes;
 
-    protected ClassedItem(ConfigurationSection config, String texture) {
+    protected ClassedItem(Texture texture, ConfigurationSection config) {
         super(texture);
 
         this.level = config.getInt("level", -1);

@@ -52,6 +52,7 @@ import ru.endlesscode.rpginventory.event.listener.PetListener;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
 import ru.endlesscode.rpginventory.inventory.PlayerWrapper;
 import ru.endlesscode.rpginventory.inventory.slot.SlotManager;
+import ru.endlesscode.rpginventory.item.Texture;
 import ru.endlesscode.rpginventory.utils.EffectUtils;
 import ru.endlesscode.rpginventory.utils.ItemUtils;
 import ru.endlesscode.rpginventory.utils.LocationUtils;
@@ -143,7 +144,12 @@ public class PetManager {
 
     private static void tryToAddPet(String name, @NotNull ConfigurationSection config) {
         try {
-            PetType petType = new PetType(config);
+            Texture texture = Texture.parseTexture(config.getString("item"));
+            if (texture.isEmpty()) {
+                Log.w("Pet ''{0}'' has not been added because its item is not valid.", name);
+                return;
+            }
+            PetType petType = new PetType(texture, config);
             PetManager.PETS.put(name, petType);
         } catch (Exception e) {
             Log.w("Pet ''{0}'' can''t be added: {1}", name, e.toString());
@@ -153,7 +159,12 @@ public class PetManager {
 
     private static void tryToAddPetFood(String name, @NotNull ConfigurationSection config) {
         try {
-            PetFood pet = new PetFood(config);
+            Texture texture = Texture.parseTexture(config.getString("item"));
+            if (texture.isEmpty()) {
+                Log.w("Pet food ''{0}'' has not been added because its item is not valid.", name);
+                return;
+            }
+            PetFood pet = new PetFood(texture, config);
             PetManager.PET_FOOD.put(name, pet);
         } catch (Exception e) {
             Log.w("Pet food ''{0}'' can''t be added: {1}", name, e.toString());

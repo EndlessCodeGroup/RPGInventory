@@ -34,6 +34,7 @@ import ru.endlesscode.rpginventory.event.listener.BackpackListener;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
 import ru.endlesscode.rpginventory.inventory.slot.Slot;
 import ru.endlesscode.rpginventory.inventory.slot.SlotManager;
+import ru.endlesscode.rpginventory.item.Texture;
 import ru.endlesscode.rpginventory.misc.config.Config;
 import ru.endlesscode.rpginventory.utils.FileUtils;
 import ru.endlesscode.rpginventory.utils.ItemUtils;
@@ -113,7 +114,12 @@ public class BackpackManager {
 
     private static void tryToAddBackpack(String name, @NotNull ConfigurationSection config) {
         try {
-            BackpackType backpackType = new BackpackType(config);
+            Texture texture = Texture.parseTexture(config.getString("item"));
+            if (texture.isEmpty()) {
+                Log.w("Backpack ''{0}'' has not been added because its item is not valid.", name);
+                return;
+            }
+            BackpackType backpackType = new BackpackType(texture, config);
             BACKPACK_TYPES.put(name, backpackType);
         } catch (Exception e) {
             Log.w("Backpack ''{0}'' can''t be added: {1}", name, e.toString());

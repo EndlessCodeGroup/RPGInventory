@@ -25,6 +25,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import ru.endlesscode.rpginventory.RPGInventory;
+import ru.endlesscode.rpginventory.item.Texture;
 import ru.endlesscode.rpginventory.item.TexturedItem;
 import ru.endlesscode.rpginventory.misc.FileLanguage;
 import ru.endlesscode.rpginventory.utils.ItemUtils;
@@ -49,8 +50,8 @@ public class PetFood extends TexturedItem {
 
     private ItemStack foodItem;
 
-    PetFood(ConfigurationSection config) {
-        super(config.getString("item"));
+    PetFood(Texture texture, @NotNull ConfigurationSection config) {
+        super(texture);
 
         this.name = StringUtils.coloredLine(config.getString("name"));
         this.lore = StringUtils.coloredLines(config.getStringList("lore"));
@@ -67,7 +68,7 @@ public class PetFood extends TexturedItem {
 
     private void createFoodItem(String id) {
         // Set texture
-        ItemStack spawnItem = ItemUtils.getTexturedItem(this.texture);
+        ItemStack spawnItem = this.texture.getItemStack();
 
         // Set lore and display itemName
         ItemMeta meta = spawnItem.getItemMeta();

@@ -45,6 +45,7 @@ import ru.endlesscode.rpginventory.event.listener.InventoryListener;
 import ru.endlesscode.rpginventory.inventory.slot.Slot;
 import ru.endlesscode.rpginventory.inventory.slot.SlotManager;
 import ru.endlesscode.rpginventory.item.ItemManager;
+import ru.endlesscode.rpginventory.item.Texture;
 import ru.endlesscode.rpginventory.misc.config.Config;
 import ru.endlesscode.rpginventory.pet.PetManager;
 import ru.endlesscode.rpginventory.pet.PetType;
@@ -78,12 +79,13 @@ public class InventoryManager {
         reporter = instance.getReporter();
 
         try {
-            InventoryManager.FILL_SLOT = ItemUtils.getTexturedItem(Config.getConfig().getString("fill"));
-            ItemMeta meta = InventoryManager.FILL_SLOT.getItemMeta();
-            if (meta != null) {
+            Texture texture = Texture.parseTexture(Config.getConfig().getString("fill"));
+            InventoryManager.FILL_SLOT = texture.getItemStack();
+            if (ItemUtils.isNotEmpty(InventoryManager.FILL_SLOT)) {
+                ItemMeta meta = InventoryManager.FILL_SLOT.getItemMeta();
                 meta.setDisplayName(" ");
+                InventoryManager.FILL_SLOT.setItemMeta(meta);
             }
-            InventoryManager.FILL_SLOT.setItemMeta(meta);
         } catch (Exception e) {
             reporter.report("Error on InventoryManager initialization", e);
             return false;
@@ -298,6 +300,10 @@ public class InventoryManager {
         final Player player = (Player) playerWrapper.getPlayer();
         for (Slot infoSlot : SlotManager.instance().getInfoSlots()) {
             ItemStack cup = infoSlot.getCup();
+            if (ItemUtils.isEmpty(cup)) {
+                continue;
+            }
+
             ItemMeta meta = cup.getItemMeta();
             List<String> lore = meta.getLore();
 

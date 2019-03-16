@@ -64,8 +64,8 @@ public class CraftExtension {
     }
 
     private ItemStack initCapItem(@NotNull ConfigurationSection config) {
-        ItemStack capItem = CraftManager.getCapItem().clone();
-        if (!ItemUtils.isEmpty(capItem)) {
+        ItemStack capItem = CraftManager.getTextureOfExtendable().getItemStack();
+        if (ItemUtils.isNotEmpty(capItem)) {
             ItemMeta meta = capItem.getItemMeta();
             meta.setDisplayName(StringUtils.coloredLine(config.getString("name", name)));
             if (config.contains("lore")) {

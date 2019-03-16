@@ -61,8 +61,8 @@ public class CustomItem extends ClassedItem {
 
     private ItemStack customItem;
 
-    CustomItem(String id, @NotNull ConfigurationSection config) {
-        super(config, config.getString("texture"));
+    CustomItem(String id, Texture texture, @NotNull ConfigurationSection config) {
+        super(texture, config);
 
         Rarity rarity = SafeEnums.valueOfOrDefault(Rarity.class, config.getString("rarity"), Rarity.COMMON);
         this.name = StringUtils.coloredLine(rarity.getColor() + config.getString("name"));
@@ -121,7 +121,7 @@ public class CustomItem extends ClassedItem {
 
     private void createItem(String id) {
         // Set texture
-        ItemStack customItem = ItemUtils.getTexturedItem(this.texture);
+        ItemStack customItem = this.texture.getItemStack();
 
         // Set lore and display name
         ItemMeta meta = customItem.getItemMeta();

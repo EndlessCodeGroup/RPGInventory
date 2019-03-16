@@ -18,14 +18,12 @@
 
 package ru.endlesscode.rpginventory.inventory.slot;
 
-import org.bukkit.Color;
-import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import ru.endlesscode.rpginventory.item.Texture;
 import ru.endlesscode.rpginventory.utils.InventoryUtils;
 import ru.endlesscode.rpginventory.utils.ItemUtils;
 import ru.endlesscode.rpginventory.utils.Log;
@@ -98,24 +96,15 @@ public class Slot {
         }
 
         // Setup cup slot
-        if (config.contains("holder.item")) {
-            String texture = config.getString("holder.item");
-            if (texture.startsWith("LEATHER_")) {
-                this.cup = ItemUtils.getTexturedItem(StringUtils.coloredLine(texture.split(":")[0]));
-                LeatherArmorMeta meta = (LeatherArmorMeta) cup.getItemMeta();
-                meta.setColor(Color.fromRGB(Integer.parseInt(texture.split(":")[1], 16)));
-                this.cup.setItemMeta(meta);
-            } else {
-                this.cup = ItemUtils.getTexturedItem(StringUtils.coloredLine(config.getString("holder.item")));
-            }
-
-            ItemMeta meta = this.cup.getItemMeta();
+        Texture texture = Texture.parseTexture(config.getString("holder.item"));
+        ItemStack cup = texture.getItemStack();
+        if (ItemUtils.isNotEmpty(cup)) {
+            ItemMeta meta = cup.getItemMeta();
             meta.setDisplayName(config.contains("holder.name") ? StringUtils.coloredLine(config.getString("holder.name")) : "[Holder name missing]");
             meta.setLore(config.contains("holder.lore") ? StringUtils.coloredLines(config.getStringList("holder.lore")) : Collections.singletonList("[Holder lore missing]"));
-            this.cup.setItemMeta(meta);
-        } else {
-            this.cup = new ItemStack(Material.AIR);
+            cup.setItemMeta(meta);
         }
+        this.cup = cup;
     }
 
     private static boolean searchItem(List<String> materialList, @NotNull ItemStack itemStack) {

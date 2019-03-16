@@ -27,6 +27,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ru.endlesscode.rpginventory.RPGInventory;
 import ru.endlesscode.rpginventory.item.ClassedItem;
+import ru.endlesscode.rpginventory.item.Texture;
 import ru.endlesscode.rpginventory.misc.FileLanguage;
 import ru.endlesscode.rpginventory.utils.ItemUtils;
 import ru.endlesscode.rpginventory.utils.SafeEnums;
@@ -69,8 +70,8 @@ public class PetType extends ClassedItem {
     private ItemStack spawnItem;
     private Map<String, String> features;
 
-    PetType(@NotNull ConfigurationSection config) {
-        super(config, config.getString("item"));
+    PetType(Texture texture, @NotNull ConfigurationSection config) {
+        super(texture, config);
 
         this.name = StringUtils.coloredLine(config.getString("name"));
         this.itemName = StringUtils.coloredLine(config.getString("item-name"));
@@ -129,7 +130,7 @@ public class PetType extends ClassedItem {
     }
 
     private void createSpawnItem(String id) {
-        ItemStack spawnItem = ItemUtils.getTexturedItem(this.texture);
+        ItemStack spawnItem = this.texture.getItemStack();
 
         // Set lore and display itemName
         ItemMeta meta = spawnItem.getItemMeta();
