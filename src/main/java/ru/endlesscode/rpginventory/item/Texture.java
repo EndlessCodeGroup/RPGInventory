@@ -127,7 +127,7 @@ public class Texture {
                 item = ItemUtils.setTag(item, ItemUtils.HIDE_FLAGS_TAG, "63");
             }
         } catch (NumberFormatException e) {
-            Log.w("Can''t parse durability: {0}", e.toString());
+            Log.w("Can''t parse durability. Specify a number instead of \"{0}\"", durabilityValue);
         }
 
         return new Texture(item, durability);
