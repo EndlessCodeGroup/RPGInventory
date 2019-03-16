@@ -79,47 +79,6 @@ public class StringUtils {
             }
         }
 
-        // Player
-        final AttributeInstance attribute = player.getAttribute(Attribute.GENERIC_MAX_HEALTH);
-        line = org.apache.commons.lang.StringUtils.replaceEach(line,
-                new String[]{
-                        "%WORLD%", "%PLAYER%",
-                        "%HP%",
-                        "%MAX_HP%"
-                },
-                new String[]{
-                        player.getWorld().getName(), player.getName(),
-                        String.valueOf(Utils.round(player.getHealth(), 1)),
-                        String.valueOf(Utils.round(attribute.getValue(), 1)),
-                }
-        );
-
-        if (InventoryManager.playerIsLoaded(player)) {
-            // Modifiers
-            line = org.apache.commons.lang.StringUtils.replaceEach(line,
-                    new String[]{
-                            "%DAMAGE%",
-                            "%BOW_DAMAGE%",
-                            "%HAND_DAMAGE%",
-                            "%CRIT_DAMAGE%",
-                            "%CRIT_CHANCE%",
-                            "%ARMOR%",
-                            "%SPEED%",
-                            "%JUMP%"
-                    },
-                    new String[]{
-                            ItemManager.getModifier(player, ItemStat.StatType.DAMAGE).toString(),
-                            ItemManager.getModifier(player, ItemStat.StatType.BOW_DAMAGE).toString(),
-                            ItemManager.getModifier(player, ItemStat.StatType.HAND_DAMAGE).toString(),
-                            ItemManager.getModifier(player, ItemStat.StatType.CRIT_DAMAGE).toString(),
-                            ItemManager.getModifier(player, ItemStat.StatType.CRIT_CHANCE).toString(),
-                            ItemManager.getModifier(player, ItemStat.StatType.ARMOR).toString(),
-                            ItemManager.getModifier(player, ItemStat.StatType.SPEED).toString(),
-                            ItemManager.getModifier(player, ItemStat.StatType.JUMP).toString()
-                    }
-            );
-        }
-
         return line;
     }
 
