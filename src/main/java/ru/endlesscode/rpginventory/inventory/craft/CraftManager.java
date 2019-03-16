@@ -18,13 +18,17 @@
 
 package ru.endlesscode.rpginventory.inventory.craft;
 
+import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
+import com.comphenix.protocol.events.PacketAdapter;
+import com.comphenix.protocol.events.PacketEvent;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.MemorySection;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ru.endlesscode.rpginventory.RPGInventory;
+import ru.endlesscode.rpginventory.compat.VersionHandler;
 import ru.endlesscode.rpginventory.event.listener.CraftListener;
 import ru.endlesscode.rpginventory.item.Texture;
 import ru.endlesscode.rpginventory.misc.config.Config;
@@ -73,11 +77,28 @@ public class CraftManager {
 
             // Register listeners
             ProtocolLibrary.getProtocolManager().addPacketListener(new CraftListener(instance));
+
+            // Disable recipe book if need
+            if (VersionHandler.getVersionCode() >= VersionHandler.VERSION_1_12) {
+                disableRecipeBook();
+            }
+
             return true;
         } catch (Exception e) {
             instance.getReporter().report("Error on CraftManager initialization", e);
             return false;
         }
+    }
+
+    private static void disableRecipeBook() {
+        ProtocolLibrary.getProtocolManager().addPacketListener(
+                new PacketAdapter(RPGInventory.getInstance(), PacketType.Play.Server.RECIPES) {
+                    @Override
+                    public void onPacketSending(@NotNull PacketEvent event) {
+                        event.setCancelled(true);
+                    }
+                });
+        Log.i("Recipe book conflicts with craft extensions and was disabled.");
     }
 
     @NotNull

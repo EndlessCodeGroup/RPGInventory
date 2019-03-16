@@ -18,11 +18,7 @@
 
 package ru.endlesscode.rpginventory;
 
-import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
-import com.comphenix.protocol.ProtocolManager;
-import com.comphenix.protocol.events.PacketAdapter;
-import com.comphenix.protocol.events.PacketEvent;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
 import org.bstats.bukkit.MetricsLite;
@@ -169,20 +165,7 @@ public class RPGInventory extends PluginLifecycle {
             pm.registerEvents(new ElytraListener(), this);
         }
 
-        ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
-        // Workaround for 1.12+
-        if (VersionHandler.getVersionCode() >= VersionHandler.VERSION_1_12) {
-            protocolManager.addPacketListener(
-                    new PacketAdapter(this, PacketType.Play.Server.RECIPES) {
-                        @Override
-                        public void onPacketSending(@NotNull PacketEvent event) {
-                            event.setCancelled(true);
-                        }
-                    });
-            Log.i("Recipe book conflicts with RPGInventory and was disabled.");
-        }
-
-        protocolManager.addPacketListener(new PlayerLoader(this));
+        ProtocolLibrary.getProtocolManager().addPacketListener(new PlayerLoader(this));
 
         this.loadPlayers();
         this.startMetrics();
