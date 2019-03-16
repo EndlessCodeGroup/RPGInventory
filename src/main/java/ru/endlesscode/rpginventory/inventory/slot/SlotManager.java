@@ -114,7 +114,7 @@ public class SlotManager {
         }
 
         if (slot.getSlotType() == Slot.SlotType.MYPET && !RPGInventory.isMyPetHooked()) {
-            Log.w("MyPet slot can't be used without MyPet installed.");
+            Log.w("MyPet slot can''t be used without MyPet installed.");
             return false;
         }
 

@@ -110,7 +110,7 @@ public class Texture {
             meta.setColor(Color.fromRGB(Integer.parseInt(hexColor, 16)));
             item.setItemMeta(meta);
         } catch (ClassCastException | IllegalArgumentException | NullPointerException e) {
-            Log.w("Can't parse leather color: {0}", e.toString());
+            Log.w("Can''t parse leather color: {0}", e.toString());
         }
 
         return new Texture(item);
@@ -127,7 +127,7 @@ public class Texture {
                 item = ItemUtils.setTag(item, ItemUtils.HIDE_FLAGS_TAG, "63");
             }
         } catch (NumberFormatException e) {
-            Log.w("Can't parse durability: {0}", e.toString());
+            Log.w("Can''t parse durability: {0}", e.toString());
         }
 
         return new Texture(item, durability);
