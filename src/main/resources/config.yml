@@ -58,7 +58,7 @@ items:
 
 
 ###############################
-#         Containers          #
+#         Backpacks           #
 ###############################
 
 backpacks:
@@ -68,15 +68,6 @@ backpacks:
 
   # Permitted number of backpacks in player inventory (0 - for unlimited)
   limit: 1
-
-containers:
-  # Disallow to open containers
-  block: false
-
-  # List of disallowed containers
-  list:
-  - DISPENSER
-  - DROPPER
 
 
 ###############################

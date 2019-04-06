@@ -194,6 +194,7 @@ public class ConfigUpdater {
 
         if (configVersion.compareTo("2.2.2") < 0) {
             config.set("metrics", null);
+            config.set("containers", null);
         }
     }
 }
