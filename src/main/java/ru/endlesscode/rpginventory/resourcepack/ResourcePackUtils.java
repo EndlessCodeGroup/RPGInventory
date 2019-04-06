@@ -16,9 +16,9 @@
  *  along with RPGInventory.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package ru.endlesscode.rpginventory.utils;
+package ru.endlesscode.rpginventory.resourcepack;
 
-import org.jetbrains.annotations.*;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -31,7 +31,7 @@ import java.net.UnknownHostException;
  * It is part of the RPGInventory.
  * All rights reserved 2014 - 2017 © «EndlessCode Group»
  */
-public final class ResourcePackUtils {
+final class ResourcePackUtils {
 
     private static final String HEADER_LOCATION = "Location";
     private static final String MIME_ZIP = "application/zip";
@@ -40,7 +40,7 @@ public final class ResourcePackUtils {
         // Utility class
     }
 
-    public static void validateUrl(@NotNull String address) throws IOException {
+    static void validateUrl(@NotNull String address) throws IOException {
         HttpURLConnection.setFollowRedirects(false);
         HttpURLConnection conn;
         try {

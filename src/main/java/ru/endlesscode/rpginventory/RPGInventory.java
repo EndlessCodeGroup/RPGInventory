@@ -18,7 +18,6 @@
 
 package ru.endlesscode.rpginventory;
 
-import com.comphenix.protocol.ProtocolLibrary;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
 import org.bstats.bukkit.MetricsLite;
@@ -37,7 +36,6 @@ import ru.endlesscode.rpginventory.event.listener.ArmorEquipListener;
 import ru.endlesscode.rpginventory.event.listener.ElytraListener;
 import ru.endlesscode.rpginventory.event.listener.HandSwapListener;
 import ru.endlesscode.rpginventory.event.listener.PlayerListener;
-import ru.endlesscode.rpginventory.event.listener.PlayerLoader;
 import ru.endlesscode.rpginventory.event.listener.WorldListener;
 import ru.endlesscode.rpginventory.inventory.InventoryLocker;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
@@ -51,9 +49,9 @@ import ru.endlesscode.rpginventory.misc.config.Config;
 import ru.endlesscode.rpginventory.misc.config.ConfigUpdater;
 import ru.endlesscode.rpginventory.pet.PetManager;
 import ru.endlesscode.rpginventory.pet.mypet.MyPetManager;
+import ru.endlesscode.rpginventory.resourcepack.ResourcePackModule;
 import ru.endlesscode.rpginventory.utils.Log;
 import ru.endlesscode.rpginventory.utils.PlayerUtils;
-import ru.endlesscode.rpginventory.utils.ResourcePackUtils;
 import ru.endlesscode.rpginventory.utils.SafeEnums;
 import ru.endlesscode.rpginventory.utils.StringUtils;
 import ru.endlesscode.rpginventory.utils.Version;
@@ -164,8 +162,7 @@ public class RPGInventory extends PluginLifecycle {
         if (SlotManager.instance().getElytraSlot() != null) {
             pm.registerEvents(new ElytraListener(), this);
         }
-
-        ProtocolLibrary.getProtocolManager().addPacketListener(new PlayerLoader(this));
+        ResourcePackModule.init(this);
 
         this.loadPlayers();
         this.startMetrics();
@@ -198,44 +195,6 @@ public class RPGInventory extends PluginLifecycle {
             Log.w("This version of RPG Inventory is not tested with \"{0}\"!", Bukkit.getBukkitVersion());
         } else if (VersionHandler.getVersionCode() >= VersionHandler.VERSION_1_13) {
             Log.w("Support of {0} is experimental! Use RPGInventory with caution.", Bukkit.getBukkitVersion());
-        }
-
-        // Check resource-pack settings
-        if (Config.getConfig().getBoolean("resource-pack.enabled", true)) {
-            String rpUrl = Config.getConfig().getString("resource-pack.url");
-            if (rpUrl == null || "PUT_YOUR_URL_HERE".equals(rpUrl)) {
-                Log.s("Set resource-pack url in config or disable it!");
-                this.getPluginLoader().disablePlugin(this);
-                return false;
-            }
-
-            if (rpUrl.contains("cloud.endlesscode.ru")) {
-                Log.w("You should not use EndlessCode's cloud for resource-pack.\n" +
-                        "Please, upload resource-pack to own host or use any third-party file hosting\n" +
-                        "that can provide direct download link.");
-            }
-
-            if ("PUT_YOUR_HASH_HERE".equals(Config.getConfig().getString("resource-pack.hash"))) {
-                Log.w("Your resource pack hash is incorrect!");
-            }
-
-            try {
-                ResourcePackUtils.validateUrl(rpUrl);
-            } catch (Exception e) {
-                String[] messageLines;
-                if (e.getMessage() != null) {
-                    messageLines = e.getLocalizedMessage().split("\n");
-                } else {
-                    messageLines = new String[]{e.toString()};
-                }
-                Log.w("");
-                Log.w("######### Something wrong with your RP link! #########");
-                for (String line : messageLines) {
-                    Log.w("# {0}", line);
-                }
-                Log.w("######################################################");
-                Log.w("");
-            }
         }
 
         // Check dependencies
