@@ -23,9 +23,17 @@ import com.comphenix.packetwrapper.WrapperPlayServerResourcePackSend;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketEvent;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityTargetLivingEntityEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
@@ -33,6 +41,7 @@ import ru.endlesscode.inspector.bukkit.scheduler.TrackedBukkitRunnable;
 import ru.endlesscode.rpginventory.RPGInventory;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
 import ru.endlesscode.rpginventory.misc.config.Config;
+import ru.endlesscode.rpginventory.utils.PlayerUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -44,24 +53,12 @@ import java.util.UUID;
  * All rights reserved 2014 - 2016 © «EndlessCode Group»
  */
 public class PlayerLoader extends PacketAdapter implements Listener {
-    private static final Map<UUID, LoadData> loadList = new HashMap<>();
+    private final Map<UUID, LoadData> loadList = new HashMap<>();
 
     public PlayerLoader(Plugin plugin) {
         super(plugin, WrapperPlayClientResourcePackStatus.TYPE, WrapperPlayServerResourcePackSend.TYPE);
-    }
 
-    static void setDamageForPlayer(Player player, double damage) {
-        if (loadList.containsKey(player.getUniqueId())) {
-            loadList.get(player.getUniqueId()).setDamage(damage);
-        }
-    }
-
-    static boolean isPreparedPlayer(Player player) {
-        return loadList.containsKey(player.getUniqueId()) && loadList.get(player.getUniqueId()).isPrepared();
-    }
-
-    static void removePlayer(Player player) {
-        loadList.remove(player.getUniqueId());
+        plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
     @Override
@@ -89,40 +86,124 @@ public class PlayerLoader extends PacketAdapter implements Listener {
         WrapperPlayClientResourcePackStatus packet = new WrapperPlayClientResourcePackStatus(event.getPacket());
 
         final Player player = event.getPlayer();
-        if (!loadList.containsKey(player.getUniqueId())) {
+        final UUID playerId = player.getUniqueId();
+        if (loadList.containsKey(playerId)) {
+            switch (packet.getResult()) {
+                case ACCEPTED:
+                    break;
+                case SUCCESSFULLY_LOADED:
+                    final double damage = loadList.get(playerId).getDamage();
+                    new TrackedBukkitRunnable() {
+                        @Override
+                        public void run() {
+                            InventoryManager.loadPlayerInventory(player);
+                            if (damage > 0) {
+                                EntityDamageEvent event = new EntityDamageEvent(player, EntityDamageEvent.DamageCause.FALL, damage);
+                                Bukkit.getPluginManager().callEvent(event);
+                            }
+                            player.removePotionEffect(PotionEffectType.BLINDNESS);
+                        }
+                    }.runTaskLater(RPGInventory.getInstance(), 1);
+                    loadList.remove(playerId);
+
+                    break;
+                case DECLINED:
+                case FAILED_DOWNLOAD:
+                    new TrackedBukkitRunnable() {
+                        @Override
+                        public void run() {
+                            player.kickPlayer(RPGInventory.getLanguage().getMessage("error.rp.denied"));
+                        }
+                    }.runTaskLater(this.plugin, 20);
+                    loadList.remove(playerId);
+            }
+        }
+    }
+
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
+    public void onDamageWhenPlayerNotLoaded(@NotNull EntityDamageEvent event) {
+        if (event.getEntity() == null
+                || event.getEntityType() != EntityType.PLAYER) {
             return;
         }
 
-        switch (packet.getResult()) {
-            case ACCEPTED:
-                return;
-            case SUCCESSFULLY_LOADED:
-                final double damage = loadList.get(player.getUniqueId()).getDamage();
-                new TrackedBukkitRunnable() {
-                    @Override
-                    public void run() {
-                        InventoryManager.loadPlayerInventory(player);
-                        if (damage > 0) {
-                            EntityDamageEvent event = new EntityDamageEvent(player, EntityDamageEvent.DamageCause.FALL, damage);
-                            Bukkit.getPluginManager().callEvent(event);
-                        }
-                        player.removePotionEffect(PotionEffectType.BLINDNESS);
-                    }
-                }.runTaskLater(RPGInventory.getInstance(), 1);
-                loadList.remove(player.getUniqueId());
+        Player player = (Player) event.getEntity();
+        if (InventoryManager.playerIsLoaded(player)) {
+            return;
+        }
 
-                break;
-            case DECLINED:
-            case FAILED_DOWNLOAD:
-                new TrackedBukkitRunnable() {
-                    @Override
-                    public void run() {
-                        player.kickPlayer(RPGInventory.getLanguage().getMessage("error.rp.denied"));
-                    }
-                }.runTaskLater(this.plugin, 20);
-                loadList.remove(player.getUniqueId());
+        if (event.getCause() == EntityDamageEvent.DamageCause.FALL) {
+            this.setDamageForPlayer(player, event.getFinalDamage());
+        }
+
+        event.setCancelled(true);
+    }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
+    public void onTargetWhenPlayerNotLoaded(@NotNull EntityTargetLivingEntityEvent event) {
+        if (event.getTarget() == null || event.getTarget().getType() != EntityType.PLAYER) {
+            return;
+        }
+
+        if (!InventoryManager.playerIsLoaded((Player) event.getTarget())) {
+            event.setCancelled(true);
         }
     }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
+    public void onPlayerMoveWhenNotLoaded(@NotNull PlayerMoveEvent event) {
+        Player player = event.getPlayer();
+
+        if (!InventoryManager.isAllowedWorld(player.getWorld()) || InventoryManager.playerIsLoaded(player)) {
+            return;
+        }
+
+        if (this.isPreparedPlayer(player)) {
+            this.removePlayerFromLoadList(player);
+            player.kickPlayer(RPGInventory.getLanguage().getMessage("error.rp.denied"));
+            event.setCancelled(true);
+        } else {
+            Location toLocation = event.getTo();
+            Location newLocation = event.getFrom().clone();
+            if (!player.isOnGround()) {
+                newLocation.setY(toLocation.getY());
+            }
+
+            newLocation.setPitch(toLocation.getPitch());
+            newLocation.setYaw(toLocation.getYaw());
+            event.setTo(newLocation);
+        }
+    }
+
+    @EventHandler(priority = EventPriority.LOW)
+    public void onPlayerInteractWhenNotLoaded(@NotNull PlayerInteractEvent event) {
+        Player player = event.getPlayer();
+        if (InventoryManager.isAllowedWorld(player.getWorld()) && !InventoryManager.playerIsLoaded(player)) {
+            PlayerUtils.sendMessage(player, RPGInventory.getLanguage().getMessage("error.rp.denied"));
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onPlayerQuit(@NotNull PlayerQuitEvent event) {
+        this.removePlayerFromLoadList(event.getPlayer());
+    }
+
+    private void setDamageForPlayer(@NotNull Player player, double damage) {
+        if (loadList.containsKey(player.getUniqueId())) {
+            loadList.get(player.getUniqueId()).setDamage(damage);
+        }
+    }
+
+    private boolean isPreparedPlayer(@NotNull Player player) {
+        return loadList.containsKey(player.getUniqueId()) && loadList.get(player.getUniqueId()).isPrepared();
+    }
+
+    private void removePlayerFromLoadList(@NotNull Player player) {
+        loadList.remove(player.getUniqueId());
+    }
+
 
     private static class LoadData {
         boolean prepared = false;

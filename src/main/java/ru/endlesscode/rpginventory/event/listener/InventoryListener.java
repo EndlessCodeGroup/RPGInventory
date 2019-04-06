@@ -87,9 +87,7 @@ public class InventoryListener implements Listener {
 
     @EventHandler
     public void onPlayerQuit(@NotNull PlayerQuitEvent event) {
-        Player player = event.getPlayer();
-        PlayerLoader.removePlayer(player);
-        InventoryManager.unloadPlayerInventory(player);
+        InventoryManager.unloadPlayerInventory(event.getPlayer());
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
