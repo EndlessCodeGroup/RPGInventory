@@ -32,6 +32,7 @@ import org.jetbrains.annotations.Nullable;
 import ru.endlesscode.inspector.bukkit.scheduler.TrackedBukkitRunnable;
 import ru.endlesscode.rpginventory.RPGInventory;
 import ru.endlesscode.rpginventory.compat.CompatSound;
+import ru.endlesscode.rpginventory.misc.config.Config;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
@@ -76,11 +77,25 @@ public class EffectUtils {
     }
 
 
-    public static void sendTitle(final Player player, int delay, String title, @NotNull final List<String> subtitles) {
-        sendTitle(player, delay, title, subtitles, null);
+    public static void showDefaultJoinMessage(Player player) {
+        showJoinMessage(player, "default", null);
     }
 
-    public static void sendTitle(final Player player, int delay, String title, @NotNull final List<String> subtitles, @Nullable final Runnable callback) {
+    public static boolean showJoinMessage(Player player, String messageId, @Nullable Runnable callback) {
+        String configPrefix = "join-messages." + messageId;
+        if (Config.getConfig().getBoolean(configPrefix + ".enabled", false)) {
+            EffectUtils.sendTitle(player,
+                    Config.getConfig().getInt("join-messages.delay", 2),
+                    Config.getConfig().getString(configPrefix + ".title"),
+                    Config.getConfig().getStringList(configPrefix + ".text"),
+                    callback);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private static void sendTitle(final Player player, int delay, String title, @NotNull final List<String> subtitles, @Nullable final Runnable callback) {
         if (delay < 2) {
             delay = 2;
         }

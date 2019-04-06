@@ -70,6 +70,7 @@ public class RPGInventory extends PluginLifecycle {
     private FileLanguage language;
     private boolean placeholderApiHooked = false;
     private boolean myPetHooked = false;
+    private ResourcePackModule resourcePackModule = null;
 
     public static RPGInventory getInstance() {
         return instance;
@@ -108,6 +109,11 @@ public class RPGInventory extends PluginLifecycle {
 
     public static PlayerUtils.ClassSystem getClassSystem() {
         return instance.classSystem;
+    }
+
+    @Nullable
+    public static ResourcePackModule getResourcePackModule() {
+        return instance.resourcePackModule;
     }
 
     @Override
@@ -162,7 +168,7 @@ public class RPGInventory extends PluginLifecycle {
         if (SlotManager.instance().getElytraSlot() != null) {
             pm.registerEvents(new ElytraListener(), this);
         }
-        ResourcePackModule.init(this);
+        this.resourcePackModule = ResourcePackModule.init(this);
 
         this.loadPlayers();
         this.startMetrics();

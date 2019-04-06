@@ -28,12 +28,9 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import ru.endlesscode.inspector.bukkit.scheduler.TrackedBukkitRunnable;
 import ru.endlesscode.inspector.report.Reporter;
 import ru.endlesscode.rpginventory.RPGInventory;
 import ru.endlesscode.rpginventory.api.InventoryAPI;
@@ -49,6 +46,7 @@ import ru.endlesscode.rpginventory.item.Texture;
 import ru.endlesscode.rpginventory.misc.config.Config;
 import ru.endlesscode.rpginventory.pet.PetManager;
 import ru.endlesscode.rpginventory.pet.PetType;
+import ru.endlesscode.rpginventory.resourcepack.ResourcePackModule;
 import ru.endlesscode.rpginventory.utils.EffectUtils;
 import ru.endlesscode.rpginventory.utils.InventoryUtils;
 import ru.endlesscode.rpginventory.utils.ItemUtils;
@@ -477,16 +475,7 @@ public class InventoryManager {
         }
     }
 
-    private static void sendResourcePack(@NotNull final Player player) {
-        new TrackedBukkitRunnable() {
-            @Override
-            public void run() {
-                player.setResourcePack(Config.getConfig().getString("resource-pack.url"));
-            }
-        }.runTaskLater(RPGInventory.getInstance(), 20);
-    }
-
-    private static boolean isNewPlayer(Player player) {
+    public static boolean isNewPlayer(@NotNull Player player) {
         Path dataFolder = RPGInventory.getInstance().getDataFolder().toPath();
         return Files.notExists(dataFolder.resolve("inventories/" + player.getUniqueId() + ".inv"));
     }
@@ -646,37 +635,15 @@ public class InventoryManager {
         return true;
     }
 
-    //TODO: Rewrite that
     public static void initPlayer(@NotNull final Player player, boolean skipJoinMessage) {
-        boolean rpEnabled = Config.getConfig().getBoolean("resource-pack.enabled", true);
-        if (rpEnabled) {
-            player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 60, 1));
-        }
-
-        if (InventoryManager.isNewPlayer(player) && rpEnabled) {
-            if (Config.getConfig().getBoolean("join-messages.rp-info.enabled", true)) {
-                Runnable callback = () -> InventoryManager.sendResourcePack(player);
-
-                EffectUtils.sendTitle(player,
-                        Config.getConfig().getInt("join-messages.delay"),
-                        Config.getConfig().getString("join-messages.rp-info.title"),
-                        Config.getConfig().getStringList("join-messages.rp-info.text"), callback);
-            } else {
-                InventoryManager.sendResourcePack(player);
-            }
+        ResourcePackModule rpModule = RPGInventory.getResourcePackModule();
+        if (rpModule != null) {
+            rpModule.loadResourcePack(player, skipJoinMessage);
         } else {
-            if (Config.getConfig().getBoolean("join-messages.default.enabled", true) && !skipJoinMessage) {
-                EffectUtils.sendTitle(player,
-                        Config.getConfig().getInt("join-messages.delay"),
-                        Config.getConfig().getString("join-messages.default.title"),
-                        Config.getConfig().getStringList("join-messages.default.text"));
+            if (!skipJoinMessage) {
+                EffectUtils.showDefaultJoinMessage(player);
             }
-
-            if (rpEnabled) {
-                InventoryManager.sendResourcePack(player);
-            } else {
-                InventoryManager.loadPlayerInventory(player);
-            }
+            InventoryManager.loadPlayerInventory(player);
         }
 
         if (RPGInventory.getPermissions().has(player, "rpginventory.admin")) {

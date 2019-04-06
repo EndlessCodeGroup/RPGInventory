@@ -37,6 +37,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -44,6 +45,7 @@ import ru.endlesscode.inspector.bukkit.scheduler.TrackedBukkitRunnable;
 import ru.endlesscode.rpginventory.RPGInventory;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
 import ru.endlesscode.rpginventory.misc.config.Config;
+import ru.endlesscode.rpginventory.utils.EffectUtils;
 import ru.endlesscode.rpginventory.utils.Log;
 import ru.endlesscode.rpginventory.utils.PlayerUtils;
 
@@ -125,6 +127,31 @@ public class ResourcePackModule implements Listener {
         this.resourcePackUrl = resourcePackUrl;
         this.resourcePackHash = resourcePackHash;
         this.resourcePackDelay = resourcePackDelay;
+    }
+
+    public void loadResourcePack(@NotNull Player player, boolean skipJoinMessage) {
+        player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 60, 1));
+
+        if (skipJoinMessage) {
+            this.sendResourcePack(player);
+        } else if (InventoryManager.isNewPlayer(player)) {
+            if (!EffectUtils.showJoinMessage(player, "rp-info", () -> this.sendResourcePack(player))) {
+                this.sendResourcePack(player);
+            }
+        } else {
+            EffectUtils.showDefaultJoinMessage(player);
+            this.sendResourcePack(player);
+        }
+    }
+
+
+    private void sendResourcePack(@NotNull final Player player) {
+        new TrackedBukkitRunnable() {
+            @Override
+            public void run() {
+                player.setResourcePack(resourcePackUrl);
+            }
+        }.runTaskLater(RPGInventory.getInstance(), TICKS_IN_SECOND);
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
