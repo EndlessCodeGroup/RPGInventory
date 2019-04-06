@@ -112,11 +112,9 @@ public class InventoryListener implements Listener {
     public void prePlayerRespawn(@NotNull PlayerRespawnEvent event) {
         Player player = event.getPlayer();
 
-        if (!InventoryManager.playerIsLoaded(player)) {
-            return;
+        if (InventoryManager.playerIsLoaded(player)) {
+            InventoryLocker.lockSlots(player);
         }
-
-        InventoryLocker.lockSlots(player);
     }
 
     @EventHandler

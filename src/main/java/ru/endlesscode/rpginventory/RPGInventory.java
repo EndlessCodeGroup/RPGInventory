@@ -203,14 +203,20 @@ public class RPGInventory extends PluginLifecycle {
         // Check resource-pack settings
         if (Config.getConfig().getBoolean("resource-pack.enabled", true)) {
             String rpUrl = Config.getConfig().getString("resource-pack.url");
-            if ("PUT_YOUR_URL_HERE".equals(rpUrl)) {
-                Log.s("Set resource-pack url in config!");
+            if (rpUrl == null || "PUT_YOUR_URL_HERE".equals(rpUrl)) {
+                Log.s("Set resource-pack url in config or disable it!");
                 this.getPluginLoader().disablePlugin(this);
                 return false;
             }
 
+            if (rpUrl.contains("cloud.endlesscode.ru")) {
+                Log.w("You should not use EndlessCode's cloud for resource-pack.\n" +
+                        "Please, upload resource-pack to own host or use any third-party file hosting\n" +
+                        "that can provide direct download link.");
+            }
+
             if ("PUT_YOUR_HASH_HERE".equals(Config.getConfig().getString("resource-pack.hash"))) {
-                Log.w("Your resource pack hash incorrect!");
+                Log.w("Your resource pack hash is incorrect!");
             }
 
             try {
@@ -311,23 +317,19 @@ public class RPGInventory extends PluginLifecycle {
 
     private boolean setupPermissions() {
         RegisteredServiceProvider<Permission> permissionProvider = getServer().getServicesManager().getRegistration(Permission.class);
-
-        if (permissionProvider == null) {
-            return perms != null;
+        if (permissionProvider != null) {
+            perms = permissionProvider.getProvider();
         }
 
-        perms = permissionProvider.getProvider();
         return perms != null;
     }
 
     private boolean setupEconomy() {
         RegisteredServiceProvider<Economy> rsp = this.getServer().getServicesManager().getRegistration(Economy.class);
-
-        if (rsp == null) {
-            return false;
+        if (rsp != null) {
+            economy = rsp.getProvider();
         }
 
-        economy = rsp.getProvider();
         return economy != null;
     }
 

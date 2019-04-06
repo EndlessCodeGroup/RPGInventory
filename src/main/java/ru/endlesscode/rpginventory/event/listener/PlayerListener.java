@@ -110,7 +110,6 @@ public class PlayerListener implements Listener {
     @EventHandler(priority = EventPriority.LOW)
     public void onPlayerInteractWhenNotLoaded(@NotNull PlayerInteractEvent event) {
         Player player = event.getPlayer();
-
         if (InventoryManager.isAllowedWorld(player.getWorld()) && !InventoryManager.playerIsLoaded(player)) {
             PlayerUtils.sendMessage(player, RPGInventory.getLanguage().getMessage("error.rp.denied"));
             event.setCancelled(true);
@@ -120,25 +119,19 @@ public class PlayerListener implements Listener {
     @EventHandler(priority = EventPriority.LOW)
     public void onPlayerDead(@NotNull PlayerDeathEvent event) {
         Player player = event.getEntity();
-
-        if (!InventoryManager.playerIsLoaded(player)) {
-            return;
+        if (InventoryManager.playerIsLoaded(player)) {
+            InventorySaver.save(player, event.getDrops(),
+                    RPGInventory.getPermissions().has(player, "rpginventory.keep.items") || event.getKeepInventory(),
+                    RPGInventory.getPermissions().has(player, "rpginventory.keep.armor") || event.getKeepInventory(),
+                    RPGInventory.getPermissions().has(player, "rpginventory.keep.rpginv") || event.getKeepInventory());
         }
-
-        InventorySaver.save(player, event.getDrops(),
-                RPGInventory.getPermissions().has(player, "rpginventory.keep.items") || event.getKeepInventory(),
-                RPGInventory.getPermissions().has(player, "rpginventory.keep.armor") || event.getKeepInventory(),
-                RPGInventory.getPermissions().has(player, "rpginventory.keep.rpginv") || event.getKeepInventory());
     }
 
     @EventHandler(priority = EventPriority.LOW)
     public void onPlayerRespawn(@NotNull PlayerRespawnEvent event) {
         Player player = event.getPlayer();
-
-        if (!InventoryManager.playerIsLoaded(player)) {
-            return;
+        if (InventoryManager.playerIsLoaded(player)) {
+            InventorySaver.restore(player);
         }
-
-        InventorySaver.restore(player);
     }
 }
