@@ -51,11 +51,6 @@ public class SafeEnums {
     }
 
     @Nullable
-    public static <T extends Enum<T>> T valueOf(Class<T> enumClass, String name) {
-        return valueOf(enumClass, name, enumClass.getSimpleName());
-    }
-
-    @Nullable
     public static <T extends Enum<T>> T valueOf(Class<T> enumClass, String name, String alias) {
         if (name == null) {
             return null;

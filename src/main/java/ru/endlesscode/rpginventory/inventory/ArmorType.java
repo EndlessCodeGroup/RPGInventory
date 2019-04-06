@@ -20,6 +20,7 @@ package ru.endlesscode.rpginventory.inventory;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -40,7 +41,7 @@ public enum ArmorType {
     UNKNOWN;
 
     @NotNull
-    public static ArmorType matchType(@NotNull ItemStack item) {
+    public static ArmorType matchType(ItemStack item) {
         if (ItemUtils.isEmpty(item)) {
             return UNKNOWN;
         }
@@ -77,15 +78,20 @@ public enum ArmorType {
 
     @Nullable
     public ItemStack getItem(@NotNull Player player) {
+        EntityEquipment equipment = player.getEquipment();
+        if (equipment == null) {
+            return null;
+        }
+
         switch (this) {
             case HELMET:
-                return player.getEquipment().getHelmet();
+                return equipment.getHelmet();
             case CHESTPLATE:
-                return player.getEquipment().getChestplate();
+                return equipment.getChestplate();
             case LEGGINGS:
-                return player.getEquipment().getLeggings();
+                return equipment.getLeggings();
             case BOOTS:
-                return player.getEquipment().getBoots();
+                return equipment.getBoots();
             default:
                 return null;
         }

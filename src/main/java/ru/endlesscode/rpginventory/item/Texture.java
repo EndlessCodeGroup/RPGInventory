@@ -34,10 +34,6 @@ public class Texture {
         return this.equals(EMPTY_TEXTURE);
     }
 
-    public boolean isNotEmpty() {
-        return !this.equals(EMPTY_TEXTURE);
-    }
-
     public ItemStack getItemStack() {
         return prototype.clone();
     }

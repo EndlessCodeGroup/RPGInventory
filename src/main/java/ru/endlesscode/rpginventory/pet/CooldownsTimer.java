@@ -77,7 +77,7 @@ public class CooldownsTimer extends BukkitRunnable {
             }
 
             final Inventory inventory = InventoryManager.get(player).getInventory();
-            if (inventory == null || inventory.getItem(PetManager.getPetSlotId()) == null) {
+            if (inventory.getItem(PetManager.getPetSlotId()) == null) {
                 iterator.remove();
                 continue;
             }

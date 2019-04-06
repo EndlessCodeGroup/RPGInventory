@@ -203,13 +203,13 @@ public class RPGInventory extends PluginLifecycle {
         // Check resource-pack settings
         if (Config.getConfig().getBoolean("resource-pack.enabled", true)) {
             String rpUrl = Config.getConfig().getString("resource-pack.url");
-            if (rpUrl.equals("PUT_YOUR_URL_HERE")) {
+            if ("PUT_YOUR_URL_HERE".equals(rpUrl)) {
                 Log.s("Set resource-pack url in config!");
                 this.getPluginLoader().disablePlugin(this);
                 return false;
             }
 
-            if (Config.getConfig().getString("resource-pack.hash").equals("PUT_YOUR_HASH_HERE")) {
+            if ("PUT_YOUR_HASH_HERE".equals(Config.getConfig().getString("resource-pack.hash"))) {
                 Log.w("Your resource pack hash incorrect!");
             }
 
