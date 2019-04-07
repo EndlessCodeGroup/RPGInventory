@@ -63,10 +63,20 @@ public class ResourcePackModule implements Listener {
 
     private static final int TICKS_IN_SECOND = 20;
 
+    private final Plugin plugin;
+    private final String resourcePackUrl;
+    private final String resourcePackHash;
+    private final int resourcePackDelay;
+
     private final Map<UUID, LoadData> loadList = new HashMap<>();
-    private String resourcePackUrl;
-    private String resourcePackHash;
-    private int resourcePackDelay;
+
+    private ResourcePackModule(Plugin plugin,
+                               @NotNull String resourcePackUrl, String resourcePackHash, int resourcePackDelay) {
+        this.plugin = plugin;
+        this.resourcePackUrl = resourcePackUrl;
+        this.resourcePackHash = resourcePackHash;
+        this.resourcePackDelay = resourcePackDelay;
+    }
 
     @Nullable
     public static ResourcePackModule init(Plugin plugin) {
@@ -87,7 +97,7 @@ public class ResourcePackModule implements Listener {
         }
 
         int rpDelay = Config.getConfig().getInt("resource-pack.delay", 2);
-        ResourcePackModule resourcePackModule = new ResourcePackModule(rpUrl, rpHash, rpDelay);
+        ResourcePackModule resourcePackModule = new ResourcePackModule(plugin, rpUrl, rpHash, rpDelay);
         plugin.getServer().getPluginManager().registerEvents(resourcePackModule, plugin);
         ProtocolLibrary.getProtocolManager().addPacketListener(resourcePackModule.new ResourcePackPacketAdapter(plugin));
         return resourcePackModule;
@@ -107,12 +117,6 @@ public class ResourcePackModule implements Listener {
         Log.w("");
     }
 
-    private ResourcePackModule(@NotNull String resourcePackUrl, String resourcePackHash, int resourcePackDelay) {
-        this.resourcePackUrl = resourcePackUrl;
-        this.resourcePackHash = resourcePackHash;
-        this.resourcePackDelay = resourcePackDelay;
-    }
-
     public void loadResourcePack(@NotNull Player player, boolean skipJoinMessage) {
         player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 60, 1));
 
@@ -128,14 +132,13 @@ public class ResourcePackModule implements Listener {
         }
     }
 
-
     private void sendResourcePack(@NotNull final Player player) {
         new TrackedBukkitRunnable() {
             @Override
             public void run() {
                 player.setResourcePack(resourcePackUrl);
             }
-        }.runTaskLater(RPGInventory.getInstance(), TICKS_IN_SECOND);
+        }.runTaskLater(this.plugin, TICKS_IN_SECOND);
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
@@ -279,7 +282,7 @@ public class ResourcePackModule implements Listener {
                     }
                     player.removePotionEffect(PotionEffectType.BLINDNESS);
                 }
-            }.runTaskLater(RPGInventory.getInstance(), 1);
+            }.runTaskLater(this.plugin, 1);
             loadList.remove(playerId);
         }
 
