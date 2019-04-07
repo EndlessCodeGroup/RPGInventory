@@ -50,6 +50,7 @@ import ru.endlesscode.rpginventory.utils.Log;
 import ru.endlesscode.rpginventory.utils.PlayerUtils;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -59,9 +60,6 @@ import java.util.UUID;
  * All rights reserved 2014 - 2016 © «EndlessCode Group»
  */
 public class ResourcePackModule implements Listener {
-    private static final String ENDLESSCODE_CLOUD = "cloud.endlesscode.ru";
-    private static final String EMPTY_URL = "PUT_YOUR_URL_HERE";
-    private static final String EMPTY_HASH = "PUT_YOUR_HASH_HERE";
 
     private static final int TICKS_IN_SECOND = 20;
 
@@ -74,35 +72,18 @@ public class ResourcePackModule implements Listener {
     public static ResourcePackModule init(Plugin plugin) {
         final FileConfiguration config = Config.getConfig();
         if (!config.getBoolean("resource-pack.enabled", false)) {
-            Log.i("Resource pack is not enabled in config.");
+            Log.i("Resource-pack is not enabled in config.");
             return null;
         }
 
-        // Check RP url for critical errors
         final String rpUrl = Config.getConfig().getString("resource-pack.url");
-        if (rpUrl == null || EMPTY_URL.equals(rpUrl)) {
-            printError("Set 'resource-pack.url' in config or disable it!");
-            return null;
-        }
-        if (rpUrl.contains(ENDLESSCODE_CLOUD)) {
-            printError("You should not use EndlessCode's cloud for resource-pack.\n" +
-                    "Please, upload resource-pack to own host or use any third-party file hosting\n" +
-                    "that can provide direct download link.");
-            return null;
-        }
-
-        // Check that RP hash is not empty
         final String rpHash = Config.getConfig().getString("resource-pack.hash");
-        if (rpHash == null || EMPTY_HASH.equals(rpHash)) {
-            Log.w("Setting ''resource-pack.hash'' is missing!");
-            Log.w("You should calculate SHA1 hash of RP and paste it into the setting.");
-        }
-
-        // Validate URL
-        try {
-            ResourcePackUtils.validateUrl(rpUrl);
-        } catch (Exception e) {
-            printError(e.toString());
+        ResourcePackValidator validator = new ResourcePackValidator();
+        boolean isLegalUrlAndHash = validator.validateUrlAndHash(rpUrl, rpHash);
+        printErrorsIfNotEmpty(validator.getErrors());
+        if (!isLegalUrlAndHash) {
+            Log.s("Resource-pack can not be enabled.");
+            return null;
         }
 
         int rpDelay = Config.getConfig().getInt("resource-pack.delay", 2);
@@ -112,18 +93,21 @@ public class ResourcePackModule implements Listener {
         return resourcePackModule;
     }
 
-    private static void printError(@NotNull String message) {
-        String[] messageLines = message.split("\n");
+    private static void printErrorsIfNotEmpty(@NotNull List<String> messages) {
+        if (messages.isEmpty()) {
+            return;
+        }
+
         Log.w("");
         Log.w("######### Something wrong with RP settings! ##########");
-        for (String line : messageLines) {
-            Log.w("# {0}", line);
+        for (String message : messages) {
+            Log.w("# {0}", message);
         }
         Log.w("######################################################");
         Log.w("");
     }
 
-    private ResourcePackModule(String resourcePackUrl, String resourcePackHash, int resourcePackDelay) {
+    private ResourcePackModule(@NotNull String resourcePackUrl, String resourcePackHash, int resourcePackDelay) {
         this.resourcePackUrl = resourcePackUrl;
         this.resourcePackHash = resourcePackHash;
         this.resourcePackDelay = resourcePackDelay;

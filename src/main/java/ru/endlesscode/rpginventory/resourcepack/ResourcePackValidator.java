@@ -18,6 +18,7 @@
 
 package ru.endlesscode.rpginventory.resourcepack;
 
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -25,22 +26,83 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Created by OsipXD on 22.11.2017
  * It is part of the RPGInventory.
  * All rights reserved 2014 - 2017 © «EndlessCode Group»
  */
-final class ResourcePackUtils {
+final class ResourcePackValidator {
+
+    private static final String ENDLESSCODE_CLOUD = "cloud.endlesscode.ru";
+    private static final String EMPTY_URL = "PUT_YOUR_URL_HERE";
+    private static final String EMPTY_HASH = "PUT_YOUR_HASH_HERE";
 
     private static final String HEADER_LOCATION = "Location";
     private static final String MIME_ZIP = "application/zip";
 
-    private ResourcePackUtils() {
-        // Utility class
+    private List<String> errors = new ArrayList<>();
+
+    /**
+     * Checks that resource-pack with given URL and hash can be used.
+     * Also stores all validation errors. You can get it with {@link #getErrors}.
+     *
+     * @param resourcePackUrl  URL of the resource-pack
+     * @param resourcePackHash Hash of the resource-pack
+     * @return false if this resource-pack can't be used, otherwise true.
+     */
+    @Contract("null, _ -> false")
+    boolean validateUrlAndHash(String resourcePackUrl, String resourcePackHash) {
+        if (isLegalUrl(resourcePackUrl)) {
+            return false;
+        }
+
+        checkHashErrors(resourcePackHash);
+        try {
+            validateUrl(resourcePackUrl);
+        } catch (IllegalArgumentException e) {
+            addErrors(e.getMessage().split("\n"));
+        } catch (Exception e) {
+            addErrors(e.toString());
+        }
+        return true;
     }
 
-    static void validateUrl(@NotNull String address) throws IOException {
+    /**
+     * Coarse check of the URL
+     *
+     * @return true if URL is present and legal
+     */
+    @Contract("null -> false")
+    private boolean isLegalUrl(String url) {
+        if (url == null || EMPTY_URL.equals(url)) {
+            addErrors("Set 'resource-pack.url' in config or disable it!");
+            return false;
+        }
+        if (url.contains(ENDLESSCODE_CLOUD)) {
+            addErrors("You should not use EndlessCode's cloud for resource-pack.",
+                    "Please, upload resource-pack to own host or use any third-party file hosting",
+                    "that can provide direct download link.");
+            return false;
+        }
+        return true;
+    }
+
+    private void checkHashErrors(String resourcePackHash) {
+        if (resourcePackHash == null || EMPTY_HASH.equals(resourcePackHash)) {
+            addErrors("Setting 'resource-pack.hash' is missing!",
+                    "You should calculate SHA1 hash of RP and paste it into the setting.");
+        }
+    }
+
+    private void addErrors(@NotNull String... messages) {
+        Collections.addAll(errors, messages);
+    }
+
+    private void validateUrl(@NotNull String address) throws IOException {
         HttpURLConnection.setFollowRedirects(false);
         HttpURLConnection conn;
         try {
@@ -65,7 +127,7 @@ final class ResourcePackUtils {
 
         int codeType = conn.getResponseCode() / 100;
         if (codeType != 2) {
-            throw new IllegalArgumentException(conn.getResponseMessage());
+            throw new IllegalArgumentException("" + conn.getResponseMessage());
         }
 
         String contentType = conn.getContentType();
@@ -78,7 +140,7 @@ final class ResourcePackUtils {
     }
 
     @NotNull
-    private static HttpURLConnection getRealConnection(@NotNull String address) throws IOException {
+    private HttpURLConnection getRealConnection(@NotNull String address) throws IOException {
         URL url = new URL(address);
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         int codeType = conn.getResponseCode() / 100;
@@ -87,5 +149,10 @@ final class ResourcePackUtils {
         }
 
         return conn;
+    }
+
+    @Contract(pure = true)
+    List<String> getErrors() {
+        return errors;
     }
 }
