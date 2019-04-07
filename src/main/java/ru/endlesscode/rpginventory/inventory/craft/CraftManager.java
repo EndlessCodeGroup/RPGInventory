@@ -105,7 +105,7 @@ public class CraftManager {
                         event.setCancelled(true);
                     }
                 });
-        Log.i("Recipe book conflicts with craft extensions and was disabled.");
+        Log.i("Recipe book conflicts with craft extensions and was disabled");
     }
 
     @NotNull

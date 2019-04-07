@@ -81,7 +81,7 @@ public class InventoryLocker {
         Texture texture = Texture.parseTexture(Config.getConfig().getString("slots." + slotId));
         ItemStack slotItem = texture.getItemStack();
         if (ItemUtils.isEmpty(slotItem)) {
-            Log.s("Texture specified in ''slots.{0}'' must be valid and must not be AIR.", slotId);
+            Log.s("Texture specified in ''slots.{0}'' must be valid and must not be AIR", slotId);
             return slotItem;
         }
 

@@ -268,7 +268,7 @@ public class PetManager {
                                 horsePet.setCarryingChest(true);
                             } catch (UnsupportedOperationException ignored) {
                                 //org.bukkit.craftbukkit.entity.CraftHorse.setCarryingChest (CraftHorse.class:56)
-                                Log.w("Failed to add a chest to the horse.");
+                                Log.w("Failed to add a chest to the horse");
                             }
                         }
 

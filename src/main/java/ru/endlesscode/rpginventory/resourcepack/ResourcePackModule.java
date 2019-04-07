@@ -82,7 +82,7 @@ public class ResourcePackModule implements Listener {
     public static ResourcePackModule init(Plugin plugin) {
         final FileConfiguration config = Config.getConfig();
         if (!config.getBoolean("resource-pack.enabled", false)) {
-            Log.i("Resource-pack is not enabled in config.");
+            Log.i("Resource-pack is disabled in config");
             return null;
         }
 
@@ -92,7 +92,7 @@ public class ResourcePackModule implements Listener {
         boolean isLegalUrlAndHash = validator.validateUrlAndHash(rpUrl, rpHash);
         printErrorsIfNotEmpty(validator.getErrors());
         if (!isLegalUrlAndHash) {
-            Log.s("Resource-pack can not be enabled.");
+            Log.s("Resource-pack can not be enabled");
             return null;
         }
 

@@ -100,7 +100,7 @@ public class SlotManager {
 
     @NotNull
     public static SlotManager instance() {
-        return Objects.requireNonNull(SlotManager.slotManager, "Plugin is not initialized yet.");
+        return Objects.requireNonNull(SlotManager.slotManager, "Plugin is not initialized yet");
     }
 
     private boolean validateSlot(Slot slot) {
@@ -114,7 +114,7 @@ public class SlotManager {
         }
 
         if (slot.getSlotType() == Slot.SlotType.MYPET && !RPGInventory.isMyPetHooked()) {
-            Log.w("MyPet slot can''t be used without MyPet installed.");
+            Log.w("MyPet slot can''t be used without MyPet installed");
             return false;
         }
 
