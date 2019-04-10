@@ -10,6 +10,7 @@ import org.jetbrains.annotations.NotNull;
 import ru.endlesscode.rpginventory.compat.CompatMaterial;
 import ru.endlesscode.rpginventory.utils.ItemUtils;
 import ru.endlesscode.rpginventory.utils.Log;
+import ru.endlesscode.rpginventory.utils.NbtFactoryMirror;
 
 import java.util.Objects;
 
@@ -94,7 +95,7 @@ public class Texture {
     }
 
     private static Texture parseLegacyMonesterEgg(ItemStack item, String entityType) {
-        NbtCompound nbt = NbtFactory.asCompound(NbtFactory.fromItemTag(item));
+        NbtCompound nbt = NbtFactoryMirror.fromItemCompound(item);
         nbt.put(ItemUtils.ENTITY_TAG, NbtFactory.ofCompound("temp").put("id", entityType));
 
         return new Texture(item);

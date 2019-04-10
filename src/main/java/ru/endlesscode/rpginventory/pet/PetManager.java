@@ -57,6 +57,7 @@ import ru.endlesscode.rpginventory.utils.EffectUtils;
 import ru.endlesscode.rpginventory.utils.ItemUtils;
 import ru.endlesscode.rpginventory.utils.LocationUtils;
 import ru.endlesscode.rpginventory.utils.Log;
+import ru.endlesscode.rpginventory.utils.NbtFactoryMirror;
 import ru.endlesscode.rpginventory.utils.SafeEnums;
 
 import java.nio.file.Files;
@@ -453,7 +454,7 @@ public class PetManager {
 
     static void addGlow(ItemStack itemStack) {
         itemStack.addUnsafeEnchantment(Enchantment.DURABILITY, 88);
-        NbtCompound compound = NbtFactory.asCompound(NbtFactory.fromItemTag(itemStack));
+        NbtCompound compound = NbtFactoryMirror.fromItemCompound(itemStack);
         compound.put(NbtFactory.ofList("ench"));
     }
 
@@ -462,8 +463,7 @@ public class PetManager {
     }
 
     public static void saveDeathTime(@NotNull ItemStack item, long deathTime) {
-        NbtCompound nbt = NbtFactory.asCompound(NbtFactory.fromItemTag(item));
-
+        NbtCompound nbt = NbtFactoryMirror.fromItemCompound(item);
         if (deathTime == 0) {
             nbt.remove(DEATH_TIME_TAG);
         } else {
@@ -478,13 +478,8 @@ public class PetManager {
             return 0L;
         }
 
-        NbtCompound nbt = NbtFactory.asCompound(NbtFactory.fromItemTag(item.clone()));
-
-        if (!nbt.containsKey(DEATH_TIME_TAG)) {
-            return 0L;
-        }
-
-        return nbt.getLong(DEATH_TIME_TAG);
+        NbtCompound nbt = NbtFactoryMirror.fromItemCompound(item.clone());
+        return nbt.containsKey(DEATH_TIME_TAG) ? nbt.getLong(DEATH_TIME_TAG) : 0L;
     }
 
     public static int getCooldown(@NotNull ItemStack item) {
@@ -509,7 +504,7 @@ public class PetManager {
     }
 
     public static void saveHealth(@NotNull ItemStack item, double health) {
-        NbtCompound nbt = NbtFactory.asCompound(NbtFactory.fromItemTag(item));
+        NbtCompound nbt = NbtFactoryMirror.fromItemCompound(item);
 
         if (health == 0) {
             nbt.remove("pet.health");
@@ -521,7 +516,7 @@ public class PetManager {
     }
 
     public static double getHealth(ItemStack item, double maxHealth) {
-        NbtCompound nbt = NbtFactory.asCompound(NbtFactory.fromItemTag(item.clone()));
+        NbtCompound nbt = NbtFactoryMirror.fromItemCompound(item.clone());
 
         if (!nbt.containsKey("pet.health")) {
             return maxHealth;

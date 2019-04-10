@@ -22,7 +22,7 @@ import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
+import ru.endlesscode.inspector.bukkit.scheduler.TrackedBukkitRunnable;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
 import ru.endlesscode.rpginventory.inventory.PlayerWrapper;
 import ru.endlesscode.rpginventory.item.ItemManager;
@@ -34,7 +34,7 @@ import ru.endlesscode.rpginventory.pet.Attributes;
  * It is part of the RpgInventory.
  * All rights reserved 2014 - 2016 © «EndlessCode Group»
  */
-public class StatsUpdater extends BukkitRunnable {
+public class StatsUpdater extends TrackedBukkitRunnable {
     private final Player player;
 
     public StatsUpdater(Player player) {

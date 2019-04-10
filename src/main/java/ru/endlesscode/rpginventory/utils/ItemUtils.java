@@ -58,8 +58,7 @@ public class ItemUtils {
             return bukkitItem;
         }
 
-        NbtCompound nbt = NbtFactory.asCompound(NbtFactory.fromItemTag(bukkitItem));
-
+        NbtCompound nbt = NbtFactoryMirror.fromItemCompound(bukkitItem);
         if (!nbt.containsKey(tag)) {
             if (UNBREAKABLE_TAG.equals(tag) || HIDE_FLAGS_TAG.equals(tag)) {
                 nbt.put(tag, Integer.parseInt(value));
@@ -85,13 +84,8 @@ public class ItemUtils {
             return "";
         }
 
-        NbtCompound nbt = NbtFactory.asCompound(NbtFactory.fromItemTag(bukkitItem));
-
-        if (!nbt.containsKey(tag)) {
-            return defaultValue;
-        }
-
-        return nbt.getString(tag);
+        NbtCompound nbt = NbtFactoryMirror.fromItemCompound(bukkitItem);
+        return nbt.containsKey(tag) ? nbt.getString(tag) : defaultValue;
     }
 
     @Contract("null, _ -> false")
@@ -105,7 +99,7 @@ public class ItemUtils {
             return false;
         }
 
-        NbtCompound nbt = NbtFactory.asCompound(NbtFactory.fromItemTag(item));
+        NbtCompound nbt = NbtFactoryMirror.fromItemCompound(item);
         return nbt.containsKey(tag);
     }
 
@@ -121,7 +115,7 @@ public class ItemUtils {
         nbt.put("data", originalItem.getDurability());
 
         ItemStack item = toBukkitItemStack(originalItem.clone());
-        NbtCompound tag = isEmpty(item) ? null : NbtFactory.asCompound(NbtFactory.fromItemTag(item));
+        NbtCompound tag = isEmpty(item) ? null : NbtFactoryMirror.fromItemCompound(item);
         if (tag != null) {
             nbt.put("tag", tag);
         }
