@@ -212,7 +212,7 @@ public class InventoryListener implements Listener {
                 }
 
                 final boolean isCraftSlot = rawSlotId >= 1 && rawSlotId <= 4;
-                if (rawSlotId == 45 // Shield slot has rawId 45
+                if (rawSlotId == Slot.SHIELD_RAW_SLOT_ID
                         || isCraftSlot && Config.craftSlotsAction == VanillaSlotAction.RPGINV) {
                     event.setCancelled(true);
                     return;
@@ -226,7 +226,6 @@ public class InventoryListener implements Listener {
         }
     }
 
-    @SuppressWarnings("deprecation")
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void onInventoryClick(@NotNull final InventoryClickEvent event) {
         final Player player = (Player) event.getWhoClicked();
@@ -274,8 +273,7 @@ public class InventoryListener implements Listener {
                     openRpgInventory = Config.craftSlotsAction == VanillaSlotAction.RPGINV;
                     break;
                 case QUICKBAR:
-                    // Shield slot is QUICKBAR and has rawId - 45 o.O
-                    openRpgInventory = rawSlot == 45 && Config.armorSlotsAction == VanillaSlotAction.RPGINV;
+                    openRpgInventory = rawSlot == Slot.SHIELD_RAW_SLOT_ID && Config.armorSlotsAction == VanillaSlotAction.RPGINV;
                     break;
                 case ARMOR:
                     openRpgInventory = Config.armorSlotsAction == VanillaSlotAction.RPGINV;

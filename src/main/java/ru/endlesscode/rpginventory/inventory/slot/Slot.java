@@ -39,6 +39,10 @@ import java.util.List;
  * All rights reserved 2014 - 2016 © «EndlessCode Group»
  */
 public class Slot {
+
+    public static final int SHIELD_RAW_SLOT_ID = 45;
+    private static final int SHIELD_SLOT_ID = 40;
+
     private final String name;
     @NotNull
     private final SlotType slotType;
@@ -67,15 +71,14 @@ public class Slot {
 
         int quickSlot = config.contains("quickbar") ? InventoryUtils.getQuickSlot(config.getInt("quickbar")) : -1;
         if (slotType == SlotType.SHIELD) {
-            this.quickSlot = 9; // Shield slot ID
+            quickSlot = SHIELD_SLOT_ID;
         } else if (slotType != SlotType.ACTIVE && quickSlot == -1 || !slotType.isAllowQuick() || slotIds.size() > 1) {
             if (config.contains("quickbar")) {
                 Log.w("Option \"quickbar\" is ignored for slot \"{0}\"!", name);
             }
-            this.quickSlot = -1;
-        } else {
-            this.quickSlot = quickSlot;
+            quickSlot = -1;
         }
+        this.quickSlot = quickSlot;
 
         if (slotType.isReadItemList()) {
             for (String item : config.getStringList("items")) {
