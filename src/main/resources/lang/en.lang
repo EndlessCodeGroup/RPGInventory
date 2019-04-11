@@ -15,13 +15,11 @@ error.level: &6&lTo purchase slots you need {0} lvl
 error.buyable: &6&lTo purchase this slots you need {0} gold. Click on it again in the next 10 seconds to confirm the purchase.
 error.previous: &6&lFirst unlock previous slots
 error.rp.denied: &cYou must allow downloading the resource-pack!
-error.rp.force: &cDisabling of the resource-pack is not allowed.
 error.item.level: &6Required &c{0} &6level
 error.item.class: &6Required class &c{0}
 error.mount.owner: &6Mount belongs to {0}
 
 message.buyed: &a&lYou have successfully purchased the slot
-message.fixhp: &6Your HP was fixed, please login to server again
 message.perms: &cYou don't have permission to use this command
 
 pet.name: {0} &f[{1}]

@@ -15,13 +15,11 @@ error.level: &6&lUm weitere Slots freizuschalten must du Level {0} erreicht habe
 error.buyable: &6&lUm diesen Slot freizuschalten benötigst du {0} Gold. Klicke zum Bestätigen innerhalb von 10 Sekunden erneut.
 error.previous: &6&lDu musst zuerst die vorherigen Slots freischalten.
 error.rp.denied: &cDu musst dem Download des Resource-Packs zustimmen!
-error.rp.force: &cDu darfst das Resource-Pack nicht deaktivieren.
 error.item.level: &6Benötigtes &c{0} &6Level
 error.item.class: &6Benötigte Klasse &c{0}
 error.mount.owner: &6Dieses Reittier gehört: {0}
 
 message.buyed: &a&lDu hast den Slot erfolgreich freigeschaltet
-message.fixhp: &6Deine LP wurden gefixt. Bitte logge dich erneut auf dem Server ein.
 message.perms: &cYou don't have permission to use this command
 
 pet.name: {0} &f[{1}]

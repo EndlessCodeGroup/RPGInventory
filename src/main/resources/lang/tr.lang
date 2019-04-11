@@ -15,13 +15,11 @@ error.level: &6&lBunu alabilmek için {0} seviyeye ihtiyacın var
 error.buyable: &6&lBu slotu alabilmek için {0} altına ihtiyacın olacak! 10 saniye içinde tekrar tıklarsan satın almayı onaylarsın.
 error.previous: &6&lİlk olarak önceki sekmeyi açman gerek!
 error.rp.denied: &cKaynak paketi yüklemeyi devreye sokman gerek!
-error.rp.force: &cKaynak paketini devre dışı bırakamazsın!
 error.item.level: &c{0} &6Seviye lazım!
 error.item.class: &6Gereken Irk: &c{0}
 error.mount.owner: &6Bineğin sahibi {0}
 
 message.buyed: &a&lBu bölmeyi başarıyla aldın!
-message.fixhp: &6Canın düzeltildi, lütfen sunucuya tekrar bağlan!
 message.perms: &cYou don't have permission to use this command
 
 pet.name: {0} &f[{1}]

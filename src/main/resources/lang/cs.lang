@@ -15,13 +15,11 @@ error.level: &6&lAby si mohl odemknout slot potrebujes {0} lvlu
 error.buyable: &6&lOdemknuti tohoto slotu te bude stat {0} gold. Klikni na to znova do 10 vterin aby si potvrdil odemceni.
 error.previous: &6&lNejdrive odemkni predchozi sloty
 error.rp.denied: &cMusis povolit stazeni resource-packu!
-error.rp.force: &cVypnuti resource-packu neni povoleno!
 error.item.level: &6Vyzaduje &c{0} &6level
 error.item.class: &6Vyzaduje tridu &c{0}
 error.mount.owner: &6Zvire patri %
 
 message.buyed: &a&lUspesne jsi zakoupil slot
-message.fixhp: &6Your HP was fixed, please login to server again.
 message.perms: &cYou don't have permission to use this command
 
 pet.name: {0} &f[{1}]
