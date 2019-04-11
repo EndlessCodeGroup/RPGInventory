@@ -470,7 +470,7 @@ public class PetManager {
             nbt.put(DEATH_TIME_TAG, deathTime);
         }
 
-        NbtFactory.setItemTag(item, nbt);
+        NbtFactoryMirror.setItemTag(item, nbt);
     }
 
     public static long getDeathTime(@NotNull ItemStack item) {
@@ -512,7 +512,7 @@ public class PetManager {
             nbt.put("pet.health", health);
         }
 
-        NbtFactory.setItemTag(item, nbt);
+        NbtFactoryMirror.setItemTag(item, nbt);
     }
 
     public static double getHealth(ItemStack item, double maxHealth) {

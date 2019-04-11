@@ -83,7 +83,7 @@ public class Texture {
         if (textureParts.length > 1) {
             // MONSTER_EGG before 1.13
             if (material.name().equals("MONSTER_EGG")) {
-                return parseLegacyMonesterEgg(item, textureParts[1]);
+                return parseLegacyMonsterEgg(item, textureParts[1]);
             } else if (material.name().startsWith("LEATHER_")) {
                 return parseLeatherArmor(item, textureParts[1]);
             } else {
@@ -94,7 +94,7 @@ public class Texture {
         return new Texture(item);
     }
 
-    private static Texture parseLegacyMonesterEgg(ItemStack item, String entityType) {
+    private static Texture parseLegacyMonsterEgg(ItemStack item, String entityType) {
         NbtCompound nbt = NbtFactoryMirror.fromItemCompound(item);
         nbt.put(ItemUtils.ENTITY_TAG, NbtFactory.ofCompound("temp").put("id", entityType));
 

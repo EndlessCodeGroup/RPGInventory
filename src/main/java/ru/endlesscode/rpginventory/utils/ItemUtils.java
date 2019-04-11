@@ -66,7 +66,7 @@ public class ItemUtils {
                 nbt.put(tag, value);
             }
         }
-        NbtFactory.setItemTag(bukkitItem, nbt);
+        NbtFactoryMirror.setItemTag(bukkitItem, nbt);
 
         return bukkitItem;
     }
@@ -134,7 +134,7 @@ public class ItemUtils {
             if (nbt.containsKey("tag")) {
                 item = toBukkitItemStack(item);
                 if (!isEmpty(item)) {
-                    NbtFactory.setItemTag(item, nbt.getCompound("tag"));
+                    NbtFactoryMirror.setItemTag(item, nbt.getCompound("tag"));
                 }
             }
         }

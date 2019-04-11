@@ -27,6 +27,12 @@ public final class NbtFactoryMirror {
         return NbtFactory.asCompound(fromItemTag(stack));
     }
 
+    public static void setItemTag(ItemStack stack, NbtCompound compound) {
+        checkItemStack(stack);
+        StructureModifier<NbtBase<?>> modifier = getStackModifier(stack);
+        modifier.write(0, compound);
+    }
+
     private static NbtWrapper<?> fromItemTag(ItemStack stack) {
         checkItemStack(stack);
         StructureModifier<NbtBase<?>> modifier = getStackModifier(stack);
