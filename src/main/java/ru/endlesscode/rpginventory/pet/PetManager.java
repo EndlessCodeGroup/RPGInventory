@@ -342,6 +342,7 @@ public class PetManager {
         pet.setAgeLock(true);
 
         pet.setCustomName(RPGInventory.getLanguage().getMessage("pet.name", petType.getName(), player.getName()));
+        pet.setCustomNameVisible(true);
         pet.setCanPickupItems(false);
         pet.setRemoveWhenFarAway(false);
 
