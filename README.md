@@ -55,7 +55,7 @@ Also, for more coverage, you should:
 plugins {
     // Add shadow plugin to make shadowJar
     // See: http://imperceptiblethoughts.com/shadow/
-    id 'com.github.johnrengelman.shadow' version '4.0.4'
+    id 'com.github.johnrengelman.shadow' version '5.2.0'
 }
 
 // Inspector published at jcenter, so we need to add it to repositories
