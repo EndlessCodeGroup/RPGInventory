@@ -55,13 +55,14 @@ abstract class TrackedPlugin @JvmOverloads constructor(
 
         try {
             lifecycle = lifecycleClass.newInstance()
-            lifecycle.holder = this
-            lifecycle.init()
         } catch (e: UninitializedPropertyAccessException) {
-            logger.severe("$TAG Looks like you trying to use plugin's methods on initialization.")
-            logger.severe("$TAG Instead of this, overload method init() and do the work within.")
+            logger.severe("$TAG Looks like you're trying to use plugin's methods on it's initialization.")
+            logger.severe("$TAG Instead of this, overload method init() and do the work that you need within.")
             throw e
         }
+
+        lifecycle.holder = this
+        track { lifecycle.init() }
 
         reporter = BukkitUnwrapReporter(createReporter())
         reporter.enabled = environment.isInspectorEnabled
