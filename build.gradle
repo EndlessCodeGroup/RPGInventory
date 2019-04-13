@@ -3,7 +3,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 // Root project build config
 
 buildscript {
-    ext.kotlinVersion = '1.3.21'
+    ext.kotlinVersion = '1.3.61'
 
     repositories {
         mavenCentral()
@@ -23,7 +23,7 @@ buildscript {
 
 plugins {
     id("base")
-    id("com.github.ben-manes.versions") version "0.21.0"
+    id("com.github.ben-manes.versions") version "0.27.0"
 }
 
 description = "Catch and report all exceptions"
@@ -60,7 +60,6 @@ configure(subprojects - apiProject) {
 
     // Use api as dependency
     dependencies {
-        // Can't use api configuration because of https://youtrack.jetbrains.com/issue/KT-28355
-        compile(apiProject)
+        api(apiProject)
     }
 }

@@ -73,7 +73,7 @@ shadowJar {
     // Read more: https://imperceptiblethoughts.com/shadow/configuration/relocation/#automatically-relocating-dependencies
     def shadowPackage = "shadow.[PLACE_HERE_YOUR_PLUGIN_PACKAGE]"
     relocate "ru.endlesscode.inspector", "${shadowPackage}.inspector"
-    relocate "org.jetbrains.annotations", "${shadowPackage}.annotations"
+    relocate "org.jetbrains", "${shadowPackage}.jetbrains"
     relocate "kotlinx", "${shadowPackage}.kotlinx"
     relocate "kotlin", "${shadowPackage}.kotlin"
     

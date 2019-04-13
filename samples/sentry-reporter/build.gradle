@@ -28,7 +28,7 @@ shadowJar {
 
     def shadowPackage = "shadow.com.example.myplugin"
     relocate "ru.endlesscode.inspector", "${shadowPackage}.inspector"
-    relocate "org.jetbrains.annotations", "${shadowPackage}.annotations"
+    relocate "org.jetbrains", "${shadowPackage}.jetbrains"
     relocate "kotlinx", "${shadowPackage}.kotlinx"
     relocate "kotlin", "${shadowPackage}.kotlin"
     relocate "io.sentry", "${shadowPackage}.sentry"
