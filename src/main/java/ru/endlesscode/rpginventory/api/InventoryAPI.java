@@ -37,7 +37,7 @@ import java.util.List;
  * It is part of the RpgInventory.
  * All rights reserved 2014 - 2016 © «EndlessCode Group»
  */
-@SuppressWarnings({"unused", "WeakerAccess"})
+@SuppressWarnings({"unused"})
 public class InventoryAPI {
     /**
      * Checks if opened inventory is RPGInventory.

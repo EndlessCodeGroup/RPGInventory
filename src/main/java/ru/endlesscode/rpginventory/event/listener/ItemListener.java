@@ -46,7 +46,7 @@ import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 import ru.endlesscode.inspector.bukkit.scheduler.TrackedBukkitRunnable;
 import ru.endlesscode.rpginventory.RPGInventory;
-import ru.endlesscode.rpginventory.compat.CompatSound;
+import ru.endlesscode.rpginventory.compat.SoundCompat;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
 import ru.endlesscode.rpginventory.inventory.slot.Slot;
 import ru.endlesscode.rpginventory.inventory.slot.SlotManager;
@@ -152,7 +152,7 @@ public class ItemListener implements Listener {
             damage *= ItemManager.getModifier(damager, ItemStat.StatType.CRIT_DAMAGE).getMultiplier();
             damager.getWorld().playSound(
                     event.getEntity().getLocation(),
-                    CompatSound.SUCCESSFUL_HIT.get(),
+                    SoundCompat.SUCCESSFUL_HIT.get(),
                     1,
                     (float) (0.5 + Math.random() * 0.4)
             );

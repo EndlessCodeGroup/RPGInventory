@@ -47,7 +47,7 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ru.endlesscode.rpginventory.RPGInventory;
-import ru.endlesscode.rpginventory.compat.CompatMaterial;
+import ru.endlesscode.rpginventory.compat.MaterialCompat;
 import ru.endlesscode.rpginventory.event.listener.PetListener;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
 import ru.endlesscode.rpginventory.inventory.PlayerWrapper;
@@ -275,7 +275,7 @@ public class PetManager {
 
                         if (features.containsKey("ARMOR")) {
                             String materialName = features.get("ARMOR");
-                            Material armorMaterial = CompatMaterial.getMaterialOrNull(materialName);
+                            Material armorMaterial = MaterialCompat.getMaterialOrNull(materialName);
                             if (armorMaterial != null) {
                                 horseInv.setArmor(new ItemStack(armorMaterial));
                             } else {

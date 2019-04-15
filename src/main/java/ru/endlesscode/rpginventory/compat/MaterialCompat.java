@@ -6,7 +6,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
-public class CompatMaterial {
+public class MaterialCompat {
     @NotNull
     public static Material getMaterial(String name) {
         return Objects.requireNonNull(getMaterialOrNull(name));

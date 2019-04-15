@@ -26,7 +26,7 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import ru.endlesscode.rpginventory.compat.CompatMaterial;
+import ru.endlesscode.rpginventory.compat.MaterialCompat;
 import ru.endlesscode.rpginventory.inventory.backpack.BackpackManager;
 import ru.endlesscode.rpginventory.inventory.backpack.BackpackType;
 import ru.endlesscode.rpginventory.item.CustomItem;
@@ -125,7 +125,7 @@ public class ItemUtils {
 
     @NotNull
     public static ItemStack nbtToItemStack(NbtCompound nbt) {
-        ItemStack item = new ItemStack(CompatMaterial.getMaterialOrAir(nbt.getString("material")));
+        ItemStack item = new ItemStack(MaterialCompat.getMaterialOrAir(nbt.getString("material")));
 
         if (!isEmpty(item)) {
             item.setAmount(nbt.getInteger("amount"));

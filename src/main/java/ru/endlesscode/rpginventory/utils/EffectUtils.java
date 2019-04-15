@@ -31,7 +31,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ru.endlesscode.inspector.bukkit.scheduler.TrackedBukkitRunnable;
 import ru.endlesscode.rpginventory.RPGInventory;
-import ru.endlesscode.rpginventory.compat.CompatSound;
+import ru.endlesscode.rpginventory.compat.SoundCompat;
 import ru.endlesscode.rpginventory.misc.config.Config;
 
 import java.lang.reflect.InvocationTargetException;
@@ -65,14 +65,14 @@ public class EffectUtils {
     public static void playSpawnEffect(Entity entity) {
         Location loc = entity.getLocation();
 
-        entity.getWorld().playSound(loc, CompatSound.ENDERMAN_TELEPORT.get(), 1, (float) (1.2 + Math.random() * 0.4));
+        entity.getWorld().playSound(loc, SoundCompat.ENDERMAN_TELEPORT.get(), 1, (float) (1.2 + Math.random() * 0.4));
         playParticlesToAll(Particle.EXPLOSION_LARGE, 3, loc);
     }
 
     public static void playDespawnEffect(Entity entity) {
         Location loc = entity.getLocation();
 
-        entity.getWorld().playSound(loc, CompatSound.ENDERMAN_TELEPORT.get(), 1, (float) (0.6 + Math.random() * 0.4));
+        entity.getWorld().playSound(loc, SoundCompat.ENDERMAN_TELEPORT.get(), 1, (float) (0.6 + Math.random() * 0.4));
         playParticlesToAll(Particle.SMOKE_NORMAL, 3, loc);
     }
 

@@ -7,7 +7,7 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.jetbrains.annotations.NotNull;
-import ru.endlesscode.rpginventory.compat.CompatMaterial;
+import ru.endlesscode.rpginventory.compat.MaterialCompat;
 import ru.endlesscode.rpginventory.utils.ItemUtils;
 import ru.endlesscode.rpginventory.utils.Log;
 import ru.endlesscode.rpginventory.utils.NbtFactoryMirror;
@@ -69,7 +69,7 @@ public class Texture {
 
         String[] textureParts = texture.split(":");
 
-        Material material = CompatMaterial.getMaterialOrNull(textureParts[0]);
+        Material material = MaterialCompat.getMaterialOrNull(textureParts[0]);
         if (material == null) {
             Log.w("Unknown material: {0}", textureParts[0]);
             return EMPTY_TEXTURE;

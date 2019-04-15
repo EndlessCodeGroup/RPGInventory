@@ -24,7 +24,7 @@ import org.bukkit.Sound;
  * Version independent spigot sounds.
  * Enum mapping to sound names for different Minecraft versions.
  */
-public enum CompatSound {
+public enum SoundCompat {
     AMBIENCE_CAVE("AMBIENCE_CAVE", "AMBIENT_CAVE"),
     AMBIENCE_RAIN("AMBIENCE_RAIN", "WEATHER_RAIN"),
     AMBIENCE_THUNDER("AMBIENCE_THUNDER", "ENTITY_LIGHTNING_THUNDER", "ENTITY_LIGHTNING_BOLT_THUNDER"),
@@ -223,7 +223,7 @@ public enum CompatSound {
     private String[] versionDependentNames;
     private Sound cached = null;
 
-    CompatSound(String... versionDependentNames) {
+    SoundCompat(String... versionDependentNames) {
         this.versionDependentNames = versionDependentNames;
     }
 
