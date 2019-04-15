@@ -4,7 +4,9 @@ import com.comphenix.protocol.wrappers.nbt.NbtCompound;
 import com.comphenix.protocol.wrappers.nbt.NbtFactory;
 import org.bukkit.Color;
 import org.bukkit.Material;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.jetbrains.annotations.NotNull;
 import ru.endlesscode.rpginventory.compat.MaterialCompat;
@@ -120,8 +122,10 @@ public class Texture {
             item.setDurability(durability);
 
             if (ItemUtils.isItemHasDurability(item)) {
-                item = ItemUtils.setTag(item, ItemUtils.UNBREAKABLE_TAG, "1");
-                item = ItemUtils.setTag(item, ItemUtils.HIDE_FLAGS_TAG, "63");
+                ItemMeta meta = item.getItemMeta();
+                meta.setUnbreakable(true);
+                meta.addItemFlags(ItemFlag.values());
+                item.setItemMeta(meta);
             }
         } catch (NumberFormatException e) {
             Log.w("Can''t parse durability. Specify a number instead of \"{0}\"", durabilityValue);

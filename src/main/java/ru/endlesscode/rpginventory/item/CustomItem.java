@@ -20,6 +20,7 @@ package ru.endlesscode.rpginventory.item;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.Contract;
@@ -127,13 +128,12 @@ public class CustomItem extends ClassedItem {
         ItemMeta meta = customItem.getItemMeta();
         meta.setDisplayName(this.name);
         meta.setLore(ItemManager.buildLore(this));
+        meta.addItemFlags(ItemFlag.values());
+        if (this.unbreakable) {
+            meta.setUnbreakable(true);
+        }
         customItem.setItemMeta(meta);
 
-        if (this.unbreakable) {
-            customItem = ItemUtils.setTag(customItem, ItemUtils.UNBREAKABLE_TAG, "1");
-        }
-
-        customItem = ItemUtils.setTag(customItem, ItemUtils.HIDE_FLAGS_TAG, "63");
         this.customItem = ItemUtils.setTag(customItem, ItemUtils.ITEM_TAG, id);
     }
 

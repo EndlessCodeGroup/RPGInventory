@@ -42,8 +42,6 @@ import ru.endlesscode.rpginventory.pet.PetType;
  */
 public class ItemUtils {
     public static final String ENTITY_TAG = "EntityTag";
-    public static final String UNBREAKABLE_TAG = "Unbreakable";
-    public static final String HIDE_FLAGS_TAG = "HideFlags";
 
     public static final String BACKPACK_UID_TAG = "backpack.uid";
     public static final String BACKPACK_TAG = "backpack.id";
@@ -60,11 +58,7 @@ public class ItemUtils {
 
         NbtCompound nbt = NbtFactoryMirror.fromItemCompound(bukkitItem);
         if (!nbt.containsKey(tag)) {
-            if (UNBREAKABLE_TAG.equals(tag) || HIDE_FLAGS_TAG.equals(tag)) {
-                nbt.put(tag, Integer.parseInt(value));
-            } else {
-                nbt.put(tag, value);
-            }
+            nbt.put(tag, value);
         }
         NbtFactoryMirror.setItemTag(bukkitItem, nbt);
 
