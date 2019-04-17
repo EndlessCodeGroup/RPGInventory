@@ -20,7 +20,7 @@ error.item.class: &6Benötigte Klasse &c{0}
 error.mount.owner: &6Dieses Reittier gehört: {0}
 
 message.buyed: &a&lDu hast den Slot erfolgreich freigeschaltet
-message.perms: &cYou don't have permission to use this command
+message.perms: &cYou don''t have permission to use this command
 
 pet.name: {0} &f[{1}]
 pet.health: &cLeben: &7{0}
@@ -54,4 +54,4 @@ stat.jump: &9Sprung: &7{0}
 
 backpack.desc: &8&oPlatzieren in den dafür vorgesehenen Slot und drücke &fRMB
 backpack.size: &aGröße: &7{0}
-backpack.limit: &cYou can't have more than {0} backpack!
+backpack.limit: &cYou can''t have more than {0} backpack!

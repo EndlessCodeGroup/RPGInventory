@@ -20,7 +20,7 @@ error.item.class: &6Clase &c{0} &6requerida
 error.mount.owner: &6La montura pertenece a {0}
 
 message.buyed: &a&lYa haz comprado el espacio
-message.perms: &cYou don't have permission to use this command
+message.perms: &cYou don''t have permission to use this command
 
 pet.name: {0} &f[{1}]
 pet.health: &cVida: &7{0}
@@ -54,4 +54,4 @@ stat.jump: &9Salto: &7{0}
 
 backpack.desc: &8&oColócala en el espacio indicado y haz &fClick Derecho
 backpack.size: &aTamaño: &7{0}
-backpack.limit: &cYou can't have more than {0} backpack!
+backpack.limit: &cYou can''t have more than {0} backpack!

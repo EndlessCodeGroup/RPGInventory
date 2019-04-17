@@ -20,7 +20,7 @@ error.item.class: &6Gereken Irk: &c{0}
 error.mount.owner: &6Bineğin sahibi {0}
 
 message.buyed: &a&lBu bölmeyi başarıyla aldın!
-message.perms: &cYou don't have permission to use this command
+message.perms: &cYou don''t have permission to use this command
 
 pet.name: {0} &f[{1}]
 pet.health: &cCan: &7{0}
@@ -54,4 +54,4 @@ stat.jump: &9Zıplama: &7{0}
 
 backpack.desc: &8&oBelirtilen bölmeye koyup &fSağ tuşa &8tikla!
 backpack.size: &aBoyut: &7{0}
-backpack.limit: &cYou can't have more than {0} backpack!
+backpack.limit: &cYou can''t have more than {0} backpack!

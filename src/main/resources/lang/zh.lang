@@ -20,7 +20,7 @@ error.item.class: &6你的种族必须为 &c{0}
 error.mount.owner: &6坐骑的主人为 {0}
 
 message.buyed: &a&l你成功解锁了一个凹槽!
-message.perms: &cYou don't have permission to use this command
+message.perms: &cYou don''t have permission to use this command
 
 pet.name: {0} &f[{1}]
 pet.health: &c血量: &7{0}
@@ -54,4 +54,4 @@ stat.jump: &9跳跃: &7{0}
 
 backpack.desc: &8请将背包放入背包凹槽,并右键点击打开
 backpack.size: &a容量: &7{0}
-backpack.limit: &cYou can't have more than {0} backpack!
+backpack.limit: &cYou can''t have more than {0} backpack!

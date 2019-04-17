@@ -20,14 +20,14 @@ error.item.class: &6Potrebna klasa &c{0}
 error.mount.owner: &6Mount je od {0}
 
 message.buyed: &a&lUspesno ste kupili slot
-message.perms: &cYou don't have permission to use this command
+message.perms: &cYou don''t have permission to use this command
 
 pet.name: &6{0} &7[&b{1}&7]
 pet.health: &cZivoti: &7{0}
 pet.damage: &cUdarac: &7{0}
 pet.speed: &cBrzina: &7{0} block/s
 pet.revival.yes: &bCooldown: &7{0}s
-pet.revival.no: &bDon't revives
+pet.revival.no: &bDon''t revives
 pet.cooldown:  &a&l({0}s)
 pet.food.value: &aPunjenje: {0} HP
 pet.role.companion: Pratilac
@@ -54,4 +54,4 @@ stat.jump: &9Jump: &7{0}
 
 backpack.desc: &8&oPut it in specified slot and click &fRMB
 backpack.size: &aSize: &7{0}
-backpack.limit: &cYou can't have more than {0} backpack!
+backpack.limit: &cYou can''t have more than {0} backpack!
