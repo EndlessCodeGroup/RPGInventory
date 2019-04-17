@@ -20,6 +20,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.Objects;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 
 public class Serialization {
 
@@ -74,7 +76,7 @@ public class Serialization {
         serializedData.set(ROOT_TAG, data);
 
         Path tempFile = Files.createTempFile(file.getParent(), file.getFileName().toString(), null);
-        try (OutputStream stream = Files.newOutputStream(tempFile)) {
+        try (OutputStream stream = new GZIPOutputStream(Files.newOutputStream(tempFile))) {
             stream.write(serializedData.saveToString().getBytes(StandardCharsets.UTF_8));
         }
         Files.move(tempFile, file, StandardCopyOption.REPLACE_EXISTING);
@@ -84,7 +86,7 @@ public class Serialization {
     private static Object load(@NotNull Path file)
             throws IOException, InvalidConfigurationException {
         final FileConfiguration serializedData = new YamlConfiguration();
-        try (InputStreamReader reader = new InputStreamReader(Files.newInputStream(file))) {
+        try (InputStreamReader reader = new InputStreamReader(new GZIPInputStream(Files.newInputStream(file)))) {
             serializedData.load(reader);
         }
 
