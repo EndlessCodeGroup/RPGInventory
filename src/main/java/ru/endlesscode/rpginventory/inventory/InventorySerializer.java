@@ -40,6 +40,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.GZIPInputStream;
@@ -52,9 +53,11 @@ class InventorySerializer {
         final YamlConfiguration serializedInventory = new YamlConfiguration();
         serializedInventory.set(INV, InventorySnapshot.create(playerWrapper));
 
-        try (OutputStream stream = Files.newOutputStream(file)) {
+        Path tempFile = Files.createTempFile(file.getParent(), file.getFileName().toString(), null);
+        try (OutputStream stream = Files.newOutputStream(tempFile)) {
             stream.write(serializedInventory.saveToString().getBytes());
         }
+        Files.move(tempFile, file, StandardCopyOption.REPLACE_EXISTING);
     }
 
     @Nullable
