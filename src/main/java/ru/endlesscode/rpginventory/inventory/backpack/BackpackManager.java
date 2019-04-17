@@ -36,6 +36,7 @@ import ru.endlesscode.rpginventory.inventory.slot.Slot;
 import ru.endlesscode.rpginventory.inventory.slot.SlotManager;
 import ru.endlesscode.rpginventory.item.Texture;
 import ru.endlesscode.rpginventory.misc.config.Config;
+import ru.endlesscode.rpginventory.misc.serialization.Serialization;
 import ru.endlesscode.rpginventory.utils.FileUtils;
 import ru.endlesscode.rpginventory.utils.ItemUtils;
 import ru.endlesscode.rpginventory.utils.Log;
@@ -187,7 +188,7 @@ public class BackpackManager {
             Files.createDirectories(folder);
             for (Map.Entry<UUID, Backpack> entry : BACKPACKS.entrySet()) {
                 Path bpFile = folder.resolve(entry.getKey().toString() + ".bp");
-                BackpackSerializer.saveBackpack(entry.getValue(), bpFile);
+                Serialization.save(entry.getValue(), bpFile);
             }
         } catch (IOException e) {
             reporter.report("Error on backpack save", e);
@@ -211,6 +212,7 @@ public class BackpackManager {
         try {
             loadBackpack(path);
         } catch (IOException e) {
+            Log.d(e);
             FileUtils.resolveException(path);
             Log.s("Error on loading backpack {0}", path.getFileName().toString());
             Log.s("Will be created new backpack. Old file was renamed.");
@@ -218,7 +220,7 @@ public class BackpackManager {
     }
 
     private static void loadBackpack(@NotNull Path path) throws IOException {
-        Backpack backpack = BackpackSerializer.loadBackpack(path);
+        Backpack backpack = Serialization.loadBackpack(path);
         if (backpack == null || backpack.isOverdue()) {
             Files.delete(path);
         } else {

@@ -555,7 +555,7 @@ public class InventoryManager {
             Path file = folder.resolve(player.getUniqueId() + ".inv");
             Files.deleteIfExists(file);
 
-            Serialization.savePlayer(playerWrapper, file);
+            Serialization.save(playerWrapper.createSnapshot(), file);
         } catch (IOException e) {
             reporter.report("Error on inventory save", e);
         }
