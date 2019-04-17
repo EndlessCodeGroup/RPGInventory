@@ -20,13 +20,11 @@ package ru.endlesscode.rpginventory.utils;
 
 import com.comphenix.protocol.utility.MinecraftReflection;
 import com.comphenix.protocol.wrappers.nbt.NbtCompound;
-import com.comphenix.protocol.wrappers.nbt.NbtFactory;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import ru.endlesscode.rpginventory.compat.MaterialCompat;
 import ru.endlesscode.rpginventory.inventory.backpack.BackpackManager;
 import ru.endlesscode.rpginventory.inventory.backpack.BackpackType;
 import ru.endlesscode.rpginventory.item.CustomItem;
@@ -99,41 +97,6 @@ public class ItemUtils {
 
     public static boolean isItemHasDurability(ItemStack item) {
         return item.getType().getMaxDurability() > 0;
-    }
-
-    public static NbtCompound itemStackToNBT(ItemStack originalItem, String name) {
-        NbtCompound nbt = NbtFactory.ofCompound(name);
-
-        nbt.put("material", originalItem.getType().name());
-        nbt.put("amount", originalItem.getAmount());
-        nbt.put("data", originalItem.getDurability());
-
-        ItemStack item = toBukkitItemStack(originalItem.clone());
-        NbtCompound tag = isEmpty(item) ? null : NbtFactoryMirror.fromItemCompound(item);
-        if (tag != null) {
-            nbt.put("tag", tag);
-        }
-
-        return nbt;
-    }
-
-    @NotNull
-    public static ItemStack nbtToItemStack(NbtCompound nbt) {
-        ItemStack item = new ItemStack(MaterialCompat.getMaterialOrAir(nbt.getString("material")));
-
-        if (!isEmpty(item)) {
-            item.setAmount(nbt.getInteger("amount"));
-            item.setDurability(nbt.getShort("data"));
-
-            if (nbt.containsKey("tag")) {
-                item = toBukkitItemStack(item);
-                if (!isEmpty(item)) {
-                    NbtFactoryMirror.setItemTag(item, nbt.getCompound("tag"));
-                }
-            }
-        }
-
-        return item;
     }
 
     @NotNull

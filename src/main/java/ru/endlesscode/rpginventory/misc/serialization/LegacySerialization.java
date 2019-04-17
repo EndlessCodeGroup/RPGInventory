@@ -8,6 +8,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import ru.endlesscode.rpginventory.compat.MaterialCompat;
 import ru.endlesscode.rpginventory.inventory.PlayerWrapper;
 import ru.endlesscode.rpginventory.inventory.backpack.Backpack;
 import ru.endlesscode.rpginventory.inventory.backpack.BackpackManager;
@@ -16,6 +17,7 @@ import ru.endlesscode.rpginventory.inventory.slot.Slot;
 import ru.endlesscode.rpginventory.inventory.slot.SlotManager;
 import ru.endlesscode.rpginventory.utils.FileUtils;
 import ru.endlesscode.rpginventory.utils.ItemUtils;
+import ru.endlesscode.rpginventory.utils.NbtFactoryMirror;
 
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -59,7 +61,7 @@ class LegacySerialization {
                     NbtCompound itemListNbt = slotNbt.getCompound("items");
                     List<ItemStack> itemList = new ArrayList<>();
                     for (String key : itemListNbt.getKeys()) {
-                        itemList.add(ItemUtils.nbtToItemStack(itemListNbt.getCompound(key)));
+                        itemList.add(nbtToItemStack(itemListNbt.getCompound(key)));
                     }
 
                     List<Integer> slotIds = slot.getSlotIds();
@@ -93,13 +95,33 @@ class LegacySerialization {
             ItemStack[] contents = new ItemStack[type.getSize()];
             for (int i = 0; i < type.getSize() && itemList.containsKey(i + ""); i++) {
                 NbtCompound compound = itemList.getCompound(i + "");
-                contents[i] = compound == null ? new ItemStack(Material.AIR) : ItemUtils.nbtToItemStack(compound);
+                contents[i] = compound == null ? new ItemStack(Material.AIR) : nbtToItemStack(compound);
             }
 
             backpack.setContents(contents);
         }
 
         return backpack;
+    }
+
+
+    @NotNull
+    private static ItemStack nbtToItemStack(NbtCompound nbt) {
+        ItemStack item = new ItemStack(MaterialCompat.getMaterialOrAir(nbt.getString("material")));
+
+        if (ItemUtils.isNotEmpty(item)) {
+            item.setAmount(nbt.getInteger("amount"));
+            item.setDurability(nbt.getShort("data"));
+
+            if (nbt.containsKey("tag")) {
+                item = ItemUtils.toBukkitItemStack(item);
+                if (ItemUtils.isNotEmpty(item)) {
+                    NbtFactoryMirror.setItemTag(item, nbt.getCompound("tag"));
+                }
+            }
+        }
+
+        return item;
     }
 
 }
