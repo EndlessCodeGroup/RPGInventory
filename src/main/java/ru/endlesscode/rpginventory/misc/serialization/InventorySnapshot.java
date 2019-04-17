@@ -18,8 +18,8 @@ public class InventorySnapshot implements ConfigurationSerializable {
     private static final String INV_SLOTS = "slots";
     private static final String INV_BOUGHT_SLOTS = "bought-slots";
 
-    private Map<String, SlotSnapshot> slots;
-    private int boughtSlots;
+    private final Map<String, SlotSnapshot> slots;
+    private final int boughtSlots;
 
 
     private InventorySnapshot(@NotNull Map<String, SlotSnapshot> slots, int boughtSlots) {
@@ -28,7 +28,7 @@ public class InventorySnapshot implements ConfigurationSerializable {
     }
 
     @NotNull
-    public static InventorySnapshot create(@NotNull PlayerWrapper playerWrapper) {
+    static InventorySnapshot create(@NotNull PlayerWrapper playerWrapper) {
         final Map<String, SlotSnapshot> slots = SlotManager.instance().getSlots().stream()
                 .filter(slot -> slot.getSlotType() != Slot.SlotType.ARMOR)
                 .map(slot -> SlotSnapshot.create(slot, playerWrapper))

@@ -21,10 +21,10 @@ public class SlotSnapshot implements ConfigurationSerializable {
     private static final String SLOT_BOUGHT = "bought";
     private static final String SLOT_ITEMS = "items";
 
-    private String name;
-    private String type;
-    private boolean bought;
-    private List<ItemStack> items;
+    private final String name;
+    private final String type;
+    private final boolean bought;
+    private final List<ItemStack> items;
 
     private SlotSnapshot(@NotNull String name, @NotNull String type, boolean bought, @NotNull List<ItemStack> items) {
         this.name = name;
@@ -48,7 +48,7 @@ public class SlotSnapshot implements ConfigurationSerializable {
 
     @NotNull
     public static SlotSnapshot deserialize(@NotNull Map<String, Object> map) {
-        String type = (String) map.getOrDefault(SLOT_TYPE, "");
+        String type = (String) map.getOrDefault(SLOT_TYPE, "{missing}");
         boolean bought = map.containsKey(SLOT_BOUGHT);
         List<ItemStack> items = (List<ItemStack>) map.getOrDefault(SLOT_ITEMS, Collections.emptyList());
 

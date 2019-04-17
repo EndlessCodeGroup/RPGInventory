@@ -44,6 +44,7 @@ import ru.endlesscode.rpginventory.inventory.slot.SlotManager;
 import ru.endlesscode.rpginventory.item.ItemManager;
 import ru.endlesscode.rpginventory.item.Texture;
 import ru.endlesscode.rpginventory.misc.config.Config;
+import ru.endlesscode.rpginventory.misc.serialization.Serialization;
 import ru.endlesscode.rpginventory.pet.PetManager;
 import ru.endlesscode.rpginventory.pet.PetType;
 import ru.endlesscode.rpginventory.resourcepack.ResourcePackModule;
@@ -496,7 +497,7 @@ public class InventoryManager {
 
             PlayerWrapper playerWrapper = null;
             if (Files.exists(file)) {
-                playerWrapper = InventorySerializer.loadPlayerOrNull(player, file);
+                playerWrapper = Serialization.loadPlayerOrNull(player, file);
                 if (playerWrapper == null) {
                     Log.s("Error on loading {0}''s inventory.", player.getDisplayName());
                     Log.s("Will be created new inventory. Old file was renamed.");
@@ -554,7 +555,7 @@ public class InventoryManager {
             Path file = folder.resolve(player.getUniqueId() + ".inv");
             Files.deleteIfExists(file);
 
-            InventorySerializer.savePlayer(playerWrapper, file);
+            Serialization.savePlayer(playerWrapper, file);
         } catch (IOException e) {
             reporter.report("Error on inventory save", e);
         }
