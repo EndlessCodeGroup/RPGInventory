@@ -19,8 +19,9 @@
 package ru.endlesscode.rpginventory.inventory;
 
 import com.comphenix.protocol.wrappers.nbt.NbtCompound;
-import com.comphenix.protocol.wrappers.nbt.NbtFactory;
 import com.comphenix.protocol.wrappers.nbt.io.NbtBinarySerializer;
+import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -28,92 +29,76 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ru.endlesscode.rpginventory.inventory.slot.Slot;
 import ru.endlesscode.rpginventory.inventory.slot.SlotManager;
-import ru.endlesscode.rpginventory.misc.config.Config;
+import ru.endlesscode.rpginventory.misc.serialization.InventorySnapshot;
 import ru.endlesscode.rpginventory.utils.FileUtils;
 import ru.endlesscode.rpginventory.utils.ItemUtils;
+import ru.endlesscode.rpginventory.utils.Log;
 
 import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.GZIPInputStream;
-import java.util.zip.GZIPOutputStream;
 
 class InventorySerializer {
+
+    private static final String INV = "inventory";
+
     static void savePlayer(@NotNull PlayerWrapper playerWrapper, @NotNull Path file) throws IOException {
-        List<NbtCompound> slotList = new ArrayList<>();
-        try (DataOutputStream dataOutput = new DataOutputStream(new GZIPOutputStream(Files.newOutputStream(file)))) {
-            for (Slot slot : SlotManager.instance().getSlots()) {
-                if (slot.getSlotType() == Slot.SlotType.ARMOR) {
-                    continue;
-                }
+        final YamlConfiguration serializedInventory = new YamlConfiguration();
+        serializedInventory.set(INV, InventorySnapshot.create(playerWrapper));
 
-                List<NbtCompound> itemList = new ArrayList<>();
-                List<Integer> slotIds = slot.getSlotIds();
-                Inventory inventory = playerWrapper.getInventory();
-                for (int i = 0; i < slotIds.size(); i++) {
-                    int slotId = slotIds.get(i);
-                    ItemStack itemStack = inventory.getItem(slotId);
-                    if (ItemUtils.isNotEmpty(itemStack) && !slot.isCup(itemStack)) {
-                        itemList.add(ItemUtils.itemStackToNBT(itemStack, i + ""));
-                    }
-                }
-
-                if (itemList.size() > 0 || playerWrapper.isBuyedSlot(slot.getName())) {
-                    NbtCompound slotNbt = NbtFactory.ofCompound(slot.getName());
-                    slotNbt.put("type", slot.getSlotType().name());
-                    if (playerWrapper.isBuyedSlot(slot.getName())) {
-                        slotNbt.put("buyed", "true");
-                    }
-                    slotNbt.put(NbtFactory.ofCompound("items", itemList));
-                    slotList.add(slotNbt);
-                }
-            }
-
-            NbtCompound playerNbt = NbtFactory.ofCompound("Inventory");
-            playerNbt.put(NbtFactory.ofCompound("slots", slotList));
-            playerNbt.put("buyed-slots", playerWrapper.getBuyedGenericSlots());
-
-            NbtBinarySerializer.DEFAULT.serialize(playerNbt, dataOutput);
+        try (OutputStream stream = Files.newOutputStream(file)) {
+            stream.write(serializedInventory.saveToString().getBytes());
         }
     }
 
     @Nullable
     static PlayerWrapper loadPlayerOrNull(Player player, @NotNull Path file) {
         try {
-            return loadPlayer(player, file);
+            try {
+                return loadPlayer(player, file);
+            } catch (InvalidConfigurationException e) {
+                Log.w("Can''t load {0}''s inventory. Trying to use legacy loader.", player.getName());
+                return legacyLoadPlayer(player, file);
+            }
         } catch (IOException e) {
+            Log.d(e);
             FileUtils.resolveException(file);
+            return null;
+        } catch (Exception e) {
+            e.printStackTrace();
             return null;
         }
     }
 
     @NotNull
-    static PlayerWrapper loadPlayer(Player player, @NotNull Path file) throws IOException {
+    private static PlayerWrapper loadPlayer(Player player, @NotNull Path file) throws IOException, InvalidConfigurationException {
+        final YamlConfiguration serializedInventory = new YamlConfiguration();
+        try (InputStreamReader reader = new InputStreamReader(Files.newInputStream(file))) {
+            serializedInventory.load(reader);
+        }
+
+        InventorySnapshot inventorySnapshot = (InventorySnapshot) serializedInventory.get(INV);
+        return inventorySnapshot.restore(player);
+    }
+
+    @NotNull
+    private static PlayerWrapper legacyLoadPlayer(Player player, @NotNull Path file) throws IOException {
         PlayerWrapper playerWrapper = new PlayerWrapper(player);
         Inventory inventory = playerWrapper.getInventory();
 
         try (DataInputStream dataInput = new DataInputStream(new GZIPInputStream(Files.newInputStream(file)))) {
             NbtCompound playerNbt = NbtBinarySerializer.DEFAULT.deserializeCompound(dataInput);
 
-            // =========== Added in v1.1.8 ============
-            if (playerNbt.containsKey("free-slots")) {
-                int savedFreeSlots = playerNbt.getInteger("free-slots");
-                int freeSlotsFromConfig = Config.getConfig().getInt("slots.free");
-                playerWrapper.setBuyedSlots(savedFreeSlots - freeSlotsFromConfig);
-                playerNbt.remove("free-slots");
-            } else {
-                playerWrapper.setBuyedSlots(playerNbt.getInteger("buyed-slots"));
-                playerNbt.remove("buyed-slots");
-            }
-            // ========================================
+            playerWrapper.setBuyedSlots(playerNbt.getInteger("buyed-slots"));
+            playerNbt.remove("buyed-slots");
 
-            // =========== Added in v1.2.1 ============
             NbtCompound itemsNbt = playerNbt.containsKey("slots") ? playerNbt.getCompound("slots") : playerNbt;
-            // ========================================
 
             for (Slot slot : SlotManager.instance().getSlots()) {
                 if (itemsNbt.containsKey(slot.getName())) {

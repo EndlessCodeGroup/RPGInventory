@@ -47,6 +47,7 @@ import ru.endlesscode.rpginventory.misc.FileLanguage;
 import ru.endlesscode.rpginventory.misc.Updater;
 import ru.endlesscode.rpginventory.misc.config.Config;
 import ru.endlesscode.rpginventory.misc.config.ConfigUpdater;
+import ru.endlesscode.rpginventory.misc.serialization.Serialization;
 import ru.endlesscode.rpginventory.pet.PetManager;
 import ru.endlesscode.rpginventory.pet.mypet.MyPetManager;
 import ru.endlesscode.rpginventory.resourcepack.ResourcePackModule;
@@ -121,6 +122,7 @@ public class RPGInventory extends PluginLifecycle {
         instance = this;
         Log.init(this.getLogger());
         Config.init(this);
+        Serialization.registerTypes();
     }
 
     @Override

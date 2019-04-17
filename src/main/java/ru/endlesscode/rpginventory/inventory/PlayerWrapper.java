@@ -142,7 +142,7 @@ public class PlayerWrapper implements InventoryHolder {
         this.setBuyedSlots("{generic}", buyedSlots);
     }
 
-    void setBuyedSlots(String slotType) {
+    public void setBuyedSlots(String slotType) {
         this.setBuyedSlots(slotType, 1);
     }
 
