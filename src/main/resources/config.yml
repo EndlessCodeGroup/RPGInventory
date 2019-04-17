@@ -97,7 +97,7 @@ join-messages:
     enabled: false
     title: "&l&2Welcome to server!"
     text:
-    - "&6Glad to see you, &3%PLAYER%"
+    - "&6Glad to see you, &3%player_name%"
     - "&6This server using &9RPGInventory"
 
   # Message on first join and if player declined resource-pack
