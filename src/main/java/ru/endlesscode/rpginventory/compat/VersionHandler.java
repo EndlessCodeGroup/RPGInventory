@@ -46,6 +46,10 @@ public class VersionHandler {
         return getVersionCode() < VERSION_1_9 || getVersionCode() >= VERSION_1_14;
     }
 
+    public static boolean isLegacy() {
+        return getVersionCode() < VERSION_1_13;
+    }
+
     public static int getVersionCode() {
         if (versionCode == -1) {
             initVersionCode();

@@ -48,6 +48,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ru.endlesscode.rpginventory.RPGInventory;
 import ru.endlesscode.rpginventory.compat.MaterialCompat;
+import ru.endlesscode.rpginventory.compat.VersionHandler;
 import ru.endlesscode.rpginventory.event.listener.PetListener;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
 import ru.endlesscode.rpginventory.inventory.PlayerWrapper;
@@ -96,9 +97,15 @@ public class PetManager {
         }
 
         try {
-            Path petsFile = RPGInventory.getInstance().getDataPath().resolve(CONFIG_NAME);
+            Path dataPath = RPGInventory.getInstance().getDataPath();
+            Path petsFile = dataPath.resolve(CONFIG_NAME);
             if (Files.notExists(petsFile)) {
-                RPGInventory.getInstance().saveResource(CONFIG_NAME, false);
+                String suffix = VersionHandler.isLegacy() ? ".legacy" : "";
+                String defaultConfigName = CONFIG_NAME + suffix;
+                RPGInventory.getInstance().saveResource(defaultConfigName, false);
+                if (!suffix.isEmpty()) {
+                    Files.move(dataPath.resolve(defaultConfigName), petsFile);
+                }
             }
 
             FileConfiguration petsConfig = YamlConfiguration.loadConfiguration(petsFile.toFile());
