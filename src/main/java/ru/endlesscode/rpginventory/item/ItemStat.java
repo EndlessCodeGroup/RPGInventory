@@ -18,7 +18,7 @@
 
 package ru.endlesscode.rpginventory.item;
 
-import org.jetbrains.annotations.*;
+import org.jetbrains.annotations.NotNull;
 import ru.endlesscode.rpginventory.utils.StringUtils;
 
 /**

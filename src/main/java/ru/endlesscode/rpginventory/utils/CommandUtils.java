@@ -20,7 +20,7 @@ package ru.endlesscode.rpginventory.utils;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.*;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by OsipXD on 16.11.2015

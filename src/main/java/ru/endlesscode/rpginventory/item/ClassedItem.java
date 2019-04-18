@@ -19,7 +19,8 @@
 package ru.endlesscode.rpginventory.item;
 
 import org.bukkit.configuration.ConfigurationSection;
-import org.jetbrains.annotations.*;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 

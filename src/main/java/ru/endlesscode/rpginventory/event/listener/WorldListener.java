@@ -23,8 +23,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.world.WorldSaveEvent;
-
-import org.jetbrains.annotations.*;
+import org.jetbrains.annotations.NotNull;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
 import ru.endlesscode.rpginventory.inventory.backpack.BackpackManager;
 

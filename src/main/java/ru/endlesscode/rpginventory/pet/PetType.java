@@ -25,6 +25,12 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import ru.endlesscode.rpginventory.RPGInventory;
+import ru.endlesscode.rpginventory.item.ClassedItem;
+import ru.endlesscode.rpginventory.misc.FileLanguage;
+import ru.endlesscode.rpginventory.utils.ItemUtils;
+import ru.endlesscode.rpginventory.utils.StringUtils;
+import ru.endlesscode.rpginventory.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -32,13 +38,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import ru.endlesscode.rpginventory.RPGInventory;
-import ru.endlesscode.rpginventory.item.ClassedItem;
-import ru.endlesscode.rpginventory.misc.FileLanguage;
-import ru.endlesscode.rpginventory.utils.ItemUtils;
-import ru.endlesscode.rpginventory.utils.StringUtils;
-import ru.endlesscode.rpginventory.utils.Utils;
 
 /**
  * Created by OsipXD on 26.08.2015

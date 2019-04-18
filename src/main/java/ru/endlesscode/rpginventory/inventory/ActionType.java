@@ -19,7 +19,8 @@
 package ru.endlesscode.rpginventory.inventory;
 
 import org.bukkit.event.inventory.InventoryAction;
-import org.jetbrains.annotations.*;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by OsipXD on 09.04.2016

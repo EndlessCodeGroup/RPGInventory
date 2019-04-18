@@ -22,7 +22,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.*;
+import org.jetbrains.annotations.NotNull;
 import ru.endlesscode.rpginventory.RPGInventory;
 import ru.endlesscode.rpginventory.event.PetUnequipEvent;
 import ru.endlesscode.rpginventory.inventory.slot.Slot;
@@ -33,7 +33,12 @@ import ru.endlesscode.rpginventory.pet.PetManager;
 import ru.endlesscode.rpginventory.pet.PetType;
 import ru.endlesscode.rpginventory.utils.ItemUtils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * Created by OsipXD on 06.10.2016

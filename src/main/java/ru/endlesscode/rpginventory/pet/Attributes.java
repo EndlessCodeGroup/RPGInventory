@@ -20,7 +20,8 @@ package ru.endlesscode.rpginventory.pet;
 
 import com.comphenix.protocol.utility.MinecraftReflection;
 import org.bukkit.entity.LivingEntity;
-import org.jetbrains.annotations.*;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;

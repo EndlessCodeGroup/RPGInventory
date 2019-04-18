@@ -20,10 +20,9 @@ package ru.endlesscode.rpginventory.inventory.backpack;
 
 import org.bukkit.inventory.Inventory;
 import org.bukkit.scheduler.BukkitRunnable;
+import ru.endlesscode.rpginventory.RPGInventory;
 
 import java.util.Arrays;
-
-import ru.endlesscode.rpginventory.RPGInventory;
 
 /**
  * Created by OsipXD on 26.08.2016

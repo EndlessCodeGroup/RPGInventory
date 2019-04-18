@@ -21,10 +21,12 @@ package ru.endlesscode.rpginventory.inventory.backpack;
 import com.comphenix.protocol.wrappers.nbt.NbtCompound;
 import com.comphenix.protocol.wrappers.nbt.NbtFactory;
 import com.comphenix.protocol.wrappers.nbt.io.NbtBinarySerializer;
-
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.*;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import ru.endlesscode.rpginventory.utils.FileUtils;
+import ru.endlesscode.rpginventory.utils.ItemUtils;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -36,9 +38,6 @@ import java.util.List;
 import java.util.UUID;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
-
-import ru.endlesscode.rpginventory.utils.FileUtils;
-import ru.endlesscode.rpginventory.utils.ItemUtils;
 
 /**
  * Created by OsipXD on 20.11.2015
