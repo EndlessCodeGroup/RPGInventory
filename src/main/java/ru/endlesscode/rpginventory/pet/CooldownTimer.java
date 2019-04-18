@@ -25,10 +25,11 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 import ru.endlesscode.rpginventory.RPGInventory;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
-import ru.endlesscode.rpginventory.inventory.slot.*;
+import ru.endlesscode.rpginventory.inventory.slot.Slot;
+import ru.endlesscode.rpginventory.inventory.slot.SlotManager;
 import ru.endlesscode.rpginventory.utils.ItemUtils;
 
-import java.util.*;
+import java.util.Objects;
 
 /**
  * Created by OsipXD on 27.08.2015

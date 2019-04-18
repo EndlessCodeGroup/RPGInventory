@@ -24,15 +24,14 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import ru.endlesscode.rpginventory.RPGInventory;
 import ru.endlesscode.rpginventory.item.TexturedItem;
 import ru.endlesscode.rpginventory.misc.FileLanguage;
 import ru.endlesscode.rpginventory.utils.ItemUtils;
 import ru.endlesscode.rpginventory.utils.StringUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by OsipXD on 28.08.2015
