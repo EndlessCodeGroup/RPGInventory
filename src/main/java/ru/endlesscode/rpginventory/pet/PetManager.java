@@ -226,6 +226,12 @@ public class PetManager {
         playerWrapper.getPet().teleport(newPetLoc);
     }
 
+    /** @see #respawnPet(Player, ItemStack) */
+    @Deprecated
+    public static void spawnPet(@NotNull final Player player, @NotNull ItemStack petItem) {
+        respawnPet(player, petItem);
+    }
+
     public static void respawnPet(@Nullable OfflinePlayer player) {
         if (!InventoryManager.playerIsLoaded(player) || !PetManager.isEnabled()) {
             return;
