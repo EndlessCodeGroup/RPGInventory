@@ -18,17 +18,20 @@
 
 package ru.endlesscode.rpginventory.inventory.craft;
 
+import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
+import com.comphenix.protocol.events.PacketAdapter;
+import com.comphenix.protocol.events.PacketEvent;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.MemorySection;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ru.endlesscode.rpginventory.RPGInventory;
+import ru.endlesscode.rpginventory.compat.VersionHandler;
 import ru.endlesscode.rpginventory.event.listener.CraftListener;
+import ru.endlesscode.rpginventory.item.Texture;
 import ru.endlesscode.rpginventory.misc.config.Config;
-import ru.endlesscode.rpginventory.utils.ItemUtils;
 import ru.endlesscode.rpginventory.utils.Log;
 
 import java.util.ArrayList;
@@ -42,23 +45,35 @@ import java.util.List;
 public class CraftManager {
     @NotNull
     private static List<CraftExtension> EXTENSIONS = new ArrayList<>();
-    private static ItemStack capItem;
+    private static Texture textureOfExtendable;
 
     private CraftManager() {
     }
 
     public static boolean init(@NotNull RPGInventory instance) {
         MemorySection config = (MemorySection) Config.getConfig().get("craft");
-        if (!config.getBoolean("enabled") || !config.contains("extensions")) {
+
+        if (config == null) {
+            Log.w("Section ''craft'' not found in config.yml");
+            return false;
+        }
+
+        if (!config.getBoolean("enabled")) {
+            Log.i("Craft system is disabled in config");
             return false;
         }
 
         try {
-            capItem = ItemUtils.getTexturedItem(config.getString("extendable"));
+            Texture texture = Texture.parseTexture(config.getString("extendable"));
+            if (texture.isEmpty()) {
+                Log.s("Invalid texture in ''craft.extendable''");
+                return false;
+            }
+            textureOfExtendable = texture;
 
             @Nullable final ConfigurationSection extensions = config.getConfigurationSection("extensions");
             if (extensions == null) {
-                Log.s("Section 'extensions' not found in config.yml");
+                Log.s("Section ''craft.extensions'' not found in config.yml");
                 return false;
             }
 
@@ -69,11 +84,28 @@ public class CraftManager {
 
             // Register listeners
             ProtocolLibrary.getProtocolManager().addPacketListener(new CraftListener(instance));
+
+            // Disable recipe book if need
+            if (VersionHandler.getVersionCode() >= VersionHandler.VERSION_1_12) {
+                disableRecipeBook();
+            }
+
             return true;
         } catch (Exception e) {
             instance.getReporter().report("Error on CraftManager initialization", e);
             return false;
         }
+    }
+
+    private static void disableRecipeBook() {
+        ProtocolLibrary.getProtocolManager().addPacketListener(
+                new PacketAdapter(RPGInventory.getInstance(), PacketType.Play.Server.RECIPES) {
+                    @Override
+                    public void onPacketSending(@NotNull PacketEvent event) {
+                        event.setCancelled(true);
+                    }
+                });
+        Log.i("Recipe book conflicts with craft extensions and was disabled");
     }
 
     @NotNull
@@ -88,8 +120,8 @@ public class CraftManager {
         return extensions;
     }
 
-    static ItemStack getCapItem() {
-        return capItem;
+    public static Texture getTextureOfExtendable() {
+        return textureOfExtendable;
     }
 
     @Nullable

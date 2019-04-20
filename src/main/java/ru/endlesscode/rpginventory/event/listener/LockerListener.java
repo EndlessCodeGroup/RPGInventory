@@ -67,7 +67,7 @@ public class LockerListener implements Listener {
             return;
         }
 
-        if (!ItemUtils.isEmpty(currentItem) && InventoryLocker.isLockedSlot(currentItem)) {
+        if (ItemUtils.isNotEmpty(currentItem) && InventoryLocker.isLockedSlot(currentItem)) {
             int slot = event.getSlot();
             int line = InventoryLocker.getLine(slot);
             if (InventoryLocker.isBuyableSlot(currentItem, line)) {

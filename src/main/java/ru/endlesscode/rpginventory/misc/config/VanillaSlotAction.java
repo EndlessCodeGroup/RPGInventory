@@ -18,7 +18,7 @@
 
 package ru.endlesscode.rpginventory.misc.config;
 
-import ru.endlesscode.rpginventory.utils.Log;
+import ru.endlesscode.rpginventory.utils.SafeEnums;
 
 public enum VanillaSlotAction {
 
@@ -34,12 +34,7 @@ public enum VanillaSlotAction {
 
 
     static VanillaSlotAction parseString(String stringValue) {
-        try {
-            return valueOf(stringValue.toUpperCase());
-        } catch (IllegalArgumentException e) {
-            Log.w("Unknown value \"{0}\". Used DEFAULT by default.");
-            return DEFAULT;
-        }
+        return SafeEnums.valueOfOrDefault(VanillaSlotAction.class, stringValue, DEFAULT, "slot action");
     }
 
 }

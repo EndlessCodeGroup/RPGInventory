@@ -20,6 +20,7 @@ package ru.endlesscode.rpginventory.item;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.Contract;
@@ -27,6 +28,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
 import ru.endlesscode.rpginventory.utils.ItemUtils;
+import ru.endlesscode.rpginventory.utils.SafeEnums;
 import ru.endlesscode.rpginventory.utils.StringUtils;
 
 import java.util.ArrayList;
@@ -60,15 +62,19 @@ public class CustomItem extends ClassedItem {
 
     private ItemStack customItem;
 
-    CustomItem(String id, @NotNull ConfigurationSection config) {
-        super(config, config.getString("texture"));
+    CustomItem(String id, Texture texture, @NotNull ConfigurationSection config) {
+        super(texture, config);
 
-        Rarity rarity = Rarity.valueOf(config.getString("rarity"));
+        Rarity rarity = SafeEnums.valueOfOrDefault(Rarity.class, config.getString("rarity"), Rarity.COMMON);
         this.name = StringUtils.coloredLine(rarity.getColor() + config.getString("name"));
 
         if (config.contains("stats")) {
             for (String stat : config.getStringList("stats")) {
-                this.stats.add(new ItemStat(ItemStat.StatType.valueOf(stat.split(" ")[0]), stat.split(" ")[1]));
+                String[] statParts = stat.split(" ");
+                ItemStat.StatType statType = SafeEnums.valueOf(ItemStat.StatType.class, statParts[0], "stat type");
+                if (statType != null) {
+                    this.stats.add(new ItemStat(statType, statParts[1]));
+                }
             }
         }
 
@@ -91,7 +97,7 @@ public class CustomItem extends ClassedItem {
 
     @Contract("null -> false")
     public static boolean isCustomItem(@Nullable ItemStack itemStack) {
-        return !ItemUtils.isEmpty(itemStack) && ItemUtils.hasTag(itemStack, ItemUtils.ITEM_TAG);
+        return ItemUtils.isNotEmpty(itemStack) && ItemUtils.hasTag(itemStack, ItemUtils.ITEM_TAG);
     }
 
     public void onEquip(Player player) {
@@ -116,19 +122,18 @@ public class CustomItem extends ClassedItem {
 
     private void createItem(String id) {
         // Set texture
-        ItemStack customItem = ItemUtils.getTexturedItem(this.texture);
+        ItemStack customItem = this.texture.getItemStack();
 
         // Set lore and display name
         ItemMeta meta = customItem.getItemMeta();
         meta.setDisplayName(this.name);
         meta.setLore(ItemManager.buildLore(this));
+        meta.addItemFlags(ItemFlag.values());
+        if (this.unbreakable) {
+            meta.setUnbreakable(true);
+        }
         customItem.setItemMeta(meta);
 
-        if (this.unbreakable) {
-            customItem = ItemUtils.setTag(customItem, ItemUtils.UNBREAKABLE_TAG, "1");
-        }
-
-        customItem = ItemUtils.setTag(customItem, ItemUtils.HIDE_FLAGS_TAG, "63");
         this.customItem = ItemUtils.setTag(customItem, ItemUtils.ITEM_TAG, id);
     }
 

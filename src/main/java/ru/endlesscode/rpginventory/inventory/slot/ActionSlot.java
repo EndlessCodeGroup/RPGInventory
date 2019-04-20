@@ -22,6 +22,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
+import ru.endlesscode.rpginventory.utils.SafeEnums;
 
 /**
  * Created by OsipXD on 06.09.2015
@@ -34,8 +35,9 @@ public class ActionSlot extends Slot {
     private final boolean isGui;
 
     ActionSlot(String name, @NotNull ConfigurationSection config) {
-        super(name, config);
-        this.actionType = ActionType.valueOf(config.getString("action"));
+        super(name, SlotType.ACTION, config);
+
+        this.actionType = SafeEnums.valueOf(ActionType.class, config.getString("action"), "action type");
         this.command = config.getString("command");
         this.isGui = config.getBoolean("gui", false);
     }

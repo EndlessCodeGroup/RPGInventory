@@ -1,7 +1,7 @@
 plugins {
-    id 'ru.endlesscode.bukkitgradle' version '0.8.1'
-    id 'com.github.johnrengelman.shadow' version '4.0.4'
-    id 'com.github.ben-manes.versions' version "0.20.0"
+    id 'ru.endlesscode.bukkitgradle' version '0.8.2'
+    id 'com.github.johnrengelman.shadow' version '5.0.0'
+    id 'com.github.ben-manes.versions' version "0.21.0"
     id 'jacoco'
 }
 
@@ -10,7 +10,7 @@ version = pluginVersion
 description = pluginDesc
 
 bukkit {
-    version = '1.12.2'
+    version = '1.13.2'
 
     meta {
         main = "ru.endlesscode.rpginventory.RPGInventoryPlugin"
@@ -18,7 +18,7 @@ bukkit {
     }
 
     run {
-        core = "paper"
+        core = "spigot"
         eula = true
     }
 }
@@ -41,6 +41,11 @@ repositories {
         name 'ec-repo'
         url 'https://gitlab.com/endlesscodegroup/mvn-repo/raw/master/'
     }
+
+    maven {
+        name 'codemc-repo'
+        url 'https://repo.codemc.org/repository/maven-public/'
+    }
 }
 
 shadowJar {
@@ -59,9 +64,12 @@ shadowJar {
     relocate "io.sentry", "${shadowPackage}.sentry"
     relocate "org.slf4j", "${shadowPackage}.slf4j"
     relocate "com.fasterxml.jackson.core", "${shadowPackage}.jackson"
+    
+    // bstats
+    relocate "org.bstats.bukkit", "${shadowPackage}.bstats"
 }
 
-ext.inspectorVersion = "0.8.0"
+ext.inspectorVersion = "0.8.1"
 
 dependencies {
     compileOnly(bukkit()) {
@@ -76,7 +84,7 @@ dependencies {
     compileOnly('org.jetbrains:annotations:15.0')
     compileOnly('me.clip:placeholderapi:2.9.2')
     compileOnly('me.robin:BattleLevelsAPI:6.9.1')
-    compileOnly('com.herocraftonline.heroes:Heroes:1.5.5.6')
+    compileOnly('com.herocraftonline.heroes:Heroes:1.5.5.7')
     compileOnly('de.keyle:mypet:2.3.3')
     compileOnly('org.tobiyas:RacesAndClasses:1.2.0')
     compileOnly('me.baks:RPGPlayerLeveling:3.7.2')
@@ -84,9 +92,10 @@ dependencies {
     compileOnly('me.leothepro555:Skills')
     implementation("ru.endlesscode.inspector:inspector-bukkit:$inspectorVersion")
     implementation("ru.endlesscode.inspector:inspector-sentry-reporter:$inspectorVersion")
-    implementation('com.comphenix.packetwrapper:PacketWrapper:1.12.1-R0.1-SNAPSHOT')
+    implementation('com.comphenix.packetwrapper:PacketWrapper:1.13-R0.1-SNAPSHOT')
+    implementation('org.bstats:bstats-bukkit-lite:1.4')
     testImplementation('junit:junit:4.12')
-    testImplementation('org.mockito:mockito-core:2.8.+')
+    testImplementation('org.mockito:mockito-core:2.25.0')
 }
 
 jacocoTestReport {

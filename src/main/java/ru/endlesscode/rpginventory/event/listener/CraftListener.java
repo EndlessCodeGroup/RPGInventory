@@ -56,7 +56,6 @@ public class CraftListener extends PacketAdapter implements Listener {
     @Override
     public void onPacketSending(@NotNull PacketEvent event) {
         Player player = event.getPlayer();
-        //noinspection ConstantConditions
         if (event.isCancelled() || !InventoryManager.playerIsLoaded(player)
                 || isExtensionsNotNeededHere(player)) {
             return;
@@ -93,7 +92,6 @@ public class CraftListener extends PacketAdapter implements Listener {
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void onInventoryClick(@NotNull InventoryClickEvent event) {
         final Player player = (Player) event.getWhoClicked();
-        //noinspection ConstantConditions
         if (!InventoryManager.playerIsLoaded(player)
                 || event.getInventory().getType() != InventoryType.WORKBENCH
                 || isExtensionsNotNeededHere(player)) {
@@ -131,7 +129,6 @@ public class CraftListener extends PacketAdapter implements Listener {
         }
 
         if (event.getInventory().getType() == InventoryType.WORKBENCH) {
-            //noinspection ConstantConditions
             InventoryManager.get(player).onWorkbenchClosed();
         }
     }

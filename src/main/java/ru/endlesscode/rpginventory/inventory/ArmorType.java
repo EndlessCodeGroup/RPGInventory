@@ -20,6 +20,7 @@ package ru.endlesscode.rpginventory.inventory;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -40,7 +41,7 @@ public enum ArmorType {
     UNKNOWN;
 
     @NotNull
-    public static ArmorType matchType(@NotNull ItemStack item) {
+    public static ArmorType matchType(ItemStack item) {
         if (ItemUtils.isEmpty(item)) {
             return UNKNOWN;
         }
@@ -49,34 +50,14 @@ public enum ArmorType {
             return CHESTPLATE;
         }
 
-        switch (item.getType()) {
-            case LEATHER_HELMET:
-            case CHAINMAIL_HELMET:
-            case IRON_HELMET:
-            case GOLD_HELMET:
-            case DIAMOND_HELMET:
-                return HELMET;
-            case LEATHER_CHESTPLATE:
-            case CHAINMAIL_CHESTPLATE:
-            case IRON_CHESTPLATE:
-            case GOLD_CHESTPLATE:
-            case DIAMOND_CHESTPLATE:
-                return CHESTPLATE;
-            case LEATHER_LEGGINGS:
-            case CHAINMAIL_LEGGINGS:
-            case IRON_LEGGINGS:
-            case GOLD_LEGGINGS:
-            case DIAMOND_LEGGINGS:
-                return LEGGINGS;
-            case LEATHER_BOOTS:
-            case CHAINMAIL_BOOTS:
-            case IRON_BOOTS:
-            case GOLD_BOOTS:
-            case DIAMOND_BOOTS:
-                return BOOTS;
-        }
+        String[] typeParts = item.getType().name().split("_");
+        String armorType = typeParts[typeParts.length - 1];
 
-        return UNKNOWN;
+        try {
+            return ArmorType.valueOf(armorType);
+        } catch (IllegalArgumentException exception) {
+            return UNKNOWN;
+        }
     }
 
     @Nullable
@@ -97,15 +78,20 @@ public enum ArmorType {
 
     @Nullable
     public ItemStack getItem(@NotNull Player player) {
+        EntityEquipment equipment = player.getEquipment();
+        if (equipment == null) {
+            return null;
+        }
+
         switch (this) {
             case HELMET:
-                return player.getEquipment().getHelmet();
+                return equipment.getHelmet();
             case CHESTPLATE:
-                return player.getEquipment().getChestplate();
+                return equipment.getChestplate();
             case LEGGINGS:
-                return player.getEquipment().getLeggings();
+                return equipment.getLeggings();
             case BOOTS:
-                return player.getEquipment().getBoots();
+                return equipment.getBoots();
             default:
                 return null;
         }

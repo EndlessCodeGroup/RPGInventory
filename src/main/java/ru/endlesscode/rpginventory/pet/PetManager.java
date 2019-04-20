@@ -47,14 +47,19 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ru.endlesscode.rpginventory.RPGInventory;
+import ru.endlesscode.rpginventory.compat.MaterialCompat;
+import ru.endlesscode.rpginventory.compat.VersionHandler;
 import ru.endlesscode.rpginventory.event.listener.PetListener;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
 import ru.endlesscode.rpginventory.inventory.PlayerWrapper;
 import ru.endlesscode.rpginventory.inventory.slot.SlotManager;
+import ru.endlesscode.rpginventory.item.Texture;
 import ru.endlesscode.rpginventory.utils.EffectUtils;
 import ru.endlesscode.rpginventory.utils.ItemUtils;
 import ru.endlesscode.rpginventory.utils.LocationUtils;
 import ru.endlesscode.rpginventory.utils.Log;
+import ru.endlesscode.rpginventory.utils.NbtFactoryMirror;
+import ru.endlesscode.rpginventory.utils.SafeEnums;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -84,7 +89,6 @@ public class PetManager {
     }
 
     public static boolean init(@NotNull RPGInventory instance) {
-        //noinspection ConstantConditions
         SLOT_PET = SlotManager.instance().getPetSlot() != null ? SlotManager.instance().getPetSlot().getSlotId() : -1;
 
         if (!PetManager.isEnabled()) {
@@ -93,9 +97,15 @@ public class PetManager {
         }
 
         try {
-            Path petsFile = RPGInventory.getInstance().getDataPath().resolve(CONFIG_NAME);
+            Path dataPath = RPGInventory.getInstance().getDataPath();
+            Path petsFile = dataPath.resolve(CONFIG_NAME);
             if (Files.notExists(petsFile)) {
-                RPGInventory.getInstance().saveResource(CONFIG_NAME, false);
+                String suffix = VersionHandler.isLegacy() ? ".legacy" : "";
+                String defaultConfigName = CONFIG_NAME + suffix;
+                RPGInventory.getInstance().saveResource(defaultConfigName, false);
+                if (!suffix.isEmpty()) {
+                    Files.move(dataPath.resolve(defaultConfigName), petsFile);
+                }
             }
 
             FileConfiguration petsConfig = YamlConfiguration.loadConfiguration(petsFile.toFile());
@@ -142,19 +152,31 @@ public class PetManager {
 
     private static void tryToAddPet(String name, @NotNull ConfigurationSection config) {
         try {
-            PetType petType = new PetType(config);
+            Texture texture = Texture.parseTexture(config.getString("item"));
+            if (texture.isEmpty()) {
+                Log.s("Pet ''{0}'' has not been added because its item is not valid.", name);
+                return;
+            }
+            PetType petType = new PetType(texture, config);
             PetManager.PETS.put(name, petType);
         } catch (Exception e) {
-            Log.w("Pet ''{0}'' can''t be added: {1}", name, e.getLocalizedMessage());
+            Log.s("Pet ''{0}'' can''t be added: {1}", name, e.toString());
+            Log.d(e);
         }
     }
 
     private static void tryToAddPetFood(String name, @NotNull ConfigurationSection config) {
         try {
-            PetFood pet = new PetFood(config);
+            Texture texture = Texture.parseTexture(config.getString("item"));
+            if (texture.isEmpty()) {
+                Log.s("Pet food ''{0}'' has not been added because its item is not valid.", name);
+                return;
+            }
+            PetFood pet = new PetFood(texture, config);
             PetManager.PET_FOOD.put(name, pet);
         } catch (Exception e) {
-            Log.w("Pet food ''{0}'' can''t be added: {1}", name, e.getLocalizedMessage());
+            Log.s("Pet food ''{0}'' can''t be added: {1}", name, e.toString());
+            Log.d(e);
         }
     }
 
@@ -163,11 +185,7 @@ public class PetManager {
             return;
         }
 
-        Inventory inventory = InventoryManager.get(player).getInventory();
-        if (inventory.getItem(SLOT_PET) != null) {
-            ItemStack petItem = inventory.getItem(SLOT_PET);
-            PetManager.spawnPet(player, petItem);
-        }
+        respawnPet(player);
     }
 
     @Contract(pure = true)
@@ -208,10 +226,30 @@ public class PetManager {
         playerWrapper.getPet().teleport(newPetLoc);
     }
 
+    /** @see #respawnPet(Player, ItemStack) */
+    @Deprecated
     public static void spawnPet(@NotNull final Player player, @NotNull ItemStack petItem) {
+        respawnPet(player, petItem);
+    }
+
+    public static void respawnPet(@Nullable OfflinePlayer player) {
         if (!InventoryManager.playerIsLoaded(player) || !PetManager.isEnabled()) {
             return;
         }
+
+        Inventory inventory = InventoryManager.get(player).getInventory();
+        ItemStack petItem = inventory.getItem(SLOT_PET);
+        if (petItem != null) {
+            respawnPet((Player) player, petItem);
+        }
+    }
+
+    public static void respawnPet(@NotNull final Player player, @NotNull ItemStack petItem) {
+        if (!InventoryManager.playerIsLoaded(player) || !PetManager.isEnabled()) {
+            return;
+        }
+
+        PetManager.despawnPet(player);
 
         final PetType petType = PetManager.getPetFromItem(petItem);
         if (petType == null) {
@@ -223,13 +261,13 @@ public class PetManager {
             return;
         }
 
-        PetManager.despawnPet(player);
         Location petLoc = LocationUtils.getLocationNearPoint(player.getLocation(), 3);
         Animals pet = (Animals) player.getWorld().spawnEntity(petLoc, petType.getSkin());
         pet.teleport(petLoc);
         EffectUtils.playSpawnEffect(pet);
         Map<String, String> features = petType.getFeatures();
 
+        boolean hasInitializationErrors = false;
         switch (petType.getRole()) {
             case MOUNT:
                 switch (pet.getType()) {
@@ -244,19 +282,33 @@ public class PetManager {
                                 horsePet.setCarryingChest(true);
                             } catch (UnsupportedOperationException ignored) {
                                 //org.bukkit.craftbukkit.entity.CraftHorse.setCarryingChest (CraftHorse.class:56)
-                                Log.w("Failed to add a chest to the horse.");
+                                Log.w("Failed to add a chest to the horse");
                             }
                         }
 
                         if (features.containsKey("ARMOR")) {
-                            horseInv.setArmor(new ItemStack(Material.valueOf(features.get("ARMOR"))));
+                            String materialName = features.get("ARMOR");
+                            Material armorMaterial = MaterialCompat.getMaterialOrNull(materialName);
+                            if (armorMaterial != null) {
+                                horseInv.setArmor(new ItemStack(armorMaterial));
+                            } else {
+                                Log.w("Failed to add an armor to the horse. Unknown material: {0}", materialName);
+                            }
                         }
 
-                        String color = features.getOrDefault("COLOR", "BROWN");
-                        String style = features.getOrDefault("STYLE", "NONE");
+                        Horse.Color color = SafeEnums.getHorseColor(features.getOrDefault("COLOR", "BROWN"));
+                        if (color != null) {
+                            horsePet.setColor(color);
+                        } else {
+                            hasInitializationErrors = true;
+                        }
 
-                        horsePet.setColor(Horse.Color.valueOf(color));
-                        horsePet.setStyle(Horse.Style.valueOf(style));
+                        Horse.Style style = SafeEnums.getHorseStyle(features.getOrDefault("STYLE", "NONE"));
+                        if (style != null) {
+                            horsePet.setStyle(style);
+                        } else {
+                            hasInitializationErrors = true;
+                        }
 
                         break;
                     case PIG:
@@ -270,13 +322,22 @@ public class PetManager {
                     case WOLF:
                         Wolf wolfPet = (Wolf) pet;
                         if (features.containsKey("COLLAR")) {
-                            wolfPet.setCollarColor(DyeColor.valueOf(features.get("COLLAR")));
+                            DyeColor collarColor = SafeEnums.getDyeColor(features.get("COLLAR"));
+                            if (collarColor != null) {
+                                wolfPet.setCollarColor(collarColor);
+                            } else {
+                                hasInitializationErrors = true;
+                            }
                         }
                         break;
                     case OCELOT:
                         Ocelot ocelotPet = (Ocelot) pet;
-                        String type = features.getOrDefault("TYPE", "WILD_OCELOT");
-                        ocelotPet.setCatType(Ocelot.Type.valueOf(type));
+                        Ocelot.Type type = SafeEnums.getOcelotType(features.getOrDefault("TYPE", "WILD_OCELOT"));
+                        if (type != null) {
+                            ocelotPet.setCatType(type);
+                        } else {
+                            hasInitializationErrors = true;
+                        }
                 }
         }
 
@@ -294,6 +355,7 @@ public class PetManager {
         pet.setAgeLock(true);
 
         pet.setCustomName(RPGInventory.getLanguage().getMessage("pet.name", petType.getName(), player.getName()));
+        pet.setCustomNameVisible(true);
         pet.setCanPickupItems(false);
         pet.setRemoveWhenFarAway(false);
 
@@ -305,6 +367,10 @@ public class PetManager {
         speedAttribute.setBaseValue(petType.getSpeed());
 
         pet.setMetadata(PetManager.METADATA_KEY_PET_OWNER, new FixedMetadataValue(RPGInventory.getInstance(), player.getUniqueId()));
+
+        if (hasInitializationErrors) {
+            Log.w("The pet ''{0}'' has errors on initialization and can be differ from expected result.", pet.getCustomName());
+        }
 
         InventoryManager.get(player).setPet(pet);
     }
@@ -341,16 +407,6 @@ public class PetManager {
 
         EffectUtils.playDespawnEffect(petEntity);
         petEntity.remove();
-    }
-
-    public static void respawnPet(@Nullable OfflinePlayer player) {
-        if (!InventoryManager.playerIsLoaded(player) || !PetManager.isEnabled()) {
-            return;
-        }
-
-        Inventory inventory = InventoryManager.get(player).getInventory();
-        despawnPet(player);
-        spawnPet((Player) player, inventory.getItem(SLOT_PET));
     }
 
     /**
@@ -412,7 +468,7 @@ public class PetManager {
 
     static void addGlow(ItemStack itemStack) {
         itemStack.addUnsafeEnchantment(Enchantment.DURABILITY, 88);
-        NbtCompound compound = NbtFactory.asCompound(NbtFactory.fromItemTag(itemStack));
+        NbtCompound compound = NbtFactoryMirror.fromItemCompound(itemStack);
         compound.put(NbtFactory.ofList("ench"));
     }
 
@@ -421,15 +477,14 @@ public class PetManager {
     }
 
     public static void saveDeathTime(@NotNull ItemStack item, long deathTime) {
-        NbtCompound nbt = NbtFactory.asCompound(NbtFactory.fromItemTag(item));
-
+        NbtCompound nbt = NbtFactoryMirror.fromItemCompound(item);
         if (deathTime == 0) {
             nbt.remove(DEATH_TIME_TAG);
         } else {
             nbt.put(DEATH_TIME_TAG, deathTime);
         }
 
-        NbtFactory.setItemTag(item, nbt);
+        NbtFactoryMirror.setItemTag(item, nbt);
     }
 
     public static long getDeathTime(@NotNull ItemStack item) {
@@ -437,13 +492,8 @@ public class PetManager {
             return 0L;
         }
 
-        NbtCompound nbt = NbtFactory.asCompound(NbtFactory.fromItemTag(item.clone()));
-
-        if (!nbt.containsKey(DEATH_TIME_TAG)) {
-            return 0L;
-        }
-
-        return nbt.getLong(DEATH_TIME_TAG);
+        NbtCompound nbt = NbtFactoryMirror.fromItemCompound(item.clone());
+        return nbt.containsKey(DEATH_TIME_TAG) ? nbt.getLong(DEATH_TIME_TAG) : 0L;
     }
 
     public static int getCooldown(@NotNull ItemStack item) {
@@ -468,7 +518,7 @@ public class PetManager {
     }
 
     public static void saveHealth(@NotNull ItemStack item, double health) {
-        NbtCompound nbt = NbtFactory.asCompound(NbtFactory.fromItemTag(item));
+        NbtCompound nbt = NbtFactoryMirror.fromItemCompound(item);
 
         if (health == 0) {
             nbt.remove("pet.health");
@@ -476,11 +526,11 @@ public class PetManager {
             nbt.put("pet.health", health);
         }
 
-        NbtFactory.setItemTag(item, nbt);
+        NbtFactoryMirror.setItemTag(item, nbt);
     }
 
     public static double getHealth(ItemStack item, double maxHealth) {
-        NbtCompound nbt = NbtFactory.asCompound(NbtFactory.fromItemTag(item.clone()));
+        NbtCompound nbt = NbtFactoryMirror.fromItemCompound(item.clone());
 
         if (!nbt.containsKey("pet.health")) {
             return maxHealth;
@@ -503,6 +553,10 @@ public class PetManager {
     }
 
     public static ItemStack toPetItem(ItemStack item) {
+        if (ItemUtils.isEmpty(item)) {
+            return item;
+        }
+
         List<String> itemLore = item.getItemMeta().getLore();
         for (PetType petType : PETS.values()) {
             List<String> petItemLore = petType.getSpawnItem().getItemMeta().getLore();
@@ -515,7 +569,7 @@ public class PetManager {
     }
 
     public static boolean isPetItem(@Nullable ItemStack item) {
-        if (item == null || !item.hasItemMeta() || !item.getItemMeta().hasLore()) {
+        if (ItemUtils.isEmpty(item) || !item.hasItemMeta() || !item.getItemMeta().hasLore()) {
             return false;
         }
 

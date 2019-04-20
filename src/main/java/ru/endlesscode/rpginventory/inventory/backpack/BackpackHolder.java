@@ -20,6 +20,7 @@ package ru.endlesscode.rpginventory.inventory.backpack;
 
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by OsipXD on 20.11.2015
@@ -29,6 +30,7 @@ import org.bukkit.inventory.InventoryHolder;
 public class BackpackHolder implements InventoryHolder {
     private Inventory inventory;
 
+    @NotNull
     @Override
     public Inventory getInventory() {
         return this.inventory;

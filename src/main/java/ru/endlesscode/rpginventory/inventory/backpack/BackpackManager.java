@@ -34,7 +34,9 @@ import ru.endlesscode.rpginventory.event.listener.BackpackListener;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
 import ru.endlesscode.rpginventory.inventory.slot.Slot;
 import ru.endlesscode.rpginventory.inventory.slot.SlotManager;
+import ru.endlesscode.rpginventory.item.Texture;
 import ru.endlesscode.rpginventory.misc.config.Config;
+import ru.endlesscode.rpginventory.misc.serialization.Serialization;
 import ru.endlesscode.rpginventory.utils.FileUtils;
 import ru.endlesscode.rpginventory.utils.ItemUtils;
 import ru.endlesscode.rpginventory.utils.Log;
@@ -65,6 +67,7 @@ public class BackpackManager {
 
     public static boolean init(@NotNull RPGInventory instance) {
         if (!isEnabled()) {
+            Log.i("Slot for backpacks not found");
             return false;
         }
 
@@ -113,10 +116,16 @@ public class BackpackManager {
 
     private static void tryToAddBackpack(String name, @NotNull ConfigurationSection config) {
         try {
-            BackpackType backpackType = new BackpackType(config);
+            Texture texture = Texture.parseTexture(config.getString("item"));
+            if (texture.isEmpty()) {
+                Log.s("Backpack ''{0}'' has not been added because its item is not valid.", name);
+                return;
+            }
+            BackpackType backpackType = new BackpackType(texture, config);
             BACKPACK_TYPES.put(name, backpackType);
         } catch (Exception e) {
-            Log.w("Backpack ''{0}'' can''t be added: {1}", name, e.getLocalizedMessage());
+            Log.s("Backpack ''{0}'' can''t be added: {1}", name, e.toString());
+            Log.d(e);
         }
     }
 
@@ -153,8 +162,7 @@ public class BackpackManager {
         if (!BACKPACKS.containsKey(uuid)) {
             if (uuid == null) {
                 backpack = type.createBackpack();
-                ItemUtils.setTag(
-                        bpItem, ItemUtils.BACKPACK_UID_TAG, backpack.getUniqueId().toString());
+                ItemUtils.setTag(bpItem, ItemUtils.BACKPACK_UID_TAG, backpack.getUniqueId().toString());
             } else {
                 backpack = type.createBackpack(uuid);
             }
@@ -180,7 +188,7 @@ public class BackpackManager {
             Files.createDirectories(folder);
             for (Map.Entry<UUID, Backpack> entry : BACKPACKS.entrySet()) {
                 Path bpFile = folder.resolve(entry.getKey().toString() + ".bp");
-                BackpackSerializer.saveBackpack(entry.getValue(), bpFile);
+                Serialization.save(entry.getValue(), bpFile);
             }
         } catch (IOException e) {
             reporter.report("Error on backpack save", e);
@@ -204,6 +212,7 @@ public class BackpackManager {
         try {
             loadBackpack(path);
         } catch (IOException e) {
+            Log.d(e);
             FileUtils.resolveException(path);
             Log.s("Error on loading backpack {0}", path.getFileName().toString());
             Log.s("Will be created new backpack. Old file was renamed.");
@@ -211,7 +220,7 @@ public class BackpackManager {
     }
 
     private static void loadBackpack(@NotNull Path path) throws IOException {
-        Backpack backpack = BackpackSerializer.loadBackpack(path);
+        Backpack backpack = Serialization.loadBackpack(path);
         if (backpack == null || backpack.isOverdue()) {
             Files.delete(path);
         } else {
@@ -221,7 +230,7 @@ public class BackpackManager {
 
     @Contract("null -> false")
     public static boolean isBackpack(ItemStack item) {
-        return !ItemUtils.isEmpty(item) && ItemUtils.hasTag(item, ItemUtils.BACKPACK_TAG);
+        return ItemUtils.isNotEmpty(item) && ItemUtils.hasTag(item, ItemUtils.BACKPACK_TAG);
     }
 
     public static boolean backpackLimitReached(@NotNull Player player) {

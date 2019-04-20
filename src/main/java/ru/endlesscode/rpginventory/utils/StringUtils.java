@@ -19,11 +19,9 @@
 package ru.endlesscode.rpginventory.utils;
 
 import me.clip.placeholderapi.PlaceholderAPI;
-import me.clip.placeholderapi.external.EZPlaceholderHook;
+import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.attribute.Attribute;
-import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -35,7 +33,6 @@ import ru.endlesscode.rpginventory.item.ItemStat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
 
 /**
  * Created by OsipXD on 29.08.2015
@@ -72,7 +69,6 @@ public class StringUtils {
 
     @NotNull
     public static String setPlaceholders(@NotNull Player player, @NotNull String line) {
-        // Using Placeholder API
         if (RPGInventory.isPlaceholderApiHooked()) {
             try {
                 return PlaceholderAPI.setPlaceholders(player, line);
@@ -83,62 +79,37 @@ public class StringUtils {
             }
         }
 
-        // Player
-        final AttributeInstance attribute = player.getAttribute(Attribute.GENERIC_MAX_HEALTH);
-        line = org.apache.commons.lang.StringUtils.replaceEach(line,
-                new String[]{
-                        "%WORLD%", "%PLAYER%",
-                        "%HP%",
-                        "%MAX_HP%"
-                },
-                new String[]{
-                        player.getWorld().getName(), player.getName(),
-                        String.valueOf(Utils.round(player.getHealth(), 1)),
-                        String.valueOf(Utils.round(attribute.getValue(), 1)),
-                }
-        );
-
-        if (InventoryManager.playerIsLoaded(player)) {
-            // Modifiers
-            line = org.apache.commons.lang.StringUtils.replaceEach(line,
-                    new String[]{
-                            "%DAMAGE%",
-                            "%BOW_DAMAGE%",
-                            "%HAND_DAMAGE%",
-                            "%CRIT_DAMAGE%",
-                            "%CRIT_CHANCE%",
-                            "%ARMOR%",
-                            "%SPEED%",
-                            "%JUMP%"
-                    },
-                    new String[]{
-                            ItemManager.getModifier(player, ItemStat.StatType.DAMAGE).toString(),
-                            ItemManager.getModifier(player, ItemStat.StatType.BOW_DAMAGE).toString(),
-                            ItemManager.getModifier(player, ItemStat.StatType.HAND_DAMAGE).toString(),
-                            ItemManager.getModifier(player, ItemStat.StatType.CRIT_DAMAGE).toString(),
-                            ItemManager.getModifier(player, ItemStat.StatType.CRIT_CHANCE).toString(),
-                            ItemManager.getModifier(player, ItemStat.StatType.ARMOR).toString(),
-                            ItemManager.getModifier(player, ItemStat.StatType.SPEED).toString(),
-                            ItemManager.getModifier(player, ItemStat.StatType.JUMP).toString()
-                    }
-            );
-        }
-
         return line;
     }
 
-    public static class Placeholders extends EZPlaceholderHook {
-        public Placeholders() {
-            super(RPGInventory.getInstance(), "rpginv");
+    public static class Placeholders extends PlaceholderExpansion {
+        @Override
+        public String getIdentifier() {
+            return "rpginv";
+        }
+
+        @Override
+        public String getAuthor() {
+            return "osipxd";
+        }
+
+        @Override
+        public String getVersion() {
+            return "1.0";
+        }
+
+        @Override
+        public boolean canRegister() {
+            return true;
         }
 
         @Override
         public String onPlaceholderRequest(@Nullable Player player, @NotNull String identifier) {
             if (!InventoryManager.playerIsLoaded(player)) {
-                return "";
+                return null;
             }
 
-            switch (identifier.toLowerCase(Locale.ENGLISH)) {
+            switch (identifier) {
                 case "damage_bonus":
                     return ItemManager.getModifier(player, ItemStat.StatType.DAMAGE).toString();
                 case "bow_damage_bonus":
@@ -157,7 +128,7 @@ public class StringUtils {
                     return ItemManager.getModifier(player, ItemStat.StatType.JUMP).toString();
             }
 
-            return "";
+            return null;
         }
     }
 }

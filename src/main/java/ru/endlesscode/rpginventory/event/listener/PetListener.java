@@ -53,7 +53,7 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import ru.endlesscode.inspector.bukkit.scheduler.TrackedBukkitRunnable;
 import ru.endlesscode.rpginventory.RPGInventory;
-import ru.endlesscode.rpginventory.compat.Sound;
+import ru.endlesscode.rpginventory.compat.SoundCompat;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
 import ru.endlesscode.rpginventory.inventory.PlayerWrapper;
 import ru.endlesscode.rpginventory.inventory.slot.Slot;
@@ -64,7 +64,6 @@ import ru.endlesscode.rpginventory.pet.PetFood;
 import ru.endlesscode.rpginventory.pet.PetManager;
 import ru.endlesscode.rpginventory.pet.PetType;
 import ru.endlesscode.rpginventory.utils.EntityUtils;
-import ru.endlesscode.rpginventory.utils.ItemUtils;
 import ru.endlesscode.rpginventory.utils.LocationUtils;
 import ru.endlesscode.rpginventory.utils.PlayerUtils;
 
@@ -117,7 +116,7 @@ public class PetListener implements Listener {
             if (petSlot != null && petSlot.isCup(inventory.getItem(PetManager.getPetSlotId()))
                     && ItemManager.allowedForPlayer(player, petItem, false)) {
                 inventory.setItem(PetManager.getPetSlotId(), event.getItem());
-                PetManager.spawnPet(player, petItem);
+                PetManager.respawnPet(player, petItem);
                 player.getEquipment().setItemInMainHand(null);
             }
 
@@ -144,10 +143,7 @@ public class PetListener implements Listener {
             return;
         }
 
-        ItemStack petItem = InventoryManager.get(player).getInventory().getItem(PetManager.getPetSlotId());
-        if (!ItemUtils.isEmpty(petItem)) {
-            PetManager.spawnPet(player, petItem);
-        }
+        PetManager.respawnPet(player);
     }
 
     //Possible fix #110
@@ -163,9 +159,16 @@ public class PetListener implements Listener {
             return;
         }
 
-        // Ugly trick to avoid infinite pet spawning when player teleports from non-solid/non-cuboid block
         final Location from = event.getFrom();
         final Location to = event.getTo();
+
+        // Avoid case when pet and player are in different worlds
+        if (!from.getWorld().getName().equals(to.getWorld().getName())) {
+            PetManager.respawnPet(player);
+            return;
+        }
+
+        // Ugly trick to avoid infinite pet spawning when player teleports from non-solid/non-cuboid block
         if (from.getBlockX() != to.getBlockX() || from.getBlockZ() != to.getBlockZ() || from.distance(to) < 0.775D) {
             return;
         }
@@ -173,11 +176,10 @@ public class PetListener implements Listener {
         final double maxDistance = (event.getPlayer().getServer().getViewDistance() / 2.0D) * 15.75D;
         final ItemStack item = InventoryManager.get(player).getInventory().getItem(PetManager.getPetSlotId());
         if (from.distance(to) > maxDistance && item != null) {
-            PetManager.spawnPet(player, item);
+            PetManager.respawnPet(player);
         } else if (LocationUtils.isSafeLocation(player.getLocation())) {
             PetManager.teleportPet(player, to);
         }
-
     }
 
     @EventHandler
@@ -205,7 +207,7 @@ public class PetListener implements Listener {
             itemInHand.setAmount(itemInHand.getAmount() - 1);
             player.getEquipment().setItemInMainHand(itemInHand);
 
-            pet.getWorld().playSound(pet.getLocation(), Sound.EAT.bukkitSound(), 1.0f, (float) (1.0 + Math.random() * 0.4));
+            pet.getWorld().playSound(pet.getLocation(), SoundCompat.EAT.get(), 1.0f, (float) (1.0 + Math.random() * 0.4));
         }
     }
 

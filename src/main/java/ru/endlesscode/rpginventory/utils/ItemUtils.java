@@ -20,7 +20,6 @@ package ru.endlesscode.rpginventory.utils;
 
 import com.comphenix.protocol.utility.MinecraftReflection;
 import com.comphenix.protocol.wrappers.nbt.NbtCompound;
-import com.comphenix.protocol.wrappers.nbt.NbtFactory;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Contract;
@@ -34,51 +33,34 @@ import ru.endlesscode.rpginventory.pet.PetFood;
 import ru.endlesscode.rpginventory.pet.PetManager;
 import ru.endlesscode.rpginventory.pet.PetType;
 
-import java.util.Arrays;
-import java.util.List;
-
 /**
  * Created by OsipXD on 28.08.2015
  * It is part of the RpgInventory.
  * All rights reserved 2014 - 2016 © «EndlessCode Group»
  */
 public class ItemUtils {
-    public static final String UNBREAKABLE_TAG = "Unbreakable";
-    public static final String HIDE_FLAGS_TAG = "HideFlags";
+    public static final String ENTITY_TAG = "EntityTag";
+
     public static final String BACKPACK_UID_TAG = "backpack.uid";
     public static final String BACKPACK_TAG = "backpack.id";
     public static final String ITEM_TAG = "rpginv.id";
     public static final String FOOD_TAG = "food.id";
     public static final String PET_TAG = "pet.id";
 
-    private static final List<Material> itemsWithDurability = Arrays.asList(
-            Material.WOOD_AXE, Material.WOOD_PICKAXE, Material.WOOD_HOE, Material.WOOD_SWORD,
-            Material.STONE_AXE, Material.STONE_PICKAXE, Material.STONE_HOE, Material.STONE_SWORD,
-            Material.IRON_AXE, Material.IRON_PICKAXE, Material.IRON_HOE, Material.IRON_SWORD,
-            Material.GOLD_AXE, Material.GOLD_PICKAXE, Material.GOLD_HOE, Material.GOLD_SWORD,
-            Material.DIAMOND_AXE, Material.DIAMOND_PICKAXE, Material.DIAMOND_HOE, Material.DIAMOND_SWORD,
-            Material.BOW, Material.FLINT_AND_STEEL, Material.SHEARS, Material.FISHING_ROD
-    );
-
-    @Contract("null, _, _ -> null")
-    public static ItemStack setTag(ItemStack item, String tag, @NotNull String value) {
-        if (isEmpty(item)) {
-            return item;
+    @NotNull
+    public static ItemStack setTag(ItemStack item, @NotNull String tag, @NotNull String value) {
+        ItemStack bukkitItem = toBukkitItemStack(item);
+        if (isEmpty(bukkitItem)) {
+            return bukkitItem;
         }
 
-        item = toBukkitItemStack(item);
-        NbtCompound nbt = NbtFactory.asCompound(NbtFactory.fromItemTag(item));
-
+        NbtCompound nbt = NbtFactoryMirror.fromItemCompound(bukkitItem);
         if (!nbt.containsKey(tag)) {
-            if (UNBREAKABLE_TAG.equals(tag) || HIDE_FLAGS_TAG.equals(tag)) {
-                nbt.put(tag, Integer.parseInt(value));
-            } else {
-                nbt.put(tag, value);
-            }
+            nbt.put(tag, value);
         }
-        NbtFactory.setItemTag(item, nbt);
+        NbtFactoryMirror.setItemTag(bukkitItem, nbt);
 
-        return item;
+        return bukkitItem;
     }
 
     @NotNull
@@ -89,94 +71,32 @@ public class ItemUtils {
     @NotNull
     @SuppressWarnings("WeakerAccess")
     public static String getTag(@NotNull ItemStack item, @NotNull String tag, @NotNull String defaultValue) {
-        if (isEmpty(item)) {
+        final ItemStack bukkitItem = toBukkitItemStack(item);
+        if (isEmpty(bukkitItem)) {
             return "";
         }
 
-        item = toBukkitItemStack(item);
-        NbtCompound nbt = NbtFactory.asCompound(NbtFactory.fromItemTag(item));
-
-        if (!nbt.containsKey(tag)) {
-            return defaultValue;
-        }
-
-        return nbt.getString(tag);
+        NbtCompound nbt = NbtFactoryMirror.fromItemCompound(bukkitItem);
+        return nbt.containsKey(tag) ? nbt.getString(tag) : defaultValue;
     }
 
+    @Contract("null, _ -> false")
     public static boolean hasTag(@Nullable ItemStack originalItem, String tag) {
         if (isEmpty(originalItem) || !originalItem.hasItemMeta()) {
             return false;
         }
 
         ItemStack item = toBukkitItemStack(originalItem.clone());
-        NbtCompound nbt = NbtFactory.asCompound(NbtFactory.fromItemTag(item));
+        if (isEmpty(item)) {
+            return false;
+        }
+
+        NbtCompound nbt = NbtFactoryMirror.fromItemCompound(item);
         return nbt.containsKey(tag);
     }
 
-    @NotNull
-    public static ItemStack getTexturedItem(String texture) {
-        String[] textures = texture.split(":");
-
-        if (Material.getMaterial(textures[0]) == null) {
-            Log.w("Material {0} not found", textures[0]);
-            return new ItemStack(Material.AIR);
-        }
-
-        ItemStack item = new ItemStack(Material.getMaterial(textures[0]));
-
-        if (textures.length == 2) {
-            if (item.getType() == Material.MONSTER_EGG) {
-                item = toBukkitItemStack(item);
-                NbtCompound nbt = NbtFactory.asCompound(NbtFactory.fromItemTag(item));
-                nbt.put("EntityTag", NbtFactory.ofCompound("temp").put("id", textures[1]));
-            } else {
-                item.setDurability(Short.parseShort(textures[1]));
-
-                if (isItemHasDurability(item)) {
-                    item = setTag(item, UNBREAKABLE_TAG, "1");
-                    item = setTag(item, HIDE_FLAGS_TAG, "63");
-                }
-            }
-        }
-
-        return item;
-    }
-
-    private static boolean isItemHasDurability(ItemStack item) {
-        return itemsWithDurability.contains(item.getType());
-    }
-
-    public static NbtCompound itemStackToNBT(ItemStack originalItem, String name) {
-        NbtCompound nbt = NbtFactory.ofCompound(name);
-
-        nbt.put("material", originalItem.getType().name());
-        nbt.put("amount", originalItem.getAmount());
-        nbt.put("data", originalItem.getDurability());
-
-        ItemStack item = toBukkitItemStack(originalItem.clone());
-        NbtCompound tag = ItemUtils.isEmpty(item) ? null : NbtFactory.asCompound(NbtFactory.fromItemTag(item));
-        if (tag != null) {
-            nbt.put("tag", tag);
-        }
-
-        return nbt;
-    }
-
-    @NotNull
-    public static ItemStack nbtToItemStack(NbtCompound nbt) {
-        ItemStack item = new ItemStack(Material.valueOf(nbt.getString("material")));
-
-        if (!ItemUtils.isEmpty(item)) {
-            item.setAmount(nbt.getInteger("amount"));
-            item.setDurability(nbt.getShort("data"));
-
-            if (nbt.containsKey("tag")) {
-                item = toBukkitItemStack(item);
-                NbtFactory.setItemTag(item, nbt.getCompound("tag"));
-            }
-        }
-
-        return item;
+    public static boolean isItemHasDurability(ItemStack item) {
+        return item.getType().getMaxDurability() > 0;
     }
 
     @NotNull
@@ -255,11 +175,13 @@ public class ItemUtils {
         return item == null || item.getType() == Material.AIR;
     }
 
+    @Contract("null -> false")
+    public static boolean isNotEmpty(@Nullable ItemStack item) {
+        return item != null && item.getType() != Material.AIR;
+    }
+
     @NotNull
-    private static ItemStack toBukkitItemStack(ItemStack item) {
-        if (item == null) {
-            return new ItemStack(Material.AIR);
-        }
-        return !item.getClass().getName().endsWith("CraftItemStack") ? MinecraftReflection.getBukkitItemStack(item) : item;
+    public static ItemStack toBukkitItemStack(ItemStack item) {
+        return MinecraftReflection.getBukkitItemStack(item);
     }
 }

@@ -23,6 +23,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import ru.endlesscode.rpginventory.RPGInventory;
+import ru.endlesscode.rpginventory.item.Texture;
 import ru.endlesscode.rpginventory.item.TexturedItem;
 import ru.endlesscode.rpginventory.misc.FileLanguage;
 import ru.endlesscode.rpginventory.utils.ItemUtils;
@@ -48,8 +49,8 @@ public class BackpackType extends TexturedItem {
 
     private ItemStack item;
 
-    BackpackType(ConfigurationSection config) {
-        super(config.getString("item"));
+    BackpackType(Texture texture, ConfigurationSection config) {
+        super(texture);
 
         this.id = config.getName();
         this.name = StringUtils.coloredLine(config.getString("name", id));
@@ -60,7 +61,7 @@ public class BackpackType extends TexturedItem {
     }
 
     private void createItem() {
-        ItemStack spawnItem = ItemUtils.getTexturedItem(this.texture);
+        ItemStack spawnItem = this.texture.getItemStack();
 
         ItemMeta meta = spawnItem.getItemMeta();
         meta.setDisplayName(this.name);

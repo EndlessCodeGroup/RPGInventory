@@ -1,11 +1,4 @@
 #version: 2.0 | Do not remove this line!
-firststart: \n\
-&3============================== RPGInventory ================================\n\
-&cBefore using &eRPGInventory&c, add changed textures to the resource-pack\n\
-and configure items that can be put in the inventory slots. After that,\n\
-set value in the config &eenabled: true\n\
-&3============================================================================
-
 title: RPG Inventar
 
 locked.name: &c&lZamceny slot
@@ -16,20 +9,18 @@ buyable.lore: &6&oAby si odemkl slot musis:
 buyable.money: &6&o• mit {0} goldu
 buyable.level: &6&o• byt {0} lvl
 
-error.fall: &cYou can't do it while you are flying
+error.fall: &cYou can''t do it while you are flying
 error.money: &6&lAby si mohl odemknout slot jeste potrebujes {0} gold
 error.level: &6&lAby si mohl odemknout slot potrebujes {0} lvlu
 error.buyable: &6&lOdemknuti tohoto slotu te bude stat {0} gold. Klikni na to znova do 10 vterin aby si potvrdil odemceni.
 error.previous: &6&lNejdrive odemkni predchozi sloty
 error.rp.denied: &cMusis povolit stazeni resource-packu!
-error.rp.force: &cVypnuti resource-packu neni povoleno!
 error.item.level: &6Vyzaduje &c{0} &6level
 error.item.class: &6Vyzaduje tridu &c{0}
 error.mount.owner: &6Zvire patri %
 
 message.buyed: &a&lUspesne jsi zakoupil slot
-message.fixhp: &6Your HP was fixed, please login to server again.
-message.perms: &cYou don't have permission to use this command
+message.perms: &cYou don''t have permission to use this command
 
 pet.name: {0} &f[{1}]
 pet.health: &cZivoty: &7{0}
@@ -63,4 +54,4 @@ stat.jump: &9Skoky: &7{0}
 
 backpack.desc: &8&oPrendej ho do spravneho slotu v RPG inventari
 backpack.size: &aKapacita: &7{0}
-backpack.limit: &cYou can't have more than {0} backpack!
+backpack.limit: &cYou can''t have more than {0} backpack!

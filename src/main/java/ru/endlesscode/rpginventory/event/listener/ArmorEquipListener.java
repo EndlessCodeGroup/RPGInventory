@@ -61,6 +61,7 @@ public class ArmorEquipListener implements Listener {
         final Player player = event.getPlayer();
         if (!InventoryManager.playerIsLoaded(player) || event.getAction() != Action.RIGHT_CLICK_AIR &&
                 event.getAction() != Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.RIGHT_CLICK_BLOCK &&
+                event.getClickedBlock() != null &&
                 !event.getClickedBlock().getState().getClass().getSimpleName().contains("BlockState")) {
             return;
         }
@@ -130,7 +131,7 @@ public class ArmorEquipListener implements Listener {
             // Prevent method when player press number
             if (event.getInventory().getType() == InventoryType.CRAFTING) {
                 ItemStack hotbarItem = player.getInventory().getItem(event.getHotbarButton());
-                if (!ItemUtils.isEmpty(hotbarItem)) {
+                if (ItemUtils.isNotEmpty(hotbarItem)) {
                     event.setCancelled(true);
                 }
             }

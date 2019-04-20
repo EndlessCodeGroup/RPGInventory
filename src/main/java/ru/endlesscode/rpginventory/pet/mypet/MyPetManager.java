@@ -30,7 +30,6 @@ import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.repository.PlayerManager;
 import de.Keyle.MyPet.api.repository.RepositoryCallback;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -45,6 +44,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ru.endlesscode.inspector.bukkit.scheduler.TrackedBukkitRunnable;
 import ru.endlesscode.rpginventory.RPGInventory;
+import ru.endlesscode.rpginventory.compat.MaterialCompat;
 import ru.endlesscode.rpginventory.event.PetEquipEvent;
 import ru.endlesscode.rpginventory.event.PetUnequipEvent;
 import ru.endlesscode.rpginventory.event.PlayerInventoryLoadEvent;
@@ -70,7 +70,7 @@ public class MyPetManager implements Listener {
 
     public static boolean init(@NotNull RPGInventory instance) {
         if (MyPetManager.getMyPetSlot() == null) {
-            Log.w("MyPet found, but slot for MyPet not configured!");
+            Log.s("MyPet found, but slot for MyPet not configured!");
             return false;
         }
 
@@ -134,7 +134,7 @@ public class MyPetManager implements Listener {
                 || action == InventoryAction.SWAP_WITH_CURSOR
                 || actionType == ActionType.DROP;
 
-        return !(!ItemUtils.isEmpty(currentItem) && isAllowedAction)
+        return !(ItemUtils.isNotEmpty(currentItem) && isAllowedAction)
                 || swapMyPets(player, isMyPetItem(currentItem), cursor);
     }
 
@@ -175,7 +175,7 @@ public class MyPetManager implements Listener {
 
     @Contract("null -> false")
     private static boolean isMyPetItem(@Nullable ItemStack item) {
-        return !ItemUtils.isEmpty(item) && ItemUtils.hasTag(item, MYPET_TAG);
+        return ItemUtils.isNotEmpty(item) && ItemUtils.hasTag(item, MYPET_TAG);
     }
 
     private static void deactivateMyPet(@NotNull final Player player) {
@@ -251,7 +251,7 @@ public class MyPetManager implements Listener {
             return;
         }
 
-        ItemStack petItem = new ItemStack(Material.MONSTER_EGG);
+        ItemStack petItem = new ItemStack(MaterialCompat.getMaterial("MONSTER_EGG"));
         ItemMeta meta = petItem.getItemMeta();
         meta.setDisplayName(RPGInventory.getLanguage().getMessage("mypet.egg", event.getMyPet().getPetName()));
         petItem.setItemMeta(meta);

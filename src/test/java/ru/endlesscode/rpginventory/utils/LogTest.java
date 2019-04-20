@@ -36,7 +36,6 @@ public class LogTest {
 
     @Test
     public void shouldApplyArgsToMessage() {
-        //noinspection ThrowableNotThrown
         Exception exception = new Exception("Exception message");
 
         Log.i("Info {0}, {1}", 0, "arg1");

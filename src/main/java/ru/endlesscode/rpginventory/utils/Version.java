@@ -147,6 +147,19 @@ public final class Version implements Comparable<Version> {
     }
 
     /**
+     * Returns version code in format xxyyzz, where x - major version, y - minor and z - patch.
+     * Example:
+     *   1.12.2  ->  11202
+     *   21.0.12 -> 210012
+     *   1.9     ->  10900
+     *   2.2.1   ->  20201
+     * Major, minor and patch versions shouldn't be higher than 99.
+     */
+    public int getVersionCode() {
+        return major * 10000 + minor * 100 + patch;
+    }
+
+    /**
      * Checks that version has qualifier.
      *
      * @return true if version contains qualifier, otherwise false.

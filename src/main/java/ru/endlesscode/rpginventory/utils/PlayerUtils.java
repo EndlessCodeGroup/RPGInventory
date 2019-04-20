@@ -25,7 +25,9 @@ import de.tobiyas.racesandclasses.APIs.ClassAPI;
 import de.tobiyas.racesandclasses.APIs.LevelAPI;
 import de.tobiyas.racesandclasses.datacontainer.traitholdercontainer.classes.ClassContainer;
 import me.baks.rpl.api.API;
-import me.leothepro555.skills.Skills;
+import me.leothepro555.skills.database.managers.PlayerInfo;
+import me.leothepro555.skills.main.LanguageSupport;
+import me.leothepro555.skills.main.Skills;
 import me.robin.battlelevels.api.BattleLevelsAPI;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -57,7 +59,8 @@ public class PlayerUtils {
                 level = BattleLevelsAPI.getLevel(player.getUniqueId());
                 break;
             case SKILLS:
-                level = Skills.getLevel(player);
+                PlayerInfo playerInfo = Skills.get().getPlayerDataManager().getOrLoadPlayerInfo(player);
+                level = playerInfo.getLevel();
                 break;
             case HEROES:
                 level = Heroes.getInstance().getCharacterManager().getHero(player).getLevel();
@@ -90,9 +93,10 @@ public class PlayerUtils {
                     playerClass = data.getMainClass().getData().getName();
                 }
                 break;
-            //class check from skills pro
             case SKILLS:
-                playerClass = Skills.getSkill(player).toString();
+                PlayerInfo playerInfo = Skills.get().getPlayerDataManager().getOrLoadPlayerInfo(player);
+                LanguageSupport.Languages skillNameLang = playerInfo.getSkill().getLanguageName();
+                playerClass = Skills.getLang().parseFirstString(skillNameLang);
                 break;
             case HEROES:
                 playerClass = Heroes.getInstance().getCharacterManager().getHero(player).getHeroClass().getName();
@@ -160,8 +164,11 @@ public class PlayerUtils {
     }
 
     public enum ClassSystem {
-        //check skills pro class system
-        PERMISSIONS("NONE"), SKILLAPI("SkillAPI"), SKILLS("Skills"), HEROES("Heroes"), RAC("RacesAndClasses");
+        PERMISSIONS("NONE"),
+        SKILLAPI("SkillAPI"),
+        SKILLS("Skills"),
+        HEROES("Heroes"),
+        RAC("RacesAndClasses");
 
         private final String pluginName;
 

@@ -51,7 +51,7 @@ import org.jetbrains.annotations.Nullable;
 import ru.endlesscode.inspector.bukkit.scheduler.TrackedBukkitRunnable;
 import ru.endlesscode.rpginventory.RPGInventory;
 import ru.endlesscode.rpginventory.api.InventoryAPI;
-import ru.endlesscode.rpginventory.compat.Sound;
+import ru.endlesscode.rpginventory.compat.SoundCompat;
 import ru.endlesscode.rpginventory.event.PlayerInventoryLoadEvent;
 import ru.endlesscode.rpginventory.inventory.ActionType;
 import ru.endlesscode.rpginventory.inventory.InventoryLocker;
@@ -87,9 +87,7 @@ public class InventoryListener implements Listener {
 
     @EventHandler
     public void onPlayerQuit(@NotNull PlayerQuitEvent event) {
-        Player player = event.getPlayer();
-        PlayerLoader.removePlayer(player);
-        InventoryManager.unloadPlayerInventory(player);
+        InventoryManager.unloadPlayerInventory(event.getPlayer());
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
@@ -112,11 +110,9 @@ public class InventoryListener implements Listener {
     public void prePlayerRespawn(@NotNull PlayerRespawnEvent event) {
         Player player = event.getPlayer();
 
-        if (!InventoryManager.playerIsLoaded(player)) {
-            return;
+        if (InventoryManager.playerIsLoaded(player)) {
+            InventoryLocker.lockSlots(player);
         }
-
-        InventoryLocker.lockSlots(player);
     }
 
     @EventHandler
@@ -183,7 +179,7 @@ public class InventoryListener implements Listener {
                 player.getInventory().setItem(slotId, event.getItem().getItemStack());
                 event.getItem().remove();
 
-                player.playSound(player.getLocation(), Sound.ITEM_PICKUP.bukkitSound(), .3f, 1.7f);
+                player.playSound(player.getLocation(), SoundCompat.ITEM_PICKUP.get(), .3f, 1.7f);
                 if (Config.getConfig().getBoolean("attack.auto-held")) {
                     player.getInventory().setHeldItemSlot(quickSlot.getQuickSlot());
                 }
@@ -216,7 +212,7 @@ public class InventoryListener implements Listener {
                 }
 
                 final boolean isCraftSlot = rawSlotId >= 1 && rawSlotId <= 4;
-                if (rawSlotId == 45 // Shield slot has rawId 45
+                if (rawSlotId == Slot.SHIELD_RAW_SLOT_ID
                         || isCraftSlot && Config.craftSlotsAction == VanillaSlotAction.RPGINV) {
                     event.setCancelled(true);
                     return;
@@ -230,7 +226,6 @@ public class InventoryListener implements Listener {
         }
     }
 
-    @SuppressWarnings("deprecation")
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void onInventoryClick(@NotNull final InventoryClickEvent event) {
         final Player player = (Player) event.getWhoClicked();
@@ -278,8 +273,7 @@ public class InventoryListener implements Listener {
                     openRpgInventory = Config.craftSlotsAction == VanillaSlotAction.RPGINV;
                     break;
                 case QUICKBAR:
-                    // Shield slot is QUICKBAR and has rawId - 45 o.O
-                    openRpgInventory = rawSlot == 45 && Config.armorSlotsAction == VanillaSlotAction.RPGINV;
+                    openRpgInventory = rawSlot == Slot.SHIELD_RAW_SLOT_ID && Config.armorSlotsAction == VanillaSlotAction.RPGINV;
                     break;
                 case ARMOR:
                     openRpgInventory = Config.armorSlotsAction == VanillaSlotAction.RPGINV;
@@ -322,7 +316,6 @@ public class InventoryListener implements Listener {
             }
 
             if (slot.getSlotType() == Slot.SlotType.ACTION) {
-                //noinspection ConstantConditions
                 ((ActionSlot) slot).preformAction(player);
                 event.setCancelled(true);
                 return;

@@ -18,18 +18,12 @@
 
 package ru.endlesscode.rpginventory.event.listener;
 
-import org.bukkit.Location;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityTargetLivingEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.jetbrains.annotations.NotNull;
 import ru.endlesscode.rpginventory.RPGInventory;
@@ -52,94 +46,22 @@ public class PlayerListener implements Listener {
         }
     }
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
-    public void onDamageWhenPlayerNotLoaded(@NotNull EntityDamageEvent event) {
-        if (event.getEntity() == null
-                || event.getEntityType() != EntityType.PLAYER) {
-            return;
-        }
-
-        Player player = (Player) event.getEntity();
-        if (InventoryManager.playerIsLoaded(player)) {
-            return;
-        }
-
-        if (event.getCause() == EntityDamageEvent.DamageCause.FALL) {
-            PlayerLoader.setDamageForPlayer(player, event.getFinalDamage());
-        }
-
-        event.setCancelled(true);
-    }
-
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
-    public void onTargetWhenPlayerNotLoaded(@NotNull EntityTargetLivingEntityEvent event) {
-        if (event.getTarget() == null || event.getTarget().getType() != EntityType.PLAYER) {
-            return;
-        }
-
-        if (!InventoryManager.playerIsLoaded((Player) event.getTarget())) {
-            event.setCancelled(true);
-        }
-    }
-
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
-    public void onPlayerMoveWhenNotLoaded(@NotNull PlayerMoveEvent event) {
-        Player player = event.getPlayer();
-
-        if (!InventoryManager.isAllowedWorld(player.getWorld()) || InventoryManager.playerIsLoaded(player)) {
-            return;
-        }
-
-        if (PlayerLoader.isPreparedPlayer(player)) {
-            PlayerLoader.removePlayer(player);
-            player.kickPlayer(RPGInventory.getLanguage().getMessage("error.rp.denied"));
-            event.setCancelled(true);
-        } else {
-            Location toLocation = event.getTo();
-            Location newLocation = event.getFrom().clone();
-            //noinspection deprecation
-            if (!player.isOnGround()) {
-                newLocation.setY(toLocation.getY());
-            }
-
-            newLocation.setPitch(toLocation.getPitch());
-            newLocation.setYaw(toLocation.getYaw());
-            event.setTo(newLocation);
-        }
-    }
-
-    @EventHandler(priority = EventPriority.LOW)
-    public void onPlayerInteractWhenNotLoaded(@NotNull PlayerInteractEvent event) {
-        Player player = event.getPlayer();
-
-        if (InventoryManager.isAllowedWorld(player.getWorld()) && !InventoryManager.playerIsLoaded(player)) {
-            PlayerUtils.sendMessage(player, RPGInventory.getLanguage().getMessage("error.rp.denied"));
-            event.setCancelled(true);
-        }
-    }
-
     @EventHandler(priority = EventPriority.LOW)
     public void onPlayerDead(@NotNull PlayerDeathEvent event) {
         Player player = event.getEntity();
-
-        if (!InventoryManager.playerIsLoaded(player)) {
-            return;
+        if (InventoryManager.playerIsLoaded(player)) {
+            InventorySaver.save(player, event.getDrops(),
+                    RPGInventory.getPermissions().has(player, "rpginventory.keep.items") || event.getKeepInventory(),
+                    RPGInventory.getPermissions().has(player, "rpginventory.keep.armor") || event.getKeepInventory(),
+                    RPGInventory.getPermissions().has(player, "rpginventory.keep.rpginv") || event.getKeepInventory());
         }
-
-        InventorySaver.save(player, event.getDrops(),
-                RPGInventory.getPermissions().has(player, "rpginventory.keep.items") || event.getKeepInventory(),
-                RPGInventory.getPermissions().has(player, "rpginventory.keep.armor") || event.getKeepInventory(),
-                RPGInventory.getPermissions().has(player, "rpginventory.keep.rpginv") || event.getKeepInventory());
     }
 
     @EventHandler(priority = EventPriority.LOW)
     public void onPlayerRespawn(@NotNull PlayerRespawnEvent event) {
         Player player = event.getPlayer();
-
-        if (!InventoryManager.playerIsLoaded(player)) {
-            return;
+        if (InventoryManager.playerIsLoaded(player)) {
+            InventorySaver.restore(player);
         }
-
-        InventorySaver.restore(player);
     }
 }
