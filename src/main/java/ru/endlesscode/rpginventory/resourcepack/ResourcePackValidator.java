@@ -42,7 +42,9 @@ final class ResourcePackValidator {
     private static final String EMPTY_HASH = "PUT_YOUR_HASH_HERE";
 
     private static final String HEADER_LOCATION = "Location";
+
     private static final String MIME_ZIP = "application/zip";
+    private static final String MIME_BINARY = "application/binary"; // Dropbox uses this MIME type for ZIPs o.o
 
     private static final int CODE_MOVED_PERMANENTLY = 301;
     private static final int CODE_FOUND = 302;
@@ -131,7 +133,7 @@ final class ResourcePackValidator {
         }
 
         String contentType = conn.getContentType();
-        if (!contentType.equals(MIME_ZIP)) {
+        if (!MIME_ZIP.equals(contentType) && !MIME_BINARY.equals(contentType)) {
             throw new IllegalArgumentException(
                     String.format("MIME type should be '%s' but received '%s'\n"
                             + "Please provide link to resource pack file, not to download page.", MIME_ZIP, contentType)
