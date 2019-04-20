@@ -44,6 +44,11 @@ final class ResourcePackValidator {
     private static final String HEADER_LOCATION = "Location";
     private static final String MIME_ZIP = "application/zip";
 
+    private static final int CODE_MOVED_PERMANENTLY = 301;
+    private static final int CODE_FOUND = 302;
+    private static final int CODE_TEMPORARY_REDIRECT = 307;
+    private static final int CODE_PERMANENT_REDIRECT = 308;
+
     private List<String> errors = new ArrayList<>();
 
     /**
@@ -56,7 +61,7 @@ final class ResourcePackValidator {
      */
     @Contract("null, _ -> false")
     boolean validateUrlAndHash(String resourcePackUrl, String resourcePackHash) {
-        if (isLegalUrl(resourcePackUrl)) {
+        if (!isLegalUrl(resourcePackUrl)) {
             return false;
         }
 
@@ -98,57 +103,79 @@ final class ResourcePackValidator {
         }
     }
 
-    private void addErrors(@NotNull String... messages) {
-        Collections.addAll(errors, messages);
-    }
-
     private void validateUrl(@NotNull String address) throws IOException {
         HttpURLConnection.setFollowRedirects(false);
         HttpURLConnection conn;
         try {
-            conn = getRealConnection(address);
+            conn = getRealConnection(address, false);
         } catch (MalformedURLException e) {
             throw new IllegalArgumentException("Wrong URL: " + e.getMessage());
         } catch (UnknownHostException e) {
             throw new IllegalArgumentException("Unknown host: " + e.getMessage());
         } catch (Exception e) {
-            throw new IllegalArgumentException("Error: " + e.getMessage());
+            throw new IllegalArgumentException("Error: " + e.toString());
         }
 
         String realUrl = conn.getURL().toString();
         if (!realUrl.equals(address)) {
-            throw new IllegalArgumentException(
+            addError(
                     String.format("Link isn't direct. Redirect found!\n"
                             + "Try to replace your link: %s\n"
-                            + "By this link: %s\n"
-                            + "If your link works normally, just ignore this message.", address, realUrl)
+                            + "By this link: %s", address, realUrl)
             );
         }
 
-        int codeType = conn.getResponseCode() / 100;
-        if (codeType != 2) {
-            throw new IllegalArgumentException("" + conn.getResponseMessage());
+        conn = getRealConnection(conn.getURL().toString(), true);
+        if (conn.getResponseCode() != 200) {
+            throw new IllegalArgumentException("Response: " + conn.getResponseMessage());
         }
 
         String contentType = conn.getContentType();
         if (!contentType.equals(MIME_ZIP)) {
             throw new IllegalArgumentException(
-                    String.format("MIME type should be '%s' but given '%s'\n"
+                    String.format("MIME type should be '%s' but received '%s'\n"
                             + "Please provide link to resource pack file, not to download page.", MIME_ZIP, contentType)
             );
         }
     }
 
     @NotNull
-    private HttpURLConnection getRealConnection(@NotNull String address) throws IOException {
+    private HttpURLConnection getRealConnection(@NotNull String address, boolean trackTemporaryRedirects)
+            throws IOException {
         URL url = new URL(address);
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-        int codeType = conn.getResponseCode() / 100;
-        if (codeType == 3) {
-            return getRealConnection(conn.getHeaderField(HEADER_LOCATION));
+        int code = conn.getResponseCode();
+        boolean isPermanentRedirect = code == CODE_MOVED_PERMANENTLY || code == CODE_PERMANENT_REDIRECT;
+        boolean isTemporaryRedirect = code == CODE_FOUND || code == CODE_TEMPORARY_REDIRECT;
+        if (isPermanentRedirect || trackTemporaryRedirects && isTemporaryRedirect) {
+            String redirectLocation = conn.getHeaderField(HEADER_LOCATION);
+            if (redirectLocation.startsWith("/")) {
+                redirectLocation = getAbsoluteUrl(url, redirectLocation);
+            }
+            return getRealConnection(redirectLocation, trackTemporaryRedirects);
         }
 
         return conn;
+    }
+
+    private String getAbsoluteUrl(@NotNull URL url, @NotNull String relativeUrl) {
+        final String protocol = url.getProtocol();
+        final String host = url.getHost();
+        final int port = url.getPort();
+
+        if (port == -1) {
+            return String.format("%s://%s%s", protocol, host, relativeUrl);
+        } else {
+            return String.format("%s://%s:%d%s", protocol, host, port, relativeUrl);
+        }
+    }
+
+    private void addError(@NotNull String message) {
+        addErrors(message.split("\n"));
+    }
+
+    private void addErrors(String... messages) {
+        Collections.addAll(errors, messages);
     }
 
     @Contract(pure = true)
