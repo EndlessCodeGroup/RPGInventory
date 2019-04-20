@@ -46,6 +46,7 @@ final class ResourcePackValidator {
     private static final String MIME_ZIP = "application/zip";
     private static final String MIME_BINARY = "application/binary"; // Dropbox uses this MIME type for ZIPs o.o
 
+    private static final int CODE_OK = 200;
     private static final int CODE_MOVED_PERMANENTLY = 301;
     private static final int CODE_FOUND = 302;
     private static final int CODE_TEMPORARY_REDIRECT = 307;
@@ -128,7 +129,7 @@ final class ResourcePackValidator {
         }
 
         conn = getRealConnection(conn.getURL().toString(), true);
-        if (conn.getResponseCode() != 200) {
+        if (conn.getResponseCode() != CODE_OK) {
             throw new IllegalArgumentException("Response: " + conn.getResponseMessage());
         }
 
