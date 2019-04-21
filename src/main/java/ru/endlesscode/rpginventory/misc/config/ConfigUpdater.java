@@ -192,7 +192,7 @@ public class ConfigUpdater {
             config.set("craft-slots-action", "rpginv");
         }
 
-        if (configVersion.compareTo("2.2.2") < 0) {
+        if (configVersion.compareTo("2.3.0") < 0) {
             config.set("metrics", null);
             config.set("containers", null);
         }
