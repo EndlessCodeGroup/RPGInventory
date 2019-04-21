@@ -85,7 +85,7 @@ dependencies {
     compileOnly('me.clip:placeholderapi:2.9.2')
     compileOnly('me.robin:BattleLevelsAPI:6.9.1')
     compileOnly('com.herocraftonline.heroes:Heroes:1.5.5.7')
-    compileOnly('de.keyle:mypet:2.3.3')
+    compileOnly('de.keyle:mypet:3.0-SNAPSHOT')
     compileOnly('org.tobiyas:RacesAndClasses:1.2.0')
     compileOnly('me.baks:RPGPlayerLeveling:3.7.2')
     compileOnly('com.sucy:SkillAPI:3.102')

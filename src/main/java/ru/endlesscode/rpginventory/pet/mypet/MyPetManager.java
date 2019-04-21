@@ -18,7 +18,6 @@
 
 package ru.endlesscode.rpginventory.pet.mypet;
 
-import com.google.common.base.Optional;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.entity.MyPet;
@@ -57,6 +56,7 @@ import ru.endlesscode.rpginventory.utils.Log;
 import ru.endlesscode.rpginventory.utils.PlayerUtils;
 
 import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -218,7 +218,7 @@ public class MyPetManager implements Listener {
                 storedMyPet.setOwner(user);
                 String worldName = player.getWorld().getName();
                 user.setMyPetForWorldGroup(WorldGroup.getGroupByWorld(worldName).getName(), storedMyPet.getUUID());
-                Optional<MyPet> pet = MyPetApi.getMyPetManager().activateMyPet(storedMyPet);
+                Optional<MyPet> pet = activateMyPetCompat(storedMyPet);
                 if (pet.isPresent()) {
                     MyPet myPet = pet.get();
                     if (myPet.getStatus() != MyPet.PetState.Dead) {
@@ -233,6 +233,20 @@ public class MyPetManager implements Listener {
                 MyPetApi.getRepository().updateMyPetPlayer(user, null);
             }
         });
+    }
+
+    @SuppressWarnings("unchecked")
+    private static Optional<MyPet> activateMyPetCompat(StoredMyPet storedMyPet) {
+        Object pet = MyPetApi.getMyPetManager().activateMyPet(storedMyPet);
+        final Optional<MyPet> optionalPet;
+        // MyPet switched to Java's Optional from Guava
+        //noinspection ConstantConditions
+        if (pet instanceof com.google.common.base.Optional) {
+            optionalPet = ((com.google.common.base.Optional<MyPet>) pet).toJavaUtil();
+        } else {
+            optionalPet = (Optional<MyPet>) pet;
+        }
+        return optionalPet;
     }
 
     @EventHandler
