@@ -1,5 +1,7 @@
+<!-- 
 DON'T JUST DELETE THIS TEMPLATE  
-WITHOUT IT WE'LL JUST MARK YOUR ISSUE AS `INVALID`
+WITHOUT IT WE'LL JUST MARK YOUR ISSUE AS INVALID 
+-->
 
 **Prerequisites**  
 * [ ] Are you running the latest version?
@@ -10,26 +12,30 @@ WITHOUT IT WE'LL JUST MARK YOUR ISSUE AS `INVALID`
 * [ ] Can you reproduce the problem on clean server (with installed only the plugin and dependencies)?
 
 **Describe the bug**  
-A clear and concise description of what the bug is.
+<!-- A clear and concise description of what the bug is. -->
 
 **To Reproduce**  
+<!--
 Steps to reproduce the behavior:
 1. Go to '...'
 2. Open '....'
 3. Kick '....'
-4. See error
+4. See the error
+-->
 
 **Expected behavior**  
-A clear and concise description of what you expected to happen.
+<!-- A clear and concise description of what you expected to happen. -->
 
 **Screenshots or video**  
-If applicable, add screenshots or video to help explain your problem.
+<!-- If applicable, add screenshots or video to help explain your problem. -->
 
 **Environment:**  
- - Server Core: [e.g. Spigot, Paper]
- - Server Version: [e.g. 1.12.2]
- - Plugin Version: [e.g. 2.1.6]
+ - Server Core: <!-- e.g. Spigot, Paper -->
+ - Server Version: <!-- e.g. 1.12.2 -->
+ - Plugin Version: <!-- e.g. 2.1.6 -->
 
 **Additional context**  
+<!-- 
 Add any other context about the problem here. For example, you can post here list of plugins.  
-Highly recommended to attach server logs to issue!
+Highly recommended to attach RPGInventory/logs/latest.log to the issue! 
+-->
