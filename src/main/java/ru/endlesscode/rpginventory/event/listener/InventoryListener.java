@@ -335,9 +335,11 @@ public class InventoryListener implements Listener {
                     event.setCancelled(true);
                 }
             } else if (slot.getSlotType() == Slot.SlotType.PET) {
-                event.setCancelled(!InventoryManager.validatePet(player, action, currentItem, cursor));
-            } else if (slot.getSlotType() == Slot.SlotType.MYPET) {
-                event.setCancelled(!MyPetManager.validatePet(player, action, currentItem, cursor));
+                if (RPGInventory.isMyPetHooked()) {
+                    event.setCancelled(!MyPetManager.validatePet(player, action, currentItem, cursor));
+                } else {
+                    event.setCancelled(!InventoryManager.validatePet(player, action, currentItem, cursor));
+                }
             } else if (slot.getSlotType() == Slot.SlotType.BACKPACK) {
                 if (event.getClick() == ClickType.RIGHT && BackpackManager.open(player, currentItem)) {
                     event.setCancelled(true);

@@ -145,20 +145,20 @@ public class RPGInventory extends PluginLifecycle {
             placeholderApiHooked = false;
         }
 
+        // Hook MyPet
+        if (Bukkit.getPluginManager().isPluginEnabled("MyPet") && MyPetManager.init(this)) {
+            myPetHooked = true;
+            Log.i("MyPet used as pet system");
+        } else {
+            myPetHooked = false;
+            Log.i(PetManager.init(this) ? "Pet system is enabled" : "Pet system isn''t loaded");
+        }
+
         // Load modules
         Log.i(CraftManager.init(this) ? "Craft extensions is enabled" : "Craft extensions isn''t loaded");
         Log.i(InventoryLocker.init(this) ? "Inventory lock system is enabled" : "Inventory lock system isn''t loaded");
         Log.i(ItemManager.init(this) ? "Item system is enabled" : "Item system isn''t loaded");
-        Log.i(PetManager.init(this) ? "Pet system is enabled" : "Pet system isn''t loaded");
         Log.i(BackpackManager.init(this) ? "Backpack system is enabled" : "Backpack system isn''t loaded");
-
-        // Hook MyPet
-        if (Bukkit.getPluginManager().isPluginEnabled("MyPet") && MyPetManager.init(this)) {
-            myPetHooked = true;
-            Log.i("MyPet hooked!");
-        } else {
-            myPetHooked = false;
-        }
 
         // Registering other listeners
         PluginManager pm = this.getServer().getPluginManager();
