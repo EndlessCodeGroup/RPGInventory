@@ -120,15 +120,17 @@ public class Texture {
         try {
             durability = Short.parseShort(durabilityValue);
             item.setDurability(durability);
-
-            if (ItemUtils.isItemHasDurability(item)) {
-                ItemMeta meta = item.getItemMeta();
-                meta.setUnbreakable(true);
-                meta.addItemFlags(ItemFlag.values());
-                item.setItemMeta(meta);
-            }
         } catch (NumberFormatException e) {
             Log.w("Can''t parse durability. Specify a number instead of \"{0}\"", durabilityValue);
+        }
+
+        ItemMeta meta = item.getItemMeta();
+        if (meta != null) {
+            meta.addItemFlags(ItemFlag.values());
+            if (ItemUtils.isItemHasDurability(item)) {
+                meta.setUnbreakable(true);
+            }
+            item.setItemMeta(meta);
         }
 
         return new Texture(item, durability);
