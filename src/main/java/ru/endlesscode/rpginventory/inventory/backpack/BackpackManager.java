@@ -20,6 +20,7 @@ package ru.endlesscode.rpginventory.inventory.backpack;
 
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -211,7 +212,7 @@ public class BackpackManager {
     private static void tryToLoadBackpack(@NotNull Path path) {
         try {
             loadBackpack(path);
-        } catch (IOException e) {
+        } catch (IOException | InvalidConfigurationException e) {
             Log.d(e);
             FileUtils.resolveException(path);
             Log.s("Error on loading backpack {0}", path.getFileName().toString());
@@ -219,7 +220,7 @@ public class BackpackManager {
         }
     }
 
-    private static void loadBackpack(@NotNull Path path) throws IOException {
+    private static void loadBackpack(@NotNull Path path) throws IOException, InvalidConfigurationException {
         Backpack backpack = Serialization.loadBackpack(path);
         if (backpack == null || backpack.isOverdue()) {
             Files.delete(path);

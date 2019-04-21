@@ -122,7 +122,6 @@ public class RPGInventory extends PluginLifecycle {
         instance = this;
         Log.init(this.getLogger());
         Config.init(this);
-        Serialization.registerTypes();
     }
 
     @Override
@@ -130,6 +129,8 @@ public class RPGInventory extends PluginLifecycle {
         this.updateConfig();
         Config.reload();
         language = new FileLanguage(this);
+
+        Serialization.registerTypes();
 
         if (!this.checkRequirements()) {
             this.getPluginLoader().disablePlugin(this);

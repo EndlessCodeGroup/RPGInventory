@@ -75,7 +75,6 @@ dependencies {
     compileOnly(bukkit()) {
         exclude group: 'junit'
         exclude module: 'gson'
-        exclude module: 'snakeyaml'
     }
     compileOnly('net.milkbowl.vault:VaultAPI:1.6') {
         exclude group: 'org.bukkit'

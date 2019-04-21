@@ -7,6 +7,7 @@ import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.yaml.snakeyaml.reader.ReaderException;
 import ru.endlesscode.rpginventory.inventory.PlayerWrapper;
 import ru.endlesscode.rpginventory.inventory.backpack.Backpack;
 import ru.endlesscode.rpginventory.utils.FileUtils;
@@ -35,43 +36,52 @@ public class Serialization {
 
     @Nullable
     public static PlayerWrapper loadPlayerOrNull(Player player, @NotNull Path file) {
+        PlayerWrapper playerWrapper;
         try {
-            try {
-                return loadPlayer(player, file);
-            } catch (InvalidConfigurationException e) {
-                Log.w("Can''t load {0}''s inventory. Trying to use legacy loader...", player.getName());
-                return LegacySerialization.loadPlayer(player, file);
-            }
-        } catch (IOException e) {
+            playerWrapper = loadPlayer(player, file);
+        } catch (IOException | InvalidConfigurationException e) {
             Log.d(e);
             FileUtils.resolveException(file);
-            return null;
-        } catch (Exception e) {
-            Log.d(e);
-            return null;
+            playerWrapper = null;
         }
+        return playerWrapper;
     }
 
     @NotNull
-    private static PlayerWrapper loadPlayer(Player player, @NotNull Path file) throws IOException, InvalidConfigurationException {
-        InventorySnapshot inventorySnapshot = (InventorySnapshot) load(file);
-        return inventorySnapshot.restore(player);
+    private static PlayerWrapper loadPlayer(Player player, @NotNull Path file)
+            throws IOException, InvalidConfigurationException {
+        PlayerWrapper playerWrapper;
+        try {
+            InventorySnapshot inventorySnapshot = (InventorySnapshot) load(file);
+            playerWrapper = inventorySnapshot.restore(player);
+        } catch (InvalidConfigurationException e) {
+            if (e.getCause() instanceof ReaderException) {
+                Log.w("Can''t load {0}''s inventory. Trying to use legacy loader...", player.getName());
+                playerWrapper = LegacySerialization.loadPlayer(player, file);
+            } else {
+                throw e;
+            }
+        }
+        return playerWrapper;
     }
 
-    public static Backpack loadBackpack(@NotNull Path file) throws IOException {
+    public static Backpack loadBackpack(@NotNull Path file) throws IOException, InvalidConfigurationException {
         Backpack backpack;
         try {
             backpack = (Backpack) load(file);
         } catch (InvalidConfigurationException e) {
-            Log.w("Can''t load backpack {0}. Trying to use legacy loader...", file.getFileName().toString());
-            backpack = LegacySerialization.loadBackpack(file);
+            if (e.getCause() instanceof ReaderException) {
+                Log.w("Can''t load backpack {0}. Trying to use legacy loader...", file.getFileName().toString());
+                backpack = LegacySerialization.loadBackpack(file);
+            } else {
+                throw e;
+            }
         }
 
         return backpack;
     }
 
-    public static void save(@NotNull Object data, @NotNull Path file)
-            throws IOException {
+    public static void save(@NotNull Object data, @NotNull Path file) throws IOException {
         final FileConfiguration serializedData = new YamlConfiguration();
         serializedData.set(ROOT_TAG, data);
 
