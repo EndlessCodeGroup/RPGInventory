@@ -1,14 +1,15 @@
 ## 2.3.0-RC1 (2019-04-21)
 
-24 changes total
+25 changes total
 
-### Fixed (5 changes)
+### Fixed (6 changes)
 
 - New inventories and backpacks serialization mechanism. Should fix issues with items loss.
 - NPEs: in InventoryLocker, in CraftExtension, on RP loading.
 - Skip wrong pets options instead of fail.
 - Fixed messages with single quote.
 - Shield slot.
+- Can't remove pet after leave with killed pet.
 
 ### Added (5 changes)
 
