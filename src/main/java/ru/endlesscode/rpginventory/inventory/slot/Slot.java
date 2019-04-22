@@ -18,14 +18,12 @@
 
 package ru.endlesscode.rpginventory.inventory.slot;
 
-import org.bukkit.Color;
-import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import ru.endlesscode.rpginventory.item.Texture;
 import ru.endlesscode.rpginventory.utils.InventoryUtils;
 import ru.endlesscode.rpginventory.utils.ItemUtils;
 import ru.endlesscode.rpginventory.utils.Log;
@@ -41,7 +39,12 @@ import java.util.List;
  * All rights reserved 2014 - 2016 © «EndlessCode Group»
  */
 public class Slot {
+
+    public static final int SHIELD_RAW_SLOT_ID = 45;
+    private static final int SHIELD_SLOT_ID = 40;
+
     private final String name;
+    @NotNull
     private final SlotType slotType;
 
     private final List<String> allowed = new ArrayList<>();
@@ -56,9 +59,10 @@ public class Slot {
     private final int quickSlot;
     private final boolean drop;
 
-    public Slot(String name, ConfigurationSection config) {
+    public Slot(String name, @NotNull SlotType slotType, @NotNull ConfigurationSection config) {
         this.name = name;
-        this.slotType = SlotType.valueOf(config.getString("type"));
+
+        this.slotType = slotType;
         final List<Integer> slotList = config.getIntegerList("slot");
         this.slotIds = slotList.isEmpty() ? Collections.singletonList(config.getInt("slot")) : slotList;
         this.requiredLevel = config.getInt("cost.required-level", 0);
@@ -67,15 +71,14 @@ public class Slot {
 
         int quickSlot = config.contains("quickbar") ? InventoryUtils.getQuickSlot(config.getInt("quickbar")) : -1;
         if (slotType == SlotType.SHIELD) {
-            this.quickSlot = 9; // Shield slot ID
+            quickSlot = SHIELD_SLOT_ID;
         } else if (slotType != SlotType.ACTIVE && quickSlot == -1 || !slotType.isAllowQuick() || slotIds.size() > 1) {
             if (config.contains("quickbar")) {
                 Log.w("Option \"quickbar\" is ignored for slot \"{0}\"!", name);
             }
-            this.quickSlot = -1;
-        } else {
-            this.quickSlot = quickSlot;
+            quickSlot = -1;
         }
+        this.quickSlot = quickSlot;
 
         if (slotType.isReadItemList()) {
             for (String item : config.getStringList("items")) {
@@ -96,24 +99,15 @@ public class Slot {
         }
 
         // Setup cup slot
-        if (config.contains("holder.item")) {
-            String texture = config.getString("holder.item");
-            if (texture.startsWith("LEATHER_")) {
-                this.cup = ItemUtils.getTexturedItem(StringUtils.coloredLine(texture.split(":")[0]));
-                LeatherArmorMeta meta = (LeatherArmorMeta) cup.getItemMeta();
-                meta.setColor(Color.fromRGB(Integer.parseInt(texture.split(":")[1], 16)));
-                this.cup.setItemMeta(meta);
-            } else {
-                this.cup = ItemUtils.getTexturedItem(StringUtils.coloredLine(config.getString("holder.item")));
-            }
-
-            ItemMeta meta = this.cup.getItemMeta();
+        Texture texture = Texture.parseTexture(config.getString("holder.item"));
+        ItemStack cup = texture.getItemStack();
+        if (ItemUtils.isNotEmpty(cup)) {
+            ItemMeta meta = cup.getItemMeta();
             meta.setDisplayName(config.contains("holder.name") ? StringUtils.coloredLine(config.getString("holder.name")) : "[Holder name missing]");
             meta.setLore(config.contains("holder.lore") ? StringUtils.coloredLines(config.getStringList("holder.lore")) : Collections.singletonList("[Holder lore missing]"));
-            this.cup.setItemMeta(meta);
-        } else {
-            this.cup = new ItemStack(Material.AIR);
+            cup.setItemMeta(meta);
         }
+        this.cup = cup;
     }
 
     private static boolean searchItem(List<String> materialList, @NotNull ItemStack itemStack) {
@@ -170,7 +164,7 @@ public class Slot {
     }
 
     public boolean isValidItem(@Nullable ItemStack itemStack) {
-        return !ItemUtils.isEmpty(itemStack) && !this.isDenied(itemStack) && this.isAllowed(itemStack);
+        return ItemUtils.isNotEmpty(itemStack) && !this.isDenied(itemStack) && this.isAllowed(itemStack);
     }
 
     public boolean isFree() {
@@ -189,6 +183,7 @@ public class Slot {
         return searchItem(this.allowed, item);
     }
 
+    @NotNull
     public SlotType getSlotType() {
         return slotType;
     }
@@ -237,8 +232,7 @@ public class Slot {
         PASSIVE(true, true, false, true),
         SHIELD(false, false, true, true),
         ELYTRA(false, false, true, false),
-        INFO(false, false, false, false),
-        MYPET(false, false, true, false);
+        INFO(false, false, false, false);
 
         private final boolean allowQuick;
         private final boolean allowMultiSlots;

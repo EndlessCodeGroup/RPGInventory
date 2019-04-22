@@ -18,7 +18,6 @@
 
 package ru.endlesscode.rpginventory.pet.mypet;
 
-import com.google.common.base.Optional;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.entity.MyPet;
@@ -30,7 +29,6 @@ import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.repository.PlayerManager;
 import de.Keyle.MyPet.api.repository.RepositoryCallback;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -45,6 +43,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ru.endlesscode.inspector.bukkit.scheduler.TrackedBukkitRunnable;
 import ru.endlesscode.rpginventory.RPGInventory;
+import ru.endlesscode.rpginventory.compat.MaterialCompat;
 import ru.endlesscode.rpginventory.event.PetEquipEvent;
 import ru.endlesscode.rpginventory.event.PetUnequipEvent;
 import ru.endlesscode.rpginventory.event.PlayerInventoryLoadEvent;
@@ -57,6 +56,7 @@ import ru.endlesscode.rpginventory.utils.Log;
 import ru.endlesscode.rpginventory.utils.PlayerUtils;
 
 import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -70,7 +70,7 @@ public class MyPetManager implements Listener {
 
     public static boolean init(@NotNull RPGInventory instance) {
         if (MyPetManager.getMyPetSlot() == null) {
-            Log.w("MyPet found, but slot for MyPet not configured!");
+            Log.s("MyPet found, but slot for MyPet not configured!");
             return false;
         }
 
@@ -115,7 +115,7 @@ public class MyPetManager implements Listener {
     @Nullable
     private static Slot getMyPetSlot() {
         for (Slot slot : SlotManager.instance().getSlots()) {
-            if (slot.getSlotType() == Slot.SlotType.MYPET) {
+            if (slot.getSlotType() == Slot.SlotType.PET) {
                 return slot;
             }
         }
@@ -134,7 +134,7 @@ public class MyPetManager implements Listener {
                 || action == InventoryAction.SWAP_WITH_CURSOR
                 || actionType == ActionType.DROP;
 
-        return !(!ItemUtils.isEmpty(currentItem) && isAllowedAction)
+        return !(ItemUtils.isNotEmpty(currentItem) && isAllowedAction)
                 || swapMyPets(player, isMyPetItem(currentItem), cursor);
     }
 
@@ -175,7 +175,7 @@ public class MyPetManager implements Listener {
 
     @Contract("null -> false")
     private static boolean isMyPetItem(@Nullable ItemStack item) {
-        return !ItemUtils.isEmpty(item) && ItemUtils.hasTag(item, MYPET_TAG);
+        return ItemUtils.isNotEmpty(item) && ItemUtils.hasTag(item, MYPET_TAG);
     }
 
     private static void deactivateMyPet(@NotNull final Player player) {
@@ -218,7 +218,7 @@ public class MyPetManager implements Listener {
                 storedMyPet.setOwner(user);
                 String worldName = player.getWorld().getName();
                 user.setMyPetForWorldGroup(WorldGroup.getGroupByWorld(worldName).getName(), storedMyPet.getUUID());
-                Optional<MyPet> pet = MyPetApi.getMyPetManager().activateMyPet(storedMyPet);
+                Optional<MyPet> pet = activateMyPetCompat(storedMyPet);
                 if (pet.isPresent()) {
                     MyPet myPet = pet.get();
                     if (myPet.getStatus() != MyPet.PetState.Dead) {
@@ -233,6 +233,20 @@ public class MyPetManager implements Listener {
                 MyPetApi.getRepository().updateMyPetPlayer(user, null);
             }
         });
+    }
+
+    @SuppressWarnings("unchecked")
+    private static Optional<MyPet> activateMyPetCompat(StoredMyPet storedMyPet) {
+        Object pet = MyPetApi.getMyPetManager().activateMyPet(storedMyPet);
+        final Optional<MyPet> optionalPet;
+        // MyPet switched to Java's Optional from Guava
+        //noinspection ConstantConditions
+        if (pet instanceof com.google.common.base.Optional) {
+            optionalPet = ((com.google.common.base.Optional<MyPet>) pet).toJavaUtil();
+        } else {
+            optionalPet = (Optional<MyPet>) pet;
+        }
+        return optionalPet;
     }
 
     @EventHandler
@@ -251,7 +265,7 @@ public class MyPetManager implements Listener {
             return;
         }
 
-        ItemStack petItem = new ItemStack(Material.MONSTER_EGG);
+        ItemStack petItem = new ItemStack(MaterialCompat.getMaterial("MONSTER_EGG"));
         ItemMeta meta = petItem.getItemMeta();
         meta.setDisplayName(RPGInventory.getLanguage().getMessage("mypet.egg", event.getMyPet().getPetName()));
         petItem.setItemMeta(meta);

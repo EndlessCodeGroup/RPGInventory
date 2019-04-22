@@ -1,11 +1,4 @@
 #version: 2.0 | Do not remove this line!
-firststart: \n\
-&3============================== RPGInventory ================================\n\
-&eRPGInventory&c pluginini kullanmadan önce, değiştirilmiş kaynak paketini\n\
-ve değiştirilmiş eşyaları konacak bölmeleri yapmalısın.!\n\
-Bundan sonra config.yml den enabled ayarını true yap!\n\
-&3============================================================================
-
 title: RPG Envanteri
 
 locked.name: &c&lKilitli Bölme
@@ -22,14 +15,12 @@ error.level: &6&lBunu alabilmek için {0} seviyeye ihtiyacın var
 error.buyable: &6&lBu slotu alabilmek için {0} altına ihtiyacın olacak! 10 saniye içinde tekrar tıklarsan satın almayı onaylarsın.
 error.previous: &6&lİlk olarak önceki sekmeyi açman gerek!
 error.rp.denied: &cKaynak paketi yüklemeyi devreye sokman gerek!
-error.rp.force: &cKaynak paketini devre dışı bırakamazsın!
 error.item.level: &c{0} &6Seviye lazım!
 error.item.class: &6Gereken Irk: &c{0}
 error.mount.owner: &6Bineğin sahibi {0}
 
 message.buyed: &a&lBu bölmeyi başarıyla aldın!
-message.fixhp: &6Canın düzeltildi, lütfen sunucuya tekrar bağlan!
-message.perms: &cYou don't have permission to use this command
+message.perms: &cYou don''t have permission to use this command
 
 pet.name: {0} &f[{1}]
 pet.health: &cCan: &7{0}
@@ -63,4 +54,4 @@ stat.jump: &9Zıplama: &7{0}
 
 backpack.desc: &8&oBelirtilen bölmeye koyup &fSağ tuşa &8tikla!
 backpack.size: &aBoyut: &7{0}
-backpack.limit: &cYou can't have more than {0} backpack!
+backpack.limit: &cYou can''t have more than {0} backpack!

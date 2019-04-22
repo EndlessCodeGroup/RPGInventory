@@ -19,13 +19,18 @@
 package ru.endlesscode.rpginventory.inventory.backpack;
 
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.*;
+import org.jetbrains.annotations.NotNull;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
 import ru.endlesscode.rpginventory.misc.config.Config;
 
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -33,7 +38,13 @@ import java.util.UUID;
  * It is part of the RpgInventory.
  * All rights reserved 2014 - 2016 © «EndlessCode Group»
  */
-public class Backpack {
+public class Backpack implements ConfigurationSerializable {
+
+    private static final String BP_ID = "id";
+    private static final String BP_TYPE = "type";
+    private static final String BP_CONTENTS = "contents";
+    private static final String BP_LAST_USE = "last-use";
+
     private final UUID id;
     @NotNull
     private final BackpackType backpackType;
@@ -45,10 +56,36 @@ public class Backpack {
         this(backpackType, UUID.randomUUID());
     }
 
-    public Backpack(BackpackType backpackType, UUID uuid) {
+    public Backpack(@NotNull BackpackType backpackType, UUID uuid) {
         this.id = uuid;
         this.backpackType = backpackType;
         this.contents = new ItemStack[backpackType.getSize()];
+    }
+
+    @NotNull
+    public static Backpack deserialize(@NotNull Map<String, Object> map) {
+        UUID id = UUID.fromString((String) map.get(BP_ID));
+        BackpackType type = BackpackManager.getBackpackType((String) map.get(BP_TYPE));
+        List<ItemStack> contents = (List<ItemStack>) map.getOrDefault(BP_CONTENTS, Collections.emptyList());
+        long lastUse = (long) map.getOrDefault(BP_LAST_USE, 0L);
+
+        Backpack backpack = new Backpack(type, id);
+        backpack.setContents(contents.toArray(new ItemStack[0]));
+        backpack.setLastUse(lastUse);
+
+        return backpack;
+    }
+
+    @NotNull
+    @Override
+    public Map<String, Object> serialize() {
+        final Map<String, Object> serializedBackpack = new LinkedHashMap<>();
+        serializedBackpack.put(BP_ID, this.id.toString());
+        serializedBackpack.put(BP_TYPE, this.backpackType.getId());
+        serializedBackpack.put(BP_CONTENTS, this.contents);
+        serializedBackpack.put(BP_LAST_USE, this.lastUse);
+
+        return serializedBackpack;
     }
 
     UUID getUniqueId() {
@@ -80,11 +117,7 @@ public class Backpack {
         InventoryManager.get(player).setBackpack(this);
     }
 
-    ItemStack[] getContents() {
-        return contents;
-    }
-
-    void setContents(ItemStack[] contents) {
+    public void setContents(ItemStack[] contents) {
         this.contents = contents;
     }
 
@@ -92,11 +125,7 @@ public class Backpack {
         this.lastUse = System.currentTimeMillis();
     }
 
-    long getLastUse() {
-        return this.lastUse;
-    }
-
-    void setLastUse(long lastUse) {
+    public void setLastUse(long lastUse) {
         this.lastUse = lastUse;
     }
 

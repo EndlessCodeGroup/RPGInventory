@@ -1,0 +1,112 @@
+pets:
+  kitty:
+    name: "&7&lKitty"
+    item-name: "&7&lKitty's Summoning Stone"
+    lore:
+    - "&e&oMeow! Meow! Meow!"
+    item: MONSTER_EGG:Ghast
+    type: COMPANION
+    health: 20
+    damage: 3
+    speed: 3.5
+    attack-mobs: false
+    attack-players: false
+    revival: true
+    cooldown: 60
+    skin: OCELOT
+    features:
+    - "BABY: TRUE"
+    - "TYPE: BLACK_CAT"
+  puppy:
+    name: "&7&lPuppy"
+    item-name: "&7&lPuppy's Summoning Stone"
+    lore:
+    - "&e&oWoof! Woof! Woof!"
+    item: MONSTER_EGG:Ghast
+    type: COMPANION
+    health: 20
+    damage: 3
+    speed: 3.5
+    attack-mobs: true
+    attack-players: false
+    revival: true
+    cooldown: 60
+    features:
+    - "BABY: TRUE"
+    - "COLLAR: BLACK"
+  rare-wolf:
+    name: "&9&lWolf"
+    item-name: "&9&lWolf's Summoning Stone"
+    lore:
+    - "&e&oBest friend - a proven friend"
+    item: MONSTER_EGG:Skeleton
+    type: COMPANION
+    health: 30
+    damage: 5
+    speed: 4
+    attack-mobs: false
+    attack-players: true
+    revival: true
+    cooldown: 45
+    features:
+    - "COLLAR: BLUE"
+  legendary-wolf:
+    name: "&5&lGrand Wolf"
+    item-name: "&5&lGrand Wolf's Summoning Stone"
+    lore:
+    - "&e&o...but only a few become legends..."
+    item: MONSTER_EGG:Silverfish
+    type: COMPANION
+    level: 10
+    classes:
+    - Mage
+    - Warrior
+    health: 50
+    damage: 10
+    speed: 6
+    mount: true
+    attack-mobs: true
+    attack-players: true
+    revival: true
+    cooldown: 30
+    features:
+    - "COLLAR: PURPLE"
+  horse:
+    name: "&6&lHorse"
+    item-name: "&5&lHorse's Summoning Stone"
+    lore:
+    - "&e&oRide like the wind!"
+    item: MONSTER_EGG:Zombie
+    type: MOUNT
+    health: 100
+    speed: 10
+    revival: true
+    cooldown: 30
+    features:
+    - "CHEST: FALSE"
+    - "ARMOR: IRON_BARDING"
+    - "COLOR: DARK_BROWN"
+    - "STYLE: WHITE"
+  pig:
+    name: "&6&lPig"
+    item-name: "&5&lPig's Summoning Stone"
+    lore:
+    - "&e&oRide faster than wind!"
+    - "&e&oBut... where my carrot?"
+    item: MONSTER_EGG:Pig
+    type: MOUNT
+    health: 100
+    speed: 12.5
+    revival: true
+    cooldown: 60
+    skin: PIG
+food:
+  bone:
+    name: "&f&lBone"
+    lore:
+    - "&e&o- Rex, come here!"
+    - "&e&o- Woof! Woof! Woof!"
+    item: BONE
+    eaters:
+    - WOLF
+    value: 5

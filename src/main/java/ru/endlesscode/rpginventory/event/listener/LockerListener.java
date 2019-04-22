@@ -28,7 +28,7 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerGameModeChangeEvent;
 import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.*;
+import org.jetbrains.annotations.NotNull;
 import ru.endlesscode.rpginventory.RPGInventory;
 import ru.endlesscode.rpginventory.inventory.InventoryLocker;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
@@ -67,7 +67,7 @@ public class LockerListener implements Listener {
             return;
         }
 
-        if (!ItemUtils.isEmpty(currentItem) && InventoryLocker.isLockedSlot(currentItem)) {
+        if (ItemUtils.isNotEmpty(currentItem) && InventoryLocker.isLockedSlot(currentItem)) {
             int slot = event.getSlot();
             int line = InventoryLocker.getLine(slot);
             if (InventoryLocker.isBuyableSlot(currentItem, line)) {

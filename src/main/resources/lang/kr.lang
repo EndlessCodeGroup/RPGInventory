@@ -1,11 +1,4 @@
 #version: 2.0 | Do not remove this line!
-firststart: \n\
-&3============================== RPGInventory ================================\n\
-&cBefore using &eRPGInventory&c, add changed textures to your server resource-pack\n\
-and configure items that can be put in the inventory slots. After that,\n\
-set value in the config &eenabled: true\n\
-&3============================================================================
-
 title: &l인벤토리
 
 locked.name: &c&l잠긴 슬릇
@@ -22,13 +15,11 @@ error.level: &6&l{0} 만큼의 레벨이 더 필요합니다
 error.buyable: &6&l당신이 이 슬릇을 구입할려면 {0} 만큼의 골드가 필요합니다. 구입 확인을 위해 10 초 이내로 다시 클릭해주시길 바랍니다.
 error.previous: &6&l이전 슬릇의 잠금을 해제해야 합니다
 error.rp.denied: &c리소스 팩이 필요합니다!
-error.rp.force: &c리소스 팩이 비활성화 되었습니다.
 error.item.level: &6그것은 &c{0} &6레벨이 필요합니다
 error.item.class: &6그것은 클래스가 필요합니다 &c{0}
 error.mount.owner: &6주인에게 귀속되어 있습니다 {0}
 
 message.buyed: &a&l성공적으로 슬릇을 구입했습니다
-message.fixhp: &6체력이 고정되었습니다 다시 로그인 해주세요
 message.perms: &c권한이 없습니다
 
 pet.name: {0} &f[{1}]

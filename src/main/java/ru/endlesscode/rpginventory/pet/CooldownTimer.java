@@ -25,10 +25,11 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 import ru.endlesscode.rpginventory.RPGInventory;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
-import ru.endlesscode.rpginventory.inventory.slot.*;
+import ru.endlesscode.rpginventory.inventory.slot.Slot;
+import ru.endlesscode.rpginventory.inventory.slot.SlotManager;
 import ru.endlesscode.rpginventory.utils.ItemUtils;
 
-import java.util.*;
+import java.util.Objects;
 
 /**
  * Created by OsipXD on 27.08.2015
@@ -55,8 +56,8 @@ class CooldownTimer extends BukkitRunnable {
 
         Inventory inventory = InventoryManager.get(this.player).getInventory();
         final boolean playerIsAlive = !this.player.isOnline() || this.player.isDead();
-        final boolean playerHasPetItem = inventory == null || inventory.getItem(PetManager.getPetSlotId()) == null;
-        if (playerIsAlive || !PetManager.isEnabled() || playerHasPetItem) {
+        final boolean playerHasNotPetItem = inventory.getItem(PetManager.getPetSlotId()) == null;
+        if (playerIsAlive || !PetManager.isEnabled() || playerHasNotPetItem) {
             this.cancel();
             return;
         }
@@ -85,8 +86,7 @@ class CooldownTimer extends BukkitRunnable {
                 inventory.setItem(PetManager.getPetSlotId(), item);
             }
         } else {
-            PetManager.saveDeathTime(this.petItem, 0);
-            PetManager.spawnPet(this.player, this.petItem);
+            PetManager.respawnPet(this.player, this.petItem);
             inventory.setItem(PetManager.getPetSlotId(), this.petItem);
             this.cancel();
         }

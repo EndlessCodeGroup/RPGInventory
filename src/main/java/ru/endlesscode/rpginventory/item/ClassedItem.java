@@ -19,7 +19,8 @@
 package ru.endlesscode.rpginventory.item;
 
 import org.bukkit.configuration.ConfigurationSection;
-import org.jetbrains.annotations.*;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -33,7 +34,7 @@ public class ClassedItem extends TexturedItem {
     @Nullable
     private final List<String> classes;
 
-    protected ClassedItem(ConfigurationSection config, String texture) {
+    protected ClassedItem(Texture texture, ConfigurationSection config) {
         super(texture);
 
         this.level = config.getInt("level", -1);

@@ -1,11 +1,4 @@
 #version: 2.0 | Do not remove this line!
-firststart: \n\
-&3============================== RPGInventory ================================\n\
-&cAntes de usar &eRPGInventory&c, añade el pack de recursos a tu servidor\n\
-y configura los items que pueden colocarse en los espacios del inventario. Luego,\n\
-modifica el valor de la configuración a &eenabled: true\n\
-&3============================================================================
-
 title: RPG Inventory
 
 locked.name: &c&lEspacio bloqueado
@@ -22,14 +15,12 @@ error.level: &6&lAún necesitas {0} niveles de experiencia
 error.buyable: &6&lNecesitas {0} monedas para comprar este espacio. Haz click nuevamente en los próximos 10 segundos para confirmar.
 error.previous: &6&lDesbloquea el espacio previo
 error.rp.denied: &cDebes habilitar la descarga del pack de recursos!
-error.rp.force: &cNo se permite deshabilitar el pack de recursos.
 error.item.level: &6Nivel &c{0} &6requerido
 error.item.class: &6Clase &c{0} &6requerida
 error.mount.owner: &6La montura pertenece a {0}
 
 message.buyed: &a&lYa haz comprado el espacio
-message.fixhp: &6Tu cantidad de vida ha sido arreglada, por favor reingrese al servidor
-message.perms: &cYou don't have permission to use this command
+message.perms: &cYou don''t have permission to use this command
 
 pet.name: {0} &f[{1}]
 pet.health: &cVida: &7{0}
@@ -63,4 +54,4 @@ stat.jump: &9Salto: &7{0}
 
 backpack.desc: &8&oColócala en el espacio indicado y haz &fClick Derecho
 backpack.size: &aTamaño: &7{0}
-backpack.limit: &cYou can't have more than {0} backpack!
+backpack.limit: &cYou can''t have more than {0} backpack!

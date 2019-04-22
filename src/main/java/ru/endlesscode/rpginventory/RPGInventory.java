@@ -18,13 +18,9 @@
 
 package ru.endlesscode.rpginventory;
 
-import com.comphenix.protocol.PacketType;
-import com.comphenix.protocol.ProtocolLibrary;
-import com.comphenix.protocol.ProtocolManager;
-import com.comphenix.protocol.events.PacketAdapter;
-import com.comphenix.protocol.events.PacketEvent;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
+import org.bstats.bukkit.MetricsLite;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
@@ -35,11 +31,11 @@ import org.jetbrains.annotations.Nullable;
 import ru.endlesscode.inspector.bukkit.command.TrackedCommandExecutor;
 import ru.endlesscode.inspector.bukkit.plugin.PluginLifecycle;
 import ru.endlesscode.inspector.bukkit.scheduler.TrackedBukkitRunnable;
+import ru.endlesscode.rpginventory.compat.VersionHandler;
 import ru.endlesscode.rpginventory.event.listener.ArmorEquipListener;
 import ru.endlesscode.rpginventory.event.listener.ElytraListener;
 import ru.endlesscode.rpginventory.event.listener.HandSwapListener;
 import ru.endlesscode.rpginventory.event.listener.PlayerListener;
-import ru.endlesscode.rpginventory.event.listener.PlayerLoader;
 import ru.endlesscode.rpginventory.event.listener.WorldListener;
 import ru.endlesscode.rpginventory.inventory.InventoryLocker;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
@@ -47,23 +43,21 @@ import ru.endlesscode.rpginventory.inventory.backpack.BackpackManager;
 import ru.endlesscode.rpginventory.inventory.craft.CraftManager;
 import ru.endlesscode.rpginventory.inventory.slot.SlotManager;
 import ru.endlesscode.rpginventory.item.ItemManager;
-import ru.endlesscode.rpginventory.misc.config.Config;
 import ru.endlesscode.rpginventory.misc.FileLanguage;
-import ru.endlesscode.rpginventory.misc.Metrics;
-import ru.endlesscode.rpginventory.misc.config.ConfigUpdater;
 import ru.endlesscode.rpginventory.misc.Updater;
-import ru.endlesscode.rpginventory.compat.VersionHandler;
+import ru.endlesscode.rpginventory.misc.config.Config;
+import ru.endlesscode.rpginventory.misc.config.ConfigUpdater;
+import ru.endlesscode.rpginventory.misc.serialization.Serialization;
 import ru.endlesscode.rpginventory.pet.PetManager;
 import ru.endlesscode.rpginventory.pet.mypet.MyPetManager;
+import ru.endlesscode.rpginventory.resourcepack.ResourcePackModule;
 import ru.endlesscode.rpginventory.utils.Log;
 import ru.endlesscode.rpginventory.utils.PlayerUtils;
-import ru.endlesscode.rpginventory.utils.ResourcePackUtils;
+import ru.endlesscode.rpginventory.utils.SafeEnums;
 import ru.endlesscode.rpginventory.utils.StringUtils;
 import ru.endlesscode.rpginventory.utils.Version;
 
-import java.io.IOException;
 import java.nio.file.Path;
-import java.util.Arrays;
 
 public class RPGInventory extends PluginLifecycle {
     private static RPGInventory instance;
@@ -77,6 +71,7 @@ public class RPGInventory extends PluginLifecycle {
     private FileLanguage language;
     private boolean placeholderApiHooked = false;
     private boolean myPetHooked = false;
+    private ResourcePackModule resourcePackModule = null;
 
     public static RPGInventory getInstance() {
         return instance;
@@ -117,6 +112,11 @@ public class RPGInventory extends PluginLifecycle {
         return instance.classSystem;
     }
 
+    @Nullable
+    public static ResourcePackModule getResourcePackModule() {
+        return instance.resourcePackModule;
+    }
+
     @Override
     public void init() {
         instance = this;
@@ -130,6 +130,8 @@ public class RPGInventory extends PluginLifecycle {
         Config.reload();
         language = new FileLanguage(this);
 
+        Serialization.registerTypes();
+
         if (!this.checkRequirements()) {
             this.getPluginLoader().disablePlugin(this);
             return;
@@ -137,27 +139,27 @@ public class RPGInventory extends PluginLifecycle {
 
         // Hook Placeholder API
         if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
-            new StringUtils.Placeholders().hook();
+            new StringUtils.Placeholders().register();
             placeholderApiHooked = true;
             Log.i("Placeholder API hooked!");
         } else {
             placeholderApiHooked = false;
         }
 
-        // Load modules
-        Log.i(CraftManager.init(this) ? "Craft extensions is enabled." : "Craft extensions isn't loaded.");
-        Log.i(InventoryLocker.init(this) ? "Inventory lock system is enabled." : "Inventory lock system isn't loaded.");
-        Log.i(ItemManager.init(this) ? "Item system is enabled." : "Item system isn't loaded.");
-        Log.i(PetManager.init(this) ? "Pet system is enabled." : "Pet system isn't loaded.");
-        Log.i(BackpackManager.init(this) ? "Backpack system is enabled." : "Backpack system isn't loaded.");
-
         // Hook MyPet
         if (Bukkit.getPluginManager().isPluginEnabled("MyPet") && MyPetManager.init(this)) {
             myPetHooked = true;
-            Log.i("MyPet hooked!");
+            Log.i("MyPet used as pet system");
         } else {
             myPetHooked = false;
+            Log.i(PetManager.init(this) ? "Pet system is enabled" : "Pet system isn''t loaded");
         }
+
+        // Load modules
+        Log.i(CraftManager.init(this) ? "Craft extensions is enabled" : "Craft extensions isn''t loaded");
+        Log.i(InventoryLocker.init(this) ? "Inventory lock system is enabled" : "Inventory lock system isn''t loaded");
+        Log.i(ItemManager.init(this) ? "Item system is enabled" : "Item system isn''t loaded");
+        Log.i(BackpackManager.init(this) ? "Backpack system is enabled" : "Backpack system isn''t loaded");
 
         // Registering other listeners
         PluginManager pm = this.getServer().getPluginManager();
@@ -169,21 +171,7 @@ public class RPGInventory extends PluginLifecycle {
         if (SlotManager.instance().getElytraSlot() != null) {
             pm.registerEvents(new ElytraListener(), this);
         }
-
-        ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
-        // Workaround for 1.12+
-        if (VersionHandler.isUpper1_12()) {
-            protocolManager.addPacketListener(
-                    new PacketAdapter(this, PacketType.Play.Server.RECIPES) {
-                        @Override
-                        public void onPacketSending(@NotNull PacketEvent event) {
-                            event.setCancelled(true);
-                        }
-                    });
-            Log.i("Recipe book conflicts with RPGInventory and was disabled.");
-        }
-
-        protocolManager.addPacketListener(new PlayerLoader(this));
+        this.resourcePackModule = ResourcePackModule.init(this);
 
         this.loadPlayers();
         this.startMetrics();
@@ -207,50 +195,22 @@ public class RPGInventory extends PluginLifecycle {
     private boolean checkRequirements() {
         // Check if plugin is enabled
         if (!Config.getConfig().getBoolean("enabled")) {
-            this.onFirstStart();
-            Log.w("Plugin is not enabled in config!");
+            Log.w("RPGInventory is disabled in the config!");
             return false;
         }
 
         // Check version compatibility
-        if (!VersionHandler.checkVersion()) {
+        if (VersionHandler.isNotSupportedVersion()) {
             Log.w("This version of RPG Inventory is not tested with \"{0}\"!", Bukkit.getBukkitVersion());
-        } else if (VersionHandler.is1_13()) {
+        } else if (VersionHandler.getVersionCode() >= VersionHandler.VERSION_1_13) {
             Log.w("Support of {0} is experimental! Use RPGInventory with caution.", Bukkit.getBukkitVersion());
-        }
-
-        // Check resource-pack settings
-        if (Config.getConfig().getBoolean("resource-pack.enabled", true)) {
-            String rpUrl = Config.getConfig().getString("resource-pack.url");
-            if (rpUrl.equals("PUT_YOUR_URL_HERE")) {
-                Log.w("Set resource-pack's url in config!");
-                this.getPluginLoader().disablePlugin(this);
-                return false;
-            }
-
-            if (Config.getConfig().getString("resource-pack.hash").equals("PUT_YOUR_HASH_HERE")) {
-                Log.w("Your resource pack hash incorrect!");
-            }
-
-            try {
-                ResourcePackUtils.validateUrl(rpUrl);
-            } catch (Exception e) {
-                String[] messageLines = e.getLocalizedMessage().split("\n");
-                Log.w("");
-                Log.w("######### Something wrong with your RP link! #########");
-                for (String line : messageLines) {
-                    Log.w("# {0}", line);
-                }
-                Log.w("######################################################");
-                Log.w("");
-            }
         }
 
         // Check dependencies
         if (this.setupPermissions()) {
             Log.i("Permissions hooked: {0}", perms.getName());
         } else {
-            Log.w("Permissions not found!");
+            Log.s("Permissions not found!");
             return false;
         }
 
@@ -267,25 +227,13 @@ public class RPGInventory extends PluginLifecycle {
     }
 
     private void initLevelSystem() {
-        String levelSystemName = Config.getConfig().getString("level-system");
-        try {
-            levelSystem = PlayerUtils.LevelSystem.valueOf(levelSystemName);
-        } catch (IllegalArgumentException e) {
-            Log.w("Unknown level system: {0}. Used EXP by default.", levelSystemName);
-            Log.w("Available level systems: {0}", Arrays.toString(PlayerUtils.LevelSystem.values()));
-            levelSystem = PlayerUtils.LevelSystem.EXP;
-        }
+        this.levelSystem = SafeEnums.valueOfOrDefault(PlayerUtils.LevelSystem.class,
+                Config.getConfig().getString("level-system"), PlayerUtils.LevelSystem.EXP, "level system");
     }
 
     private void initClassSystem() {
-        String classSystemName = Config.getConfig().getString("class-system");
-        try {
-            classSystem = PlayerUtils.ClassSystem.valueOf(classSystemName);
-        } catch (IllegalArgumentException e) {
-            Log.w("Unknown class system: {0}. Used PERMISSIONS by default.", classSystemName);
-            Log.w("Available class systems: {0}", Arrays.toString(PlayerUtils.LevelSystem.values()));
-            classSystem = PlayerUtils.ClassSystem.PERMISSIONS;
-        }
+        this.classSystem = SafeEnums.valueOfOrDefault(PlayerUtils.ClassSystem.class,
+                Config.getConfig().getString("class-system"), PlayerUtils.ClassSystem.PERMISSIONS, "class-system");
     }
 
     private void checkThatSystemsLoaded() {
@@ -310,11 +258,7 @@ public class RPGInventory extends PluginLifecycle {
     }
 
     private void startMetrics() {
-        try {
-            Metrics metrics = new Metrics(this);
-            metrics.start();
-        } catch (IOException ignored) {
-        }
+        new MetricsLite(this);
     }
 
     private void savePlayers() {
@@ -339,29 +283,21 @@ public class RPGInventory extends PluginLifecycle {
         }
     }
 
-    private void onFirstStart() {
-        StringUtils.coloredConsole(RPGInventory.getLanguage().getMessage("firststart"));
-    }
-
     private boolean setupPermissions() {
         RegisteredServiceProvider<Permission> permissionProvider = getServer().getServicesManager().getRegistration(Permission.class);
-
-        if (permissionProvider == null) {
-            return perms != null;
+        if (permissionProvider != null) {
+            perms = permissionProvider.getProvider();
         }
 
-        perms = permissionProvider.getProvider();
         return perms != null;
     }
 
     private boolean setupEconomy() {
         RegisteredServiceProvider<Economy> rsp = this.getServer().getServicesManager().getRegistration(Economy.class);
-
-        if (rsp == null) {
-            return false;
+        if (rsp != null) {
+            economy = rsp.getProvider();
         }
 
-        economy = rsp.getProvider();
         return economy != null;
     }
 

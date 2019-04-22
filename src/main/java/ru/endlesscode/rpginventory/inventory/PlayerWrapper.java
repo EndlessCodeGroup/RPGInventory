@@ -40,6 +40,7 @@ import ru.endlesscode.rpginventory.inventory.slot.Slot;
 import ru.endlesscode.rpginventory.inventory.slot.SlotManager;
 import ru.endlesscode.rpginventory.item.CustomItem;
 import ru.endlesscode.rpginventory.item.ItemManager;
+import ru.endlesscode.rpginventory.misc.serialization.InventorySnapshot;
 import ru.endlesscode.rpginventory.pet.Attributes;
 import ru.endlesscode.rpginventory.pet.PetManager;
 import ru.endlesscode.rpginventory.pet.PetType;
@@ -86,6 +87,7 @@ public class PlayerWrapper implements InventoryHolder {
         this.inventory = Bukkit.createInventory(this, 54, InventoryManager.TITLE);
     }
 
+    @NotNull
     @Override
     public Inventory getInventory() {
         return inventory;
@@ -141,7 +143,7 @@ public class PlayerWrapper implements InventoryHolder {
         this.setBuyedSlots("{generic}", buyedSlots);
     }
 
-    void setBuyedSlots(String slotType) {
+    public void setBuyedSlots(String slotType) {
         this.setBuyedSlots(slotType, 1);
     }
 
@@ -279,10 +281,7 @@ public class PlayerWrapper implements InventoryHolder {
         this.flying = false;
 
         if (PetManager.isEnabled() && !this.hasPet()) {
-            ItemStack petItem = inventory.getItem(PetManager.getPetSlotId());
-            if (PetManager.isPetItem(petItem)) {
-                PetManager.spawnPet(player.getPlayer(), petItem);
-            }
+            PetManager.respawnPet(player.getPlayer());
         }
     }
 
@@ -367,5 +366,9 @@ public class PlayerWrapper implements InventoryHolder {
 
     public boolean isPocketCraft() {
         return this.pocketCraft;
+    }
+
+    InventorySnapshot createSnapshot() {
+        return InventorySnapshot.create(this);
     }
 }

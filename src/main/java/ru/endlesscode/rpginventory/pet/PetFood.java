@@ -24,15 +24,15 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import ru.endlesscode.rpginventory.RPGInventory;
+import ru.endlesscode.rpginventory.item.Texture;
 import ru.endlesscode.rpginventory.item.TexturedItem;
 import ru.endlesscode.rpginventory.misc.FileLanguage;
 import ru.endlesscode.rpginventory.utils.ItemUtils;
 import ru.endlesscode.rpginventory.utils.StringUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by OsipXD on 28.08.2015
@@ -50,8 +50,8 @@ public class PetFood extends TexturedItem {
 
     private ItemStack foodItem;
 
-    PetFood(ConfigurationSection config) {
-        super(config.getString("item"));
+    PetFood(Texture texture, @NotNull ConfigurationSection config) {
+        super(texture);
 
         this.name = StringUtils.coloredLine(config.getString("name"));
         this.lore = StringUtils.coloredLines(config.getStringList("lore"));
@@ -63,12 +63,12 @@ public class PetFood extends TexturedItem {
 
     @Contract("null -> false")
     public static boolean isFoodItem(ItemStack itemStack) {
-        return !ItemUtils.isEmpty(itemStack) && ItemUtils.hasTag(itemStack, ItemUtils.FOOD_TAG);
+        return ItemUtils.isNotEmpty(itemStack) && ItemUtils.hasTag(itemStack, ItemUtils.FOOD_TAG);
     }
 
     private void createFoodItem(String id) {
         // Set texture
-        ItemStack spawnItem = ItemUtils.getTexturedItem(this.texture);
+        ItemStack spawnItem = this.texture.getItemStack();
 
         // Set lore and display itemName
         ItemMeta meta = spawnItem.getItemMeta();

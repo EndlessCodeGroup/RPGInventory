@@ -4,7 +4,7 @@ pets:
     item-name: "&7&lKitty's Summoning Stone"
     lore:
     - "&e&oMeow! Meow! Meow!"
-    item: MONSTER_EGG:Ghast
+    item: GHAST_SPAWN_EGG
     type: COMPANION
     health: 20
     damage: 3
@@ -22,7 +22,7 @@ pets:
     item-name: "&7&lPuppy's Summoning Stone"
     lore:
     - "&e&oWoof! Woof! Woof!"
-    item: MONSTER_EGG:Ghast
+    item: GHAST_SPAWN_EGG
     type: COMPANION
     health: 20
     damage: 3
@@ -39,7 +39,7 @@ pets:
     item-name: "&9&lWolf's Summoning Stone"
     lore:
     - "&e&oBest friend - a proven friend"
-    item: MONSTER_EGG:Skeleton
+    item: SKELETON_SPAWN_EGG
     type: COMPANION
     health: 30
     damage: 5
@@ -55,7 +55,7 @@ pets:
     item-name: "&5&lGrand Wolf's Summoning Stone"
     lore:
     - "&e&o...but only a few become legends..."
-    item: MONSTER_EGG:Silverfish
+    item: SILVERFISH_SPAWN_EGG
     type: COMPANION
     level: 10
     classes:
@@ -76,7 +76,7 @@ pets:
     item-name: "&5&lHorse's Summoning Stone"
     lore:
     - "&e&oRide like the wind!"
-    item: MONSTER_EGG:Zombie
+    item: ZOMBIE_SPAWN_EGG
     type: MOUNT
     health: 100
     speed: 10
@@ -93,7 +93,7 @@ pets:
     lore:
     - "&e&oRide faster than wind!"
     - "&e&oBut... where my carrot?"
-    item: MONSTER_EGG:Pig
+    item: PIG_SPAWN_EGG
     type: MOUNT
     health: 100
     speed: 12.5

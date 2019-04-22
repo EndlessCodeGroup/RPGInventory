@@ -18,11 +18,13 @@
 
 package ru.endlesscode.rpginventory.compat;
 
+import org.bukkit.Sound;
+
 /**
  * Version independent spigot sounds.
  * Enum mapping to sound names for different Minecraft versions.
  */
-public enum Sound {
+public enum SoundCompat {
     AMBIENCE_CAVE("AMBIENCE_CAVE", "AMBIENT_CAVE"),
     AMBIENCE_RAIN("AMBIENCE_RAIN", "WEATHER_RAIN"),
     AMBIENCE_THUNDER("AMBIENCE_THUNDER", "ENTITY_LIGHTNING_THUNDER", "ENTITY_LIGHTNING_BOLT_THUNDER"),
@@ -219,9 +221,9 @@ public enum Sound {
     VILLAGER_YES("VILLAGER_YES", "ENTITY_VILLAGER_YES");
 
     private String[] versionDependentNames;
-    private org.bukkit.Sound cached = null;
+    private Sound cached = null;
 
-    Sound(String... versionDependentNames) {
+    SoundCompat(String... versionDependentNames) {
         this.versionDependentNames = versionDependentNames;
     }
 
@@ -229,16 +231,16 @@ public enum Sound {
      * Get the bukkit sound for current server version.
      * Caches sound on first call.
      *
-     * @return corresponding {@link org.bukkit.Sound}
+     * @return corresponding {@link Sound}
      */
-    public org.bukkit.Sound bukkitSound() {
+    public Sound get() {
         if (cached != null) {
             return cached;
         }
 
         for (String name : versionDependentNames) {
             try {
-                return cached = org.bukkit.Sound.valueOf(name);
+                return cached = Sound.valueOf(name);
             } catch (IllegalArgumentException ignore) {
                 // try next
             }

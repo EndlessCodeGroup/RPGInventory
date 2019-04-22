@@ -28,12 +28,9 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import ru.endlesscode.inspector.bukkit.scheduler.TrackedBukkitRunnable;
 import ru.endlesscode.inspector.report.Reporter;
 import ru.endlesscode.rpginventory.RPGInventory;
 import ru.endlesscode.rpginventory.api.InventoryAPI;
@@ -45,14 +42,18 @@ import ru.endlesscode.rpginventory.event.listener.InventoryListener;
 import ru.endlesscode.rpginventory.inventory.slot.Slot;
 import ru.endlesscode.rpginventory.inventory.slot.SlotManager;
 import ru.endlesscode.rpginventory.item.ItemManager;
+import ru.endlesscode.rpginventory.item.Texture;
 import ru.endlesscode.rpginventory.misc.config.Config;
+import ru.endlesscode.rpginventory.misc.serialization.Serialization;
 import ru.endlesscode.rpginventory.pet.PetManager;
 import ru.endlesscode.rpginventory.pet.PetType;
+import ru.endlesscode.rpginventory.resourcepack.ResourcePackModule;
 import ru.endlesscode.rpginventory.utils.EffectUtils;
 import ru.endlesscode.rpginventory.utils.InventoryUtils;
 import ru.endlesscode.rpginventory.utils.ItemUtils;
 import ru.endlesscode.rpginventory.utils.Log;
 import ru.endlesscode.rpginventory.utils.PlayerUtils;
+import ru.endlesscode.rpginventory.utils.SafeEnums;
 import ru.endlesscode.rpginventory.utils.StringUtils;
 
 import java.io.IOException;
@@ -63,7 +64,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-@SuppressWarnings("ResultOfMethodCallIgnored")
 public class InventoryManager {
     static final String TITLE = RPGInventory.getLanguage().getMessage("title");
     private static final Map<UUID, PlayerWrapper> INVENTORIES = new HashMap<>();
@@ -78,12 +78,13 @@ public class InventoryManager {
         reporter = instance.getReporter();
 
         try {
-            InventoryManager.FILL_SLOT = ItemUtils.getTexturedItem(Config.getConfig().getString("fill"));
-            ItemMeta meta = InventoryManager.FILL_SLOT.getItemMeta();
-            if (meta != null) {
+            Texture texture = Texture.parseTexture(Config.getConfig().getString("fill"));
+            InventoryManager.FILL_SLOT = texture.getItemStack();
+            if (ItemUtils.isNotEmpty(InventoryManager.FILL_SLOT)) {
+                ItemMeta meta = InventoryManager.FILL_SLOT.getItemMeta();
                 meta.setDisplayName(" ");
+                InventoryManager.FILL_SLOT.setItemMeta(meta);
             }
-            InventoryManager.FILL_SLOT.setItemMeta(meta);
         } catch (Exception e) {
             reporter.report("Error on InventoryManager initialization", e);
             return false;
@@ -109,9 +110,9 @@ public class InventoryManager {
     public static boolean validatePet(Player player, InventoryAction action, @Nullable ItemStack currentItem, @NotNull ItemStack cursor) {
         ActionType actionType = ActionType.getTypeOfAction(action);
 
-        if (!ItemUtils.isEmpty(currentItem)
+        if (ItemUtils.isNotEmpty(currentItem)
                 && (actionType == ActionType.GET || action == InventoryAction.SWAP_WITH_CURSOR || actionType == ActionType.DROP)
-                && PetManager.getDeathTime(currentItem) > 0) {
+                && PetManager.getCooldown(currentItem) > 0) {
             return false;
         }
 
@@ -124,7 +125,7 @@ public class InventoryManager {
                     return false;
                 }
 
-                PetManager.spawnPet(event.getPlayer(), event.getPetItem());
+                PetManager.respawnPet(event.getPlayer(), event.getPetItem());
                 return true;
             }
         } else if (actionType == ActionType.GET || actionType == ActionType.DROP) {
@@ -298,6 +299,10 @@ public class InventoryManager {
         final Player player = (Player) playerWrapper.getPlayer();
         for (Slot infoSlot : SlotManager.instance().getInfoSlots()) {
             ItemStack cup = infoSlot.getCup();
+            if (ItemUtils.isEmpty(cup)) {
+                continue;
+            }
+
             ItemMeta meta = cup.getItemMeta();
             List<String> lore = meta.getLore();
 
@@ -471,16 +476,7 @@ public class InventoryManager {
         }
     }
 
-    private static void sendResourcePack(@NotNull final Player player) {
-        new TrackedBukkitRunnable() {
-            @Override
-            public void run() {
-                player.setResourcePack(Config.getConfig().getString("resource-pack.url"));
-            }
-        }.runTaskLater(RPGInventory.getInstance(), 20);
-    }
-
-    private static boolean isNewPlayer(Player player) {
+    public static boolean isNewPlayer(@NotNull Player player) {
         Path dataFolder = RPGInventory.getInstance().getDataFolder().toPath();
         return Files.notExists(dataFolder.resolve("inventories/" + player.getUniqueId() + ".inv"));
     }
@@ -501,9 +497,9 @@ public class InventoryManager {
 
             PlayerWrapper playerWrapper = null;
             if (Files.exists(file)) {
-                playerWrapper = InventorySerializer.loadPlayerOrNull(player, file);
+                playerWrapper = Serialization.loadPlayerOrNull(player, file);
                 if (playerWrapper == null) {
-                    Log.s("Error on loading {0}''s inventory.", player.getDisplayName());
+                    Log.s("Error on loading {0}''s inventory.", player.getName());
                     Log.s("Will be created new inventory. Old file was renamed.");
                 }
             }
@@ -559,7 +555,7 @@ public class InventoryManager {
             Path file = folder.resolve(player.getUniqueId() + ".inv");
             Files.deleteIfExists(file);
 
-            InventorySerializer.savePlayer(playerWrapper, file);
+            Serialization.save(playerWrapper.createSnapshot(), file);
         } catch (IOException e) {
             reporter.report("Error on inventory save", e);
         }
@@ -601,23 +597,24 @@ public class InventoryManager {
     }
 
     @Contract("null -> false")
-    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public static boolean playerIsLoaded(@Nullable AnimalTamer player) {
         return player != null && InventoryManager.INVENTORIES.containsKey(player.getUniqueId());
     }
 
-    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public static boolean isAllowedWorld(@NotNull World world) {
         List<String> list = Config.getConfig().getStringList("worlds.list");
 
-        switch (ListType.valueOf(Config.getConfig().getString("worlds.mode"))) {
-            case BLACKLIST:
-                return !list.contains(world.getName());
-            case WHITELIST:
-                return list.contains(world.getName());
+        ListType listType = SafeEnums.valueOf(ListType.class, Config.getConfig().getString("worlds.mode"), "list type");
+        if (listType != null) {
+            switch (listType) {
+                case BLACKLIST:
+                    return !list.contains(world.getName());
+                case WHITELIST:
+                    return list.contains(world.getName());
+            }
         }
 
-        return false;
+        return true;
     }
 
     public static boolean buySlot(@NotNull Player player, PlayerWrapper playerWrapper, Slot slot) {
@@ -639,37 +636,15 @@ public class InventoryManager {
         return true;
     }
 
-    //TODO: Rewrite that
     public static void initPlayer(@NotNull final Player player, boolean skipJoinMessage) {
-        boolean rpEnabled = Config.getConfig().getBoolean("resource-pack.enabled", true);
-        if (rpEnabled) {
-            player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 60, 1));
-        }
-
-        if (InventoryManager.isNewPlayer(player) && rpEnabled) {
-            if (Config.getConfig().getBoolean("join-messages.rp-info.enabled", true)) {
-                Runnable callback = () -> InventoryManager.sendResourcePack(player);
-
-                EffectUtils.sendTitle(player,
-                        Config.getConfig().getInt("join-messages.delay"),
-                        Config.getConfig().getString("join-messages.rp-info.title"),
-                        Config.getConfig().getStringList("join-messages.rp-info.text"), callback);
-            } else {
-                InventoryManager.sendResourcePack(player);
-            }
+        ResourcePackModule rpModule = RPGInventory.getResourcePackModule();
+        if (rpModule != null) {
+            rpModule.loadResourcePack(player, skipJoinMessage);
         } else {
-            if (Config.getConfig().getBoolean("join-messages.default.enabled", true) && !skipJoinMessage) {
-                EffectUtils.sendTitle(player,
-                        Config.getConfig().getInt("join-messages.delay"),
-                        Config.getConfig().getString("join-messages.default.title"),
-                        Config.getConfig().getStringList("join-messages.default.text"));
+            if (!skipJoinMessage) {
+                EffectUtils.showDefaultJoinMessage(player);
             }
-
-            if (rpEnabled) {
-                InventoryManager.sendResourcePack(player);
-            } else {
-                InventoryManager.loadPlayerInventory(player);
-            }
+            InventoryManager.loadPlayerInventory(player);
         }
 
         if (RPGInventory.getPermissions().has(player, "rpginventory.admin")) {

@@ -29,8 +29,8 @@ import org.jetbrains.annotations.Nullable;
 import ru.endlesscode.rpginventory.RPGInventory;
 import ru.endlesscode.rpginventory.event.listener.ItemListener;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
-import ru.endlesscode.rpginventory.misc.config.Config;
 import ru.endlesscode.rpginventory.misc.FileLanguage;
+import ru.endlesscode.rpginventory.misc.config.Config;
 import ru.endlesscode.rpginventory.pet.PetManager;
 import ru.endlesscode.rpginventory.pet.PetType;
 import ru.endlesscode.rpginventory.utils.InventoryUtils;
@@ -99,10 +99,16 @@ public class ItemManager {
 
     private static void tryToAddItem(String name, @NotNull ConfigurationSection config) {
         try {
-            CustomItem customItem = new CustomItem(name, config);
+            Texture texture = Texture.parseTexture(config.getString("texture"));
+            if (texture.isEmpty()) {
+                Log.s("Item ''{0}'' has not been added because its texture is not valid.", name);
+                return;
+            }
+            CustomItem customItem = new CustomItem(name, texture, config);
             CUSTOM_ITEMS.put(name, customItem);
         } catch (Exception e) {
-            Log.w("Item ''{0}'' can''t be added: {1}", name, e.getLocalizedMessage());
+            Log.s("Item ''{0}'' can''t be added: {1}", name, e.toString());
+            Log.d(e);
         }
     }
 

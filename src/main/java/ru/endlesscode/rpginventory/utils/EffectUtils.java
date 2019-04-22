@@ -31,7 +31,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ru.endlesscode.inspector.bukkit.scheduler.TrackedBukkitRunnable;
 import ru.endlesscode.rpginventory.RPGInventory;
-import ru.endlesscode.rpginventory.compat.Sound;
+import ru.endlesscode.rpginventory.compat.SoundCompat;
+import ru.endlesscode.rpginventory.misc.config.Config;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
@@ -64,23 +65,37 @@ public class EffectUtils {
     public static void playSpawnEffect(Entity entity) {
         Location loc = entity.getLocation();
 
-        entity.getWorld().playSound(loc, Sound.ENDERMAN_TELEPORT.bukkitSound(), 1, (float) (1.2 + Math.random() * 0.4));
+        entity.getWorld().playSound(loc, SoundCompat.ENDERMAN_TELEPORT.get(), 1, (float) (1.2 + Math.random() * 0.4));
         playParticlesToAll(Particle.EXPLOSION_LARGE, 3, loc);
     }
 
     public static void playDespawnEffect(Entity entity) {
         Location loc = entity.getLocation();
 
-        entity.getWorld().playSound(loc, Sound.ENDERMAN_TELEPORT.bukkitSound(), 1, (float) (0.6 + Math.random() * 0.4));
+        entity.getWorld().playSound(loc, SoundCompat.ENDERMAN_TELEPORT.get(), 1, (float) (0.6 + Math.random() * 0.4));
         playParticlesToAll(Particle.SMOKE_NORMAL, 3, loc);
     }
 
 
-    public static void sendTitle(final Player player, int delay, String title, @NotNull final List<String> subtitles) {
-        sendTitle(player, delay, title, subtitles, null);
+    public static void showDefaultJoinMessage(Player player) {
+        showJoinMessage(player, "default", null);
     }
 
-    public static void sendTitle(final Player player, int delay, String title, @NotNull final List<String> subtitles, @Nullable final Runnable callback) {
+    public static boolean showJoinMessage(Player player, String messageId, @Nullable Runnable callback) {
+        String configPrefix = "join-messages." + messageId;
+        if (Config.getConfig().getBoolean(configPrefix + ".enabled", false)) {
+            EffectUtils.sendTitle(player,
+                    Config.getConfig().getInt("join-messages.delay", 2),
+                    Config.getConfig().getString(configPrefix + ".title"),
+                    Config.getConfig().getStringList(configPrefix + ".text"),
+                    callback);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private static void sendTitle(final Player player, int delay, String title, @NotNull final List<String> subtitles, @Nullable final Runnable callback) {
         if (delay < 2) {
             delay = 2;
         }

@@ -19,6 +19,10 @@
 package ru.endlesscode.rpginventory.compat;
 
 import org.bukkit.Bukkit;
+import ru.endlesscode.rpginventory.utils.Version;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by OsipXD on 29.08.2015
@@ -27,36 +31,40 @@ import org.bukkit.Bukkit;
  */
 public class VersionHandler {
 
-    // 1.9.x
-    private static boolean is1_9() {
-        return Bukkit.getBukkitVersion().contains("1.9");
+    public static int VERSION_1_9 = 1_09_00;
+    public static int VERSION_1_10 = 1_10_00;
+    public static int VERSION_1_11 = 1_11_00;
+    public static int VERSION_1_12 = 1_12_00;
+    public static int VERSION_1_13 = 1_13_00;
+    public static int VERSION_1_14 = 1_14_00;
+
+    private static Pattern pattern = Pattern.compile("(?<version>\\d\\.\\d{1,2}(\\.\\d)?)-.*");
+
+    private static int versionCode = -1;
+
+    public static boolean isNotSupportedVersion() {
+        return getVersionCode() < VERSION_1_9 || getVersionCode() >= VERSION_1_14;
     }
 
-    // 1.10.x
-    private static boolean is1_10() {
-        return Bukkit.getBukkitVersion().contains("1.10");
+    public static boolean isLegacy() {
+        return getVersionCode() < VERSION_1_13;
     }
 
-    // 1.11.x
-    private static boolean is1_11() {
-        return Bukkit.getBukkitVersion().contains("1.11");
+    public static int getVersionCode() {
+        if (versionCode == -1) {
+            initVersionCode();
+        }
+
+        return versionCode;
     }
 
-    // 1.12.x
-    private static boolean is1_12() {
-        return Bukkit.getBukkitVersion().contains("1.12");
-    }
-
-    // 1.13.x
-    public static boolean is1_13() {
-        return Bukkit.getBukkitVersion().contains("1.13");
-    }
-
-    public static boolean checkVersion() {
-        return is1_9() || is1_10() || is1_11() || is1_12() || is1_13();
-    }
-
-    public static boolean isUpper1_12() {
-        return !is1_9() && !is1_10() && !is1_11();
+    private static void initVersionCode() {
+        Matcher matcher = pattern.matcher(Bukkit.getBukkitVersion());
+        if (matcher.find()) {
+            String versionString = matcher.group("version");
+            versionCode = Version.parseVersion(versionString).getVersionCode();
+        } else {
+            versionCode = 0;
+        }
     }
 }

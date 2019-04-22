@@ -1,11 +1,4 @@
 #version: 2.0 | Do not remove this line!
-firststart: \n\
-&3============================== RPGInventory ================================\n\
-&cBefore using &eRPGInventory&c, add changed textures to resource-pack\n\
-and configure items that can be put in the inventory slots. After that,\n\
-set value in the config &eenabled: true\n\
-&3============================================================================
-
 title: &b&l装备菜单
 
 locked.name: &c&l未解锁凹槽
@@ -22,14 +15,12 @@ error.level: &6&l你只有 {0} 级.
 error.buyable: &6&l解锁此凹槽需要 {0} 金币. 10秒内再次点击凹槽确认解锁.
 error.previous: &6&l你必须先解锁上一个凹槽
 error.rp.denied: &c你必须启用服务器材质包才可进行游戏!
-error.rp.force: &c不允许关闭服务器材质包.
 error.item.level: &6需要 &c{0} &6级.
 error.item.class: &6你的种族必须为 &c{0}
 error.mount.owner: &6坐骑的主人为 {0}
 
 message.buyed: &a&l你成功解锁了一个凹槽!
-message.fixhp: &6你的血量已修复,请重新登录服务器.
-message.perms: &cYou don't have permission to use this command
+message.perms: &cYou don''t have permission to use this command
 
 pet.name: {0} &f[{1}]
 pet.health: &c血量: &7{0}
@@ -63,4 +54,4 @@ stat.jump: &9跳跃: &7{0}
 
 backpack.desc: &8请将背包放入背包凹槽,并右键点击打开
 backpack.size: &a容量: &7{0}
-backpack.limit: &cYou can't have more than {0} backpack!
+backpack.limit: &cYou can''t have more than {0} backpack!

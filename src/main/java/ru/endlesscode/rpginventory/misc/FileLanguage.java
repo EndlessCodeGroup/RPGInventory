@@ -67,13 +67,13 @@ public class FileLanguage {
         try {
             this.plugin.saveResource(path, true);
         } catch (Exception ex) {
-            Log.w("Failed to load {0}: {1}; using en.lang", this.langFile.getFileName(), ex.getLocalizedMessage());
+            Log.w("Failed to load {0}: {1}; using en.lang", this.langFile.getFileName(), ex.toString());
 
             try (InputStream is = this.plugin.getResource("lang/en.lang")) {
                 Files.copy(is, Paths.get(this.langFile.toUri()), StandardCopyOption.REPLACE_EXISTING);
             } catch (IOException e) {
-                Log.w("Failed to write default locale to {0}: {1}; continue without localization.",
-                        this.langFile.getFileName(), e.getLocalizedMessage());
+                Log.s("Failed to write default locale to {0}: {1}; continue without localization.",
+                        this.langFile.getFileName(), e.toString());
             }
         }
     }
@@ -83,7 +83,7 @@ public class FileLanguage {
              InputStreamReader isr = new InputStreamReader(is, StandardCharsets.UTF_8)) {
             this.language.load(isr);
         } catch (IOException e) {
-            Log.w("Failed to load locale file: {0}; continue without localization.", e.getLocalizedMessage());
+            Log.s("Failed to load locale file: {0}; continue without localization.", e.toString());
         }
     }
 
@@ -131,7 +131,7 @@ public class FileLanguage {
                     StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING
             );
         } catch (IOException e) {
-            Log.w("Failed to save locale file: {0}", e.getLocalizedMessage());
+            Log.w("Failed to save locale file: {0}", e.toString());
         }
     }
 

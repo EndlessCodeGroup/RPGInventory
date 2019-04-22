@@ -30,9 +30,11 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ru.endlesscode.rpginventory.RPGInventory;
 import ru.endlesscode.rpginventory.event.listener.LockerListener;
-import ru.endlesscode.rpginventory.misc.config.Config;
+import ru.endlesscode.rpginventory.item.Texture;
 import ru.endlesscode.rpginventory.misc.FileLanguage;
+import ru.endlesscode.rpginventory.misc.config.Config;
 import ru.endlesscode.rpginventory.utils.ItemUtils;
+import ru.endlesscode.rpginventory.utils.Log;
 import ru.endlesscode.rpginventory.utils.PlayerUtils;
 import ru.endlesscode.rpginventory.utils.StringUtils;
 
@@ -49,32 +51,23 @@ public class InventoryLocker {
     private static ItemStack LOCKED_SLOT = null;
     private static ItemStack BUYABLE_SLOT = null;
 
+    private static String TAG = "locked";
+
     private InventoryLocker() {
     }
 
     public static boolean init(@NotNull RPGInventory instance) {
         if (!isEnabled()) {
+            Log.i("Inventory lock system is disabled in config");
             return false;
         }
 
         try {
-            // Setup locked slot
-            InventoryLocker.LOCKED_SLOT = ItemUtils.getTexturedItem(Config.getConfig().getString("slots.locked"));
-            ItemMeta meta = InventoryLocker.LOCKED_SLOT.getItemMeta();
-            meta.setDisplayName(RPGInventory.getLanguage().getMessage("locked.name"));
-            meta.setLore(Collections.singletonList(RPGInventory.getLanguage().getMessage("locked.lore")));
-
-            InventoryLocker.LOCKED_SLOT.setItemMeta(meta);
-            InventoryLocker.LOCKED_SLOT = addId(InventoryLocker.LOCKED_SLOT);
-
-            // Setup buyable slot
-            InventoryLocker.BUYABLE_SLOT = ItemUtils.getTexturedItem(Config.getConfig().getString("slots.buyable"));
-            meta = InventoryLocker.BUYABLE_SLOT.getItemMeta();
-            meta.setDisplayName(RPGInventory.getLanguage().getMessage("buyable.name"));
-            meta.setLore(Collections.singletonList(RPGInventory.getLanguage().getMessage("buyable.lore")));
-
-            InventoryLocker.BUYABLE_SLOT.setItemMeta(meta);
-            InventoryLocker.BUYABLE_SLOT = addId(InventoryLocker.BUYABLE_SLOT);
+            InventoryLocker.LOCKED_SLOT = initSlotItem("locked");
+            InventoryLocker.BUYABLE_SLOT = initSlotItem("buyable");
+            if (ItemUtils.isEmpty(InventoryLocker.LOCKED_SLOT) || ItemUtils.isEmpty(InventoryLocker.BUYABLE_SLOT)) {
+                return false;
+            }
         } catch (Exception e) {
             instance.getReporter().report("Error on InventoryLocker initialization", e);
             return false;
@@ -82,6 +75,22 @@ public class InventoryLocker {
 
         instance.getServer().getPluginManager().registerEvents(new LockerListener(), instance);
         return true;
+    }
+
+    private static ItemStack initSlotItem(String slotId) {
+        Texture texture = Texture.parseTexture(Config.getConfig().getString("slots." + slotId));
+        ItemStack slotItem = texture.getItemStack();
+        if (ItemUtils.isEmpty(slotItem)) {
+            Log.s("Texture specified in ''slots.{0}'' must be valid and must not be AIR", slotId);
+            return slotItem;
+        }
+
+        ItemMeta meta = slotItem.getItemMeta();
+        meta.setDisplayName(RPGInventory.getLanguage().getMessage(slotId + ".name"));
+        meta.setLore(Collections.singletonList(RPGInventory.getLanguage().getMessage(slotId + ".lore")));
+
+        slotItem.setItemMeta(meta);
+        return addTag(slotItem);
     }
 
     private static boolean isEnabled() {
@@ -135,16 +144,16 @@ public class InventoryLocker {
         im.setLore(lore);
         slot.setItemMeta(im);
 
-        return addId(slot);
+        return addTag(slot);
     }
 
     @NotNull
-    private static ItemStack addId(ItemStack item) {
-        return ItemUtils.setTag(item, "locked", "0");
+    private static ItemStack addTag(ItemStack item) {
+        return ItemUtils.setTag(item, TAG, "0");
     }
 
     public static boolean isLockedSlot(@Nullable ItemStack item) {
-        return InventoryLocker.isEnabled() && !ItemUtils.isEmpty(item) && ItemUtils.hasTag(item, "locked");
+        return InventoryLocker.isEnabled() && ItemUtils.isNotEmpty(item) && ItemUtils.hasTag(item, TAG);
     }
 
     public static boolean isBuyableSlot(ItemStack currentItem, int line) {

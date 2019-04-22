@@ -20,6 +20,7 @@ package ru.endlesscode.rpginventory.item;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 import ru.endlesscode.rpginventory.utils.CommandUtils;
 import ru.endlesscode.rpginventory.utils.PlayerUtils;
 import ru.endlesscode.rpginventory.utils.StringUtils;
@@ -35,7 +36,7 @@ class ItemAction {
     private final String message;
     private final boolean asOp;
 
-    ItemAction(ConfigurationSection config) {
+    ItemAction(@NotNull ConfigurationSection config) {
         this.command = config.getString("command");
         this.caption = config.getString("lore");
         this.message = config.getString("message");

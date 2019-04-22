@@ -47,7 +47,7 @@ import java.util.List;
 final class RPGInventoryCommandExecutor implements CommandExecutor {
 
     @Override
-    public boolean onCommand(@NotNull CommandSender sender, Command command, String label, @NotNull String[] args) {
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (args.length == 0) {
             this.printHelp(sender);
             return true;

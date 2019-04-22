@@ -1,11 +1,4 @@
 #version: 2.0 | Do not remove this line!
-firststart: \n\
-&3============================== RPGInventory ================================\n\
-&cBefore using &eRPGInventory&c, add changed textures to the resource-pack\n\
-and configure items that can be put in the inventory slots. After that,\n\
-set value in the config &eenabled: true\n\
-&3============================================================================
-
 title: RPG Inventory
 
 locked.name: &c&lLocked slot
@@ -16,27 +9,25 @@ buyable.lore: &6&oTo purchase a slot, you must:
 buyable.money: &6&o• Have {0} gold
 buyable.level: &6&o• Be {0} lvl
 
-error.fall: &cYou can't do it while you are flying
+error.fall: &cYou can''t do it while you are flying
 error.money: &6&lTo purchase slots you still need {0} gold
 error.level: &6&lTo purchase slots you need {0} lvl
 error.buyable: &6&lTo purchase this slots you need {0} gold. Click on it again in the next 10 seconds to confirm the purchase.
 error.previous: &6&lFirst unlock previous slots
 error.rp.denied: &cYou must allow downloading the resource-pack!
-error.rp.force: &cDisabling of the resource-pack is not allowed.
 error.item.level: &6Required &c{0} &6level
 error.item.class: &6Required class &c{0}
 error.mount.owner: &6Mount belongs to {0}
 
 message.buyed: &a&lYou have successfully purchased the slot
-message.fixhp: &6Your HP was fixed, please login to server again
-message.perms: &cYou don't have permission to use this command
+message.perms: &cYou don''t have permission to use this command
 
 pet.name: {0} &f[{1}]
 pet.health: &cHealth: &7{0}
 pet.damage: &cDamage: &7{0}
 pet.speed: &cSpeed: &7{0} block/s
 pet.revival.yes: &bCooldown: &7{0}s
-pet.revival.no: &bDon't revives
+pet.revival.no: &bDon''t revives
 pet.cooldown:  &a&l&o({0}s)
 pet.food.value: &aRestores: {0} HP
 pet.role.companion: Companion
@@ -45,7 +36,7 @@ mypet.egg: MyPet Egg: {0}
 
 item.level: &fRequires {0} level
 item.class: &fOnly for &b{0}
-item.nodrop: &7Doesn't drop on death
+item.nodrop: &7Doesn''t drop on death
 item.left-click: &aLMB - {0}
 item.right-click: &aRMB - {0}
 item.hide: &7&oItem stats are hidden
@@ -63,4 +54,4 @@ stat.jump: &9Jump: &7{0}
 
 backpack.desc: &8&oPut it in specified slot and click &fRMB
 backpack.size: &aSize: &7{0}
-backpack.limit: &cYou can't have more than {0} backpack!
+backpack.limit: &cYou can''t have more than {0} backpack!

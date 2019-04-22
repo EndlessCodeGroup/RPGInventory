@@ -22,7 +22,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.*;
+import org.jetbrains.annotations.NotNull;
 import ru.endlesscode.rpginventory.RPGInventory;
 import ru.endlesscode.rpginventory.event.PetUnequipEvent;
 import ru.endlesscode.rpginventory.inventory.slot.Slot;
@@ -33,7 +33,12 @@ import ru.endlesscode.rpginventory.pet.PetManager;
 import ru.endlesscode.rpginventory.pet.PetType;
 import ru.endlesscode.rpginventory.utils.ItemUtils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * Created by OsipXD on 06.10.2016
@@ -87,7 +92,7 @@ public class InventorySaver {
         List<ItemStack> contents = Arrays.asList(player.getInventory().getStorageContents());
         for (int i = 0; i < contents.size(); i++) {
             ItemStack item = contents.get(i);
-            if (!ItemUtils.isEmpty(item) && !drops.contains(item)) {
+            if (ItemUtils.isNotEmpty(item) && !drops.contains(item)) {
                 contents.set(i, null);
             }
         }
@@ -99,7 +104,7 @@ public class InventorySaver {
             for (Slot slot : SlotManager.instance().getQuickSlots()) {
                 ItemStack quickItem = player.getInventory().getItem(slot.getQuickSlot());
 
-                if (!ItemUtils.isEmpty(quickItem) && !slot.isCup(quickItem)) {
+                if (ItemUtils.isNotEmpty(quickItem) && !slot.isCup(quickItem)) {
                     if (slot.isDrop()) {
                         additionalDrops.add(quickItem);
                         contents.set(slot.getQuickSlot(), null);
@@ -156,7 +161,7 @@ public class InventorySaver {
         Slot shieldSlot = SlotManager.instance().getShieldSlot();
         if (shieldSlot != null && (saveItems || !shieldSlot.isDrop())) {
             ItemStack itemInOffHand = player.getEquipment().getItemInOffHand();
-            if (!ItemUtils.isEmpty(itemInOffHand)) {
+            if (ItemUtils.isNotEmpty(itemInOffHand)) {
                 EXTRA.put(player.getUniqueId(), itemInOffHand);
                 drops.remove(itemInOffHand);
             }
@@ -180,7 +185,7 @@ public class InventorySaver {
             for (int i = 0; i < contents.length; i++) {
                 ItemStack item = contents[i];
 
-                if (!ItemUtils.isEmpty(item)) {
+                if (ItemUtils.isNotEmpty(item)) {
                     inventory.setItem(i, item);
                 }
             }
