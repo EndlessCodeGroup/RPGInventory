@@ -19,7 +19,6 @@
 package ru.endlesscode.rpginventory.pet;
 
 import com.comphenix.protocol.wrappers.nbt.NbtCompound;
-import com.comphenix.protocol.wrappers.nbt.NbtFactory;
 import org.bukkit.DyeColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -40,7 +39,9 @@ import org.bukkit.entity.Tameable;
 import org.bukkit.entity.Wolf;
 import org.bukkit.inventory.HorseInventory;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
 import org.jetbrains.annotations.Contract;
@@ -466,10 +467,11 @@ public class PetManager {
         return PetManager.getPetFromItem(playerWrapper.getInventory().getItem(SLOT_PET));
     }
 
-    static void addGlow(ItemStack itemStack) {
-        itemStack.addUnsafeEnchantment(Enchantment.DURABILITY, 88);
-        NbtCompound compound = NbtFactoryMirror.fromItemCompound(itemStack);
-        compound.put(NbtFactory.ofList("ench"));
+    static void addGlow(@NotNull ItemStack itemStack) {
+        ItemMeta meta = itemStack.getItemMeta();
+        meta.addEnchant(Enchantment.DURABILITY, 88, true);
+        meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+        itemStack.setItemMeta(meta);
     }
 
     public static void saveDeathTime(@NotNull ItemStack item) {
