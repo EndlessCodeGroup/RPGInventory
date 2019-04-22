@@ -112,7 +112,7 @@ public class InventoryManager {
 
         if (ItemUtils.isNotEmpty(currentItem)
                 && (actionType == ActionType.GET || action == InventoryAction.SWAP_WITH_CURSOR || actionType == ActionType.DROP)
-                && PetManager.getDeathTime(currentItem) > 0) {
+                && PetManager.getCooldown(currentItem) > 0) {
             return false;
         }
 
