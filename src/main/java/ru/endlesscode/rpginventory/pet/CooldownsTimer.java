@@ -85,7 +85,6 @@ public class CooldownsTimer extends BukkitRunnable {
             final ItemStack originalItemStack = next.getValue().getItemStack();
             int cooldown = PetManager.getCooldown(originalItemStack);
             if (1 > cooldown) {
-                PetManager.saveDeathTime(originalItemStack, 0);
                 PetManager.respawnPet(player, originalItemStack);
                 inventory.setItem(PetManager.getPetSlotId(), originalItemStack);
                 iterator.remove();
@@ -94,7 +93,7 @@ public class CooldownsTimer extends BukkitRunnable {
                 final String displayName = next.getValue().getDisplayName();
                 final ItemMeta itemMeta = item.getItemMeta();
                 itemMeta.setDisplayName(
-                        displayName + RPGInventory.getLanguage().getMessage("pet.cooldown", cooldown)
+                        displayName + " " + RPGInventory.getLanguage().getMessage("pet.cooldown", cooldown)
                 );
                 item.setItemMeta(itemMeta);
                 PetManager.addGlow(item);

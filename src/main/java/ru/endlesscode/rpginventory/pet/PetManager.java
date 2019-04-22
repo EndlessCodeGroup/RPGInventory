@@ -256,8 +256,8 @@ public class PetManager {
             return;
         }
 
-        if (PetManager.getDeathTime(petItem) > 0) {
-            //PetManager.startCooldownTimer(player, petItem);
+        if (PetManager.getCooldown(petItem) > 0) {
+            PetManager.startCooldownTimer(player, petItem);
             return;
         }
 
@@ -512,6 +512,10 @@ public class PetManager {
         int itemCooldown = petCooldown - secondsSinceDeath;
         if (itemCooldown < 0 || itemCooldown > petCooldown) {
             itemCooldown = 0;
+        }
+
+        if (itemCooldown == 0) {
+            PetManager.saveDeathTime(item, 0);
         }
 
         return itemCooldown;
