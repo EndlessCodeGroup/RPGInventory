@@ -42,7 +42,7 @@ public class RPGInventoryPlugin extends TrackedPlugin {
     @Override
     protected final @NotNull Reporter createReporter() {
         String id = "1331962";
-        String key = "3364f9220f04483a9903023e5b3dbaae";
+        String key = "3fb946c572e14f819bde4b2b993b698e";
 
         return new SentryReporter.Builder()
                 .setDataSourceName(key, id)
