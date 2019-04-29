@@ -20,14 +20,23 @@ package ru.endlesscode.rpginventory;
 
 import org.jetbrains.annotations.NotNull;
 import ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin;
+import ru.endlesscode.inspector.bukkit.report.BukkitEnvironment;
 import ru.endlesscode.inspector.report.Reporter;
 import ru.endlesscode.inspector.report.SentryReporter;
+
+import java.util.Arrays;
+import java.util.List;
 
 @SuppressWarnings("unused")
 public class RPGInventoryPlugin extends TrackedPlugin {
 
+    private static List<String> INTEREST_PLUGINS = Arrays.asList(
+            "ProtocolLib", "Vault", "BattleLevels", "Skills", "Heroes", "RacesAndClasses",
+            "SkillAPI", "MyPet", "RPGPlayerLeveling", "PlaceholderAPI", "MMOItems", "QuantumRPG"
+    );
+
     public RPGInventoryPlugin() {
-        super(RPGInventory.class);
+        super(RPGInventory.class, new BukkitEnvironment.Properties(INTEREST_PLUGINS));
     }
 
     @Override
