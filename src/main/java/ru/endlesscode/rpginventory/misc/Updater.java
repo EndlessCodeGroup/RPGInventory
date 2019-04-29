@@ -18,23 +18,26 @@
 
 package ru.endlesscode.rpginventory.misc;
 
+import com.google.gson.Gson;
+import com.google.gson.annotations.SerializedName;
+import com.google.gson.reflect.TypeToken;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.JSONValue;
 import ru.endlesscode.rpginventory.utils.Log;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.reflect.Type;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 
 /**
@@ -319,11 +322,11 @@ public class Updater {
             }
         }
 
-        JSONArray array = (JSONArray) JSONValue.parse(responseBuilder.toString());
-        JSONObject latestUpdate = null;
-        for (int i = array.size() - 1; i >= 0; i--) {
-            JSONObject update = (JSONObject) array.get(i);
-            String[] versions = ((String) update.get(Updater.VERSION_VALUE)).split(", ");
+        UpdateData latestUpdate = null;
+        Type listType = new TypeToken<ArrayList<UpdateData>>() {}.getType();
+        List<UpdateData> updates = new Gson().fromJson(responseBuilder.toString(), listType);
+        for (UpdateData update : updates) {
+            String[] versions = update.mcVersions.split(", ");
 
             for (String version : versions) {
                 if (Bukkit.getBukkitVersion().startsWith(version)) {
@@ -338,9 +341,9 @@ public class Updater {
             return false;
         }
 
-        this.versionName = (String) latestUpdate.get(Updater.TITLE_VALUE);
-        this.infoLink = (String) latestUpdate.get(Updater.LINK_VALUE);
-        this.description = (String) latestUpdate.get(Updater.DESCRIPTION_VALUE);
+        this.versionName = latestUpdate.versionName;
+        this.infoLink = latestUpdate.infoLink;
+        this.description = latestUpdate.description;
 
         return true;
     }
@@ -431,5 +434,19 @@ public class Updater {
         public void run() {
             runUpdater();
         }
+    }
+
+    public final class UpdateData {
+        @SerializedName(VERSION_VALUE)
+        public String mcVersions;
+
+        @SerializedName(TITLE_VALUE)
+        public String versionName;
+
+        @SerializedName(LINK_VALUE)
+        public String infoLink;
+
+        @SerializedName(DESCRIPTION_VALUE)
+        public String description;
     }
 }

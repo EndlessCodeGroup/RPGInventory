@@ -27,6 +27,7 @@ repositories {
     flatDir { dirs 'libs' }
 
     jcenter()
+    spigot()
     dmulloy2()
     md5()
     vault()
@@ -74,7 +75,7 @@ ext.inspectorVersion = "0.8.1"
 dependencies {
     compileOnly(bukkit()) {
         exclude group: 'junit'
-        exclude module: 'gson'
+        exclude module: 'json'
     }
     compileOnly('net.milkbowl.vault:VaultAPI:1.6') {
         exclude group: 'org.bukkit'
