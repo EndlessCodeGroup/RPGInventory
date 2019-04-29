@@ -242,7 +242,7 @@ public class MyPetManager implements Listener {
         // MyPet switched to Java's Optional from Guava
         //noinspection ConstantConditions
         if (pet instanceof com.google.common.base.Optional) {
-            optionalPet = ((com.google.common.base.Optional<MyPet>) pet).toJavaUtil();
+            optionalPet = Optional.ofNullable(((com.google.common.base.Optional<MyPet>) pet).orNull());
         } else {
             optionalPet = (Optional<MyPet>) pet;
         }

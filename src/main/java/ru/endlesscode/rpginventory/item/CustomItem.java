@@ -25,6 +25,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import ru.endlesscode.rpginventory.compat.ItemStackCompat;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
 import ru.endlesscode.rpginventory.utils.ItemUtils;
 import ru.endlesscode.rpginventory.utils.SafeEnums;
@@ -127,10 +128,10 @@ public class CustomItem extends ClassedItem {
         ItemMeta meta = customItem.getItemMeta();
         meta.setDisplayName(this.name);
         meta.setLore(ItemManager.buildLore(this));
-        if (this.unbreakable) {
-            meta.setUnbreakable(true);
-        }
         customItem.setItemMeta(meta);
+        if (this.unbreakable) {
+            customItem = ItemStackCompat.setUnbreakable(customItem, true);
+        }
 
         this.customItem = ItemUtils.setTag(customItem, ItemUtils.ITEM_TAG, id);
     }
