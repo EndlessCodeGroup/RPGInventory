@@ -20,20 +20,29 @@ package ru.endlesscode.rpginventory;
 
 import org.jetbrains.annotations.NotNull;
 import ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin;
+import ru.endlesscode.inspector.bukkit.report.BukkitEnvironment;
 import ru.endlesscode.inspector.report.Reporter;
 import ru.endlesscode.inspector.report.SentryReporter;
+
+import java.util.Arrays;
+import java.util.List;
 
 @SuppressWarnings("unused")
 public class RPGInventoryPlugin extends TrackedPlugin {
 
+    private static List<String> INTEREST_PLUGINS = Arrays.asList(
+            "ProtocolLib", "Vault", "BattleLevels", "Skills", "Heroes", "RacesAndClasses",
+            "SkillAPI", "MyPet", "RPGPlayerLeveling", "PlaceholderAPI", "MMOItems", "QuantumRPG"
+    );
+
     public RPGInventoryPlugin() {
-        super(RPGInventory.class);
+        super(RPGInventory.class, new BukkitEnvironment.Properties(INTEREST_PLUGINS));
     }
 
     @Override
     protected final @NotNull Reporter createReporter() {
         String id = "1331962";
-        String key = "3364f9220f04483a9903023e5b3dbaae";
+        String key = "3fb946c572e14f819bde4b2b993b698e";
 
         return new SentryReporter.Builder()
                 .setDataSourceName(key, id)
