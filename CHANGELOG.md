@@ -1,3 +1,7 @@
+## 2.3.0 (2019-04-29)
+
+*No changes since 2.3.0-RC1.*
+
 ## 2.3.0-RC1 (2019-04-22)
 
 25 changes total
