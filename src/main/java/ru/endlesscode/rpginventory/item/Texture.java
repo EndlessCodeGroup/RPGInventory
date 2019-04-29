@@ -9,6 +9,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.jetbrains.annotations.NotNull;
+import ru.endlesscode.rpginventory.compat.ItemStackCompat;
 import ru.endlesscode.rpginventory.compat.MaterialCompat;
 import ru.endlesscode.rpginventory.utils.ItemUtils;
 import ru.endlesscode.rpginventory.utils.Log;
@@ -127,10 +128,10 @@ public class Texture {
         ItemMeta meta = item.getItemMeta();
         if (meta != null) {
             meta.addItemFlags(ItemFlag.values());
-            if (ItemUtils.isItemHasDurability(item)) {
-                meta.setUnbreakable(true);
-            }
             item.setItemMeta(meta);
+            if (ItemUtils.isItemHasDurability(item)) {
+                item = ItemStackCompat.setUnbreakable(item, true);
+            }
         }
 
         return new Texture(item, durability);

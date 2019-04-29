@@ -30,6 +30,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Animals;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Horse;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Ocelot;
@@ -406,8 +407,8 @@ public class PetManager {
             return;
         }
 
-        EffectUtils.playDespawnEffect(petEntity);
-        petEntity.remove();
+        EffectUtils.playDespawnEffect((Entity) petEntity);
+        ((Entity) petEntity).remove();
     }
 
     /**

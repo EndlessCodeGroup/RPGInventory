@@ -26,6 +26,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityToggleGlideEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.jetbrains.annotations.NotNull;
+import ru.endlesscode.rpginventory.compat.PlayerCompat;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
 import ru.endlesscode.rpginventory.inventory.PlayerWrapper;
 import ru.endlesscode.rpginventory.utils.LocationUtils;
@@ -36,7 +37,6 @@ import ru.endlesscode.rpginventory.utils.LocationUtils;
  * All rights reserved 2014 - 2016 © «EndlessCode Group»
  */
 public class ElytraListener implements Listener {
-    private boolean isGetWidthMethodAvailable = true;
 
     @EventHandler(ignoreCancelled = true)
     public void onPlayerFall(@NotNull PlayerMoveEvent event) {
@@ -81,14 +81,7 @@ public class ElytraListener implements Listener {
     }
 
     private boolean isPlayerCanFall(@NotNull Player player) {
-        double playerWidth = 0.6D;
-        if (this.isGetWidthMethodAvailable) {
-            try {
-                playerWidth = player.getWidth();
-            } catch (NoSuchMethodError ex) {
-                this.isGetWidthMethodAvailable = false;
-            }
-        }
+        double playerWidth = PlayerCompat.getWidth(player);
         return !LocationUtils.isUnderAnyBlockHonestly(player.getLocation(), playerWidth, 3)
                 && !playerIsOnLadder(player);
     }
