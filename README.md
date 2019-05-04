@@ -87,7 +87,7 @@ shadowJar {
 }
 
 // Automatically run shadowJar making on assemble
-tasks.build.assemble tasks.shadowJar
+tasks.assemble tasks.shadowJar
 
 // Here you can change preferred version of inspector
 ext.inspectorVerson = "0.8.1"
