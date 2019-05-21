@@ -97,12 +97,13 @@ public class InventoryListener implements Listener {
     public void onLoadInventory(@NotNull PlayerInventoryLoadEvent.Post event) {
         Player player = event.getPlayer();
         ItemManager.updateStats(player);
+        PlayerInventory playerInventory = player.getInventory();
 
         // Sync armor
-        player.getInventory().setArmorContents(ItemUtils.syncItems(player.getInventory().getArmorContents()));
+        playerInventory.setArmorContents(ItemUtils.syncItems(playerInventory.getArmorContents()));
 
         // Sync inventory
-        player.getInventory().setContents(ItemUtils.syncItems(player.getInventory().getContents()));
+        playerInventory.setContents(ItemUtils.syncItems(playerInventory.getContents()));
 
         // Sync RPG Inventory
         Inventory inventory = InventoryManager.get(player).getInventory();
