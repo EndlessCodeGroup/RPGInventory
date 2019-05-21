@@ -76,6 +76,9 @@ import ru.endlesscode.rpginventory.utils.PlayerUtils;
  * All rights reserved 2014 - 2016 © «EndlessCode Group»
  */
 public class InventoryListener implements Listener {
+
+    private final static int QUICKBAR_SIZE = 9;
+
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerJoin(@NotNull final PlayerJoinEvent event) {
         final Player player = event.getPlayer();
@@ -128,7 +131,7 @@ public class InventoryListener implements Listener {
         if (slot != null && slot.isCup(player.getInventory().getItem(slotId))) {
             event.setCancelled(true);
             InventoryUtils.heldFreeSlot(player, slotId,
-                    (event.getPreviousSlot() + 1) % 9 == slotId ? InventoryUtils.SearchType.NEXT : InventoryUtils.SearchType.PREV);
+                    (event.getPreviousSlot() + 1) % QUICKBAR_SIZE == slotId ? InventoryUtils.SearchType.NEXT : InventoryUtils.SearchType.PREV);
         }
     }
 
@@ -234,17 +237,12 @@ public class InventoryListener implements Listener {
             return;
         }
 
-        final int rawSlot = event.getRawSlot();
-        InventoryType.SlotType slotType = InventoryUtils.getSlotType(event.getSlotType(), rawSlot);
-
+        final InventoryType.SlotType slotType = event.getSlotType();
         if (slotType == InventoryType.SlotType.OUTSIDE) {
             return;
         }
 
-        if (rawSlot > event.getView().getTopInventory().getSize() && event.getSlot() < 9) {
-            slotType = InventoryType.SlotType.QUICKBAR;
-        }
-
+        final int rawSlot = event.getRawSlot();
         final Slot slot = SlotManager.instance().getSlot(event.getSlot(), slotType);
         final Inventory inventory = event.getInventory();
         InventoryAction action = event.getAction();
@@ -287,19 +285,22 @@ public class InventoryListener implements Listener {
         }
 
         // In RPG Inventory or quick slot
-        if (InventoryAPI.isRPGInventory(inventory) || slotType == InventoryType.SlotType.QUICKBAR && slot != null
-                && (slot.isQuick() || slot.getSlotType() == Slot.SlotType.SHIELD) && player.getGameMode() != GameMode.CREATIVE) {
-            if (rawSlot < 54 && slot == null || action == InventoryAction.MOVE_TO_OTHER_INVENTORY) {
+        final boolean isRpgInventory = InventoryAPI.isRPGInventory(inventory);
+        final boolean isQuickSlot = slotType == InventoryType.SlotType.QUICKBAR && slot != null
+                && (slot.isQuick() || slot.getSlotType() == Slot.SlotType.SHIELD);
+        if ((isRpgInventory || isQuickSlot) && player.getGameMode() != GameMode.CREATIVE) {
+            final boolean isInInventory = rawSlot < inventory.getSize();
+            if (isInInventory && slot == null || action == InventoryAction.MOVE_TO_OTHER_INVENTORY) {
                 event.setCancelled(true);
                 return;
             }
 
-            if (rawSlot >= 54 && slotType != InventoryType.SlotType.QUICKBAR || slot == null) {
+            if (slot == null || !isQuickSlot && !isInInventory) {
                 return;
             }
 
             PlayerWrapper playerWrapper = null;
-            if (InventoryAPI.isRPGInventory(inventory)) {
+            if (isRpgInventory) {
                 playerWrapper = (PlayerWrapper) inventory.getHolder();
 
                 // Check flying
