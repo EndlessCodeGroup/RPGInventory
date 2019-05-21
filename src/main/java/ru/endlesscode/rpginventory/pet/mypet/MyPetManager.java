@@ -68,18 +68,23 @@ import java.util.UUID;
 public class MyPetManager implements Listener {
     private static final String MYPET_TAG = "mypet.uuid";
 
-    public static boolean init(@NotNull RPGInventory instance) {
+    public static boolean init(@NotNull RPGInventory plugin) {
         if (MyPetManager.getMyPetSlot() == null) {
             Log.s("MyPet found, but slot for MyPet not configured!");
             return false;
         }
 
-        for (MyPetPlayer mpPlayer : MyPetApi.getPlayerManager().getMyPetPlayers()) {
-            syncPlayer(mpPlayer);
-        }
+        try {
+            for (MyPetPlayer mpPlayer : MyPetApi.getPlayerManager().getMyPetPlayers()) {
+                syncPlayer(mpPlayer);
+            }
 
-        instance.getServer().getPluginManager().registerEvents(new MyPetManager(), instance);
-        return true;
+            plugin.getServer().getPluginManager().registerEvents(new MyPetManager(), plugin);
+            return true;
+        } catch (Exception e) {
+            plugin.getReporter().report(e.getMessage(), e);
+            return false;
+        }
     }
 
     private static void syncPlayer(MyPetPlayer mpPlayer) {
