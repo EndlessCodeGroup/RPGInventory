@@ -242,14 +242,7 @@ public class InventoryListener implements Listener {
             return;
         }
 
-        final int rawSlot = event.getRawSlot();
-        final Slot slot = SlotManager.instance().getSlot(event.getSlot(), slotType);
-        final Inventory inventory = event.getInventory();
-        InventoryAction action = event.getAction();
-        ActionType actionType = ActionType.getTypeOfAction(action);
-        ItemStack currentItem = event.getCurrentItem();
-        ItemStack cursor = event.getCursor();
-
+        final InventoryAction action = event.getAction();
         if ((action == InventoryAction.HOTBAR_SWAP || action == InventoryAction.HOTBAR_MOVE_AND_READD)
                 && SlotManager.instance().getSlot(event.getHotbarButton(), InventoryType.SlotType.QUICKBAR) != null) {
             event.setCancelled(true);
@@ -257,6 +250,8 @@ public class InventoryListener implements Listener {
         }
 
         // Crafting inventory is Player's vanilla inventory
+        final Inventory inventory = event.getInventory();
+        final int rawSlot = event.getRawSlot();
         if (inventory.getType() == InventoryType.CRAFTING) {
             PlayerWrapper playerWrapper = InventoryManager.get(player);
 
@@ -285,6 +280,7 @@ public class InventoryListener implements Listener {
         }
 
         // In RPG Inventory or quick slot
+        final Slot slot = SlotManager.instance().getSlot(event.getSlot(), slotType);
         final boolean isRpgInventory = InventoryAPI.isRPGInventory(inventory);
         final boolean isQuickSlot = slotType == InventoryType.SlotType.QUICKBAR && slot != null
                 && (slot.isQuick() || slot.getSlotType() == Slot.SlotType.SHIELD);
@@ -311,6 +307,9 @@ public class InventoryListener implements Listener {
                 }
             }
 
+            final ItemStack currentItem = event.getCurrentItem();
+            final ActionType actionType = ActionType.getTypeOfAction(action);
+
             if (!validateClick(player, playerWrapper, slot, actionType, currentItem, slotType) || slot.getSlotType() == Slot.SlotType.INFO) {
                 event.setCancelled(true);
                 return;
@@ -322,6 +321,7 @@ public class InventoryListener implements Listener {
                 return;
             }
 
+            final ItemStack cursor = event.getCursor();
             if (playerWrapper != null && slot.getSlotType() == Slot.SlotType.ARMOR) {
                 onArmorSlotClick(event, playerWrapper, slot, cursor, currentItem);
                 return;
