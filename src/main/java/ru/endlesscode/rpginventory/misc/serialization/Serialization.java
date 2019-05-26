@@ -15,7 +15,7 @@ import ru.endlesscode.rpginventory.utils.Log;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -86,8 +86,8 @@ public class Serialization {
         serializedData.set(ROOT_TAG, data);
 
         Path tempFile = Files.createTempFile(file.getParent(), file.getFileName().toString(), null);
-        try (OutputStream stream = new GZIPOutputStream(Files.newOutputStream(tempFile))) {
-            stream.write(serializedData.saveToString().getBytes(StandardCharsets.UTF_8));
+        try (OutputStreamWriter stream = new OutputStreamWriter(new GZIPOutputStream(Files.newOutputStream(tempFile)), StandardCharsets.UTF_8)) {
+            stream.write(serializedData.saveToString());
         }
         Files.move(tempFile, file, StandardCopyOption.REPLACE_EXISTING);
     }
@@ -96,7 +96,7 @@ public class Serialization {
     private static Object load(@NotNull Path file)
             throws IOException, InvalidConfigurationException {
         final FileConfiguration serializedData = new YamlConfiguration();
-        try (InputStreamReader reader = new InputStreamReader(new GZIPInputStream(Files.newInputStream(file)))) {
+        try (InputStreamReader reader = new InputStreamReader(new GZIPInputStream(Files.newInputStream(file)), StandardCharsets.UTF_8)) {
             serializedData.load(reader);
         }
 
