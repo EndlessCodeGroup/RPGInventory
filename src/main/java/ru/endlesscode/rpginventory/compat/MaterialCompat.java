@@ -25,7 +25,7 @@ public class MaterialCompat {
     @Nullable
     public static Material getMaterialOrNull(String name) {
         Material material = Material.getMaterial(name);
-        if (material == null && VersionHandler.getVersionCode() >= VersionHandler.VERSION_1_13) {
+        if (material == null && !VersionHandler.isLegacy()) {
             material = Material.getMaterial(name, true);
         }
 
