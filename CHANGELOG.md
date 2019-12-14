@@ -1,3 +1,44 @@
+<!-- Template:
+## 2.X.X (YYYY-MM-DD)
+
+X changes total
+
+### Added (X changes)
+
+### Changed (X changes)
+
+### Fixed (X changes)
+
+### Other (X changes)
+-->
+
+## 2.3.1-SNAPSHOT (2019-12-15)
+
+X changes total
+
+### Added (X changes)
+
+- Support of 1.14 and 1.15
+- Pet skin OCELOT replaced with CAT  
+  Available cats types: TABBY (default), BLACK, RED, SIAMESE, BRITISH_SHORTHAIR, CALICO, PERSIAN, RAGDOLL, WHITE, JELLIE, ALL_BLACK
+- Added COLLAR option for CAT pet skin
+
+### Changed (X changes)
+
+- Removed movement blocking on resource-pack loading
+- Removed option `resource-pack.delay` from config
+- Removed support of 1.13 and older
+
+### Fixed (X changes)
+
+- Fixed problem with items name and description encoding after inventory save  
+- Fixed quickbar slots detection
+- Fixed crashes on pets damage
+- Fixed crashes from PlaceholderAPI
+- Fixed plugin loading fail if MyPet initialization failed
+- Fixed many NPE crashes
+- Fixed kick when player accepted
+
 ## 2.3.0 (2019-04-29)
 
 *No changes since 2.3.0-RC1.*

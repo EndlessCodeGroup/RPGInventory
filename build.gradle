@@ -10,7 +10,7 @@ version = pluginVersion
 description = pluginDesc
 
 bukkit {
-    version = '1.14.4'
+    version = '1.15'
 
     meta {
         main = "${group}.RPGInventoryPlugin"
