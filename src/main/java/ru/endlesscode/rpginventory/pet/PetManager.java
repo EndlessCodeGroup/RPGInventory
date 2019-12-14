@@ -30,7 +30,6 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Animals;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Horse;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Ocelot;
@@ -407,8 +406,8 @@ public class PetManager {
             return;
         }
 
-        EffectUtils.playDespawnEffect((Entity) petEntity);
-        ((Entity) petEntity).remove();
+        EffectUtils.playDespawnEffect(petEntity);
+        petEntity.remove();
     }
 
     /**
@@ -458,14 +457,14 @@ public class PetManager {
 
     @Nullable
     public static PetType getPetFromEntity(@Nullable LivingEntity entity, OfflinePlayer player) {
-        PlayerWrapper playerWrapper = InventoryManager.get(player);
-
-        if (!InventoryManager.playerIsLoaded(player) || !PetManager.isEnabled()
-                || entity == null || entity != playerWrapper.getPet()) {
+        if (entity == null || !InventoryManager.playerIsLoaded(player) || !PetManager.isEnabled()) {
             return null;
         }
 
-        return PetManager.getPetFromItem(playerWrapper.getInventory().getItem(SLOT_PET));
+        PlayerWrapper playerWrapper = InventoryManager.get(player);
+        return (entity == playerWrapper.getPet())
+                ? PetManager.getPetFromItem(playerWrapper.getInventory().getItem(SLOT_PET))
+                : null;
     }
 
     static void addGlow(@NotNull ItemStack itemStack) {

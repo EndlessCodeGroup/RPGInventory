@@ -76,6 +76,9 @@ import ru.endlesscode.rpginventory.utils.PlayerUtils;
  * All rights reserved 2014 - 2016 © «EndlessCode Group»
  */
 public class InventoryListener implements Listener {
+
+    private final static int QUICKBAR_SIZE = 9;
+
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerJoin(@NotNull final PlayerJoinEvent event) {
         final Player player = event.getPlayer();
@@ -94,12 +97,13 @@ public class InventoryListener implements Listener {
     public void onLoadInventory(@NotNull PlayerInventoryLoadEvent.Post event) {
         Player player = event.getPlayer();
         ItemManager.updateStats(player);
+        PlayerInventory playerInventory = player.getInventory();
 
         // Sync armor
-        player.getInventory().setArmorContents(ItemUtils.syncItems(player.getInventory().getArmorContents()));
+        playerInventory.setArmorContents(ItemUtils.syncItems(playerInventory.getArmorContents()));
 
         // Sync inventory
-        player.getInventory().setContents(ItemUtils.syncItems(player.getInventory().getContents()));
+        playerInventory.setContents(ItemUtils.syncItems(playerInventory.getContents()));
 
         // Sync RPG Inventory
         Inventory inventory = InventoryManager.get(player).getInventory();
@@ -128,7 +132,7 @@ public class InventoryListener implements Listener {
         if (slot != null && slot.isCup(player.getInventory().getItem(slotId))) {
             event.setCancelled(true);
             InventoryUtils.heldFreeSlot(player, slotId,
-                    (event.getPreviousSlot() + 1) % 9 == slotId ? InventoryUtils.SearchType.NEXT : InventoryUtils.SearchType.PREV);
+                    (event.getPreviousSlot() + 1) % QUICKBAR_SIZE == slotId ? InventoryUtils.SearchType.NEXT : InventoryUtils.SearchType.PREV);
         }
     }
 
@@ -234,24 +238,12 @@ public class InventoryListener implements Listener {
             return;
         }
 
-        final int rawSlot = event.getRawSlot();
-        InventoryType.SlotType slotType = InventoryUtils.getSlotType(event.getSlotType(), rawSlot);
-
+        final InventoryType.SlotType slotType = event.getSlotType();
         if (slotType == InventoryType.SlotType.OUTSIDE) {
             return;
         }
 
-        if (rawSlot > event.getView().getTopInventory().getSize() && event.getSlot() < 9) {
-            slotType = InventoryType.SlotType.QUICKBAR;
-        }
-
-        final Slot slot = SlotManager.instance().getSlot(event.getSlot(), slotType);
-        final Inventory inventory = event.getInventory();
-        InventoryAction action = event.getAction();
-        ActionType actionType = ActionType.getTypeOfAction(action);
-        ItemStack currentItem = event.getCurrentItem();
-        ItemStack cursor = event.getCursor();
-
+        final InventoryAction action = event.getAction();
         if ((action == InventoryAction.HOTBAR_SWAP || action == InventoryAction.HOTBAR_MOVE_AND_READD)
                 && SlotManager.instance().getSlot(event.getHotbarButton(), InventoryType.SlotType.QUICKBAR) != null) {
             event.setCancelled(true);
@@ -259,6 +251,8 @@ public class InventoryListener implements Listener {
         }
 
         // Crafting inventory is Player's vanilla inventory
+        final Inventory inventory = event.getInventory();
+        final int rawSlot = event.getRawSlot();
         if (inventory.getType() == InventoryType.CRAFTING) {
             PlayerWrapper playerWrapper = InventoryManager.get(player);
 
@@ -287,19 +281,23 @@ public class InventoryListener implements Listener {
         }
 
         // In RPG Inventory or quick slot
-        if (InventoryAPI.isRPGInventory(inventory) || slotType == InventoryType.SlotType.QUICKBAR && slot != null
-                && (slot.isQuick() || slot.getSlotType() == Slot.SlotType.SHIELD) && player.getGameMode() != GameMode.CREATIVE) {
-            if (rawSlot < 54 && slot == null || action == InventoryAction.MOVE_TO_OTHER_INVENTORY) {
+        final Slot slot = SlotManager.instance().getSlot(event.getSlot(), slotType);
+        final boolean isRpgInventory = InventoryAPI.isRPGInventory(inventory);
+        final boolean isQuickSlot = slotType == InventoryType.SlotType.QUICKBAR && slot != null
+                && (slot.isQuick() || slot.getSlotType() == Slot.SlotType.SHIELD);
+        if ((isRpgInventory || isQuickSlot) && player.getGameMode() != GameMode.CREATIVE) {
+            final boolean isInInventory = rawSlot < inventory.getSize();
+            if (isInInventory && slot == null || action == InventoryAction.MOVE_TO_OTHER_INVENTORY) {
                 event.setCancelled(true);
                 return;
             }
 
-            if (rawSlot >= 54 && slotType != InventoryType.SlotType.QUICKBAR || slot == null) {
+            if (slot == null || !isQuickSlot && !isInInventory) {
                 return;
             }
 
             PlayerWrapper playerWrapper = null;
-            if (InventoryAPI.isRPGInventory(inventory)) {
+            if (isRpgInventory) {
                 playerWrapper = (PlayerWrapper) inventory.getHolder();
 
                 // Check flying
@@ -309,6 +307,9 @@ public class InventoryListener implements Listener {
                     return;
                 }
             }
+
+            final ItemStack currentItem = event.getCurrentItem();
+            final ActionType actionType = ActionType.getTypeOfAction(action);
 
             if (!validateClick(player, playerWrapper, slot, actionType, currentItem, slotType) || slot.getSlotType() == Slot.SlotType.INFO) {
                 event.setCancelled(true);
@@ -321,6 +322,7 @@ public class InventoryListener implements Listener {
                 return;
             }
 
+            final ItemStack cursor = event.getCursor();
             if (playerWrapper != null && slot.getSlotType() == Slot.SlotType.ARMOR) {
                 onArmorSlotClick(event, playerWrapper, slot, cursor, currentItem);
                 return;

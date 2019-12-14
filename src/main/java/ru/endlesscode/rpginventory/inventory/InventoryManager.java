@@ -80,8 +80,8 @@ public class InventoryManager {
         try {
             Texture texture = Texture.parseTexture(Config.getConfig().getString("fill"));
             InventoryManager.FILL_SLOT = texture.getItemStack();
-            if (ItemUtils.isNotEmpty(InventoryManager.FILL_SLOT)) {
-                ItemMeta meta = InventoryManager.FILL_SLOT.getItemMeta();
+            ItemMeta meta = InventoryManager.FILL_SLOT.getItemMeta();
+            if (meta != null) {
                 meta.setDisplayName(" ");
                 InventoryManager.FILL_SLOT.setItemMeta(meta);
             }

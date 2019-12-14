@@ -19,7 +19,6 @@
 package ru.endlesscode.rpginventory.utils;
 
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -76,15 +75,6 @@ public class InventoryUtils {
             default:
                 return 8;
         }
-    }
-
-    @Contract(pure = true)
-    public static InventoryType.SlotType getSlotType(InventoryType.SlotType slotType, int rawSlot) {
-        if (rawSlot > 80) {
-            return InventoryType.SlotType.QUICKBAR;
-        }
-
-        return slotType;
     }
 
     @NotNull

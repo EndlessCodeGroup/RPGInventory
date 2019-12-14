@@ -111,4 +111,4 @@ tasks.check.dependsOn tasks.jacocoTestReport
 
 // Add ProGuard minimization task
 // TODO: minimized Jar not works, fix it
-apply(from: file("proguard.gradle"))
+//apply(from: file("proguard.gradle"))

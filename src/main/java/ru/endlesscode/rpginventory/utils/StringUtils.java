@@ -72,9 +72,10 @@ public class StringUtils {
         if (RPGInventory.isPlaceholderApiHooked()) {
             try {
                 return PlaceholderAPI.setPlaceholders(player, line);
-            } catch (Exception e) {
+            } catch (Throwable e) {
                 Log.w("Can''t set placeholders for line \"{0}\"", line);
-                Log.w(e, "Error in PlaceholderAPI, please report about it to PlaceholderAPI author.");
+                Log.w("Make sure that you use the latest version of PlaceholderAPI.");
+                Log.w(e, "If it is, please report about the error to PlaceholderAPI author:");
                 return line;
             }
         }
