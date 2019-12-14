@@ -127,6 +127,7 @@ public class VersionTest {
 
     @Test(expected = NullPointerException.class)
     public void shouldThrowExceptionWhenPassedNullQualifier() {
-        new Version(1, 0, 0, "");
+        //noinspection ConstantConditions
+        new Version(1, 0, 0, null);
     }
 }
