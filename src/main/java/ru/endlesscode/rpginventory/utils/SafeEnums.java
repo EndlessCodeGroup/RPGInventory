@@ -1,8 +1,8 @@
 package ru.endlesscode.rpginventory.utils;
 
 import org.bukkit.DyeColor;
+import org.bukkit.entity.Cat;
 import org.bukkit.entity.Horse;
-import org.bukkit.entity.Ocelot;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -30,8 +30,8 @@ public class SafeEnums {
     }
 
     @Nullable
-    public static Ocelot.Type getOcelotType(String name) {
-        return valueOf(Ocelot.Type.class, name, "ocelot type");
+    public static Cat.Type getCatType(String name) {
+        return valueOf(Cat.Type.class, name, "cat type");
     }
 
     @NotNull

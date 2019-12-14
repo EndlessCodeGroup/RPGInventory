@@ -30,9 +30,9 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Animals;
+import org.bukkit.entity.Cat;
 import org.bukkit.entity.Horse;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Ocelot;
 import org.bukkit.entity.Pig;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Tameable;
@@ -322,20 +322,25 @@ public class PetManager {
                 switch (pet.getType()) {
                     case WOLF:
                         Wolf wolfPet = (Wolf) pet;
-                        if (features.containsKey("COLLAR")) {
-                            DyeColor collarColor = SafeEnums.getDyeColor(features.get("COLLAR"));
-                            if (collarColor != null) {
-                                wolfPet.setCollarColor(collarColor);
-                            } else {
-                                hasInitializationErrors = true;
-                            }
+                        DyeColor wolfCollarColor = SafeEnums.getDyeColor(features.getOrDefault("COLLAR", "RED"));
+                        if (wolfCollarColor != null) {
+                            wolfPet.setCollarColor(wolfCollarColor);
+                        } else {
+                            hasInitializationErrors = true;
                         }
                         break;
-                    case OCELOT:
-                        Ocelot ocelotPet = (Ocelot) pet;
-                        Ocelot.Type type = SafeEnums.getOcelotType(features.getOrDefault("TYPE", "WILD_OCELOT"));
-                        if (type != null) {
-                            ocelotPet.setCatType(type);
+                    case CAT:
+                        Cat catPet = (Cat) pet;
+                        Cat.Type catType = SafeEnums.getCatType(features.getOrDefault("TYPE", "TABBY"));
+                        if (catType != null) {
+                            catPet.setCatType(catType);
+                        } else {
+                            hasInitializationErrors = true;
+                        }
+
+                        DyeColor catCollarColor = SafeEnums.getDyeColor(features.getOrDefault("COLLAR", "RED"));
+                        if (catCollarColor != null) {
+                            catPet.setCollarColor(catCollarColor);
                         } else {
                             hasInitializationErrors = true;
                         }

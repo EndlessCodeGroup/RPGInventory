@@ -228,7 +228,7 @@ public class PetType extends ClassedItem {
     }
 
     public enum Role {
-        COMPANION("WOLF", "OCELOT"),
+        COMPANION("WOLF", "CAT"),
         MOUNT("HORSE", "PIG");
 
         private final String defaultSkin;
@@ -238,10 +238,6 @@ public class PetType extends ClassedItem {
         Role(String... skins) {
             this.defaultSkin = skins[0];
             this.possibleSkins = Arrays.asList(skins);
-        }
-
-        public String getDefaultSkin() {
-            return defaultSkin;
         }
 
         public EntityType getPossibleSkin(String skin) {
