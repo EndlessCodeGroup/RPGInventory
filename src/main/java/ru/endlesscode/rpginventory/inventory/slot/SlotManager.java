@@ -70,6 +70,7 @@ public class SlotManager {
 
         for (String slotName : slots.getKeys(false)) {
             final ConfigurationSection slotConfiguration = slots.getConfigurationSection(slotName);
+            assert slotConfiguration != null;
 
             Slot.SlotType slotType = SafeEnums.valueOfOrDefault(Slot.SlotType.class, slotConfiguration.getString("type"), Slot.SlotType.GENERIC, "slot type");
             Slot slot;

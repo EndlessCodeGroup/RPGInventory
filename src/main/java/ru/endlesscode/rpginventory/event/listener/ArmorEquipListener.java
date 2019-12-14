@@ -19,6 +19,7 @@
 package ru.endlesscode.rpginventory.event.listener;
 
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.Dispenser;
 import org.bukkit.block.data.Directional;
@@ -156,8 +157,10 @@ public class ArmorEquipListener implements Listener {
     @EventHandler
     public void onDispenseEquip(BlockDispenseEvent event) {
         ArmorType type = ArmorType.matchType(event.getItem());
+        World world = event.getBlock().getWorld();
         Location blockLoc = event.getBlock().getLocation();
-        Collection<Entity> nearbyEntities = blockLoc.getWorld().getNearbyEntities(blockLoc, 3D, 1.2D, 3D);
+
+        Collection<Entity> nearbyEntities = world.getNearbyEntities(blockLoc, 3D, 1.2D, 3D);
         if (nearbyEntities.isEmpty()) {
             return;
         }

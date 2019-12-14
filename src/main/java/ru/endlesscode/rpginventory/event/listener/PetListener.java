@@ -81,8 +81,7 @@ public class PetListener implements Listener {
 
     @EventHandler(ignoreCancelled = true)
     public void onPlayerInteractEntity(PlayerInteractEntityEvent event) {
-        if (event.getRightClicked() == null
-                || !(event.getRightClicked() instanceof LivingEntity)) {
+        if (!(event.getRightClicked() instanceof LivingEntity)) {
             return;
         }
 

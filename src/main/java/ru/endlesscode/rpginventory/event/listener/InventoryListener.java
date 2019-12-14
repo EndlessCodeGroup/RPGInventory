@@ -305,7 +305,7 @@ public class InventoryListener implements Listener {
                 playerWrapper = (PlayerWrapper) inventory.getHolder();
 
                 // Check flying
-                if (playerWrapper.isFlying()) {
+                if (playerWrapper != null && playerWrapper.isFlying()) {
                     PlayerUtils.sendMessage(player, RPGInventory.getLanguage().getMessage("error.fall"));
                     event.setCancelled(true);
                     return;
@@ -413,12 +413,10 @@ public class InventoryListener implements Listener {
                 || actionType == ActionType.DROP) && slot.isCup(currentItem) && slotType != InventoryType.SlotType.QUICKBAR);
     }
 
-    /**
-     * It happens when player click on armor slot
-     */
     private void onArmorSlotClick(InventoryClickEvent event, PlayerWrapper playerWrapper, @NotNull final Slot slot,
                                   @NotNull ItemStack cursor, ItemStack currentItem) {
         final Player player = playerWrapper.getPlayer().getPlayer();
+
         final Inventory inventory = event.getInventory();
         final int rawSlot = event.getRawSlot();
         InventoryAction action = event.getAction();
@@ -481,7 +479,7 @@ public class InventoryListener implements Listener {
     public void onInventoryClose(@NotNull InventoryCloseEvent event) {
         if (InventoryAPI.isRPGInventory(event.getInventory())) {
             PlayerWrapper playerWrapper = (PlayerWrapper) event.getInventory().getHolder();
-            if (event.getPlayer() != playerWrapper.getPlayer()) {
+            if (playerWrapper == null || event.getPlayer() != playerWrapper.getPlayer()) {
                 return;
             }
 

@@ -91,12 +91,14 @@ public class CooldownsTimer extends BukkitRunnable {
             } else if (60 >= cooldown) {
                 final ItemStack item = originalItemStack.clone();
                 final String displayName = next.getValue().getDisplayName();
-                final ItemMeta itemMeta = item.getItemMeta();
-                itemMeta.setDisplayName(
-                        displayName + " " + RPGInventory.getLanguage().getMessage("pet.cooldown", cooldown)
-                );
-                item.setItemMeta(itemMeta);
-                PetManager.addGlow(item);
+                final ItemMeta meta = item.getItemMeta();
+                if (meta != null) {
+                    meta.setDisplayName(
+                            displayName + " " + RPGInventory.getLanguage().getMessage("pet.cooldown", cooldown)
+                    );
+                    PetManager.addGlow(meta);
+                    item.setItemMeta(meta);
+                }
 
                 String itemTag = ItemUtils.getTag(item, ItemUtils.PET_TAG);
                 if (!itemTag.isEmpty()) {
@@ -110,7 +112,7 @@ public class CooldownsTimer extends BukkitRunnable {
         }
     }
 
-    private class ValuePair {
+    private static class ValuePair {
         private final ItemStack itemStack;
         private final AtomicInteger timer;
         private final String displayName;

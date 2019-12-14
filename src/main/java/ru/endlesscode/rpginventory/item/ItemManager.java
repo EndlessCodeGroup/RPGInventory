@@ -79,7 +79,10 @@ public class ItemManager {
 
             CUSTOM_ITEMS.clear();
             for (String key : items.getKeys(false)) {
-                tryToAddItem(key, items.getConfigurationSection(key));
+                ConfigurationSection section = items.getConfigurationSection(key);
+                if (section != null) {
+                    tryToAddItem(key, section);
+                }
             }
 
             if (CUSTOM_ITEMS.isEmpty()) {

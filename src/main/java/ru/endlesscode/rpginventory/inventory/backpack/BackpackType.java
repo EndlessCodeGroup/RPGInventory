@@ -64,16 +64,18 @@ public class BackpackType extends TexturedItem {
         ItemStack spawnItem = this.texture.getItemStack();
 
         ItemMeta meta = spawnItem.getItemMeta();
-        meta.setDisplayName(this.name);
+        if (meta != null) {
+            meta.setDisplayName(this.name);
 
-        FileLanguage lang = RPGInventory.getLanguage();
-        List<String> lore = new ArrayList<>();
-        lore.addAll(Arrays.asList(lang.getMessage("backpack.desc").split("\n")));
-        lore.addAll(this.lore);
-        lore.add(lang.getMessage("backpack.size", this.size));
+            FileLanguage lang = RPGInventory.getLanguage();
+            List<String> lore = new ArrayList<>();
+            lore.addAll(Arrays.asList(lang.getMessage("backpack.desc").split("\n")));
+            lore.addAll(this.lore);
+            lore.add(lang.getMessage("backpack.size", this.size));
 
-        meta.setLore(lore);
-        spawnItem.setItemMeta(meta);
+            meta.setLore(lore);
+            spawnItem.setItemMeta(meta);
+        }
 
         this.item = ItemUtils.setTag(spawnItem, ItemUtils.BACKPACK_TAG, this.id);
     }

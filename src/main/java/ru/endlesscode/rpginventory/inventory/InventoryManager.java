@@ -25,6 +25,7 @@ import org.bukkit.entity.AnimalTamer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -59,6 +60,7 @@ import ru.endlesscode.rpginventory.utils.StringUtils;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -214,24 +216,27 @@ public class InventoryManager {
     public static void updateArmor(@NotNull Player player, @NotNull Inventory inventory, @NotNull Slot slot, int slotId, InventoryAction action, ItemStack currentItem, @NotNull ItemStack cursor) {
         ActionType actionType = ActionType.getTypeOfAction(action);
 
+        EntityEquipment equipment = player.getEquipment();
+        assert equipment != null;
+
         // Equip armor
         if (actionType == ActionType.SET || action == InventoryAction.UNKNOWN) {
             switch (slot.getName()) {
                 case "helmet":
                     InventoryManager.updateInventory(player, inventory, slotId, action, currentItem, cursor);
-                    player.getEquipment().setHelmet(inventory.getItem(slotId));
+                    equipment.setHelmet(inventory.getItem(slotId));
                     break;
                 case "chestplate":
                     InventoryManager.updateInventory(player, inventory, slotId, action, currentItem, cursor);
-                    player.getEquipment().setChestplate(inventory.getItem(slotId));
+                    equipment.setChestplate(inventory.getItem(slotId));
                     break;
                 case "leggings":
                     InventoryManager.updateInventory(player, inventory, slotId, action, currentItem, cursor);
-                    player.getEquipment().setLeggings(inventory.getItem(slotId));
+                    equipment.setLeggings(inventory.getItem(slotId));
                     break;
                 case "boots":
                     InventoryManager.updateInventory(player, inventory, slotId, action, currentItem, cursor);
-                    player.getEquipment().setBoots(inventory.getItem(slotId));
+                    equipment.setBoots(inventory.getItem(slotId));
                     break;
             }
         } else if (actionType == ActionType.GET || actionType == ActionType.DROP) { // Unequip armor
@@ -239,16 +244,16 @@ public class InventoryManager {
 
             switch (slot.getName()) {
                 case "helmet":
-                    player.getEquipment().setHelmet(null);
+                    equipment.setHelmet(null);
                     break;
                 case "chestplate":
-                    player.getEquipment().setChestplate(null);
+                    equipment.setChestplate(null);
                     break;
                 case "leggings":
-                    player.getEquipment().setLeggings(null);
+                    equipment.setLeggings(null);
                     break;
                 case "boots":
-                    player.getEquipment().setBoots(null);
+                    equipment.setBoots(null);
                     break;
             }
         }
@@ -258,8 +263,11 @@ public class InventoryManager {
         Player player = (Player) playerWrapper.getPlayer();
         Inventory inventory = playerWrapper.getInventory();
         SlotManager sm = SlotManager.instance();
+        EntityEquipment equipment = player.getEquipment();
+        assert equipment != null;
+
         if (ArmorType.HELMET.getSlot() != -1) {
-            ItemStack helmet = player.getEquipment().getHelmet();
+            ItemStack helmet = equipment.getHelmet();
             Slot helmetSlot = sm.getSlot(ArmorType.HELMET.getSlot(), InventoryType.SlotType.CONTAINER);
             inventory.setItem(ArmorType.HELMET.getSlot(), (ItemUtils.isEmpty(helmet))
                     && helmetSlot != null ? helmetSlot.getCup() : helmet);
@@ -267,21 +275,21 @@ public class InventoryManager {
 
         if (ArmorType.CHESTPLATE.getSlot() != -1) {
             ItemStack savedChestplate = playerWrapper.getSavedChestplate();
-            ItemStack chestplate = savedChestplate == null ? player.getEquipment().getChestplate() : savedChestplate;
+            ItemStack chestplate = savedChestplate == null ? equipment.getChestplate() : savedChestplate;
             Slot chestplateSlot = sm.getSlot(ArmorType.CHESTPLATE.getSlot(), InventoryType.SlotType.CONTAINER);
             inventory.setItem(ArmorType.CHESTPLATE.getSlot(), (ItemUtils.isEmpty(chestplate))
                     && chestplateSlot != null ? chestplateSlot.getCup() : chestplate);
         }
 
         if (ArmorType.LEGGINGS.getSlot() != -1) {
-            ItemStack leggings = player.getEquipment().getLeggings();
+            ItemStack leggings = equipment.getLeggings();
             Slot leggingsSlot = sm.getSlot(ArmorType.LEGGINGS.getSlot(), InventoryType.SlotType.CONTAINER);
             inventory.setItem(ArmorType.LEGGINGS.getSlot(), (ItemUtils.isEmpty(leggings))
                     && leggingsSlot != null ? leggingsSlot.getCup() : leggings);
         }
 
         if (ArmorType.BOOTS.getSlot() != -1) {
-            ItemStack boots = player.getEquipment().getBoots();
+            ItemStack boots = equipment.getBoots();
             Slot bootsSlot = sm.getSlot(ArmorType.BOOTS.getSlot(), InventoryType.SlotType.CONTAINER);
             inventory.setItem(ArmorType.BOOTS.getSlot(), (ItemUtils.isEmpty(boots))
                     && bootsSlot != null ? bootsSlot.getCup() : boots);
@@ -304,15 +312,20 @@ public class InventoryManager {
             }
 
             ItemMeta meta = cup.getItemMeta();
-            List<String> lore = meta.getLore();
+            if (meta != null) {
+                List<String> lore = meta.getLore();
+                if (lore == null) {
+                    lore = new ArrayList<>();
+                }
 
-            for (int i = 0; i < lore.size(); i++) {
-                String line = lore.get(i);
-                lore.set(i, StringUtils.setPlaceholders(player, line));
+                for (int i = 0; i < lore.size(); i++) {
+                    String line = lore.get(i);
+                    lore.set(i, StringUtils.setPlaceholders(player, line));
+                }
+
+                meta.setLore(lore);
+                cup.setItemMeta(meta);
             }
-
-            meta.setLore(lore);
-            cup.setItemMeta(meta);
             playerWrapper.getInventory().setItem(infoSlot.getSlotId(), cup);
         }
 

@@ -274,7 +274,7 @@ final class RPGInventoryCommandExecutor implements CommandExecutor {
             return;
         }
 
-        final Player player = ((Player) sender).getPlayer();
+        final Player player = (Player) sender;
         if (InventoryAPI.isRPGInventory(player.getOpenInventory().getTopInventory())) {
             return;
         }
@@ -288,6 +288,7 @@ final class RPGInventoryCommandExecutor implements CommandExecutor {
         }
 
         final Player player = RPGInventory.getInstance().getServer().getPlayer(playerName);
+        assert player != null;
         ((Player) sender).openInventory(InventoryManager.get(player).getInventory());
     }
 

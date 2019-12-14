@@ -10,7 +10,6 @@ import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.jetbrains.annotations.NotNull;
-import ru.endlesscode.rpginventory.compat.ItemStackCompat;
 import ru.endlesscode.rpginventory.compat.MaterialCompat;
 import ru.endlesscode.rpginventory.utils.ItemUtils;
 import ru.endlesscode.rpginventory.utils.Log;
@@ -39,6 +38,7 @@ public class Texture {
         return this.equals(EMPTY_TEXTURE);
     }
 
+    @NotNull
     public ItemStack getItemStack() {
         return prototype.clone();
     }
@@ -108,6 +108,7 @@ public class Texture {
     private static Texture parseLeatherArmor(ItemStack item, String hexColor) {
         try {
             LeatherArmorMeta meta = (LeatherArmorMeta) item.getItemMeta();
+            assert meta != null;
             meta.setColor(Color.fromRGB(Integer.parseInt(hexColor, 16)));
             item.setItemMeta(meta);
         } catch (ClassCastException | IllegalArgumentException | NullPointerException e) {
@@ -129,10 +130,10 @@ public class Texture {
             }
 
             meta.addItemFlags(ItemFlag.values());
-            item.setItemMeta(meta);
             if (ItemUtils.isItemHasDurability(item)) {
-                item = ItemStackCompat.setUnbreakable(item, true);
+                meta.setUnbreakable(true);
             }
+            item.setItemMeta(meta);
         }
 
         return new Texture(item, durability);

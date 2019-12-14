@@ -119,7 +119,10 @@ public class PetManager {
 
             PETS.clear();
             for (String key : pets.getKeys(false)) {
-                tryToAddPet(key, pets.getConfigurationSection(key));
+                ConfigurationSection section = pets.getConfigurationSection(key);
+                if (section != null) {
+                    tryToAddPet(key, section);
+                }
             }
 
             @Nullable final ConfigurationSection food = petsConfig.getConfigurationSection("food");
@@ -128,7 +131,10 @@ public class PetManager {
             } else {
                 PET_FOOD.clear();
                 for (String key : food.getKeys(false)) {
-                    tryToAddPetFood(key, food.getConfigurationSection(key));
+                    ConfigurationSection section = food.getConfigurationSection(key);
+                    if (section != null) {
+                        tryToAddPetFood(key, section);
+                    }
                 }
             }
         } catch (Exception e) {
@@ -217,14 +223,14 @@ public class PetManager {
             return;
         }
 
-        final PlayerWrapper playerWrapper = InventoryManager.get(player);
-        if (!playerWrapper.hasPet()) {
+        final LivingEntity petEntity = InventoryManager.get(player).getPet();
+        if (petEntity == null) {
             return;
         }
 
         Location baseLocation = to != null ? to : player.getLocation();
         Location newPetLoc = LocationUtils.getLocationNearPoint(baseLocation, 3);
-        playerWrapper.getPet().teleport(newPetLoc);
+        petEntity.teleport(newPetLoc);
     }
 
     /** @see #respawnPet(Player, ItemStack) */
@@ -366,10 +372,12 @@ public class PetManager {
         pet.setRemoveWhenFarAway(false);
 
         AttributeInstance maxHealth = pet.getAttribute(Attribute.GENERIC_MAX_HEALTH);
+        assert maxHealth != null;
         maxHealth.setBaseValue(petType.getHealth());
         pet.setHealth(PetManager.getHealth(petItem, maxHealth.getBaseValue()));
 
         AttributeInstance speedAttribute = pet.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED);
+        assert speedAttribute != null;
         speedAttribute.setBaseValue(petType.getSpeed());
 
         pet.setMetadata(PetManager.METADATA_KEY_PET_OWNER, new FixedMetadataValue(RPGInventory.getInstance(), player.getUniqueId()));
@@ -430,7 +438,7 @@ public class PetManager {
 
         final List<MetadataValue> metadata = entity.getMetadata(PetManager.METADATA_KEY_PET_OWNER);
         return metadata.stream()
-                .filter(value -> value.getOwningPlugin().equals(RPGInventory.getInstance()))
+                .filter(value -> RPGInventory.getInstance().equals(value.getOwningPlugin()))
                 .findFirst()
                 .map(it -> (UUID) it.value())
                 .orElse(null);
@@ -472,11 +480,9 @@ public class PetManager {
                 : null;
     }
 
-    static void addGlow(@NotNull ItemStack itemStack) {
-        ItemMeta meta = itemStack.getItemMeta();
+    static void addGlow(@NotNull ItemMeta meta) {
         meta.addEnchant(Enchantment.DURABILITY, 88, true);
         meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-        itemStack.setItemMeta(meta);
     }
 
     public static void saveDeathTime(@NotNull ItemStack item) {

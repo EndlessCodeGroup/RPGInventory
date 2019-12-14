@@ -70,11 +70,13 @@ class CooldownTimer extends BukkitRunnable {
                 item.setAmount(cooldown);
             }
 
-            ItemMeta im = item.getItemMeta();
-            im.setDisplayName(this.petItem.getItemMeta().getDisplayName()
-                    + RPGInventory.getLanguage().getMessage("pet.cooldown", cooldown));
-            item.setItemMeta(im);
-            PetManager.addGlow(item);
+            ItemMeta itemMeta = item.getItemMeta();
+            if (itemMeta != null) {
+                itemMeta.setDisplayName(itemMeta.getDisplayName()
+                        + RPGInventory.getLanguage().getMessage("pet.cooldown", cooldown));
+                PetManager.addGlow(itemMeta);
+                item.setItemMeta(itemMeta);
+            }
             String itemTag = ItemUtils.getTag(this.petItem, ItemUtils.PET_TAG);
 
             if (itemTag.isEmpty()) {

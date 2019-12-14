@@ -37,6 +37,7 @@ import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -70,8 +71,9 @@ public class FileLanguage {
             Log.w("Failed to load {0}: {1}; using en.lang", this.langFile.getFileName(), ex.toString());
 
             try (InputStream is = this.plugin.getResource("lang/en.lang")) {
+                Objects.requireNonNull(is);
                 Files.copy(is, Paths.get(this.langFile.toUri()), StandardCopyOption.REPLACE_EXISTING);
-            } catch (IOException e) {
+            } catch (IOException | NullPointerException e) {
                 Log.s("Failed to write default locale to {0}: {1}; continue without localization.",
                         this.langFile.getFileName(), e.toString());
             }
@@ -138,10 +140,9 @@ public class FileLanguage {
     private void validateLocaleFile() {
         Properties properties = new Properties();
         InputStream defaultLocale = this.plugin.getResource("lang/en.lang");
-        // FIXME: Theoretically defaultLocale can be null
-        try (InputStreamReader isr = new InputStreamReader(defaultLocale, StandardCharsets.UTF_8)) {
+        try (InputStreamReader isr = new InputStreamReader(Objects.requireNonNull(defaultLocale), StandardCharsets.UTF_8)) {
             properties.load(isr);
-        } catch (IOException e) {
+        } catch (IOException | NullPointerException e) {
             Log.w(e, "Failed to read inbuilt locale file");
             //Just ignore. We can't help with that shit.
             return;

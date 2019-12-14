@@ -90,7 +90,10 @@ public class BackpackManager {
 
             BACKPACK_TYPES.clear();
             for (String key : backpacks.getKeys(false)) {
-                tryToAddBackpack(key, backpacks.getConfigurationSection(key));
+                ConfigurationSection section = backpacks.getConfigurationSection(key);
+                if (section != null) {
+                    tryToAddBackpack(key, section);
+                }
             }
 
             if (BACKPACK_TYPES.isEmpty()) {

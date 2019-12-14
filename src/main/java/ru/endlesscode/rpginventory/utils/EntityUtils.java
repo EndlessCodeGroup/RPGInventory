@@ -62,14 +62,13 @@ public class EntityUtils {
             return;
         }
 
-        Location target = player.getLocation();
-
         //Issue #120, by 12 Feb 18 : https://github.com/EndlessCodeGroup/RPGInventory/issues/120#issuecomment-364834420
-        if (!target.getWorld().getName().equals(entity.getLocation().getWorld().getName())) {
+        if (!player.getWorld().getName().equals(entity.getWorld().getName())) {
             PetManager.teleportPet(player, null);
             return;
         }
 
+        Location target = player.getLocation();
         final double distance = target.distance(entity.getLocation());
         if (distance > 20D && LocationUtils.isSafeLocation(target)) {
             PetManager.teleportPet(player, null);

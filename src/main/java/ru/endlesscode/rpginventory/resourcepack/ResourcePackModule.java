@@ -184,12 +184,12 @@ public class ResourcePackModule implements Listener {
             return;
         }
 
+        Location toLocation = event.getTo();
         if (this.isPreparedPlayer(player)) {
             this.removePlayerFromLoadList(player);
             player.kickPlayer(RPGInventory.getLanguage().getMessage("error.rp.denied"));
             event.setCancelled(true);
-        } else {
-            Location toLocation = event.getTo();
+        } else if (toLocation != null) {
             Location newLocation = event.getFrom().clone();
             if (!player.isOnGround()) {
                 newLocation.setY(toLocation.getY());

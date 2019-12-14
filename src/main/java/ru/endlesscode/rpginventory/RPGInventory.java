@@ -177,9 +177,8 @@ public class RPGInventory extends PluginLifecycle {
         this.startMetrics();
 
         // Enable commands
-        this.getCommand("rpginventory").setExecutor(
-                new TrackedCommandExecutor(new RPGInventoryCommandExecutor(), getReporter())
-        );
+        this.getCommand("rpginventory")
+                .setExecutor(new TrackedCommandExecutor(new RPGInventoryCommandExecutor(), getReporter()));
 
         this.checkUpdates(null);
 
