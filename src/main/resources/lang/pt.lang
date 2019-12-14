@@ -1,19 +1,19 @@
 #version: 2.0 | Do not remove this line!
 title: RPG Inventory
 
-locked.name: &c&lEspaço bloqueado
+locked.name: &cEspaço bloqueado
 locked.lore: &6&oDeve desbloquear o espaço anterior
 
-buyable.name: &a&lEspaço disponivel
+buyable.name: &aEspaço disponivel
 buyable.lore: &6&oPara obter este espaco deve:
 buyable.money: &6&o• ter {0} moedas
 buyable.level: &6&o• ter {0} nivel(s) de experiencia
 
 error.fall: &cNão pode fazer isso enquanto esta voando!!
-error.money: &6&lAinda precisa de {0} moedas
-error.level: &6&lAinda precisa de {0} niveis
-error.buyable: &6&lPrecisa de  {0} moedas para comprar esse espaço. Faça um click novamente nos proximos 10seg para confirmar.
-error.previous: &6&lDesbloqueie o espaço previo
+error.money: &6Ainda precisa de {0} moedas
+error.level: &6Ainda precisa de {0} niveis
+error.buyable: &6Precisa de  {0} moedas para comprar esse espaço. Faça um click novamente nos proximos 10seg para confirmar.
+error.previous: &6Desbloqueie o espaço previo
 error.rp.denied: &cDeve habilitar o download do pacote de recursos!
 error.item.level: &6Nivel &c{0} &6requerido
 error.item.class: &6Classe &c{0} &6requerida
@@ -28,7 +28,7 @@ pet.damage: &cDano: &7{0}
 pet.speed: &cVelocidade: &7{0} blocos/segundo
 pet.revival.yes: &bTempo de espera: &7{0}s
 pet.revival.no: &bNão resucitará
-pet.cooldown:  &a&l&o({0}s)
+pet.cooldown:  &a&o({0}s)
 pet.food.value: &aRestaurou: {0} de vida
 pet.role.companion: Acompanhante
 pet.role.mount: Monte

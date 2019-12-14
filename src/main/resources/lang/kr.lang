@@ -1,25 +1,25 @@
 #version: 2.0 | Do not remove this line!
-title: &l인벤토리
+title: 인벤토리
 
-locked.name: &c&l잠긴 슬릇
+locked.name: &c잠긴 슬릇
 locked.lore: &6&o이전 슬릇부터 해제해야 합니다
 
-buyable.name: &a&l구매 가능한 슬릇
+buyable.name: &a구매 가능한 슬릇
 buyable.lore: &6&o슬릇을 구입할려면 다음의 조건:
 buyable.money: &6• {0} 만큼의 화폐가 필요합니다
 buyable.level: &6• {0} 만큼의 레벨이 필요합니다
 
 error.fall: &c공중에서 사용할 수 없습니다
-error.money: &6&l{0} 만큼의 돈이 더 필요합니다
-error.level: &6&l{0} 만큼의 레벨이 더 필요합니다
-error.buyable: &6&l당신이 이 슬릇을 구입할려면 {0} 만큼의 골드가 필요합니다. 구입 확인을 위해 10 초 이내로 다시 클릭해주시길 바랍니다.
-error.previous: &6&l이전 슬릇의 잠금을 해제해야 합니다
+error.money: &6{0} 만큼의 돈이 더 필요합니다
+error.level: &6{0} 만큼의 레벨이 더 필요합니다
+error.buyable: &6당신이 이 슬릇을 구입할려면 {0} 만큼의 골드가 필요합니다. 구입 확인을 위해 10 초 이내로 다시 클릭해주시길 바랍니다.
+error.previous: &6이전 슬릇의 잠금을 해제해야 합니다
 error.rp.denied: &c리소스 팩이 필요합니다!
 error.item.level: &6그것은 &c{0} &6레벨이 필요합니다
 error.item.class: &6그것은 클래스가 필요합니다 &c{0}
 error.mount.owner: &6주인에게 귀속되어 있습니다 {0}
 
-message.buyed: &a&l성공적으로 슬릇을 구입했습니다
+message.buyed: &a성공적으로 슬릇을 구입했습니다
 message.perms: &c권한이 없습니다
 
 pet.name: {0} &f[{1}]
@@ -28,7 +28,7 @@ pet.damage: &c데미지: &7{0}
 pet.speed: &c스피드: &7{0} block/s
 pet.revival.yes: &b쿨타임: &7{0}s
 pet.revival.no: &b부활하지 않습니다
-pet.cooldown:  &a&l&o({0}s)
+pet.cooldown:  &a&o({0}s)
 pet.food.value: &a회복: {0} HP
 pet.role.companion: 도우미
 pet.role.mount: 탑승

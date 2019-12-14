@@ -1,25 +1,25 @@
 #version: 2.0 | Do not remove this line!
 title: RPG Envanteri
 
-locked.name: &c&lKilitli Bölme
+locked.name: &cKilitli Bölme
 locked.lore: &6&oÖnce bir önceki bölmeyi alman gerek
 
-buyable.name: &a&lMevcut Bölmeler
+buyable.name: &aMevcut Bölmeler
 buyable.lore: &6&oBunu alabilmek için, bunlara sahip olmalısın:
 buyable.money: &6&o• {0} Altın
 buyable.level: &6&o• {0} Seviye
 
 error.fall: &cUçarken bunu yapamazsın
-error.money: &6&lBunu alabilmek için {0} altına ihtiyacin var
-error.level: &6&lBunu alabilmek için {0} seviyeye ihtiyacın var
-error.buyable: &6&lBu slotu alabilmek için {0} altına ihtiyacın olacak! 10 saniye içinde tekrar tıklarsan satın almayı onaylarsın.
-error.previous: &6&lİlk olarak önceki sekmeyi açman gerek!
+error.money: &6Bunu alabilmek için {0} altına ihtiyacin var
+error.level: &6Bunu alabilmek için {0} seviyeye ihtiyacın var
+error.buyable: &6Bu slotu alabilmek için {0} altına ihtiyacın olacak! 10 saniye içinde tekrar tıklarsan satın almayı onaylarsın.
+error.previous: &6İlk olarak önceki sekmeyi açman gerek!
 error.rp.denied: &cKaynak paketi yüklemeyi devreye sokman gerek!
 error.item.level: &c{0} &6Seviye lazım!
 error.item.class: &6Gereken Irk: &c{0}
 error.mount.owner: &6Bineğin sahibi {0}
 
-message.buyed: &a&lBu bölmeyi başarıyla aldın!
+message.buyed: &aBu bölmeyi başarıyla aldın!
 message.perms: &cYou don''t have permission to use this command
 
 pet.name: {0} &f[{1}]
@@ -28,7 +28,7 @@ pet.damage: &cHasar: &7{0}
 pet.speed: &cHız: &7{0} blok/saniye
 pet.revival.yes: &bBekleme Süresi: &7{0}s
 pet.revival.no: &bCanlandırma Yok!
-pet.cooldown:  &a&l&o({0}s)
+pet.cooldown:  &a&o({0}s)
 pet.food.value: &aYenileme: {0} Can
 pet.role.companion: Yoldaş
 pet.role.mount: Binek
