@@ -13,10 +13,11 @@ pets:
     attack-players: false
     revival: true
     cooldown: 60
-    skin: OCELOT
+    skin: CAT
     features:
-    - "BABY: TRUE"
-    - "TYPE: BLACK_CAT"
+      - "BABY: TRUE"
+      - "TYPE: ALL_BLACK"
+      - "COLLAR: BLUE"
   puppy:
     name: "&7&lPuppy"
     item-name: "&7&lPuppy's Summoning Stone"
