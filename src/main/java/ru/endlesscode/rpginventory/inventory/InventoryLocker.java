@@ -52,7 +52,7 @@ public class InventoryLocker {
     private static ItemStack LOCKED_SLOT = null;
     private static ItemStack BUYABLE_SLOT = null;
 
-    private static String TAG = "locked";
+    private static final String TAG = "locked";
 
     private InventoryLocker() {
     }

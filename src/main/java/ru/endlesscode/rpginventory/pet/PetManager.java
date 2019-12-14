@@ -554,7 +554,7 @@ public class PetManager {
         }
 
         double health = nbt.getDouble("pet.health");
-        return health > maxHealth ? maxHealth : health;
+        return Math.min(health, maxHealth);
     }
 
     @Nullable

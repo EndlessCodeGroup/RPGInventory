@@ -31,13 +31,13 @@ import java.util.regex.Pattern;
  */
 public class VersionHandler {
 
-    public static int VERSION_1_11 = 1_11_00;
-    public static int VERSION_1_12 = 1_12_00;
-    public static int VERSION_1_13 = 1_13_00;
-    public static int VERSION_1_14 = 1_14_00;
-    public static int VERSION_1_15 = 1_15_00;
+    public static final int VERSION_1_11 = 1_11_00;
+    public static final int VERSION_1_12 = 1_12_00;
+    public static final int VERSION_1_13 = 1_13_00;
+    public static final int VERSION_1_14 = 1_14_00;
+    public static final int VERSION_1_15 = 1_15_00;
 
-    private static Pattern pattern = Pattern.compile("(?<version>\\d\\.\\d{1,2}(\\.\\d)?)-.*");
+    private static final Pattern pattern = Pattern.compile("(?<version>\\d\\.\\d{1,2}(\\.\\d)?)-.*");
 
     private static int versionCode = -1;
 

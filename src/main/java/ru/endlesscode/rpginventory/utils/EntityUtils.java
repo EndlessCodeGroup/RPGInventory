@@ -42,9 +42,9 @@ public class EntityUtils {
     private static Method craftEntity_getHandle;
     private static Method navigationAbstract_a;
     private static Method entityInsentient_getNavigation;
-    private static Class<?> entityInsentientClass = MinecraftReflection.getMinecraftClass("EntityInsentient");
+    private static final Class<?> entityInsentientClass = MinecraftReflection.getMinecraftClass("EntityInsentient");
 
-    private static Reporter reporter = RPGInventory.getInstance().getReporter();
+    private static final Reporter reporter = RPGInventory.getInstance().getReporter();
 
     static {
         try {

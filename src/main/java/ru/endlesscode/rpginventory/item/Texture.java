@@ -19,11 +19,11 @@ import java.util.Objects;
 
 public class Texture {
 
-    private static Texture EMPTY_TEXTURE = new Texture(new ItemStack(Material.AIR));
+    private static final Texture EMPTY_TEXTURE = new Texture(new ItemStack(Material.AIR));
 
     @NotNull
-    private ItemStack prototype;
-    private short durability;
+    private final ItemStack prototype;
+    private final short durability;
 
     private Texture(@NotNull ItemStack prototype) {
         this(prototype, (short) -1);

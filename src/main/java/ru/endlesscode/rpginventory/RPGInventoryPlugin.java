@@ -30,7 +30,7 @@ import java.util.List;
 @SuppressWarnings("unused")
 public class RPGInventoryPlugin extends TrackedPlugin {
 
-    private static List<String> INTEREST_PLUGINS = Arrays.asList(
+    private static final List<String> INTEREST_PLUGINS = Arrays.asList(
             "ProtocolLib", "Vault", "BattleLevels", "Skills", "Heroes", "RacesAndClasses",
             "SkillAPI", "MyPet", "RPGPlayerLeveling", "PlaceholderAPI", "MMOItems", "QuantumRPG"
     );

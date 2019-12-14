@@ -79,19 +79,16 @@ final class RPGInventoryCommandExecutor implements CommandExecutor {
             }
         }
 
-        switch (subCommand.charAt(0)) {
-            case 'o': // open
-                if (args.length == 1 && perms.has(sender, "rpginventory.open")) {
-                    this.openInventory(sender);
-                } else if (args.length > 1 && perms.has(sender, "rpginventory.open.others")) {
-                    this.openInventory(sender, args[1]);
-                } else {
-                    this.missingRights(sender);
-                }
-                break;
-            default:
-                this.printHelp(sender);
-                break;
+        if (subCommand.charAt(0) == 'o') { // open
+            if (args.length == 1 && perms.has(sender, "rpginventory.open")) {
+                this.openInventory(sender);
+            } else if (args.length > 1 && perms.has(sender, "rpginventory.open.others")) {
+                this.openInventory(sender, args[1]);
+            } else {
+                this.missingRights(sender);
+            }
+        } else {
+            this.printHelp(sender);
         }
         return true;
     }
