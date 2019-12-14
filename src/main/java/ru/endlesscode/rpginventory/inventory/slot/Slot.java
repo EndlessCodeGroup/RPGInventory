@@ -124,7 +124,7 @@ public class Slot {
 
             if (data.length > 1) {
                 String[] borders = data[1].split("-");
-                int itemDurability = itemStack.getDurability();
+                int itemDurability = ItemUtils.getDamage(itemStack);
 
                 if (borders.length == 1 && itemDurability != Integer.parseInt(data[1])) {
                     continue;

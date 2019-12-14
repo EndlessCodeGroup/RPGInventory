@@ -29,6 +29,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.inventory.InventoryType;
@@ -37,7 +38,6 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemBreakEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
@@ -314,9 +314,12 @@ public class ItemListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
-    public void afterPickupItem(@NotNull PlayerPickupItemEvent event) {
-        Player player = event.getPlayer();
+    public void afterPickupItem(@NotNull EntityPickupItemEvent event) {
+        if (event.getEntityType() != EntityType.PLAYER) {
+            return;
+        }
 
+        Player player = (Player) event.getEntity();
         if (!InventoryManager.playerIsLoaded(player)) {
             return;
         }

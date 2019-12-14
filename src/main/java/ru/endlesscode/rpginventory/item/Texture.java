@@ -6,6 +6,7 @@ import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.jetbrains.annotations.NotNull;
@@ -117,16 +118,16 @@ public class Texture {
     }
 
     private static Texture parseItemWithDurability(ItemStack item, String durabilityValue) {
-        short durability = -1;
-        try {
-            durability = Short.parseShort(durabilityValue);
-            item.setDurability(durability);
-        } catch (NumberFormatException e) {
-            Log.w("Can''t parse durability. Specify a number instead of \"{0}\"", durabilityValue);
-        }
-
         ItemMeta meta = item.getItemMeta();
+        short durability = -1;
         if (meta != null) {
+            try {
+                durability = Short.parseShort(durabilityValue);
+                ((Damageable) meta).setDamage(durability);
+            } catch (NumberFormatException e) {
+                Log.w("Can''t parse durability. Specify a number instead of \"{0}\"", durabilityValue);
+            }
+
             meta.addItemFlags(ItemFlag.values());
             item.setItemMeta(meta);
             if (ItemUtils.isItemHasDurability(item)) {

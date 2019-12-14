@@ -18,16 +18,17 @@
 
 package ru.endlesscode.rpginventory.event.listener;
 
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -134,8 +135,12 @@ public class BackpackListener implements Listener {
     }
 
     @EventHandler(ignoreCancelled = true)
-    public void onBackpackPickup(@NotNull PlayerPickupItemEvent event) {
-        Player player = event.getPlayer();
+    public void onBackpackPickup(@NotNull EntityPickupItemEvent event) {
+        if (event.getEntityType() != EntityType.PLAYER) {
+            return;
+        }
+
+        Player player = (Player) event.getEntity();
         if (!InventoryManager.playerIsLoaded(player)) {
             return;
         }

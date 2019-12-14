@@ -21,11 +21,13 @@ package ru.endlesscode.rpginventory.event.listener;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -39,7 +41,6 @@ import org.bukkit.event.player.PlayerEvent;
 import org.bukkit.event.player.PlayerItemBreakEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.Inventory;
@@ -170,9 +171,12 @@ public class InventoryListener implements Listener {
     }
 
     @EventHandler(ignoreCancelled = true)
-    public void onPickupToQuickSlot(@NotNull PlayerPickupItemEvent event) {
-        Player player = event.getPlayer();
+    public void onPickupToQuickSlot(@NotNull EntityPickupItemEvent event) {
+        if (event.getEntityType() != EntityType.PLAYER) {
+            return;
+        }
 
+        Player player = (Player) event.getEntity();
         if (!InventoryManager.playerIsLoaded(player) || !ItemManager.allowedForPlayer(player, event.getItem().getItemStack(), false)) {
             return;
         }

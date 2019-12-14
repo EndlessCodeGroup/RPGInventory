@@ -207,6 +207,7 @@ public class PlayerWrapper implements InventoryHolder {
         this.backpack = backpack;
     }
 
+    @Nullable
     public LivingEntity getPet() {
         return pet;
     }
