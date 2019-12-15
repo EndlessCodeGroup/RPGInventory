@@ -12,24 +12,24 @@ X changes total
 ### Other (X changes)
 -->
 
-## 2.3.1-SNAPSHOT (2019-12-15)
+## 2.3.1-rc01 (2019-12-15)
 
-X changes total
+13 changes total
 
-### Added (X changes)
+### Added (3 changes)
 
 - Support of 1.14 and 1.15
 - Pet skin OCELOT replaced with CAT  
   Available cats types: TABBY (default), BLACK, RED, SIAMESE, BRITISH_SHORTHAIR, CALICO, PERSIAN, RAGDOLL, WHITE, JELLIE, ALL_BLACK
 - Added COLLAR option for CAT pet skin
 
-### Changed (X changes)
+### Changed (3 changes)
 
 - Removed movement blocking on resource-pack loading
 - Removed option `resource-pack.delay` from config
 - Removed support of 1.13 and older
 
-### Fixed (X changes)
+### Fixed (7 changes)
 
 - Fixed problem with items name and description encoding after inventory save  
 - Fixed quickbar slots detection
