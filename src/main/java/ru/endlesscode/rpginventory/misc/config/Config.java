@@ -37,7 +37,7 @@ public class Config {
     public static VanillaSlotAction craftSlotsAction = VanillaSlotAction.RPGINV;
     public static VanillaSlotAction armorSlotsAction = VanillaSlotAction.DEFAULT;
 
-    private static FileConfiguration config = new YamlConfiguration();
+    private static final FileConfiguration config = new YamlConfiguration();
     private static Path configFile;
 
     public static void init(RPGInventory plugin) {

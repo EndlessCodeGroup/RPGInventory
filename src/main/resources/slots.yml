@@ -6,13 +6,13 @@ slots:
       item: DIAMOND_HOE:4
       name: "&a&lHelmet slot"
       lore:
-      - "&6&oHere possible to put only helmet"
+        - "&6&oHere possible to put only helmet"
     items:
-    - LEATHER_HELMET
-    - CHAINMAIL_HELMET
-    - IRON_HELMET
-    - GOLD_HELMET
-    - DIAMOND_HELMET
+      - LEATHER_HELMET
+      - CHAINMAIL_HELMET
+      - IRON_HELMET
+      - GOLD_HELMET
+      - DIAMOND_HELMET
   chestplate:
     type: ARMOR
     slot: 13
@@ -20,13 +20,13 @@ slots:
       item: DIAMOND_HOE:5
       name: "&a&lChestplate slot"
       lore:
-      - "&6&oHere possible to put only chestplate"
+        - "&6&oHere possible to put only chestplate"
     items:
-    - LEATHER_CHESTPLATE
-    - CHAINMAIL_CHESTPLATE
-    - IRON_CHESTPLATE
-    - GOLD_CHESTPLATE
-    - DIAMOND_CHESTPLATE
+      - LEATHER_CHESTPLATE
+      - CHAINMAIL_CHESTPLATE
+      - IRON_CHESTPLATE
+      - GOLD_CHESTPLATE
+      - DIAMOND_CHESTPLATE
   leggings:
     type: ARMOR
     slot: 22
@@ -34,13 +34,13 @@ slots:
       item: DIAMOND_HOE:6
       name: "&a&lLeggings slot"
       lore:
-      - "&6&oHere possible to put only leggings"
+        - "&6&oHere possible to put only leggings"
     items:
-    - LEATHER_LEGGINGS
-    - CHAINMAIL_LEGGINGS
-    - IRON_LEGGINGS
-    - GOLD_LEGGINGS
-    - DIAMOND_LEGGINGS
+      - LEATHER_LEGGINGS
+      - CHAINMAIL_LEGGINGS
+      - IRON_LEGGINGS
+      - GOLD_LEGGINGS
+      - DIAMOND_LEGGINGS
   boots:
     type: ARMOR
     slot: 31
@@ -48,13 +48,13 @@ slots:
       item: DIAMOND_HOE:7
       name: "&a&lBoots slot"
       lore:
-      - "&6&oHere possible to put only boots"
+        - "&6&oHere possible to put only boots"
     items:
-    - LEATHER_BOOTS
-    - CHAINMAIL_BOOTS
-    - IRON_BOOTS
-    - GOLD_BOOTS
-    - DIAMOND_BOOTS
+      - LEATHER_BOOTS
+      - CHAINMAIL_BOOTS
+      - IRON_BOOTS
+      - GOLD_BOOTS
+      - DIAMOND_BOOTS
   weapon:
     type: ACTIVE
     slot: 12
@@ -63,19 +63,19 @@ slots:
       item: DIAMOND_HOE:9
       name: "&a&lWeapon slot"
       lore:
-      - "&6&oHere possible to put only weapon"
+        - "&6&oHere possible to put only weapon"
     items:
-    - WOOD_SWORD
-    - STONE_SWORD
-    - IRON_SWORD
-    - GOLD_SWORD
-    - DIAMOND_SWORD
-    - WOOD_AXE
-    - STONE_AXE
-    - IRON_AXE
-    - GOLD_AXE
-    - DIAMOND_AXE
-    - BOW
+      - WOOD_SWORD
+      - STONE_SWORD
+      - IRON_SWORD
+      - GOLD_SWORD
+      - DIAMOND_SWORD
+      - WOOD_AXE
+      - STONE_AXE
+      - IRON_AXE
+      - GOLD_AXE
+      - DIAMOND_AXE
+      - BOW
   gloves:
     type: PASSIVE
     slot: 14
@@ -83,9 +83,9 @@ slots:
       item: DIAMOND_HOE:8
       name: "&a&lGloves slot"
       lore:
-      - "&6&oHere possible to put only gloves"
+        - "&6&oHere possible to put only gloves"
     items:
-    - DIAMOND_HOE:24
+      - DIAMOND_HOE:24
   rings:
     type: PASSIVE
     slot: [10, 28]
@@ -93,9 +93,9 @@ slots:
       item: DIAMOND_HOE:12
       name: "&a&lRing slot"
       lore:
-      - "&6&oHere possible to put only ring"
+        - "&6&oHere possible to put only ring"
     items:
-    - DIAMOND_HOE:23
+      - DIAMOND_HOE:23
   amulet:
     type: PASSIVE
     slot: 19
@@ -106,9 +106,9 @@ slots:
       item: DIAMOND_HOE:13
       name: "&a&lAmulet slot"
       lore:
-      - "&6&oHere possible to put only amulet"
+        - "&6&oHere possible to put only amulet"
     items:
-    - DIAMOND_HOE:25
+      - DIAMOND_HOE:25
   artifacts:
     type: PASSIVE
     slot: [47, 48, 49, 50, 51]
@@ -116,9 +116,9 @@ slots:
       item: DIAMOND_HOE:16
       name: "&a&lArtifact slot"
       lore:
-      - "&6&oHere possible to put only artifacts"
+        - "&6&oHere possible to put only artifacts"
     items:
-    - DIAMOND_HOE:26
+      - DIAMOND_HOE:26
   shield:
     type: SHIELD
     slot: 21
@@ -126,9 +126,9 @@ slots:
       item: DIAMOND_HOE:10
       name: "&a&lShield slot"
       lore:
-      - "&6&oHere possible to put only shield"
+        - "&6&oHere possible to put only shield"
     items:
-    - SHIELD
+      - SHIELD
   elytra:
     type: ELYTRA
     slot: 30
@@ -136,7 +136,7 @@ slots:
       item: DIAMOND_HOE:11
       name: "&a&lElytra slot"
       lore:
-      - "&6&oHere possible to put only elytra"
+        - "&6&oHere possible to put only elytra"
   pet:
     type: PET
     slot: 33
@@ -144,7 +144,7 @@ slots:
       item: DIAMOND_HOE:14
       name: "&a&lPet slot"
       lore:
-      - "&6&oHere possible to put only pet"
+        - "&6&oHere possible to put only pet"
   backpack:
     type: BACKPACK
     slot: 34
@@ -153,7 +153,7 @@ slots:
       item: DIAMOND_HOE:15
       name: "&a&lBackpack slot"
       lore:
-      - "&6&oHere possible to put only backpack"
+        - "&6&oHere possible to put only backpack"
   craft:
     type: ACTION
     slot: 16
@@ -162,7 +162,7 @@ slots:
       item: DIAMOND_HOE:2
       name: "&a&lWorkbench"
       lore:
-      - "&6&oClick to open workbench"
+        - "&6&oClick to open workbench"
     action: WORKBENCH
   info:
     type: INFO
@@ -171,8 +171,8 @@ slots:
       item: DIAMOND_HOE:3
       name: "&a&lYour stats"
       lore:
-        - "&4&lHP: &7%player_health%&8/&7%player_max_health%"
-        - "&c&lDamage: &7%rpginv_damage_bonus% &8(Weapon) &7| %rpginv_bow_damage_bonus% &8(Bow) &7| %rpginv_hand_damage_bonus% &8(Hand)"
-        - "&6&lCrit Damage: &7%rpginv_crit_damage_bonus% &e&lCrit Chance: &7%rpginv_crit_chance%"
-        - "&3&lArmor: &7%rpginv_armor_bonus%"
-        - "&b&lSpeed: &7%rpginv_speed_bonus% &9&lJump: &7%rpginv_jump_bonus%"
+        - "&4HP: &7%player_health%&8/&7%player_max_health%"
+        - "&cDamage: &7%rpginv_damage_bonus% &8(Weapon) &7| %rpginv_bow_damage_bonus% &8(Bow) &7| %rpginv_hand_damage_bonus% &8(Hand)"
+        - "&6Crit Damage: &7%rpginv_crit_damage_bonus% &eCrit Chance: &7%rpginv_crit_chance%"
+        - "&3Armor: &7%rpginv_armor_bonus%"
+        - "&bSpeed: &7%rpginv_speed_bonus% &9Jump: &7%rpginv_jump_bonus%"

@@ -46,6 +46,7 @@ public class SlotSnapshot implements ConfigurationSerializable {
         return new SlotSnapshot(slot.getName(), slot.getSlotType().name(), bought, items);
     }
 
+    @SuppressWarnings("unused") // Should be implemented because of ConfigurationSerializable
     @NotNull
     public static SlotSnapshot deserialize(@NotNull Map<String, Object> map) {
         String type = (String) map.getOrDefault(SLOT_TYPE, "{missing}");

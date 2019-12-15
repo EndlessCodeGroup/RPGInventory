@@ -79,19 +79,16 @@ final class RPGInventoryCommandExecutor implements CommandExecutor {
             }
         }
 
-        switch (subCommand.charAt(0)) {
-            case 'o': // open
-                if (args.length == 1 && perms.has(sender, "rpginventory.open")) {
-                    this.openInventory(sender);
-                } else if (args.length > 1 && perms.has(sender, "rpginventory.open.others")) {
-                    this.openInventory(sender, args[1]);
-                } else {
-                    this.missingRights(sender);
-                }
-                break;
-            default:
-                this.printHelp(sender);
-                break;
+        if (subCommand.charAt(0) == 'o') { // open
+            if (args.length == 1 && perms.has(sender, "rpginventory.open")) {
+                this.openInventory(sender);
+            } else if (args.length > 1 && perms.has(sender, "rpginventory.open.others")) {
+                this.openInventory(sender, args[1]);
+            } else {
+                this.missingRights(sender);
+            }
+        } else {
+            this.printHelp(sender);
         }
         return true;
     }
@@ -274,7 +271,7 @@ final class RPGInventoryCommandExecutor implements CommandExecutor {
             return;
         }
 
-        final Player player = ((Player) sender).getPlayer();
+        final Player player = (Player) sender;
         if (InventoryAPI.isRPGInventory(player.getOpenInventory().getTopInventory())) {
             return;
         }
@@ -288,6 +285,7 @@ final class RPGInventoryCommandExecutor implements CommandExecutor {
         }
 
         final Player player = RPGInventory.getInstance().getServer().getPlayer(playerName);
+        assert player != null;
         ((Player) sender).openInventory(InventoryManager.get(player).getInventory());
     }
 

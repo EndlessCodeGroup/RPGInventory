@@ -1,25 +1,25 @@
 #version: 2.0 | Do not remove this line!
 title: RPG Inventory
 
-locked.name: &c&lEspacio bloqueado
+locked.name: &cEspacio bloqueado
 locked.lore: &6&oDebes desbloquear el espacio anterior
 
-buyable.name: &a&lEspacio disponible
+buyable.name: &aEspacio disponible
 buyable.lore: &6&oPara obtener este espacio debes:
 buyable.money: &6&o• tener {0} monedas
 buyable.level: &6&o• tener {0} niveles de experiencia
 
 error.fall: &cNo puedes hacer esto mientras vuelas
-error.money: &6&lAún necesitas {0} monedas
-error.level: &6&lAún necesitas {0} niveles de experiencia
-error.buyable: &6&lNecesitas {0} monedas para comprar este espacio. Haz click nuevamente en los próximos 10 segundos para confirmar.
-error.previous: &6&lDesbloquea el espacio previo
+error.money: &6Aún necesitas {0} monedas
+error.level: &6Aún necesitas {0} niveles de experiencia
+error.buyable: &6Necesitas {0} monedas para comprar este espacio. Haz click nuevamente en los próximos 10 segundos para confirmar.
+error.previous: &6Desbloquea el espacio previo
 error.rp.denied: &cDebes habilitar la descarga del pack de recursos!
 error.item.level: &6Nivel &c{0} &6requerido
 error.item.class: &6Clase &c{0} &6requerida
 error.mount.owner: &6La montura pertenece a {0}
 
-message.buyed: &a&lYa haz comprado el espacio
+message.buyed: &aYa haz comprado el espacio
 message.perms: &cYou don''t have permission to use this command
 
 pet.name: {0} &f[{1}]
@@ -28,7 +28,7 @@ pet.damage: &cDaño: &7{0}
 pet.speed: &cVelocidad: &7{0} bloques/segundo
 pet.revival.yes: &bTiempo de espera: &7{0}s
 pet.revival.no: &bNo resucitará
-pet.cooldown:  &a&l&o({0}s)
+pet.cooldown:  &a&o({0}s)
 pet.food.value: &aRestaura: {0} de vida
 pet.role.companion: Acompañante
 pet.role.mount: Montura

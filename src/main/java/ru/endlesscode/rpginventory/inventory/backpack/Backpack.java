@@ -62,6 +62,7 @@ public class Backpack implements ConfigurationSerializable {
         this.contents = new ItemStack[backpackType.getSize()];
     }
 
+    @SuppressWarnings("unused") // Should be implemented because of ConfigurationSerializable
     @NotNull
     public static Backpack deserialize(@NotNull Map<String, Object> map) {
         UUID id = UUID.fromString((String) map.get(BP_ID));

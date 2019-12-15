@@ -1,25 +1,25 @@
 #version: 2.0 | Do not remove this line!
 title: RPG Inventory
 
-locked.name: &c&lZakljucan slot
-locked.lore: &6&lMoras prvo da otkljucas prethodni slot!
+locked.name: &cZakljucan slot
+locked.lore: &6Moras prvo da otkljucas prethodni slot!
 
-buyable.name: &a&lDostupan slot
-buyable.lore: &6&lDa kupis slot moras imati:
-buyable.money: &6&l {0} para
-buyable.level: &6&l {0} lvl
+buyable.name: &aDostupan slot
+buyable.lore: &6Da kupis slot moras imati:
+buyable.money: &6 {0} para
+buyable.level: &6 {0} lvl
 
 error.fall: &cNe mozes to raditi dok letis!
-error.money: &6&lDa kupis ovaj slot moras imati &e{0} &6&lpara
-error.level: &6&lDa kupis ovaj slot moras imati&e {0} &6&llvl
-error.buyable: &6&lDa kupis ovaj slot moras imati {0} para. Klikni u narednih 10 sekundi da potvrdis!
-error.previous: &6&lPrvo odkljucaj prethodni slot!
+error.money: &6Da kupis ovaj slot moras imati &e{0} &6para
+error.level: &6Da kupis ovaj slot moras imati&e {0} &6lvl
+error.buyable: &6Da kupis ovaj slot moras imati {0} para. Klikni u narednih 10 sekundi da potvrdis!
+error.previous: &6Prvo odkljucaj prethodni slot!
 error.rp.denied: &cMoras dozvoliti skidanje teksture!
 error.item.level: &6Potrebno &c{0} &6levela
 error.item.class: &6Potrebna klasa &c{0}
 error.mount.owner: &6Mount je od {0}
 
-message.buyed: &a&lUspesno ste kupili slot
+message.buyed: &aUspesno ste kupili slot
 message.perms: &cYou don''t have permission to use this command
 
 pet.name: &6{0} &7[&b{1}&7]
@@ -28,7 +28,7 @@ pet.damage: &cUdarac: &7{0}
 pet.speed: &cBrzina: &7{0} block/s
 pet.revival.yes: &bCooldown: &7{0}s
 pet.revival.no: &bDon''t revives
-pet.cooldown:  &a&l({0}s)
+pet.cooldown:  &a({0}s)
 pet.food.value: &aPunjenje: {0} HP
 pet.role.companion: Pratilac
 pet.role.mount: Mount
@@ -39,7 +39,7 @@ item.class: &fSamo za &b{0}
 item.nodrop: &7Ne gubi se na smrti
 item.left-click: &aLevi klik - {0}
 item.right-click: &aDesni klik - {0}
-item.hide: &7&lStatusi itema su sakriveni
+item.hide: &7Statusi itema su sakriveni
 item.unbreakable: &7Neunistivi item
 
 stat.message.no_bonus: No bonus

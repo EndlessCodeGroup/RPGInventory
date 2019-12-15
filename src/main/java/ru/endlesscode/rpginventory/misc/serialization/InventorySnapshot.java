@@ -38,6 +38,7 @@ public class InventorySnapshot implements ConfigurationSerializable {
         return new InventorySnapshot(slots, playerWrapper.getBuyedGenericSlots());
     }
 
+    @SuppressWarnings("unused") // Should be implemented because of ConfigurationSerializable
     @NotNull
     public static InventorySnapshot deserialize(@NotNull Map<String, Object> map) {
         final Map<String, SlotSnapshot> slots = (Map<String, SlotSnapshot>) map.getOrDefault(INV_SLOTS, Collections.emptyMap());

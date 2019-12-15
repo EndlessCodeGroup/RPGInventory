@@ -1,25 +1,25 @@
 #version: 2.0 | Do not remove this line!
-title: &b&l装备菜单
+title: &b装备菜单
 
-locked.name: &c&l未解锁凹槽
+locked.name: &c未解锁凹槽
 locked.lore: &6你必须先解锁上一个凹槽
 
-buyable.name: &a&l可用槽
+buyable.name: &a可用槽
 buyable.lore: &6要解锁一个凹槽，你必须:
 buyable.money: &6拥有 {0} 金币
 buyable.level: &6拥有 {0} 级
 
 error.fall: &c你无法在飞行中做这个.
-error.money: &6&l你只有 {0} 金币.
-error.level: &6&l你只有 {0} 级.
-error.buyable: &6&l解锁此凹槽需要 {0} 金币. 10秒内再次点击凹槽确认解锁.
-error.previous: &6&l你必须先解锁上一个凹槽
+error.money: &6你只有 {0} 金币.
+error.level: &6你只有 {0} 级.
+error.buyable: &6解锁此凹槽需要 {0} 金币. 10秒内再次点击凹槽确认解锁.
+error.previous: &6你必须先解锁上一个凹槽
 error.rp.denied: &c你必须启用服务器材质包才可进行游戏!
 error.item.level: &6需要 &c{0} &6级.
 error.item.class: &6你的种族必须为 &c{0}
 error.mount.owner: &6坐骑的主人为 {0}
 
-message.buyed: &a&l你成功解锁了一个凹槽!
+message.buyed: &a你成功解锁了一个凹槽!
 message.perms: &cYou don''t have permission to use this command
 
 pet.name: {0} &f[{1}]
@@ -28,7 +28,7 @@ pet.damage: &c伤害: &7{0}
 pet.speed: &c移速: &7{0} block/s
 pet.revival.yes: &b冷却时间: &7{0}s
 pet.revival.no: &b不返回
-pet.cooldown:  &a&l&o({0}s)
+pet.cooldown:  &a&o({0}s)
 pet.food.value: &a恢复: {0} HP
 pet.role.companion: 同伴
 pet.role.mount: 坐骑

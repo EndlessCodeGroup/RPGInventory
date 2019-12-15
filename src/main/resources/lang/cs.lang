@@ -1,25 +1,25 @@
 #version: 2.0 | Do not remove this line!
 title: RPG Inventar
 
-locked.name: &c&lZamceny slot
+locked.name: &cZamceny slot
 locked.lore: &6&oNejdrive musis odemknout predchozi slot
 
-buyable.name: &a&lDostupny slot
+buyable.name: &aDostupny slot
 buyable.lore: &6&oAby si odemkl slot musis:
 buyable.money: &6&o• mit {0} goldu
 buyable.level: &6&o• byt {0} lvl
 
 error.fall: &cYou can''t do it while you are flying
-error.money: &6&lAby si mohl odemknout slot jeste potrebujes {0} gold
-error.level: &6&lAby si mohl odemknout slot potrebujes {0} lvlu
-error.buyable: &6&lOdemknuti tohoto slotu te bude stat {0} gold. Klikni na to znova do 10 vterin aby si potvrdil odemceni.
-error.previous: &6&lNejdrive odemkni predchozi sloty
+error.money: &6Aby si mohl odemknout slot jeste potrebujes {0} gold
+error.level: &6Aby si mohl odemknout slot potrebujes {0} lvlu
+error.buyable: &6Odemknuti tohoto slotu te bude stat {0} gold. Klikni na to znova do 10 vterin aby si potvrdil odemceni.
+error.previous: &6Nejdrive odemkni predchozi sloty
 error.rp.denied: &cMusis povolit stazeni resource-packu!
 error.item.level: &6Vyzaduje &c{0} &6level
 error.item.class: &6Vyzaduje tridu &c{0}
 error.mount.owner: &6Zvire patri %
 
-message.buyed: &a&lUspesne jsi zakoupil slot
+message.buyed: &aUspesne jsi zakoupil slot
 message.perms: &cYou don''t have permission to use this command
 
 pet.name: {0} &f[{1}]
@@ -28,7 +28,7 @@ pet.damage: &cUtok: &7{0}
 pet.speed: &cRychlost: &7{0} block/s
 pet.revival.yes: &bOzivovaci doba: &7{0}s
 pet.revival.no: &bNeozivuje se
-pet.cooldown:  &a&l&o({0}s)
+pet.cooldown:  &a&o({0}s)
 pet.food.value: &aObnovi: {0} Zivota
 pet.role.companion: Spolecnik
 pet.role.mount: Jezdec

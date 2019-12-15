@@ -177,9 +177,8 @@ public class RPGInventory extends PluginLifecycle {
         this.startMetrics();
 
         // Enable commands
-        this.getCommand("rpginventory").setExecutor(
-                new TrackedCommandExecutor(new RPGInventoryCommandExecutor(), getReporter())
-        );
+        this.getCommand("rpginventory")
+                .setExecutor(new TrackedCommandExecutor(new RPGInventoryCommandExecutor(), getReporter()));
 
         this.checkUpdates(null);
 
@@ -202,7 +201,7 @@ public class RPGInventory extends PluginLifecycle {
         // Check version compatibility
         if (VersionHandler.isNotSupportedVersion()) {
             Log.w("This version of RPG Inventory is not tested with \"{0}\"!", Bukkit.getBukkitVersion());
-        } else if (VersionHandler.getVersionCode() >= VersionHandler.VERSION_1_13) {
+        } else if (VersionHandler.isExperimentalSupport()) {
             Log.w("Support of {0} is experimental! Use RPGInventory with caution.", Bukkit.getBukkitVersion());
         }
 

@@ -23,6 +23,8 @@ import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.entity.AnimalTamer;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Horse;
@@ -67,6 +69,7 @@ import ru.endlesscode.rpginventory.utils.EntityUtils;
 import ru.endlesscode.rpginventory.utils.LocationUtils;
 import ru.endlesscode.rpginventory.utils.PlayerUtils;
 
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -78,8 +81,7 @@ public class PetListener implements Listener {
 
     @EventHandler(ignoreCancelled = true)
     public void onPlayerInteractEntity(PlayerInteractEntityEvent event) {
-        if (event.getRightClicked() == null
-                || !(event.getRightClicked() instanceof LivingEntity)) {
+        if (!(event.getRightClicked() instanceof LivingEntity)) {
             return;
         }
 
@@ -198,17 +200,23 @@ public class PetListener implements Listener {
             LivingEntity pet = (LivingEntity) event.getRightClicked();
             PetFood petFood = PetManager.getFoodFromItem(itemInHand);
 
-            if (pet.getHealth() == pet.getMaxHealth() || petFood == null || !petFood.canBeEaten(playerWrapper.getPet())) {
+            if (pet.getHealth() == getMaxHealth(pet) || petFood == null || !petFood.canBeEaten(playerWrapper.getPet())) {
                 return;
             }
 
             double health = pet.getHealth() + petFood.getValue();
-            pet.setHealth(health < pet.getMaxHealth() ? health : pet.getMaxHealth());
+            pet.setHealth(Math.min(health, getMaxHealth(pet)));
             itemInHand.setAmount(itemInHand.getAmount() - 1);
             player.getEquipment().setItemInMainHand(itemInHand);
 
             pet.getWorld().playSound(pet.getLocation(), SoundCompat.EAT.get(), 1.0f, (float) (1.0 + Math.random() * 0.4));
         }
+    }
+
+    private double getMaxHealth(LivingEntity pet) {
+        AttributeInstance maxHealthAttribute = pet.getAttribute(Attribute.GENERIC_MAX_HEALTH);
+        Objects.requireNonNull(maxHealthAttribute);
+        return maxHealthAttribute.getValue();
     }
 
     @EventHandler
@@ -381,14 +389,15 @@ public class PetListener implements Listener {
         }
 
         final PlayerWrapper playerWrapper = InventoryManager.get(player);
-        if (playerWrapper.hasPet() && event.getInventory().getHolder() == playerWrapper.getPet()) {
+        final LivingEntity petEntity = InventoryManager.get(player).getPet();
+        if (petEntity != null && event.getInventory().getHolder() == petEntity) {
             playerWrapper.openInventory();
             event.setCancelled(true);
 
             new TrackedBukkitRunnable() {
                 @Override
                 public void run() {
-                    HorseInventory horseInv = ((Horse) playerWrapper.getPet()).getInventory();
+                    HorseInventory horseInv = ((Horse) petEntity).getInventory();
                     horseInv.setSaddle(new ItemStack(Material.SADDLE));
                 }
             }.runTaskLater(RPGInventory.getInstance(), 1);
@@ -402,9 +411,8 @@ public class PetListener implements Listener {
             return;
         }
 
-        PlayerWrapper playerWrapper = InventoryManager.get(player);
-        if (playerWrapper.hasPet() && playerWrapper.getPet().getPassenger() != player) {
-            LivingEntity petEntity = playerWrapper.getPet();
+        LivingEntity petEntity = InventoryManager.get(player).getPet();
+        if (petEntity != null && !petEntity.getPassengers().isEmpty() && petEntity.getPassengers().get(0) != player) {
             PetType pet = PetManager.getPetFromEntity(petEntity, player);
             if (pet != null && pet.getRole() != PetType.Role.COMPANION) {
                 EntityUtils.goPetToPlayer(player, petEntity);

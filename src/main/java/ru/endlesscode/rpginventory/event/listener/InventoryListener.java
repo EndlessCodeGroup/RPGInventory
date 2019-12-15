@@ -21,11 +21,13 @@ package ru.endlesscode.rpginventory.event.listener;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -39,7 +41,6 @@ import org.bukkit.event.player.PlayerEvent;
 import org.bukkit.event.player.PlayerItemBreakEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.Inventory;
@@ -170,9 +171,12 @@ public class InventoryListener implements Listener {
     }
 
     @EventHandler(ignoreCancelled = true)
-    public void onPickupToQuickSlot(@NotNull PlayerPickupItemEvent event) {
-        Player player = event.getPlayer();
+    public void onPickupToQuickSlot(@NotNull EntityPickupItemEvent event) {
+        if (event.getEntityType() != EntityType.PLAYER) {
+            return;
+        }
 
+        Player player = (Player) event.getEntity();
         if (!InventoryManager.playerIsLoaded(player) || !ItemManager.allowedForPlayer(player, event.getItem().getItemStack(), false)) {
             return;
         }
@@ -301,7 +305,7 @@ public class InventoryListener implements Listener {
                 playerWrapper = (PlayerWrapper) inventory.getHolder();
 
                 // Check flying
-                if (playerWrapper.isFlying()) {
+                if (playerWrapper != null && playerWrapper.isFlying()) {
                     PlayerUtils.sendMessage(player, RPGInventory.getLanguage().getMessage("error.fall"));
                     event.setCancelled(true);
                     return;
@@ -409,12 +413,10 @@ public class InventoryListener implements Listener {
                 || actionType == ActionType.DROP) && slot.isCup(currentItem) && slotType != InventoryType.SlotType.QUICKBAR);
     }
 
-    /**
-     * It happens when player click on armor slot
-     */
     private void onArmorSlotClick(InventoryClickEvent event, PlayerWrapper playerWrapper, @NotNull final Slot slot,
                                   @NotNull ItemStack cursor, ItemStack currentItem) {
         final Player player = playerWrapper.getPlayer().getPlayer();
+
         final Inventory inventory = event.getInventory();
         final int rawSlot = event.getRawSlot();
         InventoryAction action = event.getAction();
@@ -477,7 +479,7 @@ public class InventoryListener implements Listener {
     public void onInventoryClose(@NotNull InventoryCloseEvent event) {
         if (InventoryAPI.isRPGInventory(event.getInventory())) {
             PlayerWrapper playerWrapper = (PlayerWrapper) event.getInventory().getHolder();
-            if (event.getPlayer() != playerWrapper.getPlayer()) {
+            if (playerWrapper == null || event.getPlayer() != playerWrapper.getPlayer()) {
                 return;
             }
 

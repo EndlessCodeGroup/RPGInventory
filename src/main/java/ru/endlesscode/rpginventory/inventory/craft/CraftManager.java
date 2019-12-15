@@ -44,7 +44,7 @@ import java.util.List;
  */
 public class CraftManager {
     @NotNull
-    private static List<CraftExtension> EXTENSIONS = new ArrayList<>();
+    private static final List<CraftExtension> EXTENSIONS = new ArrayList<>();
     private static Texture textureOfExtendable;
 
     private CraftManager() {

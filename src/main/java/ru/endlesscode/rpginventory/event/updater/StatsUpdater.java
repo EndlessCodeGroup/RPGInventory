@@ -52,6 +52,7 @@ public class StatsUpdater extends TrackedBukkitRunnable {
 
         // Update speed
         AttributeInstance speedAttribute = this.player.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED);
+        assert speedAttribute != null;
         AttributeModifier rpgInvModifier = null;
         for (AttributeModifier modifier : speedAttribute.getModifiers()) {
             if (modifier.getUniqueId().compareTo(Attributes.SPEED_MODIFIER_ID) == 0) {

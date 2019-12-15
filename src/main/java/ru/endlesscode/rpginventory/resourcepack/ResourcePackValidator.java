@@ -52,7 +52,7 @@ final class ResourcePackValidator {
     private static final int CODE_TEMPORARY_REDIRECT = 307;
     private static final int CODE_PERMANENT_REDIRECT = 308;
 
-    private List<String> errors = new ArrayList<>();
+    private final List<String> errors = new ArrayList<>();
 
     /**
      * Checks that resource-pack with given URL and hash can be used.

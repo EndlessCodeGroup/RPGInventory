@@ -113,6 +113,9 @@ public class PlayerWrapper implements InventoryHolder {
 
     public void openInventory(boolean softOpen) {
         Player player = this.player.getPlayer();
+        if (player == null) {
+            return;
+        }
 
         if (!softOpen) {
             player.closeInventory();
@@ -186,6 +189,7 @@ public class PlayerWrapper implements InventoryHolder {
         Player player = this.player.getPlayer();
 
         AttributeInstance speedAttribute = player.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED);
+        assert speedAttribute != null;
         AttributeModifier rpgInvModifier = null;
         for (AttributeModifier modifier : speedAttribute.getModifiers()) {
             if (modifier.getUniqueId().compareTo(Attributes.SPEED_MODIFIER_ID) == 0) {
@@ -207,6 +211,7 @@ public class PlayerWrapper implements InventoryHolder {
         this.backpack = backpack;
     }
 
+    @Nullable
     public LivingEntity getPet() {
         return pet;
     }

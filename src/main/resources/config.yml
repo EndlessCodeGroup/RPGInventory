@@ -42,16 +42,16 @@ fill: DIAMOND_HOE:1
 items:
   # Pattern of item lore
   lore-pattern:
-  - _UNBREAKABLE_
-  - _DROP_
-  - _LEVEL_
-  - _CLASS_
-  - _SEPARATOR_
-  - _LORE_
-  - _SEPARATOR_
-  - _SKILLS_
-  - _SEPARATOR_
-  - _STATS_
+    - _UNBREAKABLE_
+    - _DROP_
+    - _LEVEL_
+    - _CLASS_
+    - _SEPARATOR_
+    - _LORE_
+    - _SEPARATOR_
+    - _SKILLS_
+    - _SEPARATOR_
+    - _STATS_
 
   # What is used as a _SEPARATOR_
   separator: ""
@@ -77,10 +77,6 @@ backpacks:
 resource-pack:
   enabled: false
 
-  # Delay between player join and request of texture downloading (in seconds)
-  # NOTE: Don't change it if you don't know what you doing
-  delay: 2
-
   # URL of your RP
   # Example: https://dl.dropboxusercontent.com/u/105899524/RPGInventory/RPs/Default.zip
   url: PUT_YOUR_URL_HERE
@@ -97,18 +93,18 @@ join-messages:
     enabled: false
     title: "&l&2Welcome to server!"
     text:
-    - "&6Glad to see you, &3%player_name%"
-    - "&6This server using &9RPGInventory"
+      - "&6Glad to see you, &3%player_name%"
+      - "&6This server using &9RPGInventory"
 
   # Message on first join and if player declined resource-pack
   rp-info:
     enabled: false
     title: "&l&4It is important!"
     text:
-    - "&6You should &callow &6resource pack to play on this server"
-    - "&6This will allow you fully immerse in the RPG atmosphere"
-    - "&6But if you declined downloading of RP you can fix it..."
-    - "&6Select the server in list, click &e'Edit' &6 and set &e'Resource-Pack: Accept'"
+      - "&6You should &callow &6resource pack to play on this server"
+      - "&6This will allow you fully immerse in the RPG atmosphere"
+      - "&6But if you declined downloading of RP you can fix it..."
+      - "&6Select the server in list, click &e'Edit' &6 and set &e'Resource-Pack: Accept'"
 
 ###############################
 #        Battle system        #
@@ -201,7 +197,7 @@ craft:
 
       # Lore of extendable slot
       lore:
-      - "&eYou must be a journeyman to use it"
+        - "&eYou must be a journeyman to use it"
 
       # Slots in extension
       slots: [8, 9]
@@ -213,11 +209,11 @@ craft:
 
       # Lore of extendable slot
       lore:
-      - "&eYou must be a master to use it"
+        - "&eYou must be a master to use it"
 
       # Whats extensions included to this extension
       includes:
-      - journeyman
+        - journeyman
 
       # Slots in extension
       slots: [1, 4, 7]

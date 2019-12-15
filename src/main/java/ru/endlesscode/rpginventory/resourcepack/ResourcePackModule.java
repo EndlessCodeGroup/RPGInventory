@@ -23,18 +23,14 @@ import com.comphenix.packetwrapper.WrapperPlayServerResourcePackSend;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketEvent;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityTargetLivingEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
@@ -49,9 +45,8 @@ import ru.endlesscode.rpginventory.utils.EffectUtils;
 import ru.endlesscode.rpginventory.utils.Log;
 import ru.endlesscode.rpginventory.utils.PlayerUtils;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -66,16 +61,13 @@ public class ResourcePackModule implements Listener {
     private final Plugin plugin;
     private final String resourcePackUrl;
     private final String resourcePackHash;
-    private final int resourcePackDelay;
 
-    private final Map<UUID, LoadData> loadList = new HashMap<>();
+    private final List<UUID> loadList = new ArrayList<>();
 
-    private ResourcePackModule(Plugin plugin,
-                               @NotNull String resourcePackUrl, String resourcePackHash, int resourcePackDelay) {
+    private ResourcePackModule(Plugin plugin, @NotNull String resourcePackUrl, String resourcePackHash) {
         this.plugin = plugin;
         this.resourcePackUrl = resourcePackUrl;
         this.resourcePackHash = resourcePackHash;
-        this.resourcePackDelay = resourcePackDelay;
     }
 
     @Nullable
@@ -96,8 +88,7 @@ public class ResourcePackModule implements Listener {
             return null;
         }
 
-        int rpDelay = Config.getConfig().getInt("resource-pack.delay", 2);
-        ResourcePackModule resourcePackModule = new ResourcePackModule(plugin, rpUrl, rpHash, rpDelay);
+        ResourcePackModule resourcePackModule = new ResourcePackModule(plugin, rpUrl, rpHash);
         plugin.getServer().getPluginManager().registerEvents(resourcePackModule, plugin);
         ProtocolLibrary.getProtocolManager().addPacketListener(resourcePackModule.new ResourcePackPacketAdapter(plugin));
         return resourcePackModule;
@@ -142,30 +133,6 @@ public class ResourcePackModule implements Listener {
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
-    public void onDamageWhenPlayerNotLoaded(@NotNull EntityDamageEvent event) {
-        if (event.getEntityType() != EntityType.PLAYER) {
-            return;
-        }
-
-        Player player = (Player) event.getEntity();
-        if (InventoryManager.playerIsLoaded(player)) {
-            return;
-        }
-
-        if (event.getCause() == EntityDamageEvent.DamageCause.FALL) {
-            this.setDamageForPlayer(player, event.getFinalDamage());
-        }
-
-        event.setCancelled(true);
-    }
-
-    private void setDamageForPlayer(@NotNull Player player, double damage) {
-        if (loadList.containsKey(player.getUniqueId())) {
-            loadList.get(player.getUniqueId()).setDamage(damage);
-        }
-    }
-
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
     public void onTargetWhenPlayerNotLoaded(@NotNull EntityTargetLivingEntityEvent event) {
         if (event.getTarget() == null || event.getTarget().getType() != EntityType.PLAYER) {
             return;
@@ -174,36 +141,6 @@ public class ResourcePackModule implements Listener {
         if (!InventoryManager.playerIsLoaded((Player) event.getTarget())) {
             event.setCancelled(true);
         }
-    }
-
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
-    public void onPlayerMoveWhenNotLoaded(@NotNull PlayerMoveEvent event) {
-        Player player = event.getPlayer();
-
-        if (!InventoryManager.isAllowedWorld(player.getWorld()) || InventoryManager.playerIsLoaded(player)) {
-            return;
-        }
-
-        if (this.isPreparedPlayer(player)) {
-            this.removePlayerFromLoadList(player);
-            player.kickPlayer(RPGInventory.getLanguage().getMessage("error.rp.denied"));
-            event.setCancelled(true);
-        } else {
-            Location toLocation = event.getTo();
-            Location newLocation = event.getFrom().clone();
-            if (!player.isOnGround()) {
-                newLocation.setY(toLocation.getY());
-            }
-
-            newLocation.setPitch(toLocation.getPitch());
-            newLocation.setYaw(toLocation.getYaw());
-            event.setTo(newLocation);
-        }
-    }
-
-    private boolean isPreparedPlayer(@NotNull Player player) {
-        LoadData data = loadList.get(player.getUniqueId());
-        return data != null && data.isPrepared();
     }
 
     @EventHandler(priority = EventPriority.LOW)
@@ -217,7 +154,11 @@ public class ResourcePackModule implements Listener {
 
     @EventHandler
     public void onPlayerQuit(@NotNull PlayerQuitEvent event) {
-        this.removePlayerFromLoadList(event.getPlayer());
+        Player player = event.getPlayer();
+        if (InventoryManager.isAllowedWorld(player.getWorld()) && !InventoryManager.playerIsLoaded(player)) {
+            player.removePotionEffect(PotionEffectType.BLINDNESS);
+            this.removePlayerFromLoadList(event.getPlayer());
+        }
     }
 
     private void removePlayerFromLoadList(@NotNull Player player) {
@@ -240,22 +181,14 @@ public class ResourcePackModule implements Listener {
 
             packet.setHash(resourcePackHash);
             final Player player = event.getPlayer();
-            final LoadData loadData = new LoadData();
-            loadList.put(player.getUniqueId(), loadData);
-
-            new TrackedBukkitRunnable() {
-                @Override
-                public void run() {
-                    loadData.setPrepared();
-                }
-            }.runTaskLater(this.plugin, resourcePackDelay * TICKS_IN_SECOND);
+            loadList.add(player.getUniqueId());
         }
 
         @Override
         public void onPacketReceiving(@NotNull PacketEvent event) {
             WrapperPlayClientResourcePackStatus packet = new WrapperPlayClientResourcePackStatus(event.getPacket());
             final Player player = event.getPlayer();
-            if (loadList.containsKey(player.getUniqueId())) {
+            if (loadList.contains(player.getUniqueId())) {
                 switch (packet.getResult()) {
                     case ACCEPTED:
                         break;
@@ -271,15 +204,10 @@ public class ResourcePackModule implements Listener {
 
         private void onSuccessfullyLoaded(@NotNull Player player) {
             final UUID playerId = player.getUniqueId();
-            final double damage = loadList.get(playerId).getDamage();
             new TrackedBukkitRunnable() {
                 @Override
                 public void run() {
                     InventoryManager.loadPlayerInventory(player);
-                    if (damage > 0) {
-                        EntityDamageEvent event = new EntityDamageEvent(player, EntityDamageEvent.DamageCause.FALL, damage);
-                        Bukkit.getPluginManager().callEvent(event);
-                    }
                     player.removePotionEffect(PotionEffectType.BLINDNESS);
                 }
             }.runTaskLater(this.plugin, 1);
@@ -294,30 +222,6 @@ public class ResourcePackModule implements Listener {
                 }
             }.runTaskLater(this.plugin, TICKS_IN_SECOND);
             loadList.remove(player.getUniqueId());
-        }
-    }
-
-
-    private static class LoadData {
-        boolean prepared = false;
-        double damage = 0;
-
-        double getDamage() {
-            return damage;
-        }
-
-        void setDamage(double damage) {
-            if (this.damage == 0) {
-                this.damage = damage;
-            }
-        }
-
-        boolean isPrepared() {
-            return prepared;
-        }
-
-        void setPrepared() {
-            this.prepared = true;
         }
     }
 }

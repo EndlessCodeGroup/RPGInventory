@@ -22,6 +22,8 @@ import com.comphenix.protocol.utility.MinecraftReflection;
 import com.comphenix.protocol.wrappers.nbt.NbtCompound;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.Damageable;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -115,7 +117,7 @@ public class ItemUtils {
             return new ItemStack(Material.AIR);
         }
 
-        short durability = item.getDurability();
+        short durability = getDamage(item);
         int amount = item.getAmount();
         short textureDurability;
         if (CustomItem.isCustomItem(item)) {
@@ -165,9 +167,22 @@ public class ItemUtils {
             return item;
         }
 
-        item.setDurability(textureDurability == -1 ? durability : textureDurability);
+        setDamage(item, textureDurability == -1 ? durability : textureDurability);
         item.setAmount(amount);
         return item;
+    }
+
+    public static short getDamage(@NotNull ItemStack itemStack) {
+        ItemMeta meta = itemStack.getItemMeta();
+        return meta == null ? 0 : (short) ((Damageable) meta).getDamage();
+    }
+
+    private static void setDamage(@NotNull ItemStack itemStack, short damage) {
+        ItemMeta meta = itemStack.getItemMeta();
+        if (meta != null) {
+            ((Damageable) meta).setDamage(damage);
+            itemStack.setItemMeta(meta);
+        }
     }
 
     @Contract("null -> true")

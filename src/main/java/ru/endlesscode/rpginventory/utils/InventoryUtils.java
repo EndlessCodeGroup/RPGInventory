@@ -19,6 +19,7 @@
 package ru.endlesscode.rpginventory.utils;
 
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -82,12 +83,15 @@ public class InventoryUtils {
         List<ItemStack> items = new ArrayList<>(InventoryAPI.getPassiveItems(player));
         Collections.addAll(items, player.getInventory().getArmorContents());
 
-        ItemStack itemInHand = player.getEquipment().getItemInMainHand();
+        EntityEquipment equipment = player.getEquipment();
+        assert equipment != null;
+
+        ItemStack itemInHand = equipment.getItemInMainHand();
         if (CustomItem.isCustomItem(itemInHand) && ItemManager.allowedForPlayer(player, itemInHand, notifyPlayer)) {
             items.add(itemInHand);
         }
 
-        itemInHand = player.getEquipment().getItemInOffHand();
+        itemInHand = equipment.getItemInOffHand();
         if (CustomItem.isCustomItem(itemInHand) && ItemManager.allowedForPlayer(player, itemInHand, notifyPlayer)) {
             items.add(itemInHand);
         }

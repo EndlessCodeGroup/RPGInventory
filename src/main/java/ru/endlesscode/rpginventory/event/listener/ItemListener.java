@@ -29,6 +29,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.inventory.InventoryType;
@@ -37,7 +38,6 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemBreakEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
@@ -69,10 +69,6 @@ import java.util.List;
 public class ItemListener implements Listener {
     @EventHandler(priority = EventPriority.LOW)
     public void onDamage(@NotNull EntityDamageByEntityEvent event) {
-        if (event.getEntity() == null) {
-            return;
-        }
-
         Player damager;
 
         // Defensive stats
@@ -88,10 +84,6 @@ public class ItemListener implements Listener {
                 event.setDamage(EntityDamageEvent.DamageModifier.ARMOR, armor);
             }
         } catch (UnsupportedOperationException ignored) {
-        }
-
-        if (event.getDamager() == null) {
-            return;
         }
 
         // Attack stats
@@ -178,7 +170,7 @@ public class ItemListener implements Listener {
         }
 
         // === START: Magic constants ===
-        if (velocity.getY() == 0.41999998688697815D) {
+        if (event.getTo() != null && velocity.getY() == 0.41999998688697815D) {
             double jump = (1.5 + Math.sqrt(jumpModifier.getBonus())) * jumpModifier.getMultiplier();
             Vector moveDirection = event.getTo().toVector().subtract(event.getFrom().toVector());
             velocity.setX(moveDirection.getX() * jump * player.getWalkSpeed());
@@ -191,8 +183,7 @@ public class ItemListener implements Listener {
 
     @EventHandler
     public void onPlayerFall(@NotNull EntityDamageEvent event) {
-        if (event.getEntity() == null
-                || event.getEntity().getType() != EntityType.PLAYER
+        if (event.getEntity().getType() != EntityType.PLAYER
                 || event.getCause() != EntityDamageEvent.DamageCause.FALL) {
             return;
         }
@@ -314,9 +305,12 @@ public class ItemListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
-    public void afterPickupItem(@NotNull PlayerPickupItemEvent event) {
-        Player player = event.getPlayer();
+    public void afterPickupItem(@NotNull EntityPickupItemEvent event) {
+        if (event.getEntityType() != EntityType.PLAYER) {
+            return;
+        }
 
+        Player player = (Player) event.getEntity();
         if (!InventoryManager.playerIsLoaded(player)) {
             return;
         }

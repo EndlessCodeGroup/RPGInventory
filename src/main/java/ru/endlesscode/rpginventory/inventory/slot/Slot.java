@@ -101,8 +101,8 @@ public class Slot {
         // Setup cup slot
         Texture texture = Texture.parseTexture(config.getString("holder.item"));
         ItemStack cup = texture.getItemStack();
-        if (ItemUtils.isNotEmpty(cup)) {
-            ItemMeta meta = cup.getItemMeta();
+        ItemMeta meta = cup.getItemMeta();
+        if (meta != null) {
             meta.setDisplayName(config.contains("holder.name") ? StringUtils.coloredLine(config.getString("holder.name")) : "[Holder name missing]");
             meta.setLore(config.contains("holder.lore") ? StringUtils.coloredLines(config.getStringList("holder.lore")) : Collections.singletonList("[Holder lore missing]"));
             cup.setItemMeta(meta);
@@ -124,7 +124,7 @@ public class Slot {
 
             if (data.length > 1) {
                 String[] borders = data[1].split("-");
-                int itemDurability = itemStack.getDurability();
+                int itemDurability = ItemUtils.getDamage(itemStack);
 
                 if (borders.length == 1 && itemDurability != Integer.parseInt(data[1])) {
                     continue;

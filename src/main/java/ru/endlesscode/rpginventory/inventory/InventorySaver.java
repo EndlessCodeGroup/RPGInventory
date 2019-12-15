@@ -120,7 +120,7 @@ public class InventorySaver {
                 Slot petSlot = SlotManager.instance().getPetSlot();
                 ItemStack currentPetItem = inventory.getItem(petSlotId);
 
-                if (petSlot != null && !petSlot.isCup(currentPetItem)) {
+                if (petSlot != null && currentPetItem != null && !petSlot.isCup(currentPetItem)) {
                     ItemStack petItem = PetType.clone(currentPetItem);
                     if (petSlot.isDrop()) {
                         additionalDrops.add(petItem);

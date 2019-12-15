@@ -6,10 +6,10 @@ import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.jetbrains.annotations.NotNull;
-import ru.endlesscode.rpginventory.compat.ItemStackCompat;
 import ru.endlesscode.rpginventory.compat.MaterialCompat;
 import ru.endlesscode.rpginventory.utils.ItemUtils;
 import ru.endlesscode.rpginventory.utils.Log;
@@ -19,11 +19,11 @@ import java.util.Objects;
 
 public class Texture {
 
-    private static Texture EMPTY_TEXTURE = new Texture(new ItemStack(Material.AIR));
+    private static final Texture EMPTY_TEXTURE = new Texture(new ItemStack(Material.AIR));
 
     @NotNull
-    private ItemStack prototype;
-    private short durability;
+    private final ItemStack prototype;
+    private final short durability;
 
     private Texture(@NotNull ItemStack prototype) {
         this(prototype, (short) -1);
@@ -38,6 +38,7 @@ public class Texture {
         return this.equals(EMPTY_TEXTURE);
     }
 
+    @NotNull
     public ItemStack getItemStack() {
         return prototype.clone();
     }
@@ -107,6 +108,7 @@ public class Texture {
     private static Texture parseLeatherArmor(ItemStack item, String hexColor) {
         try {
             LeatherArmorMeta meta = (LeatherArmorMeta) item.getItemMeta();
+            assert meta != null;
             meta.setColor(Color.fromRGB(Integer.parseInt(hexColor, 16)));
             item.setItemMeta(meta);
         } catch (ClassCastException | IllegalArgumentException | NullPointerException e) {
@@ -117,21 +119,21 @@ public class Texture {
     }
 
     private static Texture parseItemWithDurability(ItemStack item, String durabilityValue) {
-        short durability = -1;
-        try {
-            durability = Short.parseShort(durabilityValue);
-            item.setDurability(durability);
-        } catch (NumberFormatException e) {
-            Log.w("Can''t parse durability. Specify a number instead of \"{0}\"", durabilityValue);
-        }
-
         ItemMeta meta = item.getItemMeta();
+        short durability = -1;
         if (meta != null) {
-            meta.addItemFlags(ItemFlag.values());
-            item.setItemMeta(meta);
-            if (ItemUtils.isItemHasDurability(item)) {
-                item = ItemStackCompat.setUnbreakable(item, true);
+            try {
+                durability = Short.parseShort(durabilityValue);
+                ((Damageable) meta).setDamage(durability);
+            } catch (NumberFormatException e) {
+                Log.w("Can''t parse durability. Specify a number instead of \"{0}\"", durabilityValue);
             }
+
+            meta.addItemFlags(ItemFlag.values());
+            if (ItemUtils.isItemHasDurability(item)) {
+                meta.setUnbreakable(true);
+            }
+            item.setItemMeta(meta);
         }
 
         return new Texture(item, durability);

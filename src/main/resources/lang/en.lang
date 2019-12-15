@@ -1,25 +1,25 @@
 #version: 2.0 | Do not remove this line!
 title: RPG Inventory
 
-locked.name: &c&lLocked slot
+locked.name: &cLocked slot
 locked.lore: &6&oYou need to unlock the previous slots first
 
-buyable.name: &a&lAvailable slot
+buyable.name: &aAvailable slot
 buyable.lore: &6&oTo purchase a slot, you must:
 buyable.money: &6&o• Have {0} gold
 buyable.level: &6&o• Be {0} lvl
 
 error.fall: &cYou can''t do it while you are flying
-error.money: &6&lTo purchase slots you still need {0} gold
-error.level: &6&lTo purchase slots you need {0} lvl
-error.buyable: &6&lTo purchase this slots you need {0} gold. Click on it again in the next 10 seconds to confirm the purchase.
-error.previous: &6&lFirst unlock previous slots
+error.money: &6To purchase slots you still need {0} gold
+error.level: &6To purchase slots you need {0} lvl
+error.buyable: &6To purchase this slots you need {0} gold. Click on it again in the next 10 seconds to confirm the purchase.
+error.previous: &6First unlock previous slots
 error.rp.denied: &cYou must allow downloading the resource-pack!
 error.item.level: &6Required &c{0} &6level
 error.item.class: &6Required class &c{0}
 error.mount.owner: &6Mount belongs to {0}
 
-message.buyed: &a&lYou have successfully purchased the slot
+message.buyed: &aYou have successfully purchased the slot
 message.perms: &cYou don''t have permission to use this command
 
 pet.name: {0} &f[{1}]
@@ -28,7 +28,7 @@ pet.damage: &cDamage: &7{0}
 pet.speed: &cSpeed: &7{0} block/s
 pet.revival.yes: &bCooldown: &7{0}s
 pet.revival.no: &bDon''t revives
-pet.cooldown:  &a&l&o({0}s)
+pet.cooldown:  &a&o({0}s)
 pet.food.value: &aRestores: {0} HP
 pet.role.companion: Companion
 pet.role.mount: Mount

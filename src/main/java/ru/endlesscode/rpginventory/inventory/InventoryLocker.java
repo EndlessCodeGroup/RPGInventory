@@ -38,6 +38,7 @@ import ru.endlesscode.rpginventory.utils.Log;
 import ru.endlesscode.rpginventory.utils.PlayerUtils;
 import ru.endlesscode.rpginventory.utils.StringUtils;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -51,7 +52,7 @@ public class InventoryLocker {
     private static ItemStack LOCKED_SLOT = null;
     private static ItemStack BUYABLE_SLOT = null;
 
-    private static String TAG = "locked";
+    private static final String TAG = "locked";
 
     private InventoryLocker() {
     }
@@ -86,10 +87,12 @@ public class InventoryLocker {
         }
 
         ItemMeta meta = slotItem.getItemMeta();
-        meta.setDisplayName(RPGInventory.getLanguage().getMessage(slotId + ".name"));
-        meta.setLore(Collections.singletonList(RPGInventory.getLanguage().getMessage(slotId + ".lore")));
+        if (meta != null) {
+            meta.setDisplayName(RPGInventory.getLanguage().getMessage(slotId + ".name"));
+            meta.setLore(Collections.singletonList(RPGInventory.getLanguage().getMessage(slotId + ".lore")));
+            slotItem.setItemMeta(meta);
+        }
 
-        slotItem.setItemMeta(meta);
         return addTag(slotItem);
     }
 
@@ -130,19 +133,24 @@ public class InventoryLocker {
     @NotNull
     public static ItemStack getBuyableSlotForLine(int line) {
         ItemStack slot = InventoryLocker.BUYABLE_SLOT.clone();
-        ItemMeta im = slot.getItemMeta();
-        List<String> lore = im.getLore();
-        FileLanguage lang = RPGInventory.getLanguage();
-        final FileConfiguration config = Config.getConfig();
-        if (config.getBoolean("slots.money.enabled")) {
-            lore.add(lang.getMessage("buyable.money", StringUtils.doubleToString(config.getDouble("slots.money.cost.line" + line))));
-        }
+        ItemMeta meta = slot.getItemMeta();
+        if (meta != null) {
+            List<String> lore = meta.getLore();
+            if (lore == null) {
+                lore = new ArrayList<>();
+            }
+            FileLanguage lang = RPGInventory.getLanguage();
+            final FileConfiguration config = Config.getConfig();
+            if (config.getBoolean("slots.money.enabled")) {
+                lore.add(lang.getMessage("buyable.money", StringUtils.doubleToString(config.getDouble("slots.money.cost.line" + line))));
+            }
 
-        if (config.getBoolean("slots.level.enabled")) {
-            lore.add(lang.getMessage("buyable.level", config.getInt("slots.level.required.line" + line)));
+            if (config.getBoolean("slots.level.enabled")) {
+                lore.add(lang.getMessage("buyable.level", config.getInt("slots.level.required.line" + line)));
+            }
+            meta.setLore(lore);
+            slot.setItemMeta(meta);
         }
-        im.setLore(lore);
-        slot.setItemMeta(im);
 
         return addTag(slot);
     }
@@ -222,6 +230,6 @@ public class InventoryLocker {
 
     private static int getSlots(OfflinePlayer player) {
         int slots = Config.getConfig().getInt("slots.free") + InventoryManager.get(player).getBuyedGenericSlots();
-        return slots > 27 ? 27 : slots;
+        return Math.min(slots, 27);
     }
 }

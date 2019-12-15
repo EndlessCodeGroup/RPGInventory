@@ -19,7 +19,10 @@
 package ru.endlesscode.rpginventory.event.listener;
 
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.block.Dispenser;
+import org.bukkit.block.data.Directional;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -154,8 +157,10 @@ public class ArmorEquipListener implements Listener {
     @EventHandler
     public void onDispenseEquip(BlockDispenseEvent event) {
         ArmorType type = ArmorType.matchType(event.getItem());
+        World world = event.getBlock().getWorld();
         Location blockLoc = event.getBlock().getLocation();
-        Collection<Entity> nearbyEntities = blockLoc.getWorld().getNearbyEntities(blockLoc, 3D, 1.2D, 3D);
+
+        Collection<Entity> nearbyEntities = world.getNearbyEntities(blockLoc, 3D, 1.2D, 3D);
         if (nearbyEntities.isEmpty()) {
             return;
         }
@@ -200,22 +205,13 @@ public class ArmorEquipListener implements Listener {
     }
 
     private boolean isPlayerInRightPosition(Block block, Player player) {
-        if (!(block.getState() instanceof org.bukkit.block.Dispenser)) {
+        if (!(block.getState() instanceof Dispenser)) {
             return false;
         }
         final Location blockLoc = block.getLocation();
         final Location playerLoc = player.getLocation();
-        org.bukkit.block.Dispenser dispenser = (org.bukkit.block.Dispenser) block.getState();
-        org.bukkit.material.Dispenser dispenserData = (org.bukkit.material.Dispenser) dispenser.getData();
-        /*
-            From old 'if' statement
-         // Someone told me not to do big if checks because it's hard to read, look at me doing it -_-
-
-            directionFacing == BlockFace.EAST && playerLoc.getBlockX() != blockLoc.getBlockX() && playerLoc.getX() <= blockLoc.getX() + 2.3 && playerLoc.getX() >= blockLoc.getX()
-         || directionFacing == BlockFace.WEST && playerLoc.getX() >= blockLoc.getX() - 1.3 && playerLoc.getX() <= blockLoc.getX()
-         || directionFacing == BlockFace.SOUTH && playerLoc.getBlockZ() != blockLoc.getBlockZ() && playerLoc.getZ() <= blockLoc.getZ() + 2.3 && playerLoc.getZ() >= lockLoc.getZ()
-         || directionFacing == BlockFace.NORTH && playerLoc.getZ() >= blockLoc.getZ() - 1.3 && playerLoc.getZ() <= blockLoc.getZ()+
-         */
+        Dispenser dispenser = (Dispenser) block.getState();
+        Directional dispenserData = (Directional) dispenser.getBlockData();
         switch (dispenserData.getFacing()) {
             case EAST:
                 return playerLoc.getBlockX() != blockLoc.getBlockX() && playerLoc.getX() <= blockLoc.getX() + 2.3 && playerLoc.getX() >= blockLoc.getX();
@@ -227,7 +223,6 @@ public class ArmorEquipListener implements Listener {
                 return playerLoc.getZ() >= blockLoc.getZ() - 1.3 && playerLoc.getZ() <= blockLoc.getZ();
             default:
                 return false;
-
         }
     }
 }

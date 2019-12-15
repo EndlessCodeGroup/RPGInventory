@@ -436,7 +436,7 @@ public class Updater {
         }
     }
 
-    public final class UpdateData {
+    public static final class UpdateData {
         @SerializedName(VERSION_VALUE)
         public String mcVersions;
 

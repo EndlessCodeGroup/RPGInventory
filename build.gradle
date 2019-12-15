@@ -1,19 +1,19 @@
 plugins {
     id 'ru.endlesscode.bukkitgradle' version '0.8.2'
-    id 'com.github.johnrengelman.shadow' version '5.0.0'
-    id 'com.github.ben-manes.versions' version "0.21.0"
+    id 'com.github.johnrengelman.shadow' version '5.2.0'
+    id 'com.github.ben-manes.versions' version "0.27.0"
     id 'jacoco'
 }
 
-group = 'ru.endlesscode'
+group = 'ru.endlesscode.rpginventory'
 version = pluginVersion
 description = pluginDesc
 
 bukkit {
-    version = '1.13.2'
+    version = '1.15'
 
     meta {
-        main = "ru.endlesscode.rpginventory.RPGInventoryPlugin"
+        main = "${group}.RPGInventoryPlugin"
         authors = ["OsipXD", "EndlessCode Group"]
     }
 
@@ -36,7 +36,7 @@ repositories {
     maven {
         name 'keyle-repo'
         url 'http://repo.keyle.de/'
-    } 
+    }
 
     maven {
         name 'ec-repo'
@@ -77,15 +77,15 @@ dependencies {
         exclude group: 'junit'
         exclude module: 'json'
     }
-    compileOnly('net.milkbowl.vault:VaultAPI:1.6') {
+    compileOnly('net.milkbowl.vault:VaultAPI:1.7') {
         exclude group: 'org.bukkit'
     }
     compileOnly('com.comphenix.protocol:ProtocolLib-API:4.4.0')
-    compileOnly('org.jetbrains:annotations:15.0')
-    compileOnly('me.clip:placeholderapi:2.9.2')
+    compileOnly('org.jetbrains:annotations:18.0.0')
+    compileOnly('me.clip:placeholderapi:2.10.4')
     compileOnly('me.robin:BattleLevelsAPI:6.9.1')
     compileOnly('com.herocraftonline.heroes:Heroes:1.5.5.7')
-    compileOnly('de.keyle:mypet:3.0-SNAPSHOT')
+    compileOnly('de.keyle:mypet:3.8')
     compileOnly('org.tobiyas:RacesAndClasses:1.2.0')
     compileOnly('me.baks:RPGPlayerLeveling:3.7.2')
     compileOnly('com.sucy:SkillAPI:3.102')
@@ -93,9 +93,9 @@ dependencies {
     implementation("ru.endlesscode.inspector:inspector-bukkit:$inspectorVersion")
     implementation("ru.endlesscode.inspector:inspector-sentry-reporter:$inspectorVersion")
     implementation('com.comphenix.packetwrapper:PacketWrapper:1.13-R0.1-SNAPSHOT')
-    implementation('org.bstats:bstats-bukkit-lite:1.4')
+    implementation('org.bstats:bstats-bukkit-lite:1.5')
     testImplementation('junit:junit:4.12')
-    testImplementation('org.mockito:mockito-core:2.25.0')
+    testImplementation('org.mockito:mockito-core:3.2.0')
 }
 
 jacocoTestReport {
