@@ -45,6 +45,7 @@ import ru.endlesscode.rpginventory.pet.Attributes;
 import ru.endlesscode.rpginventory.pet.PetManager;
 import ru.endlesscode.rpginventory.pet.PetType;
 import ru.endlesscode.rpginventory.utils.ItemUtils;
+import ru.endlesscode.rpginventory.utils.Log;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -170,19 +171,27 @@ public class PlayerWrapper implements InventoryHolder {
     }
 
     public void addPermissions(@NotNull List<String> permissions) {
-        this.permissions.addAll(permissions);
-
-        for (String permission : permissions) {
-            RPGInventory.getPermissions().playerAdd(this.player.getPlayer(), permission);
+        try {
+            for (String permission : permissions) {
+                if (RPGInventory.getPermissions().playerAdd(this.player.getPlayer(), permission)) {
+                    this.permissions.add(permission);
+                }
+            }
+        } catch (Exception e) {
+            Log.w(e);
         }
     }
 
     private void clearPermissions() {
-        for (String permission : this.permissions) {
-            RPGInventory.getPermissions().playerRemove(this.player.getPlayer(), permission);
-        }
+        try {
+            for (String permission : this.permissions) {
+                RPGInventory.getPermissions().playerRemove(this.player.getPlayer(), permission);
+            }
 
-        this.permissions.clear();
+            this.permissions.clear();
+        } catch (Exception e) {
+            Log.w(e);
+        }
     }
 
     private void clearStats() {
