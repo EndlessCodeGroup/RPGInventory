@@ -265,7 +265,7 @@ public class InventoryListener implements Listener {
             }
 
             boolean openRpgInventory = false;
-            switch (event.getSlotType()) {
+            switch (slotType) {
                 case CRAFTING:
                 case RESULT:
                     openRpgInventory = Config.craftSlotsAction == VanillaSlotAction.RPGINV;

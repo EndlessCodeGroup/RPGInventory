@@ -80,7 +80,7 @@ dependencies {
     compileOnly('net.milkbowl.vault:VaultAPI:1.7') {
         exclude group: 'org.bukkit'
     }
-    compileOnly('com.comphenix.protocol:ProtocolLib-API:4.4.0')
+    compileOnly('com.comphenix.protocol:ProtocolLib:4.5.0')
     compileOnly('org.jetbrains:annotations:18.0.0')
     compileOnly('me.clip:placeholderapi:2.10.4')
     compileOnly('me.robin:BattleLevelsAPI:6.9.1')
