@@ -280,7 +280,7 @@ public class MyPetManager implements Listener {
         Slot petSlot = Objects.requireNonNull(getMyPetSlot(), "MyPet slot should be exist!");
 
         ItemStack currentPet = inventory.getItem(petSlot.getSlotId());
-        boolean hasPet = !petSlot.isCup(currentPet);
+        boolean hasPet = currentPet != null && !petSlot.isCup(currentPet);
         inventory.setItem(petSlot.getSlotId(), petItem);
 
         if (hasPet) {
