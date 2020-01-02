@@ -12,6 +12,15 @@ X changes total
 ### Other (X changes)
 -->
 
+## 2.3.1 (2020-01-02)
+
+2 changes total
+
+### Fixed (2 changes)
+
+- Crash when MyPet integration is enabled
+- Crash when permissions plugin is not enabled
+
 ## 2.3.1-rc01 (2019-12-15)
 
 13 changes total
