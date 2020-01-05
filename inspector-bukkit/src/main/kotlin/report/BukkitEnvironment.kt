@@ -8,9 +8,9 @@ import ru.endlesscode.inspector.report.ReportField
 import ru.endlesscode.inspector.report.TextField
 
 
-class BukkitEnvironment(
+class BukkitEnvironment internal constructor(
     plugin: Plugin,
-    properties: BukkitEnvironment.Properties
+    properties: Properties
 ) : ReportEnvironment {
 
     companion object {
@@ -30,9 +30,7 @@ class BukkitEnvironment(
 
     override val fields: Map<String, ReportField>
 
-    override val defaultFieldsTags: List<String> = listOf(
-        TAG_PLUGIN, TAG_CORE, TAG_PLUGIN_LIST, TAG_INSPECTOR_VERSION, TAG_REPORTER_ID
-    )
+    override val defaultFieldsTags: Set<String>
 
     override val isInspectorEnabled: Boolean
         get() = inspector.isEnabled
@@ -53,6 +51,7 @@ class BukkitEnvironment(
             TAG_INSPECTOR_VERSION to TextField(TAG_INSPECTOR_VERSION, Inspector.version),
             TAG_REPORTER_ID to TextField(TAG_REPORTER_ID, inspector.serverId.toString())
         )
+        defaultFieldsTags = fields.keys
     }
 
     /**

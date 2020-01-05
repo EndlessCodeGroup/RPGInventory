@@ -87,7 +87,7 @@ interface Reporter {
                 return fields
             }
 
-        private var fieldsTags: MutableList<String> = mutableListOf()
+        private var fieldsTags: MutableSet<String> = mutableSetOf()
         private var customFields: MutableList<ReportField> = mutableListOf()
 
         /**
@@ -107,9 +107,9 @@ interface Reporter {
          * Set fields by tags to report.
          */
         @PublicApi
-        fun setFields(vararg newFieldsTags: String) : Builder {
-            // TODO: Add check of tag existence may be
-            fieldsTags = newFieldsTags.toMutableList()
+        fun setFields(vararg fieldsTags: String) : Builder {
+            // TODO: Add check of tag existence maybe
+            this.fieldsTags = fieldsTags.toMutableSet()
             return this
         }
 
