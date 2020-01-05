@@ -83,7 +83,7 @@ class DiscordReporter private constructor(
     ): String {
         return markdown {
             val fieldsValues = fields.map { field ->
-                field.render(prepareTag = { b("$it:") }, separator = " ")
+                field.render(prepareName = { b("$it:") }, separator = " ")
             }
 
             +b(title)

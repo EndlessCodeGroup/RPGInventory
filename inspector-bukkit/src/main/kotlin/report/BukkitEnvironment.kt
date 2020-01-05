@@ -14,11 +14,11 @@ class BukkitEnvironment internal constructor(
 ) : ReportEnvironment {
 
     companion object {
-        const val TAG_PLUGIN = "Plugin"
-        const val TAG_CORE = "Server core"
-        const val TAG_PLUGIN_LIST = "Installed plugins"
-        const val TAG_INSPECTOR_VERSION = "Inspector version"
-        const val TAG_REPORTER_ID = "Reporter ID"
+        const val FIELD_PLUGIN = "Plugin"
+        const val FIELD_CORE = "Server core"
+        const val FIELD_PLUGIN_LIST = "Installed plugins"
+        const val FIELD_INSPECTOR_VERSION = "Inspector version"
+        const val FIELD_REPORTER_ID = "Reporter ID"
 
         @JvmStatic
         internal val DEFAULT_PROPERTIES = Properties()
@@ -31,28 +31,25 @@ class BukkitEnvironment internal constructor(
 
     override val fields: Map<String, ReportField>
 
-    override val defaultFieldsTags: Set<String>
-
     override val isInspectorEnabled: Boolean
         get() = inspector.isEnabled
 
     init {
         fields = mapOf(
-            TAG_PLUGIN to TextField(TAG_PLUGIN, plugin.printableForm),
-            TAG_CORE to TextField(
-                TAG_CORE,
+            FIELD_PLUGIN to TextField(FIELD_PLUGIN, plugin.printableForm),
+            FIELD_CORE to TextField(
+                FIELD_CORE,
                 "${plugin.server.name} (${plugin.server.version})"
             ).showOnlyIf { inspector.shouldSendData(DataType.CORE) },
 
-            TAG_PLUGIN_LIST to PluginListField(
+            FIELD_PLUGIN_LIST to PluginListField(
                 plugin.server.pluginManager,
                 properties.interestPluginsNames
             ).showOnlyIf { inspector.shouldSendData(DataType.PLUGINS) },
 
-            TAG_INSPECTOR_VERSION to TextField(TAG_INSPECTOR_VERSION, Inspector.version),
-            TAG_REPORTER_ID to TextField(TAG_REPORTER_ID, inspector.serverId.toString())
+            FIELD_INSPECTOR_VERSION to TextField(FIELD_INSPECTOR_VERSION, Inspector.version),
+            FIELD_REPORTER_ID to TextField(FIELD_REPORTER_ID, inspector.serverId.toString())
         )
-        defaultFieldsTags = fields.keys
     }
 
     /**

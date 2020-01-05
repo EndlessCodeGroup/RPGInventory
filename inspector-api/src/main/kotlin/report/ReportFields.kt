@@ -6,16 +6,16 @@ interface ReportField {
         private const val HIDDEN_FIELD_VALUE = "<value hidden by user>"
     }
 
-    val tag: String
+    val name: String
     val shortValue: String
     val value: String
     val show: Boolean
 
     fun render(
-            short: Boolean = true,
-            separator: String = ": ",
-            prepareTag: (String) -> String = { it },
-            prepareValue: (String) -> String = { it }
+        short: Boolean = true,
+        separator: String = ": ",
+        prepareName: (String) -> String = { it },
+        prepareValue: (String) -> String = { it }
     ): String {
         val selectedValue = if (show) {
             if (short) shortValue else value
@@ -23,14 +23,14 @@ interface ReportField {
             HIDDEN_FIELD_VALUE
         }
 
-        return "${prepareTag(tag)}$separator${prepareValue(selectedValue)}"
+        return "${prepareName(name)}$separator${prepareValue(selectedValue)}"
     }
 }
 
 open class TextField(
-        override val tag: String,
-        override val shortValue: String,
-        override val value: String = shortValue
+    override val name: String,
+    override val shortValue: String,
+    override val value: String = shortValue
 ) : ReportField {
 
     private var shouldShow: TextField.() -> Boolean = { true }
@@ -46,9 +46,9 @@ open class TextField(
 }
 
 open class ListField<T>(
-        override val tag: String,
-        private val produceList: () -> List<T>,
-        private val getSummary: (List<T>) -> String
+    override val name: String,
+    private val produceList: () -> List<T>,
+    private val getSummary: (List<T>) -> String
 ) : ReportField {
 
     override val shortValue: String

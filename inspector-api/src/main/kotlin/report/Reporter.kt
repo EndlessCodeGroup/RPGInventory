@@ -76,57 +76,57 @@ interface Reporter {
         protected var focus: ReporterFocus = ReporterFocus.NO_FOCUS
 
         /**
-         * Returns fields given by tag and custom fields.
+         * Returns default fields that should be sent.
          */
         protected val fields: Set<ReportField>
             get() {
                 val fields = mutableSetOf<ReportField>()
-                fields.addAll(fieldsTags.mapNotNull { focus.environment.fields[it] })
+                fields.addAll(fieldsToSend.mapNotNull { focus.environment.fields[it] })
                 fields.addAll(customFields)
 
                 return fields
             }
 
-        private var fieldsTags: MutableSet<String> = mutableSetOf()
+        private var fieldsToSend: MutableSet<String> = mutableSetOf()
         private var customFields: MutableSet<ReportField> = mutableSetOf()
 
         /**
          * Assign focus.
-         * Also copies default environment fields tags to [fieldsTags].
+         * Also copies default fields names to [fieldsToSend].
          *
          * @param focus The focus
          */
         @PublicApi
         fun focusOn(focus: ReporterFocus) : Builder {
             this.focus = focus
-            fieldsTags.addAll(focus.environment.defaultFieldsTags)
+            fieldsToSend.addAll(focus.environment.fields.keys)
             return this
         }
 
         /**
-         * Set fields by tags to report.
+         * Set default fields by names to report.
          */
         @PublicApi
-        fun setFields(vararg fieldsTags: String) : Builder {
-            this.fieldsTags = fieldsTags.toMutableSet()
+        fun setFields(vararg fields: String) : Builder {
+            this.fieldsToSend = fields.toMutableSet()
             return this
         }
 
         /**
-         * Add fields by tags to report.
+         * Add default fields by names to report.
          */
         @PublicApi
-        fun addFields(vararg fieldsTags: String) : Builder {
-            this.fieldsTags.addAll(fieldsTags)
+        fun addFields(vararg fields: String) : Builder {
+            this.fieldsToSend.addAll(fields)
             return this
         }
 
         /**
-         * Remove fields by tags from report.
+         * Remove default fields by names from report.
          */
         @PublicApi
-        fun removeFields(vararg fieldsTagsToRemove: String) : Builder {
-            fieldsTags.removeAll(fieldsTagsToRemove)
+        fun removeFields(vararg fields: String) : Builder {
+            this.fieldsToSend.removeAll(fields)
             return this
         }
 

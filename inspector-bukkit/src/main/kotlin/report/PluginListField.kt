@@ -8,7 +8,7 @@ internal class PluginListField(
     pluginManager: PluginManager,
     interestPluginsNames: List<String>
 ) : ListField<String>(
-    tag = BukkitEnvironment.TAG_PLUGIN_LIST,
+    name = BukkitEnvironment.FIELD_PLUGIN_LIST,
     produceList = {
         val plugins = pluginManager.plugins.toList()
         val interestPlugins = if (interestPluginsNames.isEmpty()) {

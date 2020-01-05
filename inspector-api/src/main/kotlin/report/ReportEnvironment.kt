@@ -7,7 +7,6 @@ interface ReportEnvironment {
             override val appVersion: String = ""
             override val reporterId: String = ""
             override val fields: Map<String, ReportField> = emptyMap()
-            override val defaultFieldsTags: Set<String> = emptySet()
             override val isInspectorEnabled: Boolean = false
         }
     }
@@ -23,14 +22,9 @@ interface ReportEnvironment {
     val reporterId: String
 
     /**
-     * Environment-related [fields][ReportField]. Stored as relation "tag -> field".
+     * Environment-related [fields][ReportField]. Stored as relation "name -> field".
      */
     val fields: Map<String, ReportField>
-
-    /**
-     * Tags of fields that will be sent by default.
-     */
-    val defaultFieldsTags: Set<String>
 
     /**
      * Indicates that inspector enabled.

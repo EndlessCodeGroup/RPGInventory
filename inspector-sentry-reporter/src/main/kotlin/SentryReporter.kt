@@ -66,7 +66,7 @@ class SentryReporter private constructor(
             .apply {
                 fields.asSequence()
                     .filter(ReportField::show)
-                    .forEach { withExtra(it.tag, it.value) }
+                    .forEach { withExtra(it.name, it.value) }
             }
             .build()
 
