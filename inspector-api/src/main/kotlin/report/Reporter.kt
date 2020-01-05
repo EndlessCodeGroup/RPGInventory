@@ -81,14 +81,14 @@ interface Reporter {
         protected val fields: Set<ReportField>
             get() {
                 val fields = mutableSetOf<ReportField>()
-                fields.addAll(fieldsTags.map { focus.environment.fields.getValue(it) })
+                fields.addAll(fieldsTags.mapNotNull { focus.environment.fields[it] })
                 fields.addAll(customFields)
 
                 return fields
             }
 
         private var fieldsTags: MutableSet<String> = mutableSetOf()
-        private var customFields: MutableList<ReportField> = mutableListOf()
+        private var customFields: MutableSet<ReportField> = mutableSetOf()
 
         /**
          * Assign focus.
@@ -108,7 +108,6 @@ interface Reporter {
          */
         @PublicApi
         fun setFields(vararg fieldsTags: String) : Builder {
-            // TODO: Add check of tag existence maybe
             this.fieldsTags = fieldsTags.toMutableSet()
             return this
         }
