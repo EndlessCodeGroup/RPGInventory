@@ -41,12 +41,12 @@ class BukkitEnvironment internal constructor(
             TAG_CORE to TextField(
                 TAG_CORE,
                 "${plugin.server.name} (${plugin.server.version})"
-            ) { inspector.shouldSendData(DataType.CORE) },
+            ).showOnlyIf { inspector.shouldSendData(DataType.CORE) },
 
             TAG_PLUGIN_LIST to PluginListField(
-                { plugin.server.pluginManager.plugins.asList() },
+                plugin.server.pluginManager,
                 properties.interestPluginsNames
-            ) { inspector.shouldSendData(DataType.PLUGINS) },
+            ).showOnlyIf { inspector.shouldSendData(DataType.PLUGINS) },
 
             TAG_INSPECTOR_VERSION to TextField(TAG_INSPECTOR_VERSION, Inspector.version),
             TAG_REPORTER_ID to TextField(TAG_REPORTER_ID, inspector.serverId.toString())
