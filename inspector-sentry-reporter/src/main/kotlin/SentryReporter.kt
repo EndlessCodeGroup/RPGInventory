@@ -6,6 +6,7 @@ import io.sentry.Sentry
 import io.sentry.connection.EventSendCallback
 import io.sentry.event.Event
 import io.sentry.event.EventBuilder
+import io.sentry.event.UserBuilder
 import io.sentry.event.interfaces.ExceptionInterface
 import ru.endlesscode.inspector.PublicApi
 import java.util.UUID
@@ -14,6 +15,7 @@ import java.util.UUID
 /**
  * Reporter that sends reports to Sentry.
  */
+@PublicApi
 class SentryReporter private constructor(
     override val focus: ReporterFocus,
     dsn: String,
@@ -43,6 +45,10 @@ class SentryReporter private constructor(
                 }
             }
         })
+
+        sentry.context.user = UserBuilder()
+            .setId(focus.environment.reporterId)
+            .build()
     }
 
     override fun addHandler(handler: ReportHandler) {
@@ -79,6 +85,7 @@ class SentryReporter private constructor(
      *
      * You should specify DSN with one of [setDataSourceName] methods.
      */
+    @PublicApi
     class Builder : Reporter.Builder() {
 
         private var dsn: String = ""
