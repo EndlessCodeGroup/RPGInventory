@@ -18,9 +18,8 @@ internal class BukkitUnwrapReporter(private val delegate: Reporter) : Reporter b
     private fun unwrapException(exception: Exception): Exception {
         var resultException = exception
         while (resultException is EventException || resultException is CommandException) {
-            val cause = resultException.cause as? Exception ?: break
-            if (cause.stackTrace.any { it.className.startsWith(focus.focusedPackage) }) break
-            resultException = cause
+            if (resultException.stackTrace.any { it.className.startsWith(focus.focusedPackage) }) break
+            resultException = resultException.cause as? Exception ?: break
         }
 
         return resultException
