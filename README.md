@@ -98,6 +98,7 @@ ext.inspectorVerson = "0.8.1"
 dependencies {
     implementation "ru.endlesscode.inspector:inspector-bukkit:$inspectorVerson"
     implementation "ru.endlesscode.inspector:inspector-sentry-reporter:$inspectorVerson"
+    implementation "ru.endlesscode.inspector:sentry-bukkit:$inspectorVerson" // If you want BukkitPluginSentryClientFactory
 }
 ```
 
@@ -150,6 +151,9 @@ public class MyTrackedPlugin extends TrackedPlugin {
         // Note that you should add needed reporter as dependency first.
         return new SentryReporter.Builder()
                 .setDataSourceName(publicKey, projectId)
+                // If you want more detailed reports, add this, but you also should
+                // add `sentry-bukkit` dependency before
+                .setClientFactory(new BukkitPluginSentryClientFactory(this))
                 .focusOn(this) // Reporter will be focused on this plugin
                 .build();
     }

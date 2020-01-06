@@ -46,7 +46,7 @@ subprojects {
 }
 
 // Configuration for API implementations
-configure(subprojects - apiProject) {
+configure(subprojects.findAll { it.name.startsWith(project.name) } - apiProject) {
 
     // Finish configuring API first
     evaluationDependsOn(apiProject.path)

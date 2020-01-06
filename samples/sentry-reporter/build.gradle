@@ -40,11 +40,10 @@ tasks.assemble.dependsOn tasks.shadowJar
 ext.inspectorVerson = "0.8.1"
 
 dependencies {
-    compileOnly(bukkit()) {
-        transitive = false
-    }
-    implementation "ru.endlesscode.inspector:inspector-bukkit:$inspectorVerson"
-    implementation "ru.endlesscode.inspector:inspector-sentry-reporter:$inspectorVerson"
+    compileOnly(bukkit()) { transitive = false }
+    implementation("ru.endlesscode.inspector:inspector-bukkit:$inspectorVerson")
+    implementation("ru.endlesscode.inspector:inspector-sentry-reporter:$inspectorVerson")
+    implementation("ru.endlesscode.inspector:sentry-bukkit:$inspectorVerson")
 }
 
 repositories {

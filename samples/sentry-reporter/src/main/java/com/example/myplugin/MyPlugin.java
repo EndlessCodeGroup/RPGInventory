@@ -1,8 +1,9 @@
 package com.example.myplugin;
 
+import ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin;
 import ru.endlesscode.inspector.report.Reporter;
 import ru.endlesscode.inspector.report.SentryReporter;
-import ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin;
+import ru.endlesscode.inspector.sentry.bukkit.BukkitPluginSentryClientFactory;
 
 public class MyPlugin extends TrackedPlugin {
 
@@ -17,6 +18,7 @@ public class MyPlugin extends TrackedPlugin {
 
         return new SentryReporter.Builder()
                 .setDataSourceName(publicKey, projectId)
+                .setClientFactory(new BukkitPluginSentryClientFactory(this))
                 .focusOn(this)
                 .build();
     }
