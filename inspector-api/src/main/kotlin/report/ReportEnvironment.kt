@@ -5,8 +5,8 @@ interface ReportEnvironment {
     companion object {
         val EMPTY = object : ReportEnvironment {
             override val appVersion: String = ""
+            override val reporterId: String = ""
             override val fields: Map<String, ReportField> = emptyMap()
-            override val defaultFieldsTags: List<String> = emptyList()
             override val isInspectorEnabled: Boolean = false
         }
     }
@@ -17,14 +17,14 @@ interface ReportEnvironment {
     val appVersion: String
 
     /**
-     * Environment-related [fields][ReportField]. Stored as relation "tag -> field".
+     * Unique identifier of reporter.
      */
-    val fields: Map<String, ReportField>
+    val reporterId: String
 
     /**
-     * Tags of fields that will be sent by default.
+     * Environment-related [fields][ReportField]. Stored as relation "name -> field".
      */
-    val defaultFieldsTags: List<String>
+    val fields: Map<String, ReportField>
 
     /**
      * Indicates that inspector enabled.

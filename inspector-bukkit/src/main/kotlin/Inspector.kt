@@ -19,8 +19,7 @@ class Inspector(private val configFile: File, private val globalConfigFile: File
         /**
          * Version of Inspector.
          */
-        @JvmStatic
-        val version: String = "0.8.1"
+        const val version: String = "0.9"
 
         // Preserved value for case if global config not contains server ID yet
         private val newServerId by lazy { UUID.randomUUID() }

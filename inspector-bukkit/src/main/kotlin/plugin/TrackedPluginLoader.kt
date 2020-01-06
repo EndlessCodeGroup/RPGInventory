@@ -8,12 +8,12 @@ import org.bukkit.plugin.RegisteredListener
 import ru.endlesscode.inspector.bukkit.util.realPlugin
 
 class TrackedPluginLoader(
-        private val delegate: PluginLoader
+    private val delegate: PluginLoader
 ) : PluginLoader by delegate {
 
     override fun createRegisteredListeners(
-            listener: Listener,
-            plugin: Plugin
+        listener: Listener,
+        plugin: Plugin
     ): MutableMap<Class<out Event>, MutableSet<RegisteredListener>> {
         return delegate.createRegisteredListeners(listener, plugin.realPlugin)
     }

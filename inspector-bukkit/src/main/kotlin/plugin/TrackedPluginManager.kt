@@ -3,22 +3,16 @@ package ru.endlesscode.inspector.bukkit.plugin
 import org.bukkit.event.Event
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
-import org.bukkit.plugin.AuthorNagException
-import org.bukkit.plugin.EventExecutor
-import org.bukkit.plugin.IllegalPluginAccessException
-import org.bukkit.plugin.Plugin
-import org.bukkit.plugin.PluginManager
-import org.bukkit.plugin.RegisteredListener
-import org.bukkit.plugin.TimedRegisteredListener
+import org.bukkit.plugin.*
 import ru.endlesscode.inspector.PublicApi
-import ru.endlesscode.inspector.report.Reporter
 import ru.endlesscode.inspector.bukkit.util.EventsUtils
 import ru.endlesscode.inspector.bukkit.util.realPlugin
+import ru.endlesscode.inspector.report.Reporter
 
 
 class TrackedPluginManager(
-        private val delegate: PluginManager,
-        private val reporter: Reporter
+    private val delegate: PluginManager,
+    private val reporter: Reporter
 ) : PluginManager by delegate {
 
     @PublicApi
@@ -44,22 +38,22 @@ class TrackedPluginManager(
     }
 
     override fun registerEvent(
-            event: Class<out Event>,
-            listener: Listener,
-            priority: EventPriority,
-            executor: EventExecutor,
-            plugin: Plugin
+        event: Class<out Event>,
+        listener: Listener,
+        priority: EventPriority,
+        executor: EventExecutor,
+        plugin: Plugin
     ) {
         registerEvent(event, listener, priority, executor, plugin, false)
     }
 
     override fun registerEvent(
-            event: Class<out Event>,
-            listener: Listener,
-            priority: EventPriority,
-            executor: EventExecutor,
-            plugin: Plugin,
-            ignoreCanceled: Boolean
+        event: Class<out Event>,
+        listener: Listener,
+        priority: EventPriority,
+        executor: EventExecutor,
+        plugin: Plugin,
+        ignoreCanceled: Boolean
     ) {
         delegate.registerEvent(event, listener, priority, wrapExecutor(executor), plugin.realPlugin, ignoreCanceled)
     }

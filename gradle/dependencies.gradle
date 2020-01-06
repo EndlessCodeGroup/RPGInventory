@@ -3,9 +3,10 @@
 // Versions
 def junitVersion = "4.12"
 def mockitoVersion = "2.23.4"
-def coroutinesVersion = "1.1.1"
-def fuelVersion = "2.0.1"
-def sentryVersion = "1.7.21"
+def coroutinesVersion = "1.3.3"
+def fuelVersion = "2.2.1"
+def sentryVersion = "1.7.29"
+def slf4jVersion = "1.7.30"
 
 // Groups
 def kotlinxGroup = "org.jetbrains.kotlinx"
@@ -26,7 +27,8 @@ ext {
     deps = [
             sentry          : dep("io.sentry", "sentry", sentryVersion),
             fuel            : dep(fuelGroup, "fuel", fuelVersion),
-            fuelCoroutines  : dep(fuelGroup, "fuel-coroutines", fuelVersion)
+            fuelCoroutines  : dep(fuelGroup, "fuel-coroutines", fuelVersion),
+            slf4j           : dep("org.slf4j", "slf4j-jdk14", slf4jVersion),
     ]
 
     // These dependencies will be used with scope `testImplementation`

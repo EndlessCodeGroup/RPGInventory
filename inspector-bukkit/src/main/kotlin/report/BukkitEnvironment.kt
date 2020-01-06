@@ -8,17 +8,17 @@ import ru.endlesscode.inspector.report.ReportField
 import ru.endlesscode.inspector.report.TextField
 
 
-class BukkitEnvironment(
+class BukkitEnvironment internal constructor(
     plugin: Plugin,
-    properties: BukkitEnvironment.Properties
+    properties: Properties
 ) : ReportEnvironment {
 
     companion object {
-        const val TAG_PLUGIN = "Plugin"
-        const val TAG_CORE = "Server core"
-        const val TAG_PLUGIN_LIST = "Installed plugins"
-        const val TAG_INSPECTOR_VERSION = "Inspector version"
-        const val TAG_REPORTER_ID = "Reporter ID"
+        const val FIELD_PLUGIN = "Plugin"
+        const val FIELD_CORE = "Server core"
+        const val FIELD_PLUGIN_LIST = "Installed plugins"
+        const val FIELD_INSPECTOR_VERSION = "Inspector version"
+        const val FIELD_REPORTER_ID = "Reporter ID"
 
         @JvmStatic
         internal val DEFAULT_PROPERTIES = Properties()
@@ -27,31 +27,28 @@ class BukkitEnvironment(
     val inspector = Inspector(plugin, properties.configName)
 
     override val appVersion: String = plugin.description.version
+    override val reporterId: String = inspector.serverId.toString()
 
     override val fields: Map<String, ReportField>
-
-    override val defaultFieldsTags: List<String> = listOf(
-        TAG_PLUGIN, TAG_CORE, TAG_PLUGIN_LIST, TAG_INSPECTOR_VERSION, TAG_REPORTER_ID
-    )
 
     override val isInspectorEnabled: Boolean
         get() = inspector.isEnabled
 
     init {
         fields = mapOf(
-            TAG_PLUGIN to TextField(TAG_PLUGIN, plugin.printableForm),
-            TAG_CORE to TextField(
-                TAG_CORE,
+            FIELD_PLUGIN to TextField(FIELD_PLUGIN, plugin.printableForm),
+            FIELD_CORE to TextField(
+                FIELD_CORE,
                 "${plugin.server.name} (${plugin.server.version})"
-            ) { inspector.shouldSendData(DataType.CORE) },
+            ).showOnlyIf { inspector.shouldSendData(DataType.CORE) },
 
-            TAG_PLUGIN_LIST to PluginListField(
-                { plugin.server.pluginManager.plugins.asList() },
+            FIELD_PLUGIN_LIST to PluginListField(
+                plugin.server.pluginManager,
                 properties.interestPluginsNames
-            ) { inspector.shouldSendData(DataType.PLUGINS) },
+            ).showOnlyIf { inspector.shouldSendData(DataType.PLUGINS) },
 
-            TAG_INSPECTOR_VERSION to TextField(TAG_INSPECTOR_VERSION, Inspector.version),
-            TAG_REPORTER_ID to TextField(TAG_REPORTER_ID, inspector.serverId.toString())
+            FIELD_INSPECTOR_VERSION to TextField(FIELD_INSPECTOR_VERSION, Inspector.version),
+            FIELD_REPORTER_ID to TextField(FIELD_REPORTER_ID, inspector.serverId.toString())
         )
     }
 

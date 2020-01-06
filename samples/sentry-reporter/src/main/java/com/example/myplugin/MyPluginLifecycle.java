@@ -12,7 +12,7 @@ public class MyPluginLifecycle extends PluginLifecycle {
         getCommand("report").setExecutor(track(new ReportCommandExecutor()));
     }
 
-    public class ReportCommandExecutor implements CommandExecutor {
+    static public class ReportCommandExecutor implements CommandExecutor {
         @Override
         public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
             throw new RuntimeException("Exceptions from commands should be reported to Sentry.");

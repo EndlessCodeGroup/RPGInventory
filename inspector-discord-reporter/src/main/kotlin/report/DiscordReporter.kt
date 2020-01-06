@@ -26,7 +26,8 @@ class DiscordReporter private constructor(
 ) : CachingReporter() {
 
     companion object {
-        const val DEFAULT_AVATAR_URL = "https://gitlab.com/endlesscodegroup/inspector/raw/master/images/inspector_icon_256.png"
+        const val DEFAULT_AVATAR_URL =
+            "https://gitlab.com/endlesscodegroup/inspector/raw/master/images/inspector_icon_256.png"
 
         val defaultTextStorage = HastebinStorage()
     }
@@ -83,7 +84,7 @@ class DiscordReporter private constructor(
     ): String {
         return markdown {
             val fieldsValues = fields.map { field ->
-                field.render(prepareTag = { b("$it:") }, separator = " ")
+                field.render(prepareName = { b("$it:") }, separator = " ")
             }
 
             +b(title)

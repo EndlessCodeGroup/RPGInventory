@@ -55,7 +55,7 @@ Also, for more coverage, you should:
 plugins {
     // Add shadow plugin to make shadowJar
     // See: http://imperceptiblethoughts.com/shadow/
-    id 'com.github.johnrengelman.shadow' version '4.0.4'
+    id 'com.github.johnrengelman.shadow' version '5.2.0'
 }
 
 // Inspector published at jcenter, so we need to add it to repositories
@@ -73,7 +73,7 @@ shadowJar {
     // Read more: https://imperceptiblethoughts.com/shadow/configuration/relocation/#automatically-relocating-dependencies
     def shadowPackage = "shadow.[PLACE_HERE_YOUR_PLUGIN_PACKAGE]"
     relocate "ru.endlesscode.inspector", "${shadowPackage}.inspector"
-    relocate "org.jetbrains.annotations", "${shadowPackage}.annotations"
+    relocate "org.jetbrains", "${shadowPackage}.jetbrains"
     relocate "kotlinx", "${shadowPackage}.kotlinx"
     relocate "kotlin", "${shadowPackage}.kotlin"
     
@@ -90,7 +90,7 @@ shadowJar {
 tasks.assemble.dependsOn tasks.shadowJar
 
 // Here you can change preferred version of inspector
-ext.inspectorVerson = "0.8.1"
+ext.inspectorVerson = "0.9"
 
 // Add Inspector as dependency
 // 'inspector-bukkit' - implementation of Inspector for Bukkit.
@@ -98,6 +98,7 @@ ext.inspectorVerson = "0.8.1"
 dependencies {
     implementation "ru.endlesscode.inspector:inspector-bukkit:$inspectorVerson"
     implementation "ru.endlesscode.inspector:inspector-sentry-reporter:$inspectorVerson"
+    implementation "ru.endlesscode.inspector:sentry-bukkit:$inspectorVerson" // If you want BukkitPluginSentryClientFactory
 }
 ```
 
@@ -150,6 +151,9 @@ public class MyTrackedPlugin extends TrackedPlugin {
         // Note that you should add needed reporter as dependency first.
         return new SentryReporter.Builder()
                 .setDataSourceName(publicKey, projectId)
+                // If you want more detailed reports, add this, but you also should
+                // add `sentry-bukkit` dependency before
+                .setClientFactory(new BukkitPluginSentryClientFactory(this))
                 .focusOn(this) // Reporter will be focused on this plugin
                 .build();
     }

@@ -102,19 +102,19 @@
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>bukkit</artifactId>
-            <version>1.13.2-R0.1-SNAPSHOT</version>
+            <version>1.15.1-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>ru.endlesscode.inspector</groupId>
             <artifactId>inspector-bukkit</artifactId>
-            <version>0.8.1</version>
+            <version>0.9</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>ru.endlesscode.inspector</groupId>
             <artifactId>inspector-sentry-reporter</artifactId>
-            <version>0.8.1</version>
+            <version>0.9</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>

@@ -15,9 +15,9 @@ internal annotation class MarkdownMarker
 
 @MarkdownMarker
 abstract class Group(
-        private val indent: String,
-        private val firstLine: String?,
-        private val lastLine: String? = firstLine
+    private val indent: String,
+    private val firstLine: String?,
+    private val lastLine: String? = firstLine
 ) : Element {
     private val children = arrayListOf<Element>()
 

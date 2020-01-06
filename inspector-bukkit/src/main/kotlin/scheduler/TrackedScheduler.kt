@@ -5,8 +5,8 @@ import org.bukkit.scheduler.BukkitRunnable
 import org.bukkit.scheduler.BukkitScheduler
 import org.bukkit.scheduler.BukkitTask
 import ru.endlesscode.inspector.PublicApi
-import ru.endlesscode.inspector.report.Reporter
 import ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin
+import ru.endlesscode.inspector.report.Reporter
 
 @Suppress("DEPRECATION")
 class TrackedScheduler(
@@ -88,7 +88,7 @@ class TrackedScheduler(
         }
     }
 
-    override fun runTask(plugin: Plugin , task: Runnable): BukkitTask {
+    override fun runTask(plugin: Plugin, task: Runnable): BukkitTask {
         return runTracked(task) {
             delegate.runTask(plugin, it)
         }
@@ -98,7 +98,7 @@ class TrackedScheduler(
         message = "Use BukkitRunnable.runTask instead",
         replaceWith = ReplaceWith("task.runTask(plugin)")
     )
-    override fun runTask(plugin: Plugin , task: BukkitRunnable): BukkitTask {
+    override fun runTask(plugin: Plugin, task: BukkitRunnable): BukkitTask {
         return runTask(plugin, task as Runnable)
     }
 
@@ -168,7 +168,12 @@ class TrackedScheduler(
         message = "Use BukkitRunnable.runTaskTimerAsynchronously instead",
         replaceWith = ReplaceWith("task.runTaskTimerAsynchronously(plugin, delay, period)")
     )
-    override fun runTaskTimerAsynchronously(plugin: Plugin, task: BukkitRunnable, delay: Long, period: Long): BukkitTask {
+    override fun runTaskTimerAsynchronously(
+        plugin: Plugin,
+        task: BukkitRunnable,
+        delay: Long,
+        period: Long
+    ): BukkitTask {
         return runTaskTimerAsynchronously(plugin, task as Runnable, delay, period)
     }
 

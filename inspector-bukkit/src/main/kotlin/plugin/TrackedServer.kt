@@ -4,8 +4,8 @@ import org.bukkit.Server
 import org.bukkit.plugin.PluginManager
 import org.bukkit.scheduler.BukkitScheduler
 import ru.endlesscode.inspector.PublicApi
-import ru.endlesscode.inspector.report.Reporter
 import ru.endlesscode.inspector.bukkit.scheduler.TrackedScheduler
+import ru.endlesscode.inspector.report.Reporter
 
 class TrackedServer(
     @PublicApi

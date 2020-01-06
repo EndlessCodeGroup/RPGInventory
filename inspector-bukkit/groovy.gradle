@@ -1,7 +1,7 @@
 def repoUrl = "https://gitlab.com/endlesscodegroup/inspector"
 
 bukkit {
-    version = "1.13"
+    version = "1.15.1"
 
     meta {
         name = pluginName
@@ -17,9 +17,8 @@ bukkit {
 }
 
 dependencies {
-    compileOnly(bukkit()) {
-        transitive = false
-    }
+    compileOnly(bukkit()) { transitive = false }
+    implementation(deps.slf4j)
 }
 
 ext.publicationName = "bukkit"

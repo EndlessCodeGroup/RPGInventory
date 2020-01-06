@@ -1,8 +1,8 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ConfigureShadowRelocation
 
 plugins {
-    id 'ru.endlesscode.bukkitgradle' version '0.8.1'
-    id 'com.github.johnrengelman.shadow' version '4.0.4'
+    id 'ru.endlesscode.bukkitgradle' version '0.8.2'
+    id 'com.github.johnrengelman.shadow' version '5.2.0'
 }
 
 group = "com.example"
@@ -11,7 +11,7 @@ version = "0.1-SNAPSHOT"
 
 // Read more about BukkitGradle: https://github.com/EndlessCodeGroup/BukkitGradle
 bukkit {
-    version = "1.12.2"
+    version = "1.15.1"
 
     meta {
         name = "MyPlugin"
@@ -37,7 +37,7 @@ task relocateShadowJar(type: ConfigureShadowRelocation) {
 tasks.shadowJar.dependsOn tasks.relocateShadowJar
 tasks.assemble.dependsOn tasks.shadowJar
 
-ext.inspectorVerson = "0.8.1"
+ext.inspectorVerson = "0.9"
 
 dependencies {
     compileOnly(bukkit()) {

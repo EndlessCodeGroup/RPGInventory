@@ -1,11 +1,14 @@
 package ru.endlesscode.inspector.report
 
+import io.sentry.DefaultSentryClientFactory
 import io.sentry.DefaultSentryClientFactory.IN_APP_FRAMES_OPTION
 import io.sentry.DefaultSentryClientFactory.UNCAUGHT_HANDLER_ENABLED_OPTION
 import io.sentry.Sentry
+import io.sentry.SentryClientFactory
 import io.sentry.connection.EventSendCallback
 import io.sentry.event.Event
 import io.sentry.event.EventBuilder
+import io.sentry.event.UserBuilder
 import io.sentry.event.interfaces.ExceptionInterface
 import ru.endlesscode.inspector.PublicApi
 import java.util.UUID
@@ -14,15 +17,17 @@ import java.util.UUID
 /**
  * Reporter that sends reports to Sentry.
  */
+@PublicApi
 class SentryReporter private constructor(
-    override val focus: ReporterFocus,
     dsn: String,
+    factory: SentryClientFactory,
+    override val focus: ReporterFocus,
     private val fields: Set<ReportField>
 ) : Reporter {
 
     override var enabled: Boolean = true
 
-    private val sentry = Sentry.init(dsn)
+    private val sentry = Sentry.init(dsn, factory)
 
     private val handlers = CompoundReportHandler()
     private val pendingExceptions = mutableMapOf<UUID, ExceptionData>()
@@ -43,6 +48,11 @@ class SentryReporter private constructor(
                 }
             }
         })
+
+        sentry.release = focus.environment.appVersion
+        sentry.context.user = UserBuilder()
+            .setId(focus.environment.reporterId)
+            .build()
     }
 
     override fun addHandler(handler: ReportHandler) {
@@ -53,19 +63,17 @@ class SentryReporter private constructor(
         val exceptionData = ExceptionData(exception)
         handlers.beforeReport(message, exceptionData)
 
-        val event = EventBuilder()
+        val eventBuilder = EventBuilder()
             .withMessage(message)
-            .withRelease(focus.environment.appVersion)
             .withSentryInterface(ExceptionInterface(exception))
             .apply {
                 fields.asSequence()
                     .filter(ReportField::show)
-                    .forEach { withExtra(it.tag, it.value) }
+                    .forEach { withExtra(it.name, it.value) }
             }
-            .build()
 
-        addPendingException(event.id, exceptionData)
-        sentry.sendEvent(event)
+        sentry.sendEvent(eventBuilder)
+        addPendingException(sentry.context.lastEventId, exceptionData)
     }
 
     private fun addPendingException(id: UUID, exception: ExceptionData) {
@@ -79,10 +87,21 @@ class SentryReporter private constructor(
      *
      * You should specify DSN with one of [setDataSourceName] methods.
      */
+    @PublicApi
     class Builder : Reporter.Builder() {
 
+        private var clientFactory: SentryClientFactory? = null
         private var dsn: String = ""
         private var options: Map<String, String> = emptyMap()
+
+        /**
+         * Set [SentryClientFactory], that will be used to create SentryClient.
+         */
+        @PublicApi
+        fun setClientFactory(clientFactory: SentryClientFactory): Builder {
+            this.clientFactory = clientFactory
+            return this
+        }
 
         /**
          * Set Sentry [dsn] with one string.
@@ -91,7 +110,6 @@ class SentryReporter private constructor(
         @PublicApi
         fun setDataSourceName(dsn: String): Builder {
             this.dsn = dsn
-
             return this
         }
 
@@ -142,7 +160,12 @@ class SentryReporter private constructor(
             val optionsString = options.asSequence()
                 .joinToString(prefix = "?", separator = "&") { (key, value) -> "$key=$value" }
 
-            return SentryReporter(focus, "$dsn$optionsString", fields)
+            return SentryReporter(
+                dsn = "$dsn$optionsString",
+                factory = clientFactory ?: DefaultSentryClientFactory(),
+                focus = focus,
+                fields = fields
+            )
         }
     }
 }

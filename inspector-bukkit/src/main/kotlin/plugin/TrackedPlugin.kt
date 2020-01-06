@@ -54,14 +54,15 @@ abstract class TrackedPlugin @JvmOverloads constructor(
         initLogger()
 
         try {
-            lifecycle = lifecycleClass.newInstance()
-            lifecycle.holder = this
-            lifecycle.init()
+            lifecycle = lifecycleClass.getDeclaredConstructor().newInstance()
         } catch (e: UninitializedPropertyAccessException) {
-            logger.severe("$TAG Looks like you trying to use plugin's methods on initialization.")
-            logger.severe("$TAG Instead of this, overload method init() and do the work within.")
+            logger.severe("$TAG Looks like you're trying to use plugin's methods on it's initialization.")
+            logger.severe("$TAG Instead of this, overload method init() and do the work that you need within.")
             throw e
         }
+
+        lifecycle.holder = this
+        track { lifecycle.init() }
 
         reporter = BukkitUnwrapReporter(createReporter())
         reporter.enabled = environment.isInspectorEnabled
@@ -114,11 +115,11 @@ abstract class TrackedPlugin @JvmOverloads constructor(
         super.saveDefaultConfig()
     }
 
-    final override fun saveResource(resourcePath: String?, replace: Boolean) {
+    final override fun saveResource(resourcePath: String, replace: Boolean) {
         super.saveResource(resourcePath, replace)
     }
 
-    final override fun getResource(filename: String?): InputStream? {
+    final override fun getResource(filename: String): InputStream? {
         return super.getResource(filename)
     }
 
@@ -129,10 +130,10 @@ abstract class TrackedPlugin @JvmOverloads constructor(
     }
 
     final override fun onCommand(
-            sender: CommandSender?,
-            command: Command?,
-            label: String?,
-            args: Array<out String>
+        sender: CommandSender,
+        command: Command,
+        label: String,
+        args: Array<out String>
     ): Boolean {
         return track("Exception occurred on command '$label' with arguments: ${args.contentToString()}") {
             lifecycle.onCommand(sender, command, label, args)
@@ -140,10 +141,10 @@ abstract class TrackedPlugin @JvmOverloads constructor(
     }
 
     final override fun onTabComplete(
-            sender: CommandSender?,
-            command: Command?,
-            alias: String?,
-            args: Array<out String>?
+        sender: CommandSender,
+        command: Command,
+        alias: String,
+        args: Array<out String>
     ): MutableList<String>? {
         return track {
             lifecycle.onTabComplete(sender, command, alias, args)
@@ -168,7 +169,7 @@ abstract class TrackedPlugin @JvmOverloads constructor(
         }
     }
 
-    final override fun getDefaultWorldGenerator(worldName: String?, id: String?): ChunkGenerator? {
+    final override fun getDefaultWorldGenerator(worldName: String, id: String?): ChunkGenerator? {
         return track {
             lifecycle.getDefaultWorldGenerator(worldName, id)
         }

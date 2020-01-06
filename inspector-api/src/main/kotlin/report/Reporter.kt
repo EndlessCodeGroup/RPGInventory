@@ -17,9 +17,9 @@ interface Reporter {
      * Alias for [addHandler] method.
      */
     fun addHandler(
-            beforeReport: (String, ExceptionData) -> Unit = { _, _ -> },
-            onSuccess: (String, ExceptionData) -> Unit = { _, _ -> },
-            onError: (Throwable) -> Unit = { throw it }
+        beforeReport: (String, ExceptionData) -> Unit = { _, _ -> },
+        onSuccess: (String, ExceptionData) -> Unit = { _, _ -> },
+        onError: (Throwable) -> Unit = { throw it }
     ) {
         addHandler(object : ReportHandler {
             override fun beforeReport(message: String, exceptionData: ExceptionData) {
@@ -76,58 +76,57 @@ interface Reporter {
         protected var focus: ReporterFocus = ReporterFocus.NO_FOCUS
 
         /**
-         * Returns fields given by tag and custom fields.
+         * Returns default fields that should be sent.
          */
         protected val fields: Set<ReportField>
             get() {
                 val fields = mutableSetOf<ReportField>()
-                fields.addAll(fieldsTags.map { focus.environment.fields.getValue(it) })
+                fields.addAll(fieldsToSend.mapNotNull { focus.environment.fields[it] })
                 fields.addAll(customFields)
 
                 return fields
             }
 
-        private var fieldsTags: MutableList<String> = mutableListOf()
-        private var customFields: MutableList<ReportField> = mutableListOf()
+        private var fieldsToSend: MutableSet<String> = mutableSetOf()
+        private var customFields: MutableSet<ReportField> = mutableSetOf()
 
         /**
          * Assign focus.
-         * Also copies default environment fields tags to [fieldsTags].
+         * Also copies default fields names to [fieldsToSend].
          *
          * @param focus The focus
          */
         @PublicApi
-        fun focusOn(focus: ReporterFocus) : Builder {
+        fun focusOn(focus: ReporterFocus): Builder {
             this.focus = focus
-            fieldsTags.addAll(focus.environment.defaultFieldsTags)
+            fieldsToSend.addAll(focus.environment.fields.keys)
             return this
         }
 
         /**
-         * Set fields by tags to report.
+         * Set default fields by names to report.
          */
         @PublicApi
-        fun setFields(vararg newFieldsTags: String) : Builder {
-            // TODO: Add check of tag existence may be
-            fieldsTags = newFieldsTags.toMutableList()
+        fun setFields(vararg fields: String): Builder {
+            this.fieldsToSend = fields.toMutableSet()
             return this
         }
 
         /**
-         * Add fields by tags to report.
+         * Add default fields by names to report.
          */
         @PublicApi
-        fun addFields(vararg fieldsTags: String) : Builder {
-            this.fieldsTags.addAll(fieldsTags)
+        fun addFields(vararg fields: String): Builder {
+            this.fieldsToSend.addAll(fields)
             return this
         }
 
         /**
-         * Remove fields by tags from report.
+         * Remove default fields by names from report.
          */
         @PublicApi
-        fun removeFields(vararg fieldsTagsToRemove: String) : Builder {
-            fieldsTags.removeAll(fieldsTagsToRemove)
+        fun removeFields(vararg fields: String): Builder {
+            this.fieldsToSend.removeAll(fields)
             return this
         }
 
@@ -135,7 +134,7 @@ interface Reporter {
          * Add custom fields to report.
          */
         @PublicApi
-        fun addCustomFields(vararg customFields: ReportField) : Builder {
+        fun addCustomFields(vararg customFields: ReportField): Builder {
             this.customFields.addAll(customFields)
             return this
         }

@@ -1,6 +1,6 @@
 plugins {
-    id 'ru.endlesscode.bukkitgradle' version '0.8.1'
-    id 'com.github.johnrengelman.shadow' version '4.0.4'
+    id 'ru.endlesscode.bukkitgradle' version '0.8.2'
+    id 'com.github.johnrengelman.shadow' version '5.2.0'
 }
 
 group = "com.example"
@@ -9,7 +9,7 @@ version = "0.1-SNAPSHOT"
 
 // Read more about BukkitGradle: https://github.com/EndlessCodeGroup/BukkitGradle
 bukkit {
-    version = "1.12.2"
+    version = "1.15.1"
 
     meta {
         name = "MyPlugin"
@@ -28,7 +28,7 @@ shadowJar {
 
     def shadowPackage = "shadow.com.example.myplugin"
     relocate "ru.endlesscode.inspector", "${shadowPackage}.inspector"
-    relocate "org.jetbrains.annotations", "${shadowPackage}.annotations"
+    relocate "org.jetbrains", "${shadowPackage}.jetbrains"
     relocate "kotlinx", "${shadowPackage}.kotlinx"
     relocate "kotlin", "${shadowPackage}.kotlin"
     relocate "io.sentry", "${shadowPackage}.sentry"
@@ -37,14 +37,13 @@ shadowJar {
 }
 tasks.assemble.dependsOn tasks.shadowJar
 
-ext.inspectorVerson = "0.8.1"
+ext.inspectorVerson = "0.9"
 
 dependencies {
-    compileOnly(bukkit()) {
-        transitive = false
-    }
-    implementation "ru.endlesscode.inspector:inspector-bukkit:$inspectorVerson"
-    implementation "ru.endlesscode.inspector:inspector-sentry-reporter:$inspectorVerson"
+    compileOnly(bukkit()) { transitive = false }
+    implementation("ru.endlesscode.inspector:inspector-bukkit:$inspectorVerson")
+    implementation("ru.endlesscode.inspector:inspector-sentry-reporter:$inspectorVerson")
+    implementation("ru.endlesscode.inspector:sentry-bukkit:$inspectorVerson")
 }
 
 repositories {
