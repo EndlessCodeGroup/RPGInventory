@@ -54,7 +54,7 @@ abstract class TrackedPlugin @JvmOverloads constructor(
         initLogger()
 
         try {
-            lifecycle = lifecycleClass.newInstance()
+            lifecycle = lifecycleClass.getDeclaredConstructor().newInstance()
         } catch (e: UninitializedPropertyAccessException) {
             logger.severe("$TAG Looks like you're trying to use plugin's methods on it's initialization.")
             logger.severe("$TAG Instead of this, overload method init() and do the work that you need within.")
@@ -130,10 +130,10 @@ abstract class TrackedPlugin @JvmOverloads constructor(
     }
 
     final override fun onCommand(
-            sender: CommandSender,
-            command: Command,
-            label: String,
-            args: Array<out String>
+        sender: CommandSender,
+        command: Command,
+        label: String,
+        args: Array<out String>
     ): Boolean {
         return track("Exception occurred on command '$label' with arguments: ${args.contentToString()}") {
             lifecycle.onCommand(sender, command, label, args)
@@ -141,10 +141,10 @@ abstract class TrackedPlugin @JvmOverloads constructor(
     }
 
     final override fun onTabComplete(
-            sender: CommandSender,
-            command: Command,
-            alias: String,
-            args: Array<out String>
+        sender: CommandSender,
+        command: Command,
+        alias: String,
+        args: Array<out String>
     ): MutableList<String>? {
         return track {
             lifecycle.onTabComplete(sender, command, alias, args)

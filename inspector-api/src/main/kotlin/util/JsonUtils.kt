@@ -1,7 +1,7 @@
 package ru.endlesscode.inspector.util
 
 fun json(vararg pairs: Pair<String, String>): String {
-    return pairs.joinToString(prefix = "{", separator = ",", postfix = "}") {  (key, value) ->
+    return pairs.joinToString(prefix = "{", separator = ",", postfix = "}") { (key, value) ->
         """"$key":"${escape(value)}""""
     }
 }

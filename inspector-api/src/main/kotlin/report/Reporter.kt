@@ -17,9 +17,9 @@ interface Reporter {
      * Alias for [addHandler] method.
      */
     fun addHandler(
-            beforeReport: (String, ExceptionData) -> Unit = { _, _ -> },
-            onSuccess: (String, ExceptionData) -> Unit = { _, _ -> },
-            onError: (Throwable) -> Unit = { throw it }
+        beforeReport: (String, ExceptionData) -> Unit = { _, _ -> },
+        onSuccess: (String, ExceptionData) -> Unit = { _, _ -> },
+        onError: (Throwable) -> Unit = { throw it }
     ) {
         addHandler(object : ReportHandler {
             override fun beforeReport(message: String, exceptionData: ExceptionData) {
@@ -97,7 +97,7 @@ interface Reporter {
          * @param focus The focus
          */
         @PublicApi
-        fun focusOn(focus: ReporterFocus) : Builder {
+        fun focusOn(focus: ReporterFocus): Builder {
             this.focus = focus
             fieldsToSend.addAll(focus.environment.fields.keys)
             return this
@@ -107,7 +107,7 @@ interface Reporter {
          * Set default fields by names to report.
          */
         @PublicApi
-        fun setFields(vararg fields: String) : Builder {
+        fun setFields(vararg fields: String): Builder {
             this.fieldsToSend = fields.toMutableSet()
             return this
         }
@@ -116,7 +116,7 @@ interface Reporter {
          * Add default fields by names to report.
          */
         @PublicApi
-        fun addFields(vararg fields: String) : Builder {
+        fun addFields(vararg fields: String): Builder {
             this.fieldsToSend.addAll(fields)
             return this
         }
@@ -125,7 +125,7 @@ interface Reporter {
          * Remove default fields by names from report.
          */
         @PublicApi
-        fun removeFields(vararg fields: String) : Builder {
+        fun removeFields(vararg fields: String): Builder {
             this.fieldsToSend.removeAll(fields)
             return this
         }
@@ -134,7 +134,7 @@ interface Reporter {
          * Add custom fields to report.
          */
         @PublicApi
-        fun addCustomFields(vararg customFields: ReportField) : Builder {
+        fun addCustomFields(vararg customFields: ReportField): Builder {
             this.customFields.addAll(customFields)
             return this
         }

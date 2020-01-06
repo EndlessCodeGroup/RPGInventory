@@ -19,7 +19,7 @@ val Throwable.rootCause: Throwable
     get() = this.cause?.rootCause ?: this
 
 fun Throwable.similarTo(other: Throwable): Boolean {
-    return stackTrace?.contentEquals(other.stackTrace) ?: false
+    return stackTrace?.contentEquals(other.stackTrace) == true
 }
 
 fun Throwable.getFocusedStackTrace(focusedPackage: String): String {

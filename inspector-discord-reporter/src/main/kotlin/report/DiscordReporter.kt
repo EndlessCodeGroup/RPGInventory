@@ -26,7 +26,8 @@ class DiscordReporter private constructor(
 ) : CachingReporter() {
 
     companion object {
-        const val DEFAULT_AVATAR_URL = "https://gitlab.com/endlesscodegroup/inspector/raw/master/images/inspector_icon_256.png"
+        const val DEFAULT_AVATAR_URL =
+            "https://gitlab.com/endlesscodegroup/inspector/raw/master/images/inspector_icon_256.png"
 
         val defaultTextStorage = HastebinStorage()
     }
