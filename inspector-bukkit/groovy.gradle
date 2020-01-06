@@ -17,9 +17,8 @@ bukkit {
 }
 
 dependencies {
-    compileOnly(bukkit()) {
-        transitive = false
-    }
+    compileOnly(bukkit()) { transitive = false }
+    implementation(deps.slf4j)
 }
 
 ext.publicationName = "bukkit"
