@@ -70,7 +70,7 @@ shadowJar {
     relocate "org.bstats.bukkit", "${shadowPackage}.bstats"
 }
 
-ext.inspectorVersion = "0.8.1"
+ext.inspectorVersion = "0.9"
 
 dependencies {
     compileOnly(bukkit()) {
@@ -92,6 +92,7 @@ dependencies {
     compileOnly('me.leothepro555:Skills')
     implementation("ru.endlesscode.inspector:inspector-bukkit:$inspectorVersion")
     implementation("ru.endlesscode.inspector:inspector-sentry-reporter:$inspectorVersion")
+    implementation("ru.endlesscode.inspector:sentry-bukkit:$inspectorVersion")
     implementation('com.comphenix.packetwrapper:PacketWrapper:1.13-R0.1-SNAPSHOT')
     implementation('org.bstats:bstats-bukkit-lite:1.5')
     testImplementation('junit:junit:4.12')

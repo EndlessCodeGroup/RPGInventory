@@ -23,6 +23,7 @@ import ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin;
 import ru.endlesscode.inspector.bukkit.report.BukkitEnvironment;
 import ru.endlesscode.inspector.report.Reporter;
 import ru.endlesscode.inspector.report.SentryReporter;
+import ru.endlesscode.inspector.sentry.bukkit.BukkitPluginSentryClientFactory;
 
 import java.util.Arrays;
 import java.util.List;
@@ -32,7 +33,8 @@ public class RPGInventoryPlugin extends TrackedPlugin {
 
     private static final List<String> INTEREST_PLUGINS = Arrays.asList(
             "ProtocolLib", "Vault", "BattleLevels", "Skills", "Heroes", "RacesAndClasses",
-            "SkillAPI", "MyPet", "RPGPlayerLeveling", "PlaceholderAPI", "MMOItems", "QuantumRPG"
+            "SkillAPI", "MyPet", "RPGPlayerLeveling", "PlaceholderAPI", "MMOItems", "QuantumRPG",
+            "MMOCore", "MMOInventory"
     );
 
     public RPGInventoryPlugin() {
@@ -45,6 +47,7 @@ public class RPGInventoryPlugin extends TrackedPlugin {
         String key = "3fb946c572e14f819bde4b2b993b698e";
 
         return new SentryReporter.Builder()
+                .setClientFactory(new BukkitPluginSentryClientFactory(this))
                 .setDataSourceName(key, id)
                 .focusOn(this)
                 .build();
