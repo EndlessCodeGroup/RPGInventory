@@ -4,21 +4,21 @@ import org.bukkit.plugin.Plugin
 import org.bukkit.scheduler.BukkitRunnable
 import org.bukkit.scheduler.BukkitScheduler
 import org.bukkit.scheduler.BukkitTask
+import ru.endlesscode.inspector.PublicApi
 
+@PublicApi
 abstract class TrackedBukkitRunnable : BukkitRunnable() {
 
     private var task: BukkitTask? = null
 
     @Synchronized
     override fun isCancelled(): Boolean {
-        checkScheduled()
-        return task!!.isCancelled
+        return checkScheduled().isCancelled
     }
 
     @Synchronized
     override fun getTaskId(): Int {
-        checkScheduled()
-        return task!!.taskId
+        return checkScheduled().taskId
     }
 
     @Synchronized
@@ -57,20 +57,14 @@ abstract class TrackedBukkitRunnable : BukkitRunnable() {
         return setupTask(getScheduler(plugin).runTaskTimerAsynchronously(plugin, this as Runnable, delay, period))
     }
 
-    private fun getScheduler(plugin: Plugin): BukkitScheduler {
-        return plugin.server.scheduler ?: error("Scheduler can't be null")
-    }
+    private fun getScheduler(plugin: Plugin): BukkitScheduler = plugin.server.scheduler
 
-    private fun checkScheduled() {
-        if (task == null) {
-            error("Not scheduled yet")
-        }
+    private fun checkScheduled(): BukkitTask {
+        return checkNotNull(task) { "Not scheduled yet" }
     }
 
     private fun checkNotYetScheduled() {
-        task?.let {
-            error("Already scheduled as ${it.taskId}")
-        }
+        task?.let { error("Already scheduled as ${it.taskId}") }
     }
 
     private fun setupTask(task: BukkitTask): BukkitTask {

@@ -115,11 +115,11 @@ abstract class TrackedPlugin @JvmOverloads constructor(
         super.saveDefaultConfig()
     }
 
-    final override fun saveResource(resourcePath: String?, replace: Boolean) {
+    final override fun saveResource(resourcePath: String, replace: Boolean) {
         super.saveResource(resourcePath, replace)
     }
 
-    final override fun getResource(filename: String?): InputStream? {
+    final override fun getResource(filename: String): InputStream? {
         return super.getResource(filename)
     }
 
@@ -130,9 +130,9 @@ abstract class TrackedPlugin @JvmOverloads constructor(
     }
 
     final override fun onCommand(
-            sender: CommandSender?,
-            command: Command?,
-            label: String?,
+            sender: CommandSender,
+            command: Command,
+            label: String,
             args: Array<out String>
     ): Boolean {
         return track("Exception occurred on command '$label' with arguments: ${args.contentToString()}") {
@@ -141,10 +141,10 @@ abstract class TrackedPlugin @JvmOverloads constructor(
     }
 
     final override fun onTabComplete(
-            sender: CommandSender?,
-            command: Command?,
-            alias: String?,
-            args: Array<out String>?
+            sender: CommandSender,
+            command: Command,
+            alias: String,
+            args: Array<out String>
     ): MutableList<String>? {
         return track {
             lifecycle.onTabComplete(sender, command, alias, args)
@@ -169,7 +169,7 @@ abstract class TrackedPlugin @JvmOverloads constructor(
         }
     }
 
-    final override fun getDefaultWorldGenerator(worldName: String?, id: String?): ChunkGenerator? {
+    final override fun getDefaultWorldGenerator(worldName: String, id: String?): ChunkGenerator? {
         return track {
             lifecycle.getDefaultWorldGenerator(worldName, id)
         }

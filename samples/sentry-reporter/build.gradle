@@ -9,7 +9,7 @@ version = "0.1-SNAPSHOT"
 
 // Read more about BukkitGradle: https://github.com/EndlessCodeGroup/BukkitGradle
 bukkit {
-    version = "1.12.2"
+    version = "1.15.1"
 
     meta {
         name = "MyPlugin"

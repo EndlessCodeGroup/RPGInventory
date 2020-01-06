@@ -11,8 +11,8 @@ import org.bukkit.plugin.PluginBase
 import org.bukkit.plugin.PluginDescriptionFile
 import org.bukkit.plugin.PluginLoader
 import ru.endlesscode.inspector.PublicApi
-import ru.endlesscode.inspector.report.Reporter
 import ru.endlesscode.inspector.bukkit.command.TrackedCommandExecutor
+import ru.endlesscode.inspector.report.Reporter
 import java.io.File
 import java.io.InputStream
 import java.io.Reader
@@ -72,28 +72,28 @@ abstract class PluginLifecycle : PluginBase() {
         holder.saveDefaultConfig()
     }
 
-    final override fun saveResource(resourcePath: String?, replace: Boolean) {
+    final override fun saveResource(resourcePath: String, replace: Boolean) {
         holder.saveResource(resourcePath, replace)
     }
 
-    final override fun getResource(filename: String?): InputStream? {
+    final override fun getResource(filename: String): InputStream? {
         return holder.getResource(filename)
     }
 
     override fun onCommand(
-            sender: CommandSender?,
-            command: Command?,
-            label: String?,
-            args: Array<out String>?
+        sender: CommandSender,
+        command: Command,
+        label: String,
+        args: Array<out String>
     ): Boolean {
         return false
     }
 
     override fun onTabComplete(
-            sender: CommandSender?,
-            command: Command?,
-            alias: String?,
-            args: Array<out String>?
+        sender: CommandSender,
+        command: Command,
+        alias: String,
+        args: Array<out String>
     ): MutableList<String>? {
         return null
     }
@@ -104,7 +104,7 @@ abstract class PluginLifecycle : PluginBase() {
 
     override fun onDisable() {}
 
-    override fun getDefaultWorldGenerator(worldName: String?, id: String?): ChunkGenerator? {
+    override fun getDefaultWorldGenerator(worldName: String, id: String?): ChunkGenerator? {
         return null
     }
 

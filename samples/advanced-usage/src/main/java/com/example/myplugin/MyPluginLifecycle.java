@@ -57,7 +57,7 @@ public class MyPluginLifecycle extends PluginLifecycle {
     }
 
 
-    public class BrokenListener implements Listener {
+    public static class BrokenListener implements Listener {
         @EventHandler
         public void onPlayerDropItemThrowException(PlayerDropItemEvent event) {
             throw new RuntimeException("You should know about the exceptions.");
@@ -65,7 +65,7 @@ public class MyPluginLifecycle extends PluginLifecycle {
     }
 
 
-    public class BrokenCommandExecutor implements CommandExecutor {
+    public static class BrokenCommandExecutor implements CommandExecutor {
         @Override
         public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
             throw new RuntimeException("Exceptions from commands also should be reported.");

@@ -1,7 +1,7 @@
 def repoUrl = "https://gitlab.com/endlesscodegroup/inspector"
 
 bukkit {
-    version = "1.13"
+    version = "1.15.1"
 
     meta {
         name = pluginName

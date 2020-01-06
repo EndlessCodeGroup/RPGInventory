@@ -1,7 +1,7 @@
 name: MyPlugin
 version: ${project.version}
 main: com.example.myplugin.MyPlugin
-api-version: 1.13
+api-version: '1.15'
 description: My Plugin with Inspector, build with Maven
 commands:
   report:
