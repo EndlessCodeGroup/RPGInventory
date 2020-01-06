@@ -90,7 +90,7 @@ shadowJar {
 tasks.assemble.dependsOn tasks.shadowJar
 
 // Here you can change preferred version of inspector
-ext.inspectorVerson = "0.8.1"
+ext.inspectorVerson = "0.9"
 
 // Add Inspector as dependency
 // 'inspector-bukkit' - implementation of Inspector for Bukkit.

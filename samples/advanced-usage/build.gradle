@@ -37,7 +37,7 @@ task relocateShadowJar(type: ConfigureShadowRelocation) {
 tasks.shadowJar.dependsOn tasks.relocateShadowJar
 tasks.assemble.dependsOn tasks.shadowJar
 
-ext.inspectorVerson = "0.8.1"
+ext.inspectorVerson = "0.9"
 
 dependencies {
     compileOnly(bukkit()) {

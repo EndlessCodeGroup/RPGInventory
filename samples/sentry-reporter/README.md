@@ -3,8 +3,10 @@ Reporter that sends reports to [Sentry](https://sentry.io/).
 
 ### Gradle
 ```groovy
+ext.inspectorVersion = "0.9"
 dependencies {
-    implementation "ru.endlesscode.inspector:inspector-sentry-reporter:0.8.1"
+    implementation "ru.endlesscode.inspector:inspector-sentry-reporter:$inspectorVersion"
+    implementation "ru.endlesscode.inspector:sentry-bukkit:$inspectorVersion" // If you want BukkitPluginSentryClientFactory
 }
 ```
 
@@ -18,6 +20,9 @@ protected Reporter createReporter() {
 
     return new SentryReporter.Builder()
             .setDataSourceName(publicKey, projectId)
+            // If you want more detailed reports, add this, but you also should
+            // add `sentry-bukkit` dependency before
+            .setClientFactory(new BukkitPluginSentryClientFactory(this))
             .focusOn(this) // this - instance of TrackedPlugin
             .build();
 }
