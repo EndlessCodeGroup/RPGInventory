@@ -23,6 +23,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
 import ru.endlesscode.rpginventory.inventory.PlayerWrapper;
 import ru.endlesscode.rpginventory.inventory.slot.Slot;
@@ -45,7 +46,7 @@ public class InventoryAPI {
      * @param inventory - opened inventory
      * @return true - if opened RPGInventory, false - otherwise
      */
-    public static boolean isRPGInventory(Inventory inventory) {
+    public static boolean isRPGInventory(@NotNull Inventory inventory) {
         InventoryHolder holder = inventory.getHolder();
         return holder instanceof PlayerWrapper;
     }
@@ -57,7 +58,7 @@ public class InventoryAPI {
      * @return List of not null passive item
      */
     @NotNull
-    public static List<ItemStack> getPassiveItems(Player player) {
+    public static List<ItemStack> getPassiveItems(@Nullable Player player) {
         List<ItemStack> passiveItems = new ArrayList<>();
 
         if (!InventoryManager.playerIsLoaded(player)) {
@@ -84,7 +85,7 @@ public class InventoryAPI {
      * @return List of not null active item
      */
     @NotNull
-    public static List<ItemStack> getActiveItems(Player player) {
+    public static List<ItemStack> getActiveItems(@Nullable Player player) {
         List<ItemStack> activeItems = new ArrayList<>();
 
         if (!InventoryManager.playerIsLoaded(player)) {

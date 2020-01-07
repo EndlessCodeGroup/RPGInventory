@@ -32,6 +32,7 @@ import ru.endlesscode.inspector.bukkit.command.TrackedCommandExecutor;
 import ru.endlesscode.inspector.bukkit.plugin.PluginLifecycle;
 import ru.endlesscode.inspector.bukkit.scheduler.TrackedBukkitRunnable;
 import ru.endlesscode.rpginventory.compat.VersionHandler;
+import ru.endlesscode.rpginventory.compat.mypet.MyPetManager;
 import ru.endlesscode.rpginventory.event.listener.ArmorEquipListener;
 import ru.endlesscode.rpginventory.event.listener.ElytraListener;
 import ru.endlesscode.rpginventory.event.listener.HandSwapListener;
@@ -49,7 +50,6 @@ import ru.endlesscode.rpginventory.misc.config.Config;
 import ru.endlesscode.rpginventory.misc.config.ConfigUpdater;
 import ru.endlesscode.rpginventory.misc.serialization.Serialization;
 import ru.endlesscode.rpginventory.pet.PetManager;
-import ru.endlesscode.rpginventory.pet.mypet.MyPetManager;
 import ru.endlesscode.rpginventory.resourcepack.ResourcePackModule;
 import ru.endlesscode.rpginventory.utils.Log;
 import ru.endlesscode.rpginventory.utils.PlayerUtils;
@@ -137,8 +137,10 @@ public class RPGInventory extends PluginLifecycle {
             return;
         }
 
+        PluginManager pm = this.getServer().getPluginManager();
+
         // Hook Placeholder API
-        if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+        if (pm.isPluginEnabled("PlaceholderAPI")) {
             new StringUtils.Placeholders().register();
             placeholderApiHooked = true;
             Log.i("Placeholder API hooked!");
@@ -147,7 +149,7 @@ public class RPGInventory extends PluginLifecycle {
         }
 
         // Hook MyPet
-        if (Bukkit.getPluginManager().isPluginEnabled("MyPet") && MyPetManager.init(this)) {
+        if (pm.isPluginEnabled("MyPet") && MyPetManager.init(this)) {
             myPetHooked = true;
             Log.i("MyPet used as pet system");
         } else {
@@ -162,7 +164,6 @@ public class RPGInventory extends PluginLifecycle {
         Log.i(BackpackManager.init(this) ? "Backpack system is enabled" : "Backpack system isn''t loaded");
 
         // Registering other listeners
-        PluginManager pm = this.getServer().getPluginManager();
         pm.registerEvents(new ArmorEquipListener(), this);
         pm.registerEvents(new HandSwapListener(), this);
         pm.registerEvents(new PlayerListener(), this);

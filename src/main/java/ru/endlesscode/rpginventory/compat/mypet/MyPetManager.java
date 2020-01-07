@@ -16,7 +16,7 @@
  * along with RPGInventory.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package ru.endlesscode.rpginventory.pet.mypet;
+package ru.endlesscode.rpginventory.compat.mypet;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.WorldGroup;
