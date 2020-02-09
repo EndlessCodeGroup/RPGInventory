@@ -194,8 +194,8 @@ public class BackpackManager {
                 Path bpFile = folder.resolve(entry.getKey().toString() + ".bp");
                 Serialization.save(entry.getValue(), bpFile);
             }
-        } catch (IOException e) {
-            reporter.report("Error on backpack save", e);
+        } catch (IOException | NullPointerException e) {
+            Log.w(e, "Error on backpack save");
         }
     }
 
@@ -208,7 +208,7 @@ public class BackpackManager {
                     .filter((file) -> Files.isRegularFile(file) && file.toString().endsWith(".bp"))
                     .forEach(BackpackManager::tryToLoadBackpack);
         } catch (IOException e) {
-            reporter.report("Error on backpacks loading", e);
+            Log.w(e, "Error on backpack loading");
         }
     }
 
@@ -216,7 +216,7 @@ public class BackpackManager {
         try {
             loadBackpack(path);
         } catch (IOException | InvalidConfigurationException e) {
-            Log.d(e);
+            Log.w(e);
             FileUtils.resolveException(path);
             Log.s("Error on loading backpack {0}", path.getFileName().toString());
             Log.s("Will be created new backpack. Old file was renamed.");

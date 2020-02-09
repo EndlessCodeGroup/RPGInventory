@@ -40,7 +40,7 @@ public class Serialization {
         try {
             playerWrapper = loadPlayer(player, file);
         } catch (IOException | InvalidConfigurationException e) {
-            Log.d(e);
+            Log.w(e);
             FileUtils.resolveException(file);
             playerWrapper = null;
         }
