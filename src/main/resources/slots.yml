@@ -171,7 +171,6 @@ slots:
       item: DIAMOND_HOE:3
       name: "&a&lYour stats"
       lore:
-        - "&4HP: &7%player_health%&8/&7%player_max_health%"
         - "&cDamage: &7%rpginv_damage_bonus% &8(Weapon) &7| %rpginv_bow_damage_bonus% &8(Bow) &7| %rpginv_hand_damage_bonus% &8(Hand)"
         - "&6Crit Damage: &7%rpginv_crit_damage_bonus% &eCrit Chance: &7%rpginv_crit_chance%"
         - "&3Armor: &7%rpginv_armor_bonus%"
