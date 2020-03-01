@@ -13,6 +13,7 @@ bukkit {
     version = '1.15'
 
     meta {
+        name = "RPGInventory"
         main = "${group}.RPGInventoryPlugin"
         authors = ["OsipXD", "EndlessCode Group"]
     }
@@ -113,3 +114,5 @@ tasks.check.dependsOn tasks.jacocoTestReport
 // Add ProGuard minimization task
 // TODO: minimized Jar not works, fix it
 //apply(from: file("proguard.gradle"))
+
+apply(from: file("gradle/publish.gradle"))
