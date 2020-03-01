@@ -31,6 +31,12 @@ level-system: EXP
 # Can be: PERMISSIONS (like a rpginventory.class.{class_name}), SKILLAPI, HEROES, RAC
 class-system: PERMISSIONS
 
+# Here you can switch textures type between custom-model-data and damage.
+# Available values:
+#   damage (default) - https://www.spigotmc.org/wiki/custom-item-models-in-1-9-and-up/
+#   custom_model_data - modern replacement for textures by damage for 1.14+
+textures-type: damage
+
 # Texture to fill unavailable slots
 fill: DIAMOND_HOE:1
 

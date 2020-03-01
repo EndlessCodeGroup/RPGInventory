@@ -196,5 +196,9 @@ public class ConfigUpdater {
             config.set("metrics", null);
             config.set("containers", null);
         }
+
+        if (configVersion.compareTo("2.3.2") < 0) {
+            config.set("textures-type", "damage");
+        }
     }
 }
