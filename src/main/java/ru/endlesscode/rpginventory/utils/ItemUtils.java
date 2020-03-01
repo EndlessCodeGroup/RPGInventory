@@ -117,9 +117,9 @@ public class ItemUtils {
             return new ItemStack(Material.AIR);
         }
 
-        short durability = getDamage(item);
+        short damage = getDamage(item);
         int amount = item.getAmount();
-        short textureDurability;
+        int textureDamage;
         if (CustomItem.isCustomItem(item)) {
             CustomItem custom = ItemManager.getCustomItem(item);
 
@@ -127,7 +127,7 @@ public class ItemUtils {
                 return new ItemStack(Material.AIR);
             }
 
-            textureDurability = custom.getTextureDurability();
+            textureDamage = custom.getTextureDamage();
             item = ItemManager.getItem(ItemUtils.getTag(item, ItemUtils.ITEM_TAG));
         } else if (BackpackManager.isBackpack(item)) {
             BackpackType type = BackpackManager.getBackpackType(ItemUtils.getTag(item, ItemUtils.BACKPACK_TAG));
@@ -136,7 +136,7 @@ public class ItemUtils {
                 return new ItemStack(Material.AIR);
             }
 
-            textureDurability = type.getTextureDurability();
+            textureDamage = type.getTextureDamage();
 
             String bpUID = ItemUtils.getTag(item, ItemUtils.BACKPACK_UID_TAG);
             if (!bpUID.isEmpty()) {
@@ -147,7 +147,7 @@ public class ItemUtils {
             if (petType == null) {
                 return new ItemStack(Material.AIR);
             }
-            textureDurability = petType.getTextureDurability();
+            textureDamage = petType.getTextureDamage();
 
             long deathTime = PetManager.getDeathTime(item);
             double health = PetManager.getHealth(item, petType.getHealth());
@@ -160,14 +160,14 @@ public class ItemUtils {
             if (food == null) {
                 return new ItemStack(Material.AIR);
             }
-            textureDurability = food.getTextureDurability();
+            textureDamage = food.getTextureDamage();
 
             item = food.getFoodItem();
         } else {
             return item;
         }
 
-        setDamage(item, textureDurability == -1 ? durability : textureDurability);
+        setDamage(item, textureDamage == -1 ? damage : textureDamage);
         item.setAmount(amount);
         return item;
     }
@@ -177,7 +177,7 @@ public class ItemUtils {
         return meta == null ? 0 : (short) ((Damageable) meta).getDamage();
     }
 
-    private static void setDamage(@NotNull ItemStack itemStack, short damage) {
+    private static void setDamage(@NotNull ItemStack itemStack, int damage) {
         ItemMeta meta = itemStack.getItemMeta();
         if (meta != null) {
             ((Damageable) meta).setDamage(damage);

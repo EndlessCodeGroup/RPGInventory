@@ -23,15 +23,15 @@ public class Texture {
 
     @NotNull
     private final ItemStack prototype;
-    private final short durability;
+    private final int damage;
 
     private Texture(@NotNull ItemStack prototype) {
         this(prototype, (short) -1);
     }
 
-    private Texture(@NotNull ItemStack prototype, short durability) {
+    private Texture(@NotNull ItemStack prototype, int damage) {
         this.prototype = prototype;
-        this.durability = durability;
+        this.damage = damage;
     }
 
     public boolean isEmpty() {
@@ -43,8 +43,8 @@ public class Texture {
         return prototype.clone();
     }
 
-    public short getDurability() {
-        return durability;
+    public int getDamage() {
+        return damage;
     }
 
     @Override

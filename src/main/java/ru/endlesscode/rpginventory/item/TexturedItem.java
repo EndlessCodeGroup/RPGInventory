@@ -30,7 +30,7 @@ public class TexturedItem {
         this.texture = texture;
     }
 
-    public short getTextureDurability() {
-        return texture.getDurability();
+    public int getTextureDamage() {
+        return texture.getDamage();
     }
 }
