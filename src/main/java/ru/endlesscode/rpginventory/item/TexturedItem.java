@@ -30,7 +30,7 @@ public class TexturedItem {
         this.texture = texture;
     }
 
-    public int getTextureDamage() {
-        return texture.getDamage();
+    public int getTextureData() {
+        return texture.getData();
     }
 }

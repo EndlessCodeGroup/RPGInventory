@@ -25,15 +25,15 @@ public class Texture {
 
     @NotNull
     private final ItemStack prototype;
-    private final int damage;
+    private final int data;
 
     private Texture(@NotNull ItemStack prototype) {
         this(prototype, (short) -1);
     }
 
-    private Texture(@NotNull ItemStack prototype, int damage) {
+    private Texture(@NotNull ItemStack prototype, int data) {
         this.prototype = prototype;
-        this.damage = damage;
+        this.data = data;
     }
 
     public boolean isEmpty() {
@@ -45,8 +45,8 @@ public class Texture {
         return prototype.clone();
     }
 
-    public int getDamage() {
-        return damage;
+    public int getData() {
+        return data;
     }
 
     @Override
@@ -93,7 +93,7 @@ public class Texture {
             } else if (material.name().startsWith("LEATHER_")) {
                 return parseLeatherArmor(item, textureParts[1]);
             } else {
-                return parseItemWithModifier(item, textureParts[1]);
+                return parseItemWithData(item, textureParts[1]);
             }
         }
 
@@ -120,22 +120,22 @@ public class Texture {
         return new Texture(item);
     }
 
-    private static Texture parseItemWithModifier(ItemStack item, String textureModifierValue) {
+    private static Texture parseItemWithData(ItemStack item, String textureDataValue) {
         if (item.getItemMeta() == null) {
             return new Texture(item);
         }
 
-        int textureModifier = -1;
+        int textureData = -1;
         try {
-            textureModifier = Integer.parseInt(textureModifierValue);
+            textureData = Integer.parseInt(textureDataValue);
         } catch (NumberFormatException e) {
-            Log.w("Can''t parse texture modifier. Specify a number instead of \"{0}\"", textureModifier);
+            Log.w("Can''t parse texture modifier. Specify a number instead of \"{0}\"", textureData);
         }
 
         if (Config.texturesType == TexturesType.DAMAGE) {
-            return parseItemWithDurability(item, textureModifier);
+            return parseItemWithDurability(item, textureData);
         }
-        return parseItemWithCustomModelData(item, textureModifier);
+        return parseItemWithCustomModelData(item, textureData);
     }
 
     private static Texture parseItemWithDurability(ItemStack item, int damage) {
@@ -164,6 +164,6 @@ public class Texture {
         }
         item.setItemMeta(meta);
 
-        return new Texture(item);
+        return new Texture(item, customModelData);
     }
 }

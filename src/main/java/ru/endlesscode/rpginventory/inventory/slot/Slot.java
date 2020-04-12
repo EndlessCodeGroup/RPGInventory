@@ -124,21 +124,21 @@ public class Slot {
 
             if (data.length > 1) {
                 String[] borders = data[1].split("-");
-                int itemDurability = ItemUtils.getDamage(itemStack);
+                int itemTextureData = ItemUtils.getTextureData(itemStack);
 
-                if (borders.length == 1 && itemDurability != Integer.parseInt(data[1])) {
+                if (borders.length == 1 && itemTextureData != Integer.parseInt(data[1])) {
                     continue;
                 } else if (borders.length == 2) {
                     int min = Integer.parseInt(borders[0]);
                     int max = Integer.parseInt(borders[1]);
 
                     if (min > max) {
-                        min *= max;
-                        max = min / max;
-                        min /= max;
+                        int temp = max;
+                        max = min;
+                        min = temp;
                     }
 
-                    if (itemDurability < min || itemDurability > max) {
+                    if (itemTextureData < min || itemTextureData > max) {
                         continue;
                     }
                 }

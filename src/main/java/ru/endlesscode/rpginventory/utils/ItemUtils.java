@@ -31,6 +31,8 @@ import ru.endlesscode.rpginventory.inventory.backpack.BackpackManager;
 import ru.endlesscode.rpginventory.inventory.backpack.BackpackType;
 import ru.endlesscode.rpginventory.item.CustomItem;
 import ru.endlesscode.rpginventory.item.ItemManager;
+import ru.endlesscode.rpginventory.misc.config.Config;
+import ru.endlesscode.rpginventory.misc.config.TexturesType;
 import ru.endlesscode.rpginventory.pet.PetFood;
 import ru.endlesscode.rpginventory.pet.PetManager;
 import ru.endlesscode.rpginventory.pet.PetType;
@@ -117,9 +119,9 @@ public class ItemUtils {
             return new ItemStack(Material.AIR);
         }
 
-        short damage = getDamage(item);
+        int itemTextureData = getTextureData(item);
         int amount = item.getAmount();
-        int textureDamage;
+        int foundTextureData;
         if (CustomItem.isCustomItem(item)) {
             CustomItem custom = ItemManager.getCustomItem(item);
 
@@ -127,7 +129,7 @@ public class ItemUtils {
                 return new ItemStack(Material.AIR);
             }
 
-            textureDamage = custom.getTextureDamage();
+            foundTextureData = custom.getTextureData();
             item = ItemManager.getItem(ItemUtils.getTag(item, ItemUtils.ITEM_TAG));
         } else if (BackpackManager.isBackpack(item)) {
             BackpackType type = BackpackManager.getBackpackType(ItemUtils.getTag(item, ItemUtils.BACKPACK_TAG));
@@ -136,7 +138,7 @@ public class ItemUtils {
                 return new ItemStack(Material.AIR);
             }
 
-            textureDamage = type.getTextureDamage();
+            foundTextureData = type.getTextureData();
 
             String bpUID = ItemUtils.getTag(item, ItemUtils.BACKPACK_UID_TAG);
             if (!bpUID.isEmpty()) {
@@ -147,7 +149,7 @@ public class ItemUtils {
             if (petType == null) {
                 return new ItemStack(Material.AIR);
             }
-            textureDamage = petType.getTextureDamage();
+            foundTextureData = petType.getTextureData();
 
             long deathTime = PetManager.getDeathTime(item);
             double health = PetManager.getHealth(item, petType.getHealth());
@@ -160,27 +162,39 @@ public class ItemUtils {
             if (food == null) {
                 return new ItemStack(Material.AIR);
             }
-            textureDamage = food.getTextureDamage();
+            foundTextureData = food.getTextureData();
 
             item = food.getFoodItem();
         } else {
             return item;
         }
 
-        setDamage(item, textureDamage == -1 ? damage : textureDamage);
+        setTextureData(item, foundTextureData == -1 ? itemTextureData : foundTextureData);
         item.setAmount(amount);
         return item;
     }
 
-    public static short getDamage(@NotNull ItemStack itemStack) {
+    public static int getTextureData(@NotNull ItemStack itemStack) {
         ItemMeta meta = itemStack.getItemMeta();
-        return meta == null ? 0 : (short) ((Damageable) meta).getDamage();
+        int data;
+        if (meta == null) {
+            data = 0;
+        } else if (Config.texturesType == TexturesType.DAMAGE) {
+            data = ((Damageable) meta).getDamage();
+        } else {
+            data = meta.getCustomModelData();
+        }
+        return data;
     }
 
-    private static void setDamage(@NotNull ItemStack itemStack, int damage) {
+    private static void setTextureData(@NotNull ItemStack itemStack, int data) {
         ItemMeta meta = itemStack.getItemMeta();
         if (meta != null) {
-            ((Damageable) meta).setDamage(damage);
+            if (Config.texturesType == TexturesType.DAMAGE) {
+                ((Damageable) meta).setDamage(data);
+            } else {
+                meta.setCustomModelData(data);
+            }
             itemStack.setItemMeta(meta);
         }
     }
