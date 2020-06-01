@@ -176,13 +176,17 @@ public class ItemUtils {
 
     public static int getTextureData(@NotNull ItemStack itemStack) {
         ItemMeta meta = itemStack.getItemMeta();
-        int data;
         if (meta == null) {
-            data = 0;
-        } else if (Config.texturesType == TexturesType.DAMAGE) {
+            return 0;
+        }
+
+        int data;
+        if (Config.texturesType == TexturesType.DAMAGE) {
             data = ((Damageable) meta).getDamage();
-        } else {
+        } else if (meta.hasCustomModelData()) {
             data = meta.getCustomModelData();
+        } else {
+            data = 0;
         }
         return data;
     }
