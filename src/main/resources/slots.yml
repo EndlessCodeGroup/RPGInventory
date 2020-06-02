@@ -12,6 +12,7 @@ slots:
       - CHAINMAIL_HELMET
       - IRON_HELMET
       - GOLD_HELMET
+      - GOLDEN_HELMET
       - DIAMOND_HELMET
   chestplate:
     type: ARMOR
@@ -26,6 +27,7 @@ slots:
       - CHAINMAIL_CHESTPLATE
       - IRON_CHESTPLATE
       - GOLD_CHESTPLATE
+      - GOLDEN_CHESTPLATE
       - DIAMOND_CHESTPLATE
   leggings:
     type: ARMOR
@@ -40,6 +42,7 @@ slots:
       - CHAINMAIL_LEGGINGS
       - IRON_LEGGINGS
       - GOLD_LEGGINGS
+      - GOLDEN_LEGGINGS
       - DIAMOND_LEGGINGS
   boots:
     type: ARMOR
@@ -54,6 +57,7 @@ slots:
       - CHAINMAIL_BOOTS
       - IRON_BOOTS
       - GOLD_BOOTS
+      - GOLDEN_BOOTS
       - DIAMOND_BOOTS
   weapon:
     type: ACTIVE
@@ -69,11 +73,13 @@ slots:
       - STONE_SWORD
       - IRON_SWORD
       - GOLD_SWORD
+      - GOLDEN_SWORD
       - DIAMOND_SWORD
       - WOOD_AXE
       - STONE_AXE
       - IRON_AXE
       - GOLD_AXE
+      - GOLDEN_AXE
       - DIAMOND_AXE
       - BOW
   gloves:
