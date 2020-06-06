@@ -104,8 +104,7 @@ public class ArmorEquipListener implements Listener {
     @EventHandler
     public void onNormalEquip(@NotNull InventoryClickEvent event) {
         Player player = (Player) event.getWhoClicked();
-        if (!InventoryManager.playerIsLoaded(player) || InventoryAPI.isRPGInventory(event.getInventory())
-                || Config.armorSlotsAction == VanillaSlotAction.RPGINV) {
+        if (!InventoryManager.playerIsLoaded(player) || InventoryAPI.isRPGInventory(event.getInventory())) {
             return;
         }
 
@@ -125,7 +124,7 @@ public class ArmorEquipListener implements Listener {
             ItemStack item = event.getCursor();
             Slot armorSlot = ArmorType.getArmorSlotById(event.getRawSlot());
 
-            if (armorSlot == null || ItemUtils.isEmpty(item)) {
+            if (Config.armorSlotsAction == VanillaSlotAction.RPGINV || armorSlot == null || ItemUtils.isEmpty(item)) {
                 return;
             }
 
