@@ -18,7 +18,7 @@ X changes total
 
 ### Fixed (3 changes)
 
-- Add GOLD**EN** tools to default config
+- Add GOLD**EN** tools to the default config
 - Prevent equip restricted armor with right-click
 - Prevent equip restricted armor with shift-click when `armor_slot_action` is `rpginv`
 
@@ -28,7 +28,7 @@ X changes total
 
 ### Added (3 changes)
 
-- **Added option textures-type.**  
+- **Added option `textures-type`.**  
   Now you can switch textures type between Custom Model Data and damage.
   Available values:
   - `damage` (default) - https://www.spigotmc.org/wiki/custom-item-models-in-1-9-and-up/
