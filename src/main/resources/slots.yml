@@ -12,6 +12,7 @@ slots:
       - CHAINMAIL_HELMET
       - IRON_HELMET
       - GOLD_HELMET
+      - GOLDEN_HELMET
       - DIAMOND_HELMET
   chestplate:
     type: ARMOR
@@ -26,6 +27,7 @@ slots:
       - CHAINMAIL_CHESTPLATE
       - IRON_CHESTPLATE
       - GOLD_CHESTPLATE
+      - GOLDEN_CHESTPLATE
       - DIAMOND_CHESTPLATE
   leggings:
     type: ARMOR
@@ -40,6 +42,7 @@ slots:
       - CHAINMAIL_LEGGINGS
       - IRON_LEGGINGS
       - GOLD_LEGGINGS
+      - GOLDEN_LEGGINGS
       - DIAMOND_LEGGINGS
   boots:
     type: ARMOR
@@ -54,6 +57,7 @@ slots:
       - CHAINMAIL_BOOTS
       - IRON_BOOTS
       - GOLD_BOOTS
+      - GOLDEN_BOOTS
       - DIAMOND_BOOTS
   weapon:
     type: ACTIVE
@@ -69,11 +73,13 @@ slots:
       - STONE_SWORD
       - IRON_SWORD
       - GOLD_SWORD
+      - GOLDEN_SWORD
       - DIAMOND_SWORD
       - WOOD_AXE
       - STONE_AXE
       - IRON_AXE
       - GOLD_AXE
+      - GOLDEN_AXE
       - DIAMOND_AXE
       - BOW
   gloves:
@@ -171,7 +177,6 @@ slots:
       item: DIAMOND_HOE:3
       name: "&a&lYour stats"
       lore:
-        - "&4HP: &7%player_health%&8/&7%player_max_health%"
         - "&cDamage: &7%rpginv_damage_bonus% &8(Weapon) &7| %rpginv_bow_damage_bonus% &8(Bow) &7| %rpginv_hand_damage_bonus% &8(Hand)"
         - "&6Crit Damage: &7%rpginv_crit_damage_bonus% &eCrit Chance: &7%rpginv_crit_chance%"
         - "&3Armor: &7%rpginv_armor_bonus%"

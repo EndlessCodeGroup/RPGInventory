@@ -59,7 +59,7 @@ import java.util.Collection;
  * All rights reserved 2014 - 2016 © «EndlessCode Group»
  */
 public class ArmorEquipListener implements Listener {
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onQuickEquip(@NotNull PlayerInteractEvent event) {
         final Player player = event.getPlayer();
         if (!InventoryManager.playerIsLoaded(player) || event.getAction() != Action.RIGHT_CLICK_AIR &&
@@ -101,11 +101,10 @@ public class ArmorEquipListener implements Listener {
         }
     }
 
-    @EventHandler(ignoreCancelled = true)
+    @EventHandler
     public void onNormalEquip(@NotNull InventoryClickEvent event) {
         Player player = (Player) event.getWhoClicked();
-        if (!InventoryManager.playerIsLoaded(player) || InventoryAPI.isRPGInventory(event.getInventory())
-                || Config.armorSlotsAction == VanillaSlotAction.RPGINV) {
+        if (!InventoryManager.playerIsLoaded(player) || InventoryAPI.isRPGInventory(event.getInventory())) {
             return;
         }
 
@@ -125,7 +124,7 @@ public class ArmorEquipListener implements Listener {
             ItemStack item = event.getCursor();
             Slot armorSlot = ArmorType.getArmorSlotById(event.getRawSlot());
 
-            if (armorSlot == null || ItemUtils.isEmpty(item)) {
+            if (Config.armorSlotsAction == VanillaSlotAction.RPGINV || armorSlot == null || ItemUtils.isEmpty(item)) {
                 return;
             }
 

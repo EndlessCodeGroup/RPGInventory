@@ -18,6 +18,7 @@ error.rp.denied: &cリソースパックを使用に変えてください!
 error.item.level: &6それは&c{0}&6レベルが必要になります
 error.item.class: &6それはクラスが必要になります &c{0}
 error.mount.owner: &6主人に帰属しています {0}
+error.creative: &4RPGInventory can''t be used in CREATIVE game mode. Please switch to SURVIVAL.
 
 message.buyed: &a正常にスペースを購入しました
 message.perms: &c権限がありません

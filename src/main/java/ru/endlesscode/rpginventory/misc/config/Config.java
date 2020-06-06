@@ -37,6 +37,8 @@ public class Config {
     public static VanillaSlotAction craftSlotsAction = VanillaSlotAction.RPGINV;
     public static VanillaSlotAction armorSlotsAction = VanillaSlotAction.DEFAULT;
 
+    public static TexturesType texturesType = TexturesType.DAMAGE;
+
     private static final FileConfiguration config = new YamlConfiguration();
     private static Path configFile;
 
@@ -92,5 +94,7 @@ public class Config {
     private static void copyOptionsFromConfig() {
         craftSlotsAction = VanillaSlotAction.parseString(config.getString("craft-slots-action"));
         armorSlotsAction = VanillaSlotAction.parseString(config.getString("armor-slots-action"));
+
+        texturesType = TexturesType.parseString(config.getString("textures-type"));
     }
 }

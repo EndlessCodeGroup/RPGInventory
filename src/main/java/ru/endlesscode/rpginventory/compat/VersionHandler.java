@@ -47,7 +47,7 @@ public class VersionHandler {
     }
 
     public static boolean isExperimentalSupport() {
-        return getVersionCode() >= VERSION_1_15;
+        return getVersionCode() >= VERSION_1_16;
     }
 
     public static boolean isLegacy() {

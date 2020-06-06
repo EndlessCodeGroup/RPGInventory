@@ -11,6 +11,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.jetbrains.annotations.NotNull;
 import ru.endlesscode.rpginventory.compat.MaterialCompat;
+import ru.endlesscode.rpginventory.misc.config.Config;
+import ru.endlesscode.rpginventory.misc.config.TexturesType;
 import ru.endlesscode.rpginventory.utils.ItemUtils;
 import ru.endlesscode.rpginventory.utils.Log;
 import ru.endlesscode.rpginventory.utils.NbtFactoryMirror;
@@ -23,15 +25,15 @@ public class Texture {
 
     @NotNull
     private final ItemStack prototype;
-    private final short durability;
+    private final int data;
 
     private Texture(@NotNull ItemStack prototype) {
         this(prototype, (short) -1);
     }
 
-    private Texture(@NotNull ItemStack prototype, short durability) {
+    private Texture(@NotNull ItemStack prototype, int data) {
         this.prototype = prototype;
-        this.durability = durability;
+        this.data = data;
     }
 
     public boolean isEmpty() {
@@ -43,8 +45,8 @@ public class Texture {
         return prototype.clone();
     }
 
-    public short getDurability() {
-        return durability;
+    public int getData() {
+        return data;
     }
 
     @Override
@@ -91,7 +93,7 @@ public class Texture {
             } else if (material.name().startsWith("LEATHER_")) {
                 return parseLeatherArmor(item, textureParts[1]);
             } else {
-                return parseItemWithDurability(item, textureParts[1]);
+                return parseItemWithData(item, textureParts[1]);
             }
         }
 
@@ -118,24 +120,50 @@ public class Texture {
         return new Texture(item);
     }
 
-    private static Texture parseItemWithDurability(ItemStack item, String durabilityValue) {
-        ItemMeta meta = item.getItemMeta();
-        short durability = -1;
-        if (meta != null) {
-            try {
-                durability = Short.parseShort(durabilityValue);
-                ((Damageable) meta).setDamage(durability);
-            } catch (NumberFormatException e) {
-                Log.w("Can''t parse durability. Specify a number instead of \"{0}\"", durabilityValue);
-            }
+    private static Texture parseItemWithData(ItemStack item, String textureDataValue) {
+        if (item.getItemMeta() == null) {
+            return new Texture(item);
+        }
 
-            meta.addItemFlags(ItemFlag.values());
+        int textureData = -1;
+        try {
+            textureData = Integer.parseInt(textureDataValue);
+        } catch (NumberFormatException e) {
+            Log.w("Can''t parse texture modifier. Specify a number instead of \"{0}\"", textureData);
+        }
+
+        if (Config.texturesType == TexturesType.DAMAGE) {
+            return parseItemWithDurability(item, textureData);
+        }
+        return parseItemWithCustomModelData(item, textureData);
+    }
+
+    private static Texture parseItemWithDurability(ItemStack item, int damage) {
+        ItemMeta meta = item.getItemMeta();
+        assert meta != null;
+
+        meta.addItemFlags(ItemFlag.values());
+        if (damage != -1) {
+            ((Damageable) meta).setDamage(damage);
             if (ItemUtils.isItemHasDurability(item)) {
                 meta.setUnbreakable(true);
             }
-            item.setItemMeta(meta);
         }
+        item.setItemMeta(meta);
 
-        return new Texture(item, durability);
+        return new Texture(item, damage);
+    }
+
+    private static Texture parseItemWithCustomModelData(ItemStack item, int customModelData) {
+        ItemMeta meta = item.getItemMeta();
+        assert meta != null;
+
+        meta.addItemFlags(ItemFlag.values());
+        if (customModelData != -1) {
+            meta.setCustomModelData(customModelData);
+        }
+        item.setItemMeta(meta);
+
+        return new Texture(item, customModelData);
     }
 }

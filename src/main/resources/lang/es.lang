@@ -18,6 +18,7 @@ error.rp.denied: &cDebes habilitar la descarga del pack de recursos!
 error.item.level: &6Nivel &c{0} &6requerido
 error.item.class: &6Clase &c{0} &6requerida
 error.mount.owner: &6La montura pertenece a {0}
+error.creative: &4RPGInventory can''t be used in CREATIVE game mode. Please switch to SURVIVAL.
 
 message.buyed: &aYa haz comprado el espacio
 message.perms: &cYou don''t have permission to use this command

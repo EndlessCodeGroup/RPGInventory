@@ -18,6 +18,7 @@ error.rp.denied: &cDu musst dem Download des Resource-Packs zustimmen!
 error.item.level: &6Benötigtes &c{0} &6Level
 error.item.class: &6Benötigte Klasse &c{0}
 error.mount.owner: &6Dieses Reittier gehört: {0}
+error.creative: &4RPGInventory can''t be used in CREATIVE game mode. Please switch to SURVIVAL.
 
 message.buyed: &aDu hast den Slot erfolgreich freigeschaltet
 message.perms: &cYou don''t have permission to use this command

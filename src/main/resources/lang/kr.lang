@@ -18,6 +18,7 @@ error.rp.denied: &c리소스 팩이 필요합니다!
 error.item.level: &6그것은 &c{0} &6레벨이 필요합니다
 error.item.class: &6그것은 클래스가 필요합니다 &c{0}
 error.mount.owner: &6주인에게 귀속되어 있습니다 {0}
+error.creative: &4RPGInventory can''t be used in CREATIVE game mode. Please switch to SURVIVAL.
 
 message.buyed: &a성공적으로 슬릇을 구입했습니다
 message.perms: &c권한이 없습니다

@@ -569,8 +569,8 @@ public class InventoryManager {
             Files.deleteIfExists(file);
 
             Serialization.save(playerWrapper.createSnapshot(), file);
-        } catch (IOException e) {
-            reporter.report("Error on inventory save", e);
+        } catch (IOException | NullPointerException e) {
+            Log.w(e, "Error on inventory save");
         }
     }
 

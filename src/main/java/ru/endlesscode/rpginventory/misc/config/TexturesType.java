@@ -1,6 +1,6 @@
 /*
  * This file is part of RPGInventory.
- * Copyright (C) 2015-2017 Osip Fatkullin
+ * Copyright (C) 2020 EndlessCode Group and contributors
  *
  * RPGInventory is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,21 +16,16 @@
  * along with RPGInventory.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package ru.endlesscode.rpginventory.item;
+package ru.endlesscode.rpginventory.misc.config;
 
-/**
- * Created by OsipXD on 28.08.2016
- * It is part of the RpgInventory.
- * All rights reserved 2014 - 2016 © «EndlessCode Group»
- */
-public class TexturedItem {
-    protected final Texture texture;
+import ru.endlesscode.rpginventory.utils.SafeEnums;
 
-    protected TexturedItem(Texture texture) {
-        this.texture = texture;
-    }
+@SuppressWarnings("unused")
+public enum TexturesType {
+    DAMAGE,
+    CUSTOM_MODEL_DATA;
 
-    public int getTextureData() {
-        return texture.getData();
+    static TexturesType parseString(String stringValue) {
+        return SafeEnums.valueOfOrDefault(TexturesType.class, stringValue, DAMAGE, "textures type");
     }
 }

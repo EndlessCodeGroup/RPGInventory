@@ -13,6 +13,7 @@ bukkit {
     version = '1.15'
 
     meta {
+        name = "RPGInventory"
         main = "${group}.RPGInventoryPlugin"
         authors = ["OsipXD", "EndlessCode Group"]
     }
@@ -57,7 +58,7 @@ shadowJar {
     
     // inspector
     relocate "ru.endlesscode.inspector", "${shadowPackage}.inspector"
-    relocate "org.jetbrains.annotations", "${shadowPackage}.annotations"
+    relocate "org.jetbrains", "${shadowPackage}.jetbrains"
     relocate "kotlinx", "${shadowPackage}.kotlinx"
     relocate "kotlin", "${shadowPackage}.kotlin"
 
@@ -70,7 +71,7 @@ shadowJar {
     relocate "org.bstats.bukkit", "${shadowPackage}.bstats"
 }
 
-ext.inspectorVersion = "0.8.1"
+ext.inspectorVersion = "0.9"
 
 dependencies {
     compileOnly(bukkit()) {
@@ -83,15 +84,16 @@ dependencies {
     compileOnly('com.comphenix.protocol:ProtocolLib:4.5.0')
     compileOnly('org.jetbrains:annotations:18.0.0')
     compileOnly('me.clip:placeholderapi:2.10.4')
-    compileOnly('me.robin:BattleLevelsAPI:6.9.1')
+    compileOnly('me.robin:battlelevels-api:6.9.1')
     compileOnly('com.herocraftonline.heroes:Heroes:1.5.5.7')
     compileOnly('de.keyle:mypet:3.8')
-    compileOnly('org.tobiyas:RacesAndClasses:1.2.0')
-    compileOnly('me.baks:RPGPlayerLeveling:3.7.2')
+    compileOnly('org.tobiyas:racesandclasses:1.2.0')
+    compileOnly('me.baks:rpgplayerleveling:3.7.2')
     compileOnly('com.sucy:SkillAPI:3.102')
-    compileOnly('me.leothepro555:Skills')
+    compileOnly('me.leothepro555:skills:12.1.7')
     implementation("ru.endlesscode.inspector:inspector-bukkit:$inspectorVersion")
     implementation("ru.endlesscode.inspector:inspector-sentry-reporter:$inspectorVersion")
+    implementation("ru.endlesscode.inspector:sentry-bukkit:$inspectorVersion")
     implementation('com.comphenix.packetwrapper:PacketWrapper:1.13-R0.1-SNAPSHOT')
     implementation('org.bstats:bstats-bukkit-lite:1.5')
     testImplementation('junit:junit:4.12')
@@ -112,3 +114,5 @@ tasks.check.dependsOn tasks.jacocoTestReport
 // Add ProGuard minimization task
 // TODO: minimized Jar not works, fix it
 //apply(from: file("proguard.gradle"))
+
+apply(from: file("gradle/publish.gradle"))

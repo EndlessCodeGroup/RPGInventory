@@ -1,0 +1,15 @@
+apply plugin: "maven-publish"
+
+def sourceJar = tasks.register("sourceJar", Jar) {
+    archiveClassifier.set("sources")
+    from(project.sourceSets["main"].allJava)
+}
+
+publishing {
+    publications {
+        "$project.name"(MavenPublication) {
+            from(components.java)
+            artifact(sourceJar.get())
+        }
+    }
+}

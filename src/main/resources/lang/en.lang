@@ -18,6 +18,7 @@ error.rp.denied: &cYou must allow downloading the resource-pack!
 error.item.level: &6Required &c{0} &6level
 error.item.class: &6Required class &c{0}
 error.mount.owner: &6Mount belongs to {0}
+error.creative: &4RPGInventory can''t be used in CREATIVE game mode. Please switch to SURVIVAL.
 
 message.buyed: &aYou have successfully purchased the slot
 message.perms: &cYou don''t have permission to use this command

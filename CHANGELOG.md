@@ -12,6 +12,38 @@ X changes total
 ### Other (X changes)
 -->
 
+## 2.3.2-rc2 (2020-06-06)
+
+3 changes total
+
+### Fixed (3 changes)
+
+- Add GOLD**EN** tools to default config
+- Prevent equip restricted armor with right-click
+- Prevent equip restricted armor with shift-click when `armor_slot_action` is `rpginv`
+
+## 2.3.2-rc1 (2020-06-02)
+
+5 changes total
+
+### Added (3 changes)
+
+- **Added option textures-type.**  
+  Now you can switch textures type between Custom Model Data and damage.
+  Available values:
+  - `damage` (default) - https://www.spigotmc.org/wiki/custom-item-models-in-1-9-and-up/
+  - `custom_model_data` - modern replacement for textures by damage for 1.14+
+- Now 1.15 is fully supported
+- Disallow to open RPGInventory in creative mode
+
+### Changed (1 changes)
+
+- Removed health info from default info slot
+
+### Other (1 changes)
+
+- Update Inspector to v0.9 - crash reports will be better
+
 ## 2.3.1 (2020-01-02)
 
 2 changes total

@@ -19,6 +19,7 @@
 package ru.endlesscode.rpginventory.inventory;
 
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.attribute.Attribute;
@@ -115,6 +116,11 @@ public class PlayerWrapper implements InventoryHolder {
     public void openInventory(boolean softOpen) {
         Player player = this.player.getPlayer();
         if (player == null) {
+            return;
+        }
+
+        if (player.getGameMode() == GameMode.CREATIVE) {
+            player.sendMessage(RPGInventory.getLanguage().getMessage("error.creative"));
             return;
         }
 
