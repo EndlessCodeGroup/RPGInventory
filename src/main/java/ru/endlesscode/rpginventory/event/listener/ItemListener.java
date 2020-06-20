@@ -20,7 +20,7 @@ package ru.endlesscode.rpginventory.event.listener;
 
 import org.bukkit.Material;
 import org.bukkit.Particle;
-import org.bukkit.entity.Arrow;
+import org.bukkit.entity.AbstractArrow;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -33,12 +33,7 @@ import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.inventory.InventoryType;
-import org.bukkit.event.player.PlayerDropItemEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerItemBreakEvent;
-import org.bukkit.event.player.PlayerItemHeldEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.event.player.PlayerRespawnEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
@@ -94,9 +89,9 @@ public class ItemListener implements Listener {
             itemInHand = damager.getEquipment().getItemInMainHand();
             damageModifier = ItemManager.getModifier(damager,
                     ItemUtils.isEmpty(itemInHand) ? ItemStat.StatType.HAND_DAMAGE : ItemStat.StatType.DAMAGE);
-        } else if (event.getDamager().getType() == EntityType.ARROW &&
-                ((Arrow) event.getDamager()).getShooter() instanceof Player) {
-            damager = (Player) ((Arrow) event.getDamager()).getShooter();
+        } else if (event.getDamager() instanceof AbstractArrow &&
+                ((AbstractArrow) event.getDamager()).getShooter() instanceof Player) {
+            damager = (Player) ((AbstractArrow) event.getDamager()).getShooter();
             itemInHand = damager.getEquipment().getItemInMainHand();
             damageModifier = ItemManager.getModifier(damager, ItemStat.StatType.BOW_DAMAGE);
         } else {
