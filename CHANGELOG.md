@@ -12,6 +12,17 @@ X changes total
 ### Other (X changes)
 -->
 
+## 2.3.2-rc3 (2020-06-22)
+
+4 changes total
+
+### Fixed (4 changes)
+
+- Add missing weapons and armor to default slot configs
+- Fix crash when backpack size is more than 54
+- Fix armor validation on right click and dispense
+- Prevent damage pet with spectral arrow
+
 ## 2.3.2-rc2 (2020-06-06)
 
 3 changes total
