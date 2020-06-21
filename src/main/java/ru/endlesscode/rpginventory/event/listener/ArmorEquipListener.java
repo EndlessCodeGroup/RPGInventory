@@ -20,6 +20,7 @@ package ru.endlesscode.rpginventory.event.listener;
 
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -51,13 +52,13 @@ import ru.endlesscode.rpginventory.utils.PlayerUtils;
  * All rights reserved 2014 - 2016 © «EndlessCode Group»
  */
 public class ArmorEquipListener implements Listener {
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.HIGH)
     public void onQuickEquip(@NotNull PlayerInteractEvent event) {
         final Player player = event.getPlayer();
-        if (!InventoryManager.playerIsLoaded(player) || event.getAction() != Action.RIGHT_CLICK_AIR &&
-                event.getAction() != Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.RIGHT_CLICK_BLOCK &&
-                event.getClickedBlock() != null &&
-                !event.getClickedBlock().getState().getClass().getSimpleName().contains("BlockState")) {
+        boolean isNotInterestAction = event.getAction() != Action.RIGHT_CLICK_AIR &&
+                event.getAction() != Action.RIGHT_CLICK_BLOCK;
+
+        if (!InventoryManager.playerIsLoaded(player) || isNotInterestAction) {
             return;
         }
 
@@ -73,9 +74,11 @@ public class ArmorEquipListener implements Listener {
                 return;
             }
 
-            event.setCancelled(!InventoryManager.validateArmor(player, InventoryAction.PLACE_ONE, armorSlot, item));
-
-            PlayerUtils.updateInventory(player);
+            boolean armorIsValid = InventoryManager.validateArmor(player, InventoryAction.PLACE_ONE, armorSlot, item);
+            if (!armorIsValid) {
+                event.setUseItemInHand(Event.Result.DENY);
+                PlayerUtils.updateInventory(player);
+            }
         }
     }
 
