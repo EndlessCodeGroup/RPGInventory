@@ -43,12 +43,9 @@ public class RPGInventoryPlugin extends TrackedPlugin {
 
     @Override
     protected final @NotNull Reporter createReporter() {
-        String id = "1331962";
-        String key = "3fb946c572e14f819bde4b2b993b698e";
-
         return new SentryReporter.Builder()
                 .setClientFactory(new BukkitPluginSentryClientFactory(this))
-                .setDataSourceName(key, id)
+                .setDataSourceName("@sentry_key@", "@sentry_project_id@")
                 .focusOn(this)
                 .build();
     }
