@@ -18,19 +18,13 @@
 
 package ru.endlesscode.rpginventory.event.listener;
 
-import org.bukkit.Location;
-import org.bukkit.World;
-import org.bukkit.block.Block;
-import org.bukkit.block.Dispenser;
-import org.bukkit.block.data.Directional;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.block.BlockDispenseEvent;
+import org.bukkit.event.block.BlockDispenseArmorEvent;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
@@ -50,8 +44,6 @@ import ru.endlesscode.rpginventory.misc.config.VanillaSlotAction;
 import ru.endlesscode.rpginventory.utils.InventoryUtils;
 import ru.endlesscode.rpginventory.utils.ItemUtils;
 import ru.endlesscode.rpginventory.utils.PlayerUtils;
-
-import java.util.Collection;
 
 /**
  * Created by OsipXD on 08.04.2016
@@ -154,34 +146,19 @@ public class ArmorEquipListener implements Listener {
     }
 
     @EventHandler
-    public void onDispenseEquip(BlockDispenseEvent event) {
-        ArmorType type = ArmorType.matchType(event.getItem());
-        World world = event.getBlock().getWorld();
-        Location blockLoc = event.getBlock().getLocation();
+    public void onDispenseEquip(BlockDispenseArmorEvent event) {
+        if (event.getTargetEntity().getType() == EntityType.PLAYER) {
+            ArmorType type = ArmorType.matchType(event.getItem());
+            Player player = (Player) event.getTargetEntity();
 
-        Collection<Entity> nearbyEntities = world.getNearbyEntities(blockLoc, 3D, 1.2D, 3D);
-        if (nearbyEntities.isEmpty()) {
-            return;
-        }
-
-        for (Entity entity : nearbyEntities) {
-            if (entity.getType() != EntityType.PLAYER) {
-                continue;
-            }
-
-            Player player = (Player) entity;
-            if (!this.isPlayerInRightPosition(event.getBlock(), player)) {
-                continue;
-            }
             if (this.hasInventoryArmorByType(type, player)) {
-                continue;
+                return;
             }
             if (InventoryManager.playerIsLoaded(player)) {
                 Slot armorSlot = SlotManager.instance().getSlot(type.name());
                 event.setCancelled(armorSlot != null
                         && !InventoryManager.validateArmor(player, InventoryAction.PLACE_ONE, armorSlot, event.getItem())
                 );
-                return;
             }
         }
     }
@@ -200,28 +177,6 @@ public class ArmorEquipListener implements Listener {
             case UNKNOWN:
             default:
                 return true; //Why no?
-        }
-    }
-
-    private boolean isPlayerInRightPosition(Block block, Player player) {
-        if (!(block.getState() instanceof Dispenser)) {
-            return false;
-        }
-        final Location blockLoc = block.getLocation();
-        final Location playerLoc = player.getLocation();
-        Dispenser dispenser = (Dispenser) block.getState();
-        Directional dispenserData = (Directional) dispenser.getBlockData();
-        switch (dispenserData.getFacing()) {
-            case EAST:
-                return playerLoc.getBlockX() != blockLoc.getBlockX() && playerLoc.getX() <= blockLoc.getX() + 2.3 && playerLoc.getX() >= blockLoc.getX();
-            case WEST:
-                return playerLoc.getX() >= blockLoc.getX() - 1.3 && playerLoc.getX() <= blockLoc.getX();
-            case SOUTH:
-                return playerLoc.getBlockZ() != blockLoc.getBlockZ() && playerLoc.getZ() <= blockLoc.getZ() + 2.3 && playerLoc.getZ() >= blockLoc.getZ();
-            case NORTH:
-                return playerLoc.getZ() >= blockLoc.getZ() - 1.3 && playerLoc.getZ() <= blockLoc.getZ();
-            default:
-                return false;
         }
     }
 }
