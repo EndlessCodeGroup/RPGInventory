@@ -26,12 +26,9 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
 import ru.endlesscode.rpginventory.misc.config.Config;
+import ru.endlesscode.rpginventory.utils.Log;
 
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Created by OsipXD on 19.10.2015
@@ -100,6 +97,10 @@ public class Backpack implements ConfigurationSerializable {
 
     void open(@NotNull Player player) {
         int realSize = (int) Math.ceil(this.backpackType.getSize() / 9.0) * 9;
+        if (realSize > 54) {
+            realSize = 54;
+            Log.w("Backpack can''t contain more than 54 slots. So it was trimmed downto 54.");
+        }
         BackpackHolder holder = new BackpackHolder();
         Inventory inventory = Bukkit.createInventory(holder, realSize, backpackType.getTitle());
         holder.setInventory(inventory);
