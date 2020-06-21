@@ -14,6 +14,8 @@ slots:
       - GOLD_HELMET
       - GOLDEN_HELMET
       - DIAMOND_HELMET
+      - NETHERITE_HELMET
+      - TURTLE_HELMET
   chestplate:
     type: ARMOR
     slot: 13
@@ -29,6 +31,7 @@ slots:
       - GOLD_CHESTPLATE
       - GOLDEN_CHESTPLATE
       - DIAMOND_CHESTPLATE
+      - NETHERITE_CHESTPLATE
   leggings:
     type: ARMOR
     slot: 22
@@ -44,6 +47,7 @@ slots:
       - GOLD_LEGGINGS
       - GOLDEN_LEGGINGS
       - DIAMOND_LEGGINGS
+      - NETHERITE_LEGGINGS
   boots:
     type: ARMOR
     slot: 31
@@ -59,6 +63,7 @@ slots:
       - GOLD_BOOTS
       - GOLDEN_BOOTS
       - DIAMOND_BOOTS
+      - NETHERITE_BOOTS
   weapon:
     type: ACTIVE
     slot: 12
@@ -75,13 +80,17 @@ slots:
       - GOLD_SWORD
       - GOLDEN_SWORD
       - DIAMOND_SWORD
+      - NETHERITE_SWORD
       - WOOD_AXE
       - STONE_AXE
       - IRON_AXE
       - GOLD_AXE
       - GOLDEN_AXE
       - DIAMOND_AXE
+      - NETHERITE_AXE
       - BOW
+      - TRIDENT
+      - CROSSBOW
   gloves:
     type: PASSIVE
     slot: 14

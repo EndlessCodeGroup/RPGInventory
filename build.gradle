@@ -10,18 +10,35 @@ version = pluginVersion
 description = pluginDesc
 
 bukkit {
-    version = '1.15'
+    version = '1.15.2'
 
     meta {
         name = "RPGInventory"
         main = "${group}.RPGInventoryPlugin"
-        authors = ["OsipXD", "EndlessCode Group"]
+        authors = ["osipxd", "EndlessCode Group"]
     }
 
     run {
         core = "spigot"
         eula = true
     }
+}
+
+// Replace sentry credentials in code
+def processSources = tasks.register("processSource", Sync) {
+    def projectId = "1331962"
+    // The key should be declared in ~/.gradle/gradle.properties
+    def key = findProperty("rpginvSentryKey") ?: ""
+
+    from(sourceSets.main.java)
+    inputs.property("projectId", projectId)
+    inputs.property("key", key)
+    filter(org.apache.tools.ant.filters.ReplaceTokens, tokens: [sentry_key: key, sentry_project_id: projectId])
+    into("$buildDir/src")
+}
+
+compileJava {
+    source = processSources.get().outputs
 }
 
 repositories {
@@ -52,10 +69,10 @@ repositories {
 
 shadowJar {
     minimize()
-    
+
     def shadowPackage = "shade.ru.endlesscode.rpginventory"
     relocate "com.comphenix.packetwrapper", "${shadowPackage}.packetwrapper"
-    
+
     // inspector
     relocate "ru.endlesscode.inspector", "${shadowPackage}.inspector"
     relocate "org.jetbrains", "${shadowPackage}.jetbrains"
@@ -66,7 +83,7 @@ shadowJar {
     relocate "io.sentry", "${shadowPackage}.sentry"
     relocate "org.slf4j", "${shadowPackage}.slf4j"
     relocate "com.fasterxml.jackson.core", "${shadowPackage}.jackson"
-    
+
     // bstats
     relocate "org.bstats.bukkit", "${shadowPackage}.bstats"
 }
