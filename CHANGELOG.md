@@ -14,11 +14,53 @@ X changes total
 
 ## 2.3.2 (2020-06-30)
 
-1 changes total
+#### Custom Model Data
 
-### Fixed (1 changes)
+Now you can switch textures type between Custom Model Data and damage.
+Just change option `textures-type` in the config.
+There is two possible values:
+ - `damage` (default value) - https://www.spigotmc.org/wiki/custom-item-models-in-1-9-and-up/
+ - `custom_model_data` - modern replacement for textures by damage available since 1.14
 
-- Fixed exception on shield take off (#173)
+We also created resource-pack `majesty` using Custom Model Data.
+It is fully compatible with the default plugin config.
+https://gitlab.com/endlesscodegroup/rpginventory/resource-packs
+
+#### Other changes
+
+This release contains a lot of small but significant fixes and improvements.
+We improved default configs.
+Now it should be less confusing for new plugin users.
+
+Version 1.15 now is fully supported.
+Also, there is initial support of 1.16.
+By the way, NETHERITE tools and armors are already in default configs :)
+
+#### All changes
+
+13 changes total
+
+### Added (3 changes)
+
+- Custom Model Data support
+- Now 1.15 is fully supported
+- Disallow to open RPGInventory in creative mode
+
+### Fixed (8 changes)
+
+- Fixed error on shield take off (#173)
+- Fixed error when backpack size is greater than 54
+- Prevent damaging pets with spectral arrows
+- Add GOLD**EN** and NETHERITE tools to the default config
+- Fix armor validation on right click and dispense
+- Prevent equip restricted armor with right-click
+- Prevent equip restricted armor with shift-click when `armor_slot_action` is `rpginv`
+- Prevent equip a shield with shift-click if it is not allowed.
+
+### Other (2 changes)
+
+- Removed health info from default info slot
+- Inspector updated to v0.9 - crash reports will look better :)
 
 ## 2.3.2-rc3 (2020-06-22)
 
