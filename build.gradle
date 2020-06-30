@@ -10,7 +10,7 @@ version = pluginVersion
 description = pluginDesc
 
 bukkit {
-    version = '1.15.2'
+    version = '1.16.1'
 
     meta {
         name = "RPGInventory"
@@ -91,10 +91,7 @@ shadowJar {
 ext.inspectorVersion = "0.9"
 
 dependencies {
-    compileOnly(bukkit()) {
-        exclude group: 'junit'
-        exclude module: 'json'
-    }
+    compileOnly(spigotApi())
     compileOnly('net.milkbowl.vault:VaultAPI:1.7') {
         exclude group: 'org.bukkit'
     }
