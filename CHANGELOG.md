@@ -12,6 +12,14 @@ X changes total
 ### Other (X changes)
 -->
 
+## 2.3.2 (2020-06-30)
+
+1 changes total
+
+### Fixed (1 changes)
+
+- Fixed exception on shield take off (#173)
+
 ## 2.3.2-rc3 (2020-06-22)
 
 4 changes total
