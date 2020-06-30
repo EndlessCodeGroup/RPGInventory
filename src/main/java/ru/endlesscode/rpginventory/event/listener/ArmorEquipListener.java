@@ -18,6 +18,7 @@
 
 package ru.endlesscode.rpginventory.event.listener;
 
+import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -31,6 +32,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import ru.endlesscode.rpginventory.RPGInventory;
@@ -45,6 +47,8 @@ import ru.endlesscode.rpginventory.misc.config.VanillaSlotAction;
 import ru.endlesscode.rpginventory.utils.InventoryUtils;
 import ru.endlesscode.rpginventory.utils.ItemUtils;
 import ru.endlesscode.rpginventory.utils.PlayerUtils;
+
+import java.util.Objects;
 
 /**
  * Created by OsipXD on 08.04.2016
@@ -135,16 +139,33 @@ public class ArmorEquipListener implements Listener {
         } else if (event.getAction() == InventoryAction.MOVE_TO_OTHER_INVENTORY) {
             // Validate Shift-Click
             ItemStack item = event.getCurrentItem();
-            ArmorType armorType = ArmorType.matchType(item);
-
-            if (armorType == ArmorType.UNKNOWN) {
-                return;
+            if (item != null && item.getType() == Material.SHIELD) {
+                handleShieldShiftClick(event, player, item);
+            } else {
+                handleArmorShiftClick(event, player, item);
             }
+        }
+    }
 
-            Slot armorSlot = SlotManager.instance().getSlot(armorType.name());
-            if (armorSlot != null && InventoryUtils.playerNeedArmor(player, armorType)) {
-                event.setCancelled(!InventoryManager.validateArmor(player, InventoryAction.PLACE_ONE, armorSlot, item));
-            }
+    private void handleShieldShiftClick(InventoryClickEvent event, Player player, ItemStack item) {
+        Slot shieldSlot = SlotManager.instance().getShieldSlot();
+        EntityEquipment equipment = Objects.requireNonNull(player.getEquipment(), "Player always have equipment.");
+
+        if (shieldSlot != null && ItemUtils.isEmpty(equipment.getItemInOffHand())) {
+            event.setCancelled(!InventoryManager.validateUpdate(player, ActionType.SET, shieldSlot, item));
+        }
+    }
+
+    private void handleArmorShiftClick(InventoryClickEvent event, Player player, ItemStack item) {
+        ArmorType armorType = ArmorType.matchType(item);
+
+        if (armorType == ArmorType.UNKNOWN) {
+            return;
+        }
+
+        Slot armorSlot = SlotManager.instance().getSlot(armorType.name());
+        if (armorSlot != null && InventoryUtils.playerNeedArmor(player, armorType)) {
+            event.setCancelled(!InventoryManager.validateArmor(player, InventoryAction.PLACE_ONE, armorSlot, item));
         }
     }
 
