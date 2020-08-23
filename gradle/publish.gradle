@@ -1,15 +1,53 @@
 apply plugin: "maven-publish"
+apply plugin: "com.jfrog.bintray"
 
-def sourceJar = tasks.register("sourceJar", Jar) {
-    archiveClassifier.set("sources")
-    from(project.sourceSets["main"].allJava)
+java {
+    withSourcesJar()
 }
 
 publishing {
     publications {
-        "$project.name"(MavenPublication) {
-            from(components.java)
-            artifact(sourceJar.get())
+        "maven"(MavenPublication) { publication ->
+            project.shadow.component(publication)
+        }
+    }
+}
+
+def repoUrl = "https://github.com/EndlessCodeGroup/RPGInventory"
+def pluginName = "RPGInventory"
+def bintrayUsername = System.getProperty("bintray.username") ?: System.getenv("BINTRAY_USERNAME")
+def bintrayApiKey = System.getProperty("bintray.apiKey") ?: System.getenv("BINTRAY_API_KEY")
+if (bintrayUsername == null || bintrayApiKey == null) {
+    println("""
+        System properties 'bintray.username' and 'bintray.apiKey' are not specified.
+        Publication to Bintray is unavailable.
+        Alternatively, you can specify environment variables 'BINTRAY_USERNAME' and 'BINTRAY_API_KEY'.
+        https://docs.gradle.org/current/userguide/build_environment.html#sec:gradle_system_properties
+    """.stripIndent())
+    return
+}
+
+bintray {
+    user = bintrayUsername
+    key = bintrayApiKey
+    setPublications("maven")
+
+    pkg {
+        repo = "repo"
+        name = pluginName.toLowerCase()
+        userOrg = "endlesscode"
+        setLicenses("GPL-v3")
+        setLabels("plugin", "bukkit", "rpg", "minecraft")
+        publicDownloadNumbers = true
+        vcsUrl = "${repoUrl}.git"
+        websiteUrl = repoUrl
+        issueTrackerUrl = "$repoUrl/issues"
+
+        version {
+            name = project.version.toString()
+            desc = "$pluginName v$name"
+            released = new Date().toString()
+            vcsTag = "v$name"
         }
     }
 }
