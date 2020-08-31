@@ -8,6 +8,9 @@ java {
 publishing {
     publications {
         "maven"(MavenPublication) { publication ->
+            from(components.java)
+        }
+        "shadow"(MavenPublication) { publication ->
             project.shadow.component(publication)
         }
     }
@@ -30,7 +33,7 @@ if (bintrayUsername == null || bintrayApiKey == null) {
 bintray {
     user = bintrayUsername
     key = bintrayApiKey
-    setPublications("maven")
+    setPublications("maven", "shadow")
 
     pkg {
         repo = "repo"
