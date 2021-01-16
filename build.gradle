@@ -1,5 +1,5 @@
 plugins {
-    id 'ru.endlesscode.bukkitgradle' version '0.8.2'
+    id 'ru.endlesscode.bukkitgradle' version '0.9.0'
     id 'com.github.johnrengelman.shadow' version '5.2.0'
     id 'com.github.ben-manes.versions' version "0.27.0"
     id "com.jfrog.bintray" version "1.8.5" apply false
@@ -11,16 +11,17 @@ version = pluginVersion
 description = pluginDesc
 
 bukkit {
-    version = '1.16.1'
+    apiVersion = '1.16.4'
 
     meta {
-        name = "RPGInventory"
-        main = "${group}.RPGInventoryPlugin"
-        authors = ["osipxd", "EndlessCode Group"]
+        name.set("RPGInventory")
+        main.set("${group}.RPGInventoryPlugin")
+        apiVersion.set("1.14")
+        authors.set(["osipxd", "EndlessCode Group"])
     }
 
-    run {
-        core = "spigot"
+    server {
+        core = "paper"
         eula = true
     }
 }
@@ -49,8 +50,8 @@ repositories {
     spigot()
     dmulloy2()
     md5()
-    vault()
     placeholderapi()
+    jitpack()
 
     maven {
         name 'keyle-repo'
@@ -93,7 +94,7 @@ ext.inspectorVersion = "0.9"
 
 dependencies {
     compileOnly(spigotApi())
-    compileOnly('net.milkbowl.vault:VaultAPI:1.7') {
+    compileOnly('com.github.MilkBowl:VaultAPI:1.7') {
         exclude group: 'org.bukkit'
     }
     compileOnly('com.comphenix.protocol:ProtocolLib:4.5.0')

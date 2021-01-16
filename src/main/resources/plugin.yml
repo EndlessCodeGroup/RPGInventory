@@ -1,4 +1,3 @@
-api-version: "1.14"
 depend:
   - ProtocolLib
   - Vault
@@ -15,7 +14,7 @@ softdepend:
 commands:
   rpginventory:
     description: RPGInventory command.
-    aliases: rpginv
+    aliases: [rpginv]
     usage: /<command>
 
 permissions:
