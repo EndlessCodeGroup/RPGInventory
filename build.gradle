@@ -1,6 +1,6 @@
 plugins {
-    id 'ru.endlesscode.bukkitgradle' version '0.9.1'
-    id 'com.github.johnrengelman.shadow' version '5.2.0'
+    id 'com.github.johnrengelman.shadow' version '6.1.0'
+    id 'ru.endlesscode.bukkitgradle' version '0.9.2'
     id 'com.github.ben-manes.versions' version "0.36.0"
     id "com.jfrog.bintray" version "1.8.5" apply false
     id 'jacoco'
@@ -28,14 +28,12 @@ bukkit {
 
 // Replace sentry credentials in code
 def processSources = tasks.register("processSource", Sync) {
-    def projectId = "1331962"
     // The key should be declared in ~/.gradle/gradle.properties
-    def key = findProperty("rpginvSentryKey") ?: ""
+    def dsn = findProperty("rpginvSentryDsn") ?: ""
 
     from(sourceSets.main.java)
-    inputs.property("projectId", projectId)
-    inputs.property("key", key)
-    filter(org.apache.tools.ant.filters.ReplaceTokens, tokens: [sentry_key: key, sentry_project_id: projectId])
+    inputs.property("dsn", dsn)
+    filter(org.apache.tools.ant.filters.ReplaceTokens, tokens: [sentry_dsn: dsn])
     into("$buildDir/src")
 }
 
@@ -86,7 +84,7 @@ shadowJar {
     relocate "org.bstats.bukkit", "${shadowPackage}.bstats"
 }
 
-ext.inspectorVersion = "0.9"
+def inspectorVersion = "0.10.1"
 
 dependencies {
     compileOnly(spigotApi())
