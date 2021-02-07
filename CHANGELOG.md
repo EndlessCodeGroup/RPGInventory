@@ -12,6 +12,12 @@ X changes total
 ### Other (X changes)
 -->
 
+## [Unreleased]
+
+### Fixed
+
+- Dupe when press `F` on item (#168)
+
 ## 2.3.2 (2020-06-30)
 
 #### Custom Model Data
@@ -185,3 +191,5 @@ By the way, NETHERITE tools and armors are already in default configs :)
 - Updated Skills integration.
 - Updated MyPet integration.
 - bStats instead of MCStats.
+
+[Unreleased]: https://github.com/EndlessCodeGroup/RPGInventory/compare/v2.3.2...develop
