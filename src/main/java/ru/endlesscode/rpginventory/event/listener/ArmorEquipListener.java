@@ -129,10 +129,12 @@ public class ArmorEquipListener implements Listener {
 
             event.setCancelled(!InventoryManager.validateArmor(player, event.getAction(), armorSlot, item));
         } else if (event.getAction() == InventoryAction.HOTBAR_SWAP) {
-            // Prevent method when player press number
-            if (event.getInventory().getType() == InventoryType.CRAFTING) {
-                ItemStack hotbarItem = player.getInventory().getItem(event.getHotbarButton());
-                if (ItemUtils.isNotEmpty(hotbarItem)) {
+            int hotbarSlot = event.getHotbarButton();
+            if (hotbarSlot == -1) {
+                handleShieldShiftClick(event, player, event.getCurrentItem());
+            } else if (event.getInventory().getType() == InventoryType.CRAFTING) {
+                // Prevent method when player press number
+                if (ItemUtils.isNotEmpty(player.getInventory().getItem(hotbarSlot))) {
                     event.setCancelled(true);
                 }
             }
@@ -151,7 +153,7 @@ public class ArmorEquipListener implements Listener {
         Slot shieldSlot = SlotManager.instance().getShieldSlot();
         EntityEquipment equipment = Objects.requireNonNull(player.getEquipment(), "Player always have equipment.");
 
-        if (shieldSlot != null && ItemUtils.isEmpty(equipment.getItemInOffHand())) {
+        if (shieldSlot != null && (ItemUtils.isEmpty(equipment.getItemInOffHand()) || !ItemUtils.isEmpty(item))) {
             event.setCancelled(!InventoryManager.validateUpdate(player, ActionType.SET, shieldSlot, item));
         }
     }
