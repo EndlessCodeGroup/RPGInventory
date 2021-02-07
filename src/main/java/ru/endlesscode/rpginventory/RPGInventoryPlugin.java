@@ -23,7 +23,7 @@ import ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin;
 import ru.endlesscode.inspector.bukkit.report.BukkitEnvironment;
 import ru.endlesscode.inspector.report.Reporter;
 import ru.endlesscode.inspector.report.SentryReporter;
-import ru.endlesscode.inspector.sentry.bukkit.BukkitPluginSentryClientFactory;
+import ru.endlesscode.inspector.sentry.bukkit.SentryBukkitIntegration;
 
 import java.util.Arrays;
 import java.util.List;
@@ -44,8 +44,8 @@ public class RPGInventoryPlugin extends TrackedPlugin {
     @Override
     protected final @NotNull Reporter createReporter() {
         return new SentryReporter.Builder()
-                .setClientFactory(new BukkitPluginSentryClientFactory(this))
-                .setDataSourceName("@sentry_key@", "@sentry_project_id@")
+                .setDsn("@sentry_dsn@")
+                .addIntegration(new SentryBukkitIntegration(this))
                 .focusOn(this)
                 .build();
     }
