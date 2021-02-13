@@ -18,20 +18,11 @@
 
 package ru.endlesscode.rpginventory.utils;
 
-import com.herocraftonline.heroes.Heroes;
-import com.sucy.skill.SkillAPI;
-import com.sucy.skill.api.player.PlayerData;
-import de.tobiyas.racesandclasses.APIs.ClassAPI;
-import de.tobiyas.racesandclasses.APIs.LevelAPI;
-import de.tobiyas.racesandclasses.datacontainer.traitholdercontainer.classes.ClassContainer;
-import me.baks.rpl.api.API;
-import me.leothepro555.skills.database.managers.PlayerInfo;
-import me.leothepro555.skills.main.LanguageSupport;
-import me.leothepro555.skills.main.Skills;
-import me.robin.battlelevels.api.BattleLevelsAPI;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import ru.endlesscode.inspector.bukkit.scheduler.TrackedBukkitRunnable;
+import ru.endlesscode.mimic.classes.BukkitClassSystem;
+import ru.endlesscode.mimic.level.BukkitLevelSystem;
 import ru.endlesscode.rpginventory.RPGInventory;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
 import ru.endlesscode.rpginventory.inventory.PlayerWrapper;
@@ -46,67 +37,13 @@ import java.util.List;
 public class PlayerUtils {
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public static boolean checkLevel(@NotNull Player player, int required) {
-        int level = 0;
-        switch (RPGInventory.getLevelSystem()) {
-            case EXP:
-                level = player.getLevel();
-                break;
-            case SKILLAPI:
-                PlayerData playerData = SkillAPI.getPlayerData(player);
-                level = playerData.hasClass() ? playerData.getMainClass().getLevel() : 0;
-                break;
-            case BATTLELEVELS:
-                level = BattleLevelsAPI.getLevel(player.getUniqueId());
-                break;
-            case SKILLS:
-                PlayerInfo playerInfo = Skills.get().getPlayerDataManager().getOrLoadPlayerInfo(player);
-                level = playerInfo.getLevel();
-                break;
-            case HEROES:
-                level = Heroes.getInstance().getCharacterManager().getHero(player).getLevel();
-                break;
-            case RAC:
-                level = LevelAPI.getCurrentLevel(player);
-                break;
-            case RPGPL:
-                level = new API().getPlayerLevel(player);
-                break;
-        }
-
-        return level >= required;
+        BukkitLevelSystem levelSystem = RPGInventory.getLevelSystem(player);
+        return levelSystem.didReachLevel(required);
     }
 
     public static boolean checkClass(@NotNull Player player, @NotNull List<String> classes) {
-        String playerClass = "";
-        switch (RPGInventory.getClassSystem()) {
-            case PERMISSIONS:
-                for (String theClass : classes) {
-                    if (RPGInventory.getPermissions().has(player, "rpginventory.class." + theClass)) {
-                        playerClass = theClass;
-                        break;
-                    }
-                }
-                break;
-            case SKILLAPI:
-                PlayerData data = SkillAPI.getPlayerData(player);
-                if (data.hasClass()) {
-                    playerClass = data.getMainClass().getData().getName();
-                }
-                break;
-            case SKILLS:
-                PlayerInfo playerInfo = Skills.get().getPlayerDataManager().getOrLoadPlayerInfo(player);
-                LanguageSupport.Languages skillNameLang = playerInfo.getSkill().getLanguageName();
-                playerClass = Skills.getLang().parseFirstString(skillNameLang);
-                break;
-            case HEROES:
-                playerClass = Heroes.getInstance().getCharacterManager().getHero(player).getHeroClass().getName();
-                break;
-            case RAC:
-                ClassContainer classContainer = ClassAPI.getClassOfPlayer(player);
-                playerClass = classContainer == null ? null : classContainer.getDisplayName();
-        }
-
-        return classes.contains(playerClass);
+        BukkitClassSystem classSystem = RPGInventory.getClassSystem(player);
+        return classSystem.hasAnyOfClasses(classes);
     }
 
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
@@ -141,43 +78,5 @@ public class PlayerUtils {
         }
 
         player.sendMessage(message);
-    }
-
-    public enum LevelSystem {
-        EXP("NONE"),
-        SKILLAPI("SkillAPI"),
-        BATTLELEVELS("BattleLevels"),
-        SKILLS("Skills"),
-        HEROES("Heroes"),
-        RAC("RacesAndClasses"),
-        RPGPL("RPGPlayerLeveling");
-
-        private final String pluginName;
-
-        LevelSystem(String pluginName) {
-            this.pluginName = pluginName;
-        }
-
-        public String getPluginName() {
-            return pluginName;
-        }
-    }
-
-    public enum ClassSystem {
-        PERMISSIONS("NONE"),
-        SKILLAPI("SkillAPI"),
-        SKILLS("Skills"),
-        HEROES("Heroes"),
-        RAC("RacesAndClasses");
-
-        private final String pluginName;
-
-        ClassSystem(String pluginName) {
-            this.pluginName = pluginName;
-        }
-
-        public String getPluginName() {
-            return pluginName;
-        }
     }
 }
