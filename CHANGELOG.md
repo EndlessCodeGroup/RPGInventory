@@ -14,6 +14,23 @@ X changes total
 
 ## [Unreleased]
 
+### Mimic support
+
+> Now you should install [Mimic](https://www.spigotmc.org/resources/82515/) to use RPGInventory.
+
+Mimic automatically detects classes and levels plugins that you use and RPGInventory will use it for items and slots requirements.
+All supported level and class systems available at [this page](https://github.com/EndlessCodeGroup/Mimic/tree/develop/mimic-bukkit#supported-implementations).
+With Mimic you can add support of own levels/classes plugin. 
+
+Removed `level-system` and `class-system` options from config.
+Option `slots.level.spend` works for any level system.
+
+Added `RPGInventoryItemsRegistry`.
+You can get RPGInv items using command:
+```
+/mimic items give <player> rpginventory:<item id>
+```
+
 ### Fixed
 
 - Dupe when press `F` on item (#168)
