@@ -2,6 +2,7 @@ depend:
   - ProtocolLib
   - Vault
 softdepend:
+  - Mimic
   - BattleLevels
   - Skills
   - Heroes

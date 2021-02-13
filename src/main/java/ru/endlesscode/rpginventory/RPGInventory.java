@@ -25,12 +25,15 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
+import org.bukkit.plugin.ServicesManager;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ru.endlesscode.inspector.bukkit.command.TrackedCommandExecutor;
 import ru.endlesscode.inspector.bukkit.plugin.PluginLifecycle;
 import ru.endlesscode.inspector.bukkit.scheduler.TrackedBukkitRunnable;
+import ru.endlesscode.mimic.classes.BukkitClassSystem;
+import ru.endlesscode.mimic.level.BukkitLevelSystem;
 import ru.endlesscode.rpginventory.compat.VersionHandler;
 import ru.endlesscode.rpginventory.compat.mypet.MyPetManager;
 import ru.endlesscode.rpginventory.event.listener.ArmorEquipListener;
@@ -53,7 +56,6 @@ import ru.endlesscode.rpginventory.pet.PetManager;
 import ru.endlesscode.rpginventory.resourcepack.ResourcePackModule;
 import ru.endlesscode.rpginventory.utils.Log;
 import ru.endlesscode.rpginventory.utils.PlayerUtils;
-import ru.endlesscode.rpginventory.utils.SafeEnums;
 import ru.endlesscode.rpginventory.utils.StringUtils;
 import ru.endlesscode.rpginventory.utils.Version;
 
@@ -65,8 +67,8 @@ public class RPGInventory extends PluginLifecycle {
     private Permission perms;
     private Economy economy;
 
-    private PlayerUtils.LevelSystem levelSystem;
-    private PlayerUtils.ClassSystem classSystem;
+    private BukkitLevelSystem.Provider levelSystemProvider;
+    private BukkitClassSystem.Provider classSystemProvider;
 
     private FileLanguage language;
     private boolean placeholderApiHooked = false;
@@ -104,12 +106,12 @@ public class RPGInventory extends PluginLifecycle {
         return instance.myPetHooked;
     }
 
-    public static PlayerUtils.LevelSystem getLevelSystem() {
-        return instance.levelSystem;
+    public static BukkitLevelSystem getLevelSystem(@NotNull Player player) {
+        return instance.levelSystemProvider.getSystem(player);
     }
 
-    public static PlayerUtils.ClassSystem getClassSystem() {
-        return instance.classSystem;
+    public static BukkitClassSystem getClassSystem(@NotNull Player player) {
+        return instance.classSystemProvider.getSystem(player);
     }
 
     @Nullable
@@ -126,6 +128,10 @@ public class RPGInventory extends PluginLifecycle {
 
     @Override
     public void onEnable() {
+        if (!initMimicSystems()) {
+            return;
+        }
+
         this.updateConfig();
         Config.reload();
         language = new FileLanguage(this);
@@ -182,14 +188,20 @@ public class RPGInventory extends PluginLifecycle {
                 .setExecutor(new TrackedCommandExecutor(new RPGInventoryCommandExecutor(), getReporter()));
 
         this.checkUpdates(null);
+    }
 
-        // Do this after all plugins loaded
-        new TrackedBukkitRunnable() {
-            @Override
-            public void run() {
-                checkThatSystemsLoaded();
-            }
-        }.runTask(this);
+    private boolean initMimicSystems() {
+        boolean isMimicEnabled = getServer().getPluginManager().isPluginEnabled("Mimic");
+        if (isMimicEnabled) {
+            ServicesManager servicesManager = getServer().getServicesManager();
+            this.levelSystemProvider = servicesManager.load(BukkitLevelSystem.Provider.class);
+            this.classSystemProvider = servicesManager.load(BukkitClassSystem.Provider.class);
+        } else {
+            getLogger().severe("Mimic is required for the plugin!");
+            getLogger().severe("Download it: https://www.spigotmc.org/resources/82515/");
+            getServer().getPluginManager().disablePlugin(this);
+        }
+        return isMimicEnabled;
     }
 
     private boolean checkRequirements() {
@@ -220,35 +232,7 @@ public class RPGInventory extends PluginLifecycle {
             Log.w("Economy not found!");
         }
 
-        initLevelSystem();
-        initClassSystem();
-
         return InventoryManager.init(this) && SlotManager.init();
-    }
-
-    private void initLevelSystem() {
-        this.levelSystem = SafeEnums.valueOfOrDefault(PlayerUtils.LevelSystem.class,
-                Config.getConfig().getString("level-system"), PlayerUtils.LevelSystem.EXP, "level system");
-    }
-
-    private void initClassSystem() {
-        this.classSystem = SafeEnums.valueOfOrDefault(PlayerUtils.ClassSystem.class,
-                Config.getConfig().getString("class-system"), PlayerUtils.ClassSystem.PERMISSIONS, "class-system");
-    }
-
-    private void checkThatSystemsLoaded() {
-        PluginManager pm = this.getServer().getPluginManager();
-        if (levelSystem != PlayerUtils.LevelSystem.EXP && !pm.isPluginEnabled(levelSystem.getPluginName())) {
-            Log.w("Level-system {0} is not enabled!", levelSystem.getPluginName());
-            Log.w("Will be used EXP by default");
-            levelSystem = PlayerUtils.LevelSystem.EXP;
-        }
-
-        if (classSystem != PlayerUtils.ClassSystem.PERMISSIONS && !pm.isPluginEnabled(classSystem.getPluginName())) {
-            Log.w("Class-system {0} is not enabled!", classSystem.getPluginName());
-            Log.w("Will be used PERMISSIONS by default");
-            classSystem = PlayerUtils.ClassSystem.PERMISSIONS;
-        }
     }
 
     @Override
