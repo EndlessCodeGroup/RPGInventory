@@ -200,5 +200,10 @@ public class ConfigUpdater {
         if (configVersion.compareTo("2.3.2") < 0) {
             config.set("textures-type", "damage");
         }
+
+        if (configVersion.compareTo("2.4.0") < 0) {
+            config.set("level-system", null);
+            config.set("class-system", null);
+        }
     }
 }
