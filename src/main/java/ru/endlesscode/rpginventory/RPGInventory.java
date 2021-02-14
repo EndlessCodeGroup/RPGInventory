@@ -25,6 +25,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
+import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.ServicesManager;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -33,8 +34,10 @@ import ru.endlesscode.inspector.bukkit.command.TrackedCommandExecutor;
 import ru.endlesscode.inspector.bukkit.plugin.PluginLifecycle;
 import ru.endlesscode.inspector.bukkit.scheduler.TrackedBukkitRunnable;
 import ru.endlesscode.mimic.classes.BukkitClassSystem;
+import ru.endlesscode.mimic.items.BukkitItemsRegistry;
 import ru.endlesscode.mimic.level.BukkitLevelSystem;
 import ru.endlesscode.rpginventory.compat.VersionHandler;
+import ru.endlesscode.rpginventory.compat.mimic.RPGInventoryItemsRegistry;
 import ru.endlesscode.rpginventory.compat.mypet.MyPetManager;
 import ru.endlesscode.rpginventory.event.listener.ArmorEquipListener;
 import ru.endlesscode.rpginventory.event.listener.ElytraListener;
@@ -127,6 +130,15 @@ public class RPGInventory extends PluginLifecycle {
     }
 
     @Override
+    public void onLoad() {
+        if (!checkMimicEnabled()) {
+            getServer()
+                    .getServicesManager()
+                    .register(BukkitItemsRegistry.class, new RPGInventoryItemsRegistry(), this, ServicePriority.High);
+        }
+    }
+
+    @Override
     public void onEnable() {
         if (!initMimicSystems()) {
             return;
@@ -191,17 +203,23 @@ public class RPGInventory extends PluginLifecycle {
     }
 
     private boolean initMimicSystems() {
-        boolean isMimicEnabled = getServer().getPluginManager().isPluginEnabled("Mimic");
+        boolean isMimicEnabled = checkMimicEnabled();
         if (isMimicEnabled) {
             ServicesManager servicesManager = getServer().getServicesManager();
             this.levelSystemProvider = servicesManager.load(BukkitLevelSystem.Provider.class);
+            Log.i("Level system ''{0}'' found.", this.levelSystemProvider.getId());
             this.classSystemProvider = servicesManager.load(BukkitClassSystem.Provider.class);
+            Log.i("Class system ''{0}'' found.", this.classSystemProvider.getId());
         } else {
-            getLogger().severe("Mimic is required for the plugin!");
-            getLogger().severe("Download it: https://www.spigotmc.org/resources/82515/");
+            Log.s("Mimic is required for RPGInventory to use levels and classes from other RPG plugins!");
+            Log.s("Download it from SpigotMC: https://www.spigotmc.org/resources/82515/");
             getServer().getPluginManager().disablePlugin(this);
         }
         return isMimicEnabled;
+    }
+
+    private boolean checkMimicEnabled() {
+        return getServer().getPluginManager().isPluginEnabled("Mimic");
     }
 
     private boolean checkRequirements() {
