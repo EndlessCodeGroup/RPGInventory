@@ -29,12 +29,12 @@ items:
         - essentials.gamemode
       right-click:
         op: true
-        command: "time set day %WORLD%"
+        command: "time set day"
         lore: "Set day"
         message: "Good day!"
       left-click:
         op: true
-        command: "weather %WORLD% sun"
+        command: "weather clear"
         lore: "Clear weather"
         message: "Sunshine!"
   mysterious-amulet:

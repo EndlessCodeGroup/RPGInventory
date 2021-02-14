@@ -41,6 +41,8 @@ import java.util.List;
 public class CustomItem extends ClassedItem {
     // Required options
     @NotNull
+    private final String id;
+    @NotNull
     private final String name;
     private final List<ItemStat> stats = new ArrayList<>();
 
@@ -63,6 +65,7 @@ public class CustomItem extends ClassedItem {
 
     CustomItem(String id, Texture texture, @NotNull ConfigurationSection config) {
         super(texture, config);
+        this.id = id;
 
         Rarity rarity = SafeEnums.valueOfOrDefault(Rarity.class, config.getString("rarity"), Rarity.COMMON);
         this.name = StringUtils.coloredLine(rarity.getColor() + config.getString("name"));
@@ -187,6 +190,10 @@ public class CustomItem extends ClassedItem {
 
     boolean isUnbreakable() {
         return unbreakable;
+    }
+
+    public @NotNull String getId() {
+        return id;
     }
 
     @SuppressWarnings("unused")

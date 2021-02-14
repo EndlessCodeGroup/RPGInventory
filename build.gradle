@@ -61,6 +61,8 @@ repositories {
         name 'ec-repo'
         url 'https://gitlab.com/endlesscodegroup/mvn-repo/raw/master/'
     }
+
+    maven { setUrl('https://dl.bintray.com/endlesscode/repo') }
 }
 
 shadowJar {
@@ -101,6 +103,7 @@ dependencies {
     compileOnly('me.baks:rpgplayerleveling:3.7.2')
     compileOnly('com.sucy:SkillAPI:3.102')
     compileOnly('me.leothepro555:skills:12.1.7')
+    compileOnly('ru.endlesscode.mimic:mimic-bukkit-api:0.5')
     implementation("ru.endlesscode.inspector:inspector-bukkit:$inspectorVersion")
     implementation("ru.endlesscode.inspector:inspector-sentry-reporter:$inspectorVersion")
     implementation("ru.endlesscode.inspector:sentry-bukkit:$inspectorVersion")

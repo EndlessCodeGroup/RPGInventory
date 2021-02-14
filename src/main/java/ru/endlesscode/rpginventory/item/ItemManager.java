@@ -152,6 +152,10 @@ public class ItemManager {
         return new ArrayList<>(CUSTOM_ITEMS.keySet());
     }
 
+    public static boolean hasItem(String itemId) {
+        return CUSTOM_ITEMS.containsKey(itemId);
+    }
+
     @NotNull
     public static ItemStack getItem(String itemId) {
         CustomItem customItem = CUSTOM_ITEMS.get(itemId);

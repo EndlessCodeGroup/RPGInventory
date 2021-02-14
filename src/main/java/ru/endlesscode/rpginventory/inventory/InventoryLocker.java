@@ -28,6 +28,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import ru.endlesscode.mimic.level.BukkitLevelSystem;
 import ru.endlesscode.rpginventory.RPGInventory;
 import ru.endlesscode.rpginventory.event.listener.LockerListener;
 import ru.endlesscode.rpginventory.item.Texture;
@@ -114,12 +115,12 @@ public class InventoryLocker {
             }
         }
         if (config.getBoolean("slots.level.enabled") && config.getBoolean("slots.level.spend")) {
-            if (RPGInventory.getLevelSystem() == PlayerUtils.LevelSystem.EXP) {
-                final int level = player.getLevel() - config.getInt("slots.level.required.line" + line);
-                if (0 > level) {
-                    return false;
-                }
-                player.setLevel(level);
+            BukkitLevelSystem levelSystem = RPGInventory.getLevelSystem(player);
+            int requiredLevels = config.getInt("slots.level.required.line" + line);
+            if (levelSystem.didReachLevel(requiredLevels)) {
+                levelSystem.takeLevels(requiredLevels);
+            } else {
+                return false;
             }
         }
         return true;

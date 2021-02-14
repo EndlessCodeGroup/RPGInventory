@@ -2,6 +2,7 @@ depend:
   - ProtocolLib
   - Vault
 softdepend:
+  - Mimic
   - BattleLevels
   - Skills
   - Heroes
@@ -22,19 +23,13 @@ permissions:
     description: Gives access to all RPGInventory commands
     default: op
     children:
-      rpginventory.container: true
       rpginventory.user: true
       rpginventory.open.others: true
-      rpginventory.fixhp.others: true
   rpginventory.user:
     description: Gives access to all user commands
     default: true
     children:
-      rpginventory.fixhp: true
       rpginventory.open: true
-  rpginventory.container:
-    description: Allows you to open containers
-    default: op
   rpginventory.open:
     description: Allows you to open inventory by command
     default: true
@@ -52,11 +47,3 @@ permissions:
   rpginventory.keep.rpginv:
     description: Player with this permission will not lose items from RPGInventory on dead
     default: op
-  rpginventory.fixhp:
-    description: Allows you to fix corrupted hp
-    default: true
-  rpginventory.fixhp.others:
-    description: Allows you to fix corrupted hp for you or other players
-    default: op
-    children:
-      rpginventory.textures: true

@@ -23,14 +23,6 @@ worlds:
   list:
     - blocked_world
 
-# What system used for level
-# Can be: EXP (exp bar from Minecraft), SKILLAPI, BATTLELEVELS, SKILLS, HEROES, RAC, RPGPL
-level-system: EXP
-
-# What system used for class
-# Can be: PERMISSIONS (like a rpginventory.class.{class_name}), SKILLAPI, HEROES, RAC
-class-system: PERMISSIONS
-
 # Here you can switch textures type between custom-model-data and damage.
 # Available values:
 #   damage (default) - https://www.spigotmc.org/wiki/custom-item-models-in-1-9-and-up/
