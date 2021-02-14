@@ -171,6 +171,14 @@ public class Slot {
         return this.cost == 0;
     }
 
+    public List<String> getAllowedItems() {
+        return allowed;
+    }
+
+    public List<String> getDeniedItems() {
+        return denied;
+    }
+
     boolean itemListIsEmpty() {
         return this.allowed.isEmpty() && this.denied.isEmpty();
     }

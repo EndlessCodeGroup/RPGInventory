@@ -109,9 +109,20 @@ public class SlotManager {
             Log.w("Slot with type {0} must contains list of allowed items", slot.getSlotType());
         }
 
+        if (!validateItems(slot.getAllowedItems()) || !validateItems(slot.getDeniedItems())) {
+            return false;
+        }
+
         if (!slot.getSlotType().isAllowMultiSlots() && slot.getSlotIds().size() > 1) {
             Log.w("Slot with type {0} can not contain more than one slotId", slot.getSlotType());
             return false;
+        }
+
+        for (int slotId : slot.getSlotIds()) {
+            if (slotId < 0 || slotId > 53) {
+                Log.w("Slot IDs should be in range 0..53, but it was {0}", slotId);
+                return false;
+            }
         }
 
         for (Slot existingSlot : this.slots) {
@@ -137,6 +148,17 @@ public class SlotManager {
             }
         }
 
+        return true;
+    }
+
+    private boolean validateItems(List<String> itemsPatterns) {
+        for (String itemPattern : itemsPatterns) {
+            if (!itemPattern.matches("^[\\w_]+(:\\d+(-\\d)?)?$")) {
+                Log.w("Allowed and denied items should fit to pattern ''[string]:[number]-[number]''");
+                Log.w("But it was: {0}", itemPattern);
+                return false;
+            }
+        }
         return true;
     }
 

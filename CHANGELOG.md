@@ -31,6 +31,11 @@ You can get RPGInv items using command:
 /mimic items give <player> rpginventory:<item id>
 ```
 
+### Added
+
+- Validation of slot IDs on slots initialization
+- Validation of allowed and denied items on slots initialization
+
 ### Fixed
 
 - Dupe when press `F` on item (#168)
