@@ -14,6 +14,8 @@ X changes total
 
 ## [Unreleased]
 
+## [2.4.0-rc1] (2021-02-14)
+
 ### Mimic support
 
 > Now you should install [Mimic](https://www.spigotmc.org/resources/82515/) to use RPGInventory.
@@ -214,4 +216,5 @@ By the way, NETHERITE tools and armors are already in default configs :)
 - Updated MyPet integration.
 - bStats instead of MCStats.
 
-[Unreleased]: https://github.com/EndlessCodeGroup/RPGInventory/compare/v2.3.2...develop
+[Unreleased]: https://github.com/EndlessCodeGroup/RPGInventory/compare/v2.4.0-rc1...develop
+[2.4.0-RC1]: https://github.com/EndlessCodeGroup/RPGInventory/compare/v2.3.2...v2.4.0-rc1
