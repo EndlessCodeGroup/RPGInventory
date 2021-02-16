@@ -21,9 +21,9 @@ package ru.endlesscode.rpginventory;
 import org.jetbrains.annotations.NotNull;
 import ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin;
 import ru.endlesscode.inspector.bukkit.report.BukkitEnvironment;
-import ru.endlesscode.inspector.report.Reporter;
-import ru.endlesscode.inspector.report.SentryReporter;
+import ru.endlesscode.inspector.report.*;
 import ru.endlesscode.inspector.sentry.bukkit.SentryBukkitIntegration;
+import ru.endlesscode.rpginventory.utils.Log;
 
 import java.util.Arrays;
 import java.util.List;
@@ -43,8 +43,14 @@ public class RPGInventoryPlugin extends TrackedPlugin {
 
     @Override
     protected final @NotNull Reporter createReporter() {
+        String dsn = "@sentry_dsn@"; // Token will be replaced in compile time, so it can be empty
+        if (dsn.isEmpty()) {
+            Log.w("It is unofficial build of RPGInventory.");
+            dsn = "no_dsn";
+        }
+
         return new SentryReporter.Builder()
-                .setDsn("@sentry_dsn@")
+                .setDsn(dsn)
                 .addIntegration(new SentryBukkitIntegration(this))
                 .focusOn(this)
                 .build();
