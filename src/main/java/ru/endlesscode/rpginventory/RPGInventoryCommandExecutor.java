@@ -43,7 +43,6 @@ import java.util.List;
  * It is part of the RpgInventory.
  * All rights reserved 2014 - 2016 © «EndlessCode Group»
  */
-@SuppressWarnings("deprecation")
 final class RPGInventoryCommandExecutor implements CommandExecutor {
 
     @Override

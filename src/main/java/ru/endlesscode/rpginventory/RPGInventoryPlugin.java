@@ -18,7 +18,6 @@
 
 package ru.endlesscode.rpginventory;
 
-import org.jetbrains.annotations.NotNull;
 import ru.endlesscode.inspector.bukkit.plugin.TrackedPlugin;
 import ru.endlesscode.inspector.bukkit.report.BukkitEnvironment;
 import ru.endlesscode.inspector.report.*;
@@ -32,7 +31,7 @@ import java.util.List;
 public class RPGInventoryPlugin extends TrackedPlugin {
 
     private static final List<String> INTEREST_PLUGINS = Arrays.asList(
-            "ProtocolLib", "Vault", "BattleLevels", "Skills", "Heroes", "RacesAndClasses",
+            "ProtocolLib", "Vault", "Mimic", "BattleLevels", "Skills", "Heroes", "RacesAndClasses",
             "SkillAPI", "MyPet", "RPGPlayerLeveling", "PlaceholderAPI", "MMOItems", "QuantumRPG",
             "MMOCore", "MMOInventory"
     );
@@ -42,11 +41,13 @@ public class RPGInventoryPlugin extends TrackedPlugin {
     }
 
     @Override
-    protected final @NotNull Reporter createReporter() {
-        String dsn = "@sentry_dsn@"; // Token will be replaced in compile time, so it can be empty
+    protected final Reporter createReporter() {
+        String dsn = "@sentry_dsn@";
+        // Token will be replaced in compile time, so it can be empty
+        // noinspection ConstantConditions
         if (dsn.isEmpty()) {
             Log.w("It is unofficial build of RPGInventory.");
-            dsn = "no_dsn";
+            return null;
         }
 
         return new SentryReporter.Builder()

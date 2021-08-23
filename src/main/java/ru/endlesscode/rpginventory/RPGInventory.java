@@ -221,7 +221,7 @@ public class RPGInventory extends PluginLifecycle {
         } else if (MimicApiLevel.checkApiLevel(MimicApiLevel.VERSION_0_6)) {
             return true;
         } else {
-            Log.w("At least Mimic 0.6 required for RPGInventory.");
+            Log.w("At least Mimic 0.6.1 required for RPGInventory.");
             return false;
         }
     }

@@ -14,6 +14,10 @@ X changes total
 
 ## [Unreleased]
 
+### Changes
+
+- This version requires at least Mimic 0.6.1
+
 ### Housekeeping
 
 - Dependencies updated? removed unused dependenices
