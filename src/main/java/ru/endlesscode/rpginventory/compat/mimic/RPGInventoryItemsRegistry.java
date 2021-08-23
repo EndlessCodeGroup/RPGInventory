@@ -34,7 +34,7 @@ public class RPGInventoryItemsRegistry implements BukkitItemsRegistry {
 
     @Nullable
     @Override
-    public ItemStack getItem(@NotNull String itemId, int amount) {
+    public ItemStack getItem(@NotNull String itemId, @Nullable Object payload, int amount) {
         ItemStack item = ItemManager.getItem(itemId);
         if (item.getType() != Material.AIR) {
             item.setAmount(amount);

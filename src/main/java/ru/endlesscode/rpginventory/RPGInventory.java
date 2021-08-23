@@ -33,6 +33,7 @@ import org.jetbrains.annotations.Nullable;
 import ru.endlesscode.inspector.bukkit.command.TrackedCommandExecutor;
 import ru.endlesscode.inspector.bukkit.plugin.PluginLifecycle;
 import ru.endlesscode.inspector.bukkit.scheduler.TrackedBukkitRunnable;
+import ru.endlesscode.mimic.MimicApiLevel;
 import ru.endlesscode.mimic.classes.BukkitClassSystem;
 import ru.endlesscode.mimic.items.BukkitItemsRegistry;
 import ru.endlesscode.mimic.level.BukkitLevelSystem;
@@ -127,7 +128,7 @@ public class RPGInventory extends PluginLifecycle {
 
     @Override
     public void onLoad() {
-        if (!checkMimicEnabled()) {
+        if (checkMimic()) {
             getServer()
                     .getServicesManager()
                     .register(BukkitItemsRegistry.class, new RPGInventoryItemsRegistry(), this, ServicePriority.High);
@@ -199,8 +200,8 @@ public class RPGInventory extends PluginLifecycle {
     }
 
     private boolean initMimicSystems() {
-        boolean isMimicEnabled = checkMimicEnabled();
-        if (isMimicEnabled) {
+        boolean isMimicFound = checkMimic();
+        if (isMimicFound) {
             ServicesManager servicesManager = getServer().getServicesManager();
             this.levelSystemProvider = servicesManager.load(BukkitLevelSystem.Provider.class);
             Log.i("Level system ''{0}'' found.", this.levelSystemProvider.getId());
@@ -211,11 +212,18 @@ public class RPGInventory extends PluginLifecycle {
             Log.s("Download it from SpigotMC: https://www.spigotmc.org/resources/82515/");
             getServer().getPluginManager().disablePlugin(this);
         }
-        return isMimicEnabled;
+        return isMimicFound;
     }
 
-    private boolean checkMimicEnabled() {
-        return getServer().getPluginManager().isPluginEnabled("Mimic");
+    private boolean checkMimic() {
+        if (getServer().getPluginManager().getPlugin("Mimic") == null) {
+            return false;
+        } else if (MimicApiLevel.checkApiLevel(MimicApiLevel.VERSION_0_6)) {
+            return true;
+        } else {
+            Log.w("At least Mimic 0.6 required for RPGInventory.");
+            return false;
+        }
     }
 
     private boolean checkRequirements() {

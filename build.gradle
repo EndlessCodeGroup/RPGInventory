@@ -88,7 +88,7 @@ dependencies {
     compileOnly('org.jetbrains:annotations:22.0.0')
     compileOnly('me.clip:placeholderapi:2.10.10')
     compileOnly('de.keyle:mypet:3.11-SNAPSHOT')
-    compileOnly('ru.endlesscode.mimic:mimic-bukkit-api:0.6')
+    compileOnly('ru.endlesscode.mimic:mimic-bukkit-api:0.6.1')
     implementation("ru.endlesscode.inspector:inspector-bukkit:$inspectorVersion")
     implementation("ru.endlesscode.inspector:inspector-sentry-reporter:$inspectorVersion")
     implementation("ru.endlesscode.inspector:sentry-bukkit:$inspectorVersion")
