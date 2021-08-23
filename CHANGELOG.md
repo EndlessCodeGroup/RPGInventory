@@ -14,6 +14,10 @@ X changes total
 
 ## [Unreleased]
 
+### Added
+
+- **This update brings experimental Spigot 1.17 support.**
+
 ### Changes
 
 - This version requires at least Mimic 0.6.1
