@@ -14,6 +14,8 @@ X changes total
 
 ## [Unreleased]
 
+## [2.4.0-rc1] (2021-08-24)
+
 ### Added
 
 - **This update brings experimental Spigot 1.17 support.**
@@ -229,5 +231,6 @@ By the way, NETHERITE tools and armors are already in default configs :)
 - Updated MyPet integration.
 - bStats instead of MCStats.
 
-[Unreleased]: https://github.com/EndlessCodeGroup/RPGInventory/compare/v2.4.0-rc1...develop
+[Unreleased]: https://github.com/EndlessCodeGroup/RPGInventory/compare/v2.4.0-rc2...develop
+[2.4.0-RC2]: https://github.com/EndlessCodeGroup/RPGInventory/compare/v2.4.0-rc1...v2.4.0-rc2
 [2.4.0-RC1]: https://github.com/EndlessCodeGroup/RPGInventory/compare/v2.3.2...v2.4.0-rc1
