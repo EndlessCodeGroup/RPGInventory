@@ -20,7 +20,7 @@ package ru.endlesscode.rpginventory;
 
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
-import org.bstats.bukkit.MetricsLite;
+import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
@@ -39,11 +39,7 @@ import ru.endlesscode.mimic.level.BukkitLevelSystem;
 import ru.endlesscode.rpginventory.compat.VersionHandler;
 import ru.endlesscode.rpginventory.compat.mimic.RPGInventoryItemsRegistry;
 import ru.endlesscode.rpginventory.compat.mypet.MyPetManager;
-import ru.endlesscode.rpginventory.event.listener.ArmorEquipListener;
-import ru.endlesscode.rpginventory.event.listener.ElytraListener;
-import ru.endlesscode.rpginventory.event.listener.HandSwapListener;
-import ru.endlesscode.rpginventory.event.listener.PlayerListener;
-import ru.endlesscode.rpginventory.event.listener.WorldListener;
+import ru.endlesscode.rpginventory.event.listener.*;
 import ru.endlesscode.rpginventory.inventory.InventoryLocker;
 import ru.endlesscode.rpginventory.inventory.InventoryManager;
 import ru.endlesscode.rpginventory.inventory.backpack.BackpackManager;
@@ -260,7 +256,7 @@ public class RPGInventory extends PluginLifecycle {
     }
 
     private void startMetrics() {
-        new MetricsLite(this);
+        new Metrics(holder, 4210);
     }
 
     private void savePlayers() {

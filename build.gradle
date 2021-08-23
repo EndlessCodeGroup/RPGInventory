@@ -10,7 +10,7 @@ version = pluginVersion
 description = pluginDesc
 
 bukkit {
-    apiVersion = '1.16.4'
+    apiVersion = '1.17.1'
 
     meta {
         name.set("RPGInventory")
@@ -74,10 +74,10 @@ shadowJar {
     relocate "com.fasterxml.jackson.core", "${shadowPackage}.jackson"
 
     // bstats
-    relocate "org.bstats.bukkit", "${shadowPackage}.bstats"
+    relocate "org.bstats", "${shadowPackage}.bstats"
 }
 
-def inspectorVersion = "0.11.0"
+def inspectorVersion = "0.12.0"
 
 dependencies {
     compileOnly(spigotApi())
@@ -93,7 +93,7 @@ dependencies {
     implementation("ru.endlesscode.inspector:inspector-sentry-reporter:$inspectorVersion")
     implementation("ru.endlesscode.inspector:sentry-bukkit:$inspectorVersion")
     implementation('com.comphenix.packetwrapper:PacketWrapper:1.13-R0.1-SNAPSHOT')
-    implementation('org.bstats:bstats-bukkit-lite:1.8')
+    implementation('org.bstats:bstats-bukkit:2.2.1')
     testImplementation('junit:junit:4.12')
     testImplementation('org.mockito:mockito-core:3.12.1')
 }
