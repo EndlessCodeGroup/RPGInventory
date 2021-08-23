@@ -3,13 +3,7 @@ depend:
   - Vault
 softdepend:
   - Mimic
-  - BattleLevels
-  - Skills
-  - Heroes
-  - RacesAndClasses
-  - SkillAPI
   - MyPet
-  - RPGPlayerLeveling
   - PlaceholderAPI
 
 commands:

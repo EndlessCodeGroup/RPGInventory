@@ -14,6 +14,11 @@ X changes total
 
 ## [Unreleased]
 
+### Housekeeping
+
+- Dependencies updated? removed unused dependenices
+- Gradle 6.8.1 -> 7.2
+
 ## [2.4.0-rc1] (2021-02-14)
 
 ### Mimic support

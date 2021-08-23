@@ -1,8 +1,7 @@
 plugins {
-    id 'com.github.johnrengelman.shadow' version '6.1.0'
-    id 'ru.endlesscode.bukkitgradle' version '0.9.2'
-    id 'com.github.ben-manes.versions' version "0.36.0"
-    id "com.jfrog.bintray" version "1.8.5" apply false
+    id 'com.github.johnrengelman.shadow' version '7.0.0'
+    id 'ru.endlesscode.bukkitgradle' version '0.10.0'
+    id 'com.github.ben-manes.versions' version "0.39.0"
     id 'jacoco'
 }
 
@@ -42,27 +41,19 @@ compileJava {
 }
 
 repositories {
-    flatDir { dirs 'libs' }
-
-    jcenter()
+    mavenCentral()
     spigot()
     dmulloy2()
     md5()
     placeholderapi()
     jitpack()
-    codemc()
 
+    // You should configure credentials for this repo
     maven {
-        name 'keyle-repo'
-        url 'http://repo.keyle.de/'
+        name = "githubPackages"
+        url = uri("https://maven.pkg.github.com/scomans/MyPet")
+        credentials(PasswordCredentials)
     }
-
-    maven {
-        name 'ec-repo'
-        url 'https://gitlab.com/endlesscodegroup/mvn-repo/raw/master/'
-    }
-
-    maven { setUrl('https://dl.bintray.com/endlesscode/repo') }
 }
 
 shadowJar {
@@ -86,31 +77,25 @@ shadowJar {
     relocate "org.bstats.bukkit", "${shadowPackage}.bstats"
 }
 
-def inspectorVersion = "0.10.1"
+def inspectorVersion = "0.11.0"
 
 dependencies {
     compileOnly(spigotApi())
-    compileOnly('com.github.MilkBowl:VaultAPI:1.7') {
+    compileOnly('com.github.MilkBowl:VaultAPI:1.7.1') {
         exclude group: 'org.bukkit'
     }
-    compileOnly('com.comphenix.protocol:ProtocolLib:4.5.0')
-    compileOnly('org.jetbrains:annotations:18.0.0')
-    compileOnly('me.clip:placeholderapi:2.10.4')
-    compileOnly('me.robin:battlelevels-api:6.9.1')
-    compileOnly('com.herocraftonline.heroes:Heroes:1.5.5.7')
-    compileOnly('de.keyle:mypet:3.8')
-    compileOnly('org.tobiyas:racesandclasses:1.2.0')
-    compileOnly('me.baks:rpgplayerleveling:3.7.2')
-    compileOnly('com.sucy:SkillAPI:3.102')
-    compileOnly('me.leothepro555:skills:12.1.7')
-    compileOnly('ru.endlesscode.mimic:mimic-bukkit-api:0.5')
+    compileOnly('com.comphenix.protocol:ProtocolLib:4.7.0')
+    compileOnly('org.jetbrains:annotations:22.0.0')
+    compileOnly('me.clip:placeholderapi:2.10.10')
+    compileOnly('de.keyle:mypet:3.11-SNAPSHOT')
+    compileOnly('ru.endlesscode.mimic:mimic-bukkit-api:0.6')
     implementation("ru.endlesscode.inspector:inspector-bukkit:$inspectorVersion")
     implementation("ru.endlesscode.inspector:inspector-sentry-reporter:$inspectorVersion")
     implementation("ru.endlesscode.inspector:sentry-bukkit:$inspectorVersion")
     implementation('com.comphenix.packetwrapper:PacketWrapper:1.13-R0.1-SNAPSHOT')
-    implementation('org.bstats:bstats-bukkit-lite:1.5')
+    implementation('org.bstats:bstats-bukkit-lite:1.8')
     testImplementation('junit:junit:4.12')
-    testImplementation('org.mockito:mockito-core:3.2.0')
+    testImplementation('org.mockito:mockito-core:3.12.1')
 }
 
 jacocoTestReport {
@@ -127,5 +112,4 @@ tasks.check.dependsOn tasks.jacocoTestReport
 // Add ProGuard minimization task
 // TODO: minimized Jar not works, fix it
 //apply(from: file("proguard.gradle"))
-
-apply(from: file("gradle/publish.gradle"))
+//apply(from: file("gradle/publish.gradle"))
