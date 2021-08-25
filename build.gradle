@@ -57,6 +57,15 @@ repositories {
 }
 
 shadowJar {
+    dependencies {
+        exclude(dependency("com.google.code.gson:gson:.*"))
+        exclude(dependency("org.jetbrains:annotations:.*"))
+    }
+
+    exclude("DebugProbesKt.bin")
+    exclude("META-INF/proguard/**")
+    exclude("META-INF/native-image/**")
+
     minimize()
 
     def shadowPackage = "shade.ru.endlesscode.rpginventory"
@@ -64,20 +73,17 @@ shadowJar {
 
     // inspector
     relocate "ru.endlesscode.inspector", "${shadowPackage}.inspector"
-    relocate "org.jetbrains", "${shadowPackage}.jetbrains"
     relocate "kotlinx", "${shadowPackage}.kotlinx"
     relocate "kotlin", "${shadowPackage}.kotlin"
 
     // inspector-sentry-reporter
     relocate "io.sentry", "${shadowPackage}.sentry"
-    relocate "org.slf4j", "${shadowPackage}.slf4j"
-    relocate "com.fasterxml.jackson.core", "${shadowPackage}.jackson"
 
     // bstats
     relocate "org.bstats", "${shadowPackage}.bstats"
 }
 
-def inspectorVersion = "0.12.0"
+def inspectorVersion = "0.12.1"
 
 dependencies {
     compileOnly(spigotApi())
