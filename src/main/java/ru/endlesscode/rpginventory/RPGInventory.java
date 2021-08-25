@@ -18,11 +18,13 @@
 
 package ru.endlesscode.rpginventory;
 
+import com.comphenix.protocol.ProtocolLibrary;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.ServicePriority;
@@ -141,10 +143,7 @@ public class RPGInventory extends PluginLifecycle {
             return;
         }
 
-        this.updateConfig();
-        Config.reload();
-        language = new FileLanguage(this);
-
+        loadConfigs();
         Serialization.registerTypes();
 
         if (!this.checkRequirements()) {
@@ -162,6 +161,54 @@ public class RPGInventory extends PluginLifecycle {
         } else {
             placeholderApiHooked = false;
         }
+
+        loadModules();
+
+        this.loadPlayers();
+        this.startMetrics();
+
+        // Enable commands
+        this.getCommand("rpginventory")
+                .setExecutor(new TrackedCommandExecutor(new RPGInventoryCommandExecutor(), getReporter()));
+
+        this.checkUpdates(null);
+    }
+
+    private boolean initMimicSystems() {
+        boolean isMimicFound = checkMimic();
+        if (isMimicFound) {
+            ServicesManager servicesManager = getServer().getServicesManager();
+            this.levelSystemProvider = servicesManager.load(BukkitLevelSystem.Provider.class);
+            Log.i("Level system ''{0}'' found.", this.levelSystemProvider.getId());
+            this.classSystemProvider = servicesManager.load(BukkitClassSystem.Provider.class);
+            Log.i("Class system ''{0}'' found.", this.classSystemProvider.getId());
+        } else {
+            Log.s("Mimic is required for RPGInventory to use levels and classes from other RPG plugins!");
+            Log.s("Download it from SpigotMC: https://www.spigotmc.org/resources/82515/");
+            getServer().getPluginManager().disablePlugin(this);
+        }
+        return isMimicFound;
+    }
+
+    void reload() {
+        // Unload
+        saveData();
+        removeListeners();
+
+        // Load
+        loadConfigs();
+        loadModules();
+        loadPlayers();
+    }
+
+    private void loadConfigs() {
+        this.updateConfig();
+        Config.reload();
+        language = new FileLanguage(this);
+    }
+
+    private void loadModules() {
+        PluginManager pm = getServer().getPluginManager();
 
         // Hook MyPet
         if (pm.isPluginEnabled("MyPet") && MyPetManager.init(this)) {
@@ -188,31 +235,11 @@ public class RPGInventory extends PluginLifecycle {
             pm.registerEvents(new ElytraListener(), this);
         }
         this.resourcePackModule = ResourcePackModule.init(this);
-
-        this.loadPlayers();
-        this.startMetrics();
-
-        // Enable commands
-        this.getCommand("rpginventory")
-                .setExecutor(new TrackedCommandExecutor(new RPGInventoryCommandExecutor(), getReporter()));
-
-        this.checkUpdates(null);
     }
 
-    private boolean initMimicSystems() {
-        boolean isMimicFound = checkMimic();
-        if (isMimicFound) {
-            ServicesManager servicesManager = getServer().getServicesManager();
-            this.levelSystemProvider = servicesManager.load(BukkitLevelSystem.Provider.class);
-            Log.i("Level system ''{0}'' found.", this.levelSystemProvider.getId());
-            this.classSystemProvider = servicesManager.load(BukkitClassSystem.Provider.class);
-            Log.i("Class system ''{0}'' found.", this.classSystemProvider.getId());
-        } else {
-            Log.s("Mimic is required for RPGInventory to use levels and classes from other RPG plugins!");
-            Log.s("Download it from SpigotMC: https://www.spigotmc.org/resources/82515/");
-            getServer().getPluginManager().disablePlugin(this);
-        }
-        return isMimicFound;
+    private void removeListeners() {
+        ProtocolLibrary.getProtocolManager().removePacketListeners(this);
+        HandlerList.unregisterAll(this);
     }
 
     private boolean checkMimic() {
@@ -259,6 +286,10 @@ public class RPGInventory extends PluginLifecycle {
 
     @Override
     public void onDisable() {
+        saveData();
+    }
+
+    private void saveData() {
         BackpackManager.saveBackpacks();
         this.savePlayers();
     }

@@ -25,7 +25,6 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.PluginManager;
 import org.jetbrains.annotations.NotNull;
 import ru.endlesscode.rpginventory.api.InventoryAPI;
 import ru.endlesscode.rpginventory.event.ItemCommandEvent;
@@ -237,9 +236,8 @@ final class RPGInventoryCommandExecutor implements CommandExecutor {
     }
 
     private void reloadPlugin(CommandSender sender) {
-        final PluginManager pm = RPGInventory.getInstance().getServer().getPluginManager();
-        pm.disablePlugin(RPGInventory.getInstance());
-        pm.enablePlugin(RPGInventory.getInstance());
+        sender.sendMessage(StringUtils.coloredLine("&e[RPGInventory] Reloading..."));
+        RPGInventory.getInstance().reload();
         sender.sendMessage(StringUtils.coloredLine("&e[RPGInventory] Plugin successfully reloaded!"));
     }
 
