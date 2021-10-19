@@ -49,10 +49,15 @@ repositories {
     jitpack()
 
     // You should configure credentials for this repo
-    maven {
+    def myPetRepo = maven {
         name = "githubPackages"
-        url = uri("https://maven.pkg.github.com/scomans/MyPet")
+        url = uri("https://maven.pkg.github.com/MyPetORG/MyPet")
         credentials(PasswordCredentials)
+    }
+
+    exclusiveContent {
+        forRepositories(myPetRepo)
+        filter { includeGroup("de.keyle") }
     }
 }
 
@@ -93,7 +98,7 @@ dependencies {
     compileOnly('com.comphenix.protocol:ProtocolLib:4.7.0')
     compileOnly('org.jetbrains:annotations:22.0.0')
     compileOnly('me.clip:placeholderapi:2.10.10')
-    compileOnly('de.keyle:mypet:3.11-SNAPSHOT')
+    compileOnly('de.keyle:mypet:3.12-SNAPSHOT')
     compileOnly('ru.endlesscode.mimic:mimic-bukkit-api:0.6.1')
     implementation("ru.endlesscode.inspector:inspector-bukkit:$inspectorVersion")
     implementation("ru.endlesscode.inspector:inspector-sentry-reporter:$inspectorVersion")
