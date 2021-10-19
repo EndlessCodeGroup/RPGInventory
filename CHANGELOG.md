@@ -14,7 +14,15 @@ X changes total
 
 ## [Unreleased]
 
-## [2.4.0-rc1] (2021-08-24)
+## [2.4.0] (2021-10-19)
+
+### Fixed
+
+- Fixed dependencies relocation
+- Fixed error on plugin reload
+- Removed SLF4J from dependencies
+
+## [2.4.0-rc2] (2021-08-24)
 
 ### Added
 
@@ -26,7 +34,7 @@ X changes total
 
 ### Housekeeping
 
-- Dependencies updated? removed unused dependenices
+- Dependencies updated, removed unused dependencies
 - Gradle 6.8.1 -> 7.2
 
 ## [2.4.0-rc1] (2021-02-14)
@@ -231,6 +239,7 @@ By the way, NETHERITE tools and armors are already in default configs :)
 - Updated MyPet integration.
 - bStats instead of MCStats.
 
-[Unreleased]: https://github.com/EndlessCodeGroup/RPGInventory/compare/v2.4.0-rc2...develop
-[2.4.0-RC2]: https://github.com/EndlessCodeGroup/RPGInventory/compare/v2.4.0-rc1...v2.4.0-rc2
-[2.4.0-RC1]: https://github.com/EndlessCodeGroup/RPGInventory/compare/v2.3.2...v2.4.0-rc1
+[Unreleased]: https://github.com/EndlessCodeGroup/RPGInventory/compare/v2.4.0...develop
+[2.4.0]: https://github.com/EndlessCodeGroup/RPGInventory/compare/v2.4.0-rc2...v2.4.0
+[2.4.0-rc2]: https://github.com/EndlessCodeGroup/RPGInventory/compare/v2.4.0-rc1...v2.4.0-rc2
+[2.4.0-rc1]: https://github.com/EndlessCodeGroup/RPGInventory/compare/v2.3.2...v2.4.0-rc1
