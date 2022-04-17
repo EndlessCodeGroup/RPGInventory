@@ -28,16 +28,15 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.ServicePriority;
-import org.bukkit.plugin.ServicesManager;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ru.endlesscode.inspector.bukkit.command.TrackedCommandExecutor;
 import ru.endlesscode.inspector.bukkit.plugin.PluginLifecycle;
 import ru.endlesscode.inspector.bukkit.scheduler.TrackedBukkitRunnable;
+import ru.endlesscode.mimic.Mimic;
 import ru.endlesscode.mimic.MimicApiLevel;
 import ru.endlesscode.mimic.classes.BukkitClassSystem;
-import ru.endlesscode.mimic.items.BukkitItemsRegistry;
 import ru.endlesscode.mimic.level.BukkitLevelSystem;
 import ru.endlesscode.rpginventory.compat.VersionHandler;
 import ru.endlesscode.rpginventory.compat.mimic.RPGInventoryItemsRegistry;
@@ -69,8 +68,7 @@ public class RPGInventory extends PluginLifecycle {
     private Permission perms;
     private Economy economy;
 
-    private BukkitLevelSystem.Provider levelSystemProvider;
-    private BukkitClassSystem.Provider classSystemProvider;
+    private Mimic mimic;
 
     private FileLanguage language;
     private boolean placeholderApiHooked = false;
@@ -109,11 +107,11 @@ public class RPGInventory extends PluginLifecycle {
     }
 
     public static BukkitLevelSystem getLevelSystem(@NotNull Player player) {
-        return instance.levelSystemProvider.getSystem(player);
+        return instance.mimic.getLevelSystem(player);
     }
 
     public static BukkitClassSystem getClassSystem(@NotNull Player player) {
-        return instance.classSystemProvider.getSystem(player);
+        return instance.mimic.getClassSystem(player);
     }
 
     @Nullable
@@ -131,9 +129,8 @@ public class RPGInventory extends PluginLifecycle {
     @Override
     public void onLoad() {
         if (checkMimic()) {
-            getServer()
-                    .getServicesManager()
-                    .register(BukkitItemsRegistry.class, new RPGInventoryItemsRegistry(), this, ServicePriority.High);
+            mimic = Mimic.getInstance();
+            mimic.registerItemsRegistry(new RPGInventoryItemsRegistry(), MimicApiLevel.VERSION_0_7, this, ServicePriority.High);
         }
     }
 
@@ -177,11 +174,10 @@ public class RPGInventory extends PluginLifecycle {
     private boolean initMimicSystems() {
         boolean isMimicFound = checkMimic();
         if (isMimicFound) {
-            ServicesManager servicesManager = getServer().getServicesManager();
-            this.levelSystemProvider = servicesManager.load(BukkitLevelSystem.Provider.class);
-            Log.i("Level system ''{0}'' found.", this.levelSystemProvider.getId());
-            this.classSystemProvider = servicesManager.load(BukkitClassSystem.Provider.class);
-            Log.i("Class system ''{0}'' found.", this.classSystemProvider.getId());
+            BukkitLevelSystem.Provider levelSystemProvider = mimic.getLevelSystemProvider();
+            Log.i("Level system ''{0}'' found.", levelSystemProvider.getId());
+            BukkitClassSystem.Provider classSystemProvider = mimic.getClassSystemProvider();
+            Log.i("Class system ''{0}'' found.", classSystemProvider.getId());
         } else {
             Log.s("Mimic is required for RPGInventory to use levels and classes from other RPG plugins!");
             Log.s("Download it from SpigotMC: https://www.spigotmc.org/resources/82515/");
@@ -245,10 +241,10 @@ public class RPGInventory extends PluginLifecycle {
     private boolean checkMimic() {
         if (getServer().getPluginManager().getPlugin("Mimic") == null) {
             return false;
-        } else if (MimicApiLevel.checkApiLevel(MimicApiLevel.VERSION_0_6)) {
+        } else if (MimicApiLevel.checkApiLevel(MimicApiLevel.VERSION_0_8)) {
             return true;
         } else {
-            Log.w("At least Mimic 0.6.1 required for RPGInventory.");
+            Log.w("At least Mimic 0.8 required for RPGInventory.");
             return false;
         }
     }
