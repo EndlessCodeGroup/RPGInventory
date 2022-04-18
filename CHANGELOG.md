@@ -22,6 +22,11 @@ X changes total
 
 - Compatibility with Mimic 0.8+
 
+### Housekeeping
+
+- Update dependencies
+- Update build environment
+
 ## [2.4.0] (2021-10-19)
 
 ### Fixed
