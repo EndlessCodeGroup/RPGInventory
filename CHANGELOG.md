@@ -14,6 +14,14 @@ X changes total
 
 ## [Unreleased]
 
+### Added
+
+- Implemented Mimic Inventory API to make it easier to integrate RPGInventory with plugins providing custom items. 
+
+### Fixed
+
+- Compatibility with Mimic 0.8+
+
 ## [2.4.0] (2021-10-19)
 
 ### Fixed

@@ -40,6 +40,7 @@ import ru.endlesscode.mimic.classes.BukkitClassSystem;
 import ru.endlesscode.mimic.level.BukkitLevelSystem;
 import ru.endlesscode.rpginventory.compat.VersionHandler;
 import ru.endlesscode.rpginventory.compat.mimic.RPGInventoryItemsRegistry;
+import ru.endlesscode.rpginventory.compat.mimic.RPGInventoryPlayerInventory;
 import ru.endlesscode.rpginventory.compat.mypet.MyPetManager;
 import ru.endlesscode.rpginventory.event.listener.*;
 import ru.endlesscode.rpginventory.inventory.InventoryLocker;
@@ -131,6 +132,8 @@ public class RPGInventory extends PluginLifecycle {
         if (checkMimic()) {
             mimic = Mimic.getInstance();
             mimic.registerItemsRegistry(new RPGInventoryItemsRegistry(), MimicApiLevel.VERSION_0_7, this, ServicePriority.High);
+            //noinspection UnstableApiUsage
+            mimic.registerPlayerInventoryProvider(RPGInventoryPlayerInventory::new, MimicApiLevel.VERSION_0_8, this, ServicePriority.High);
         }
     }
 
