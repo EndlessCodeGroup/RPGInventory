@@ -153,7 +153,7 @@ public class SlotManager {
 
     private boolean validateItems(List<String> itemsPatterns) {
         for (String itemPattern : itemsPatterns) {
-            if (!itemPattern.matches("^[\\w_]+(:\\d+(-\\d)?)?$")) {
+            if (!itemPattern.matches("^[\\w_]+(:\\d+(-\\d+)?)?$")) {
                 Log.w("Allowed and denied items should fit to pattern ''[string]:[number]-[number]''");
                 Log.w("But it was: {0}", itemPattern);
                 return false;
