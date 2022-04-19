@@ -14,6 +14,24 @@ X changes total
 
 ## [Unreleased]
 
+## [2.4.1] (2022-04-19)
+
+### Added
+
+- Support of 1.18 now is experimental
+- Implemented Mimic Inventory API to make it easier to integrate RPGInventory with plugins providing custom items. 
+
+### Fixed
+
+- Fixed `/rpginv reload` command
+- Compatibility with Mimic 0.8+
+- Visual dupe when press `F` on item
+
+### Housekeeping
+
+- Update dependencies
+- Update build environment
+
 ## [2.4.0] (2021-10-19)
 
 ### Fixed

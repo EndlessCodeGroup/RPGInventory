@@ -1,7 +1,9 @@
+import org.apache.tools.ant.filters.ReplaceTokens
+
 plugins {
-    id 'com.github.johnrengelman.shadow' version '7.0.0'
-    id 'ru.endlesscode.bukkitgradle' version '0.10.0'
-    id 'com.github.ben-manes.versions' version "0.39.0"
+    id 'com.github.johnrengelman.shadow' version '7.1.2'
+    id 'ru.endlesscode.bukkitgradle' version '0.10.1'
+    id 'com.github.ben-manes.versions' version "0.42.0"
     id 'jacoco'
 }
 
@@ -10,7 +12,7 @@ version = pluginVersion
 description = pluginDesc
 
 bukkit {
-    apiVersion = '1.17.1'
+    apiVersion = '1.18.2'
 
     meta {
         name.set("RPGInventory")
@@ -32,7 +34,7 @@ def processSources = tasks.register("processSource", Sync) {
 
     from(sourceSets.main.java)
     inputs.property("dsn", dsn)
-    filter(org.apache.tools.ant.filters.ReplaceTokens, tokens: [sentry_dsn: dsn])
+    filter(ReplaceTokens, tokens: [sentry_dsn: dsn])
     into("$buildDir/src")
 }
 
@@ -49,10 +51,15 @@ repositories {
     jitpack()
 
     // You should configure credentials for this repo
-    maven {
+    def myPetRepo = maven {
         name = "githubPackages"
-        url = uri("https://maven.pkg.github.com/scomans/MyPet")
+        url = uri("https://maven.pkg.github.com/MyPetORG/MyPet")
         credentials(PasswordCredentials)
+    }
+
+    exclusiveContent {
+        forRepositories(myPetRepo)
+        filter { includeGroup("de.keyle") }
     }
 }
 
@@ -90,18 +97,18 @@ dependencies {
     compileOnly('com.github.MilkBowl:VaultAPI:1.7.1') {
         exclude group: 'org.bukkit'
     }
-    compileOnly('com.comphenix.protocol:ProtocolLib:4.7.0')
-    compileOnly('org.jetbrains:annotations:22.0.0')
-    compileOnly('me.clip:placeholderapi:2.10.10')
-    compileOnly('de.keyle:mypet:3.11-SNAPSHOT')
-    compileOnly('ru.endlesscode.mimic:mimic-bukkit-api:0.6.1')
+    compileOnly('com.comphenix.protocol:ProtocolLib:4.8.0')
+    compileOnly('org.jetbrains:annotations:23.0.0')
+    compileOnly('me.clip:placeholderapi:2.11.1')
+    compileOnly('de.keyle:mypet:3.12-SNAPSHOT')
+    compileOnly('ru.endlesscode.mimic:mimic-bukkit-api:0.8.0')
     implementation("ru.endlesscode.inspector:inspector-bukkit:$inspectorVersion")
     implementation("ru.endlesscode.inspector:inspector-sentry-reporter:$inspectorVersion")
     implementation("ru.endlesscode.inspector:sentry-bukkit:$inspectorVersion")
     implementation('com.comphenix.packetwrapper:PacketWrapper:1.13-R0.1-SNAPSHOT')
-    implementation('org.bstats:bstats-bukkit:2.2.1')
-    testImplementation('junit:junit:4.12')
-    testImplementation('org.mockito:mockito-core:3.12.1')
+    implementation('org.bstats:bstats-bukkit:3.0.0')
+    testImplementation('junit:junit:4.13.2')
+    testImplementation('org.mockito:mockito-core:4.4.0')
 }
 
 jacocoTestReport {

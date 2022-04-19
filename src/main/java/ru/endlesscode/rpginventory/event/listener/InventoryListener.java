@@ -374,6 +374,25 @@ public class InventoryListener implements Listener {
         }
     }
 
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void afterInventoryClick(@NotNull final InventoryClickEvent event) {
+        if (event.getClick() == ClickType.SWAP_OFFHAND && event.isCancelled()) {
+            syncOffhandSlot((Player) event.getWhoClicked());
+        }
+    }
+
+    // We should manually sync offhand slot after SWAP_OFFHAND event
+    // Issue: https://hub.spigotmc.org/jira/browse/SPIGOT-6145
+    private void syncOffhandSlot(Player player) {
+        final PlayerInventory inventory = player.getInventory();
+        new TrackedBukkitRunnable() {
+            @Override
+            public void run() {
+                inventory.setItemInOffHand(inventory.getItemInOffHand());
+            }
+        }.runTaskLater(RPGInventory.getInstance(), 1);
+    }
+
     /**
      * Check
      *

@@ -5,26 +5,12 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ru.endlesscode.mimic.items.BukkitItemsRegistry;
-import ru.endlesscode.rpginventory.RPGInventory;
 import ru.endlesscode.rpginventory.item.CustomItem;
 import ru.endlesscode.rpginventory.item.ItemManager;
 
 import java.util.Collection;
 
 public class RPGInventoryItemsRegistry implements BukkitItemsRegistry {
-
-    public static String ID = "rpginventory";
-
-    @NotNull
-    @Override
-    public String getId() {
-        return ID;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return RPGInventory.getInstance().isEnabled();
-    }
 
     @NotNull
     @Override

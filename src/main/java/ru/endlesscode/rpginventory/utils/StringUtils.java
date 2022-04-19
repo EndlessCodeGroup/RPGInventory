@@ -84,18 +84,36 @@ public class StringUtils {
     }
 
     public static class Placeholders extends PlaceholderExpansion {
+
+        private static Placeholders instance = null;
+
+        public static void registerPlaceholders() {
+            instance = new Placeholders();
+            instance.register();
+        }
+
+        public static void unregisterPlaceholders() {
+            if (instance != null) {
+                instance.unregister();
+            }
+        }
+
+        private Placeholders() {
+            // Make constructor private
+        }
+
         @Override
-        public String getIdentifier() {
+        public @NotNull String getIdentifier() {
             return "rpginv";
         }
 
         @Override
-        public String getAuthor() {
+        public @NotNull String getAuthor() {
             return "osipxd";
         }
 
         @Override
-        public String getVersion() {
+        public @NotNull String getVersion() {
             return "1.0";
         }
 
