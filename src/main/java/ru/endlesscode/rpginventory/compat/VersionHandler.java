@@ -39,17 +39,18 @@ public class VersionHandler {
     public static final int VERSION_1_16 = 1_16_00;
     public static final int VERSION_1_17 = 1_17_00;
     public static final int VERSION_1_18 = 1_18_00;
+    public static final int VERSION_1_19 = 1_19_00;
 
     private static final Pattern pattern = Pattern.compile("(?<version>\\d\\.\\d{1,2}(\\.\\d)?)-.*");
 
     private static int versionCode = -1;
 
     public static boolean isNotSupportedVersion() {
-        return getVersionCode() < VERSION_1_14 || getVersionCode() >= VERSION_1_18;
+        return getVersionCode() < VERSION_1_14 || getVersionCode() >= VERSION_1_19;
     }
 
     public static boolean isExperimentalSupport() {
-        return getVersionCode() == VERSION_1_17;
+        return getVersionCode() == VERSION_1_18;
     }
 
     public static boolean isLegacy() {

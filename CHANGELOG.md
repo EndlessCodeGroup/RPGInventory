@@ -16,6 +16,7 @@ X changes total
 
 ### Added
 
+- Support of 1.18 now is experimental
 - Implemented Mimic Inventory API to make it easier to integrate RPGInventory with plugins providing custom items. 
 
 ### Fixed
