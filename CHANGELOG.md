@@ -22,6 +22,7 @@ X changes total
 
 - Fixed `/rpginv reload` command
 - Compatibility with Mimic 0.8+
+- Visual dupe when press `F` on item
 
 ### Housekeeping
 
