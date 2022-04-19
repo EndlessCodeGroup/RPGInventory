@@ -20,6 +20,7 @@ X changes total
 
 ### Fixed
 
+- Fixed `/rpginv reload` command
 - Compatibility with Mimic 0.8+
 
 ### Housekeeping

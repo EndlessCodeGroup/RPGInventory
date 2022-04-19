@@ -146,26 +146,13 @@ public class RPGInventory extends PluginLifecycle {
         loadConfigs();
         Serialization.registerTypes();
 
-        if (!this.checkRequirements()) {
-            this.getPluginLoader().disablePlugin(this);
+        hookPlaceholderApi();
+        if (!loadModules()) {
+            getPluginLoader().disablePlugin(this);
             return;
         }
-
-        PluginManager pm = this.getServer().getPluginManager();
-
-        // Hook Placeholder API
-        if (pm.isPluginEnabled("PlaceholderAPI")) {
-            new StringUtils.Placeholders().register();
-            placeholderApiHooked = true;
-            Log.i("Placeholder API hooked!");
-        } else {
-            placeholderApiHooked = false;
-        }
-
-        loadModules();
-
-        this.loadPlayers();
-        this.startMetrics();
+        loadPlayers();
+        startMetrics();
 
         // Enable commands
         this.getCommand("rpginventory")
@@ -189,6 +176,16 @@ public class RPGInventory extends PluginLifecycle {
         return isMimicFound;
     }
 
+    private void hookPlaceholderApi() {
+        if (getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+            StringUtils.Placeholders.registerPlaceholders();
+            placeholderApiHooked = true;
+            Log.i("Placeholder API hooked!");
+        } else {
+            placeholderApiHooked = false;
+        }
+    }
+
     void reload() {
         // Unload
         saveData();
@@ -196,7 +193,10 @@ public class RPGInventory extends PluginLifecycle {
 
         // Load
         loadConfigs();
-        loadModules();
+        if (!loadModules()) {
+            getPluginLoader().disablePlugin(this);
+            return;
+        }
         loadPlayers();
     }
 
@@ -206,7 +206,12 @@ public class RPGInventory extends PluginLifecycle {
         language = new FileLanguage(this);
     }
 
-    private void loadModules() {
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
+    private boolean loadModules() {
+        if (!checkRequirements()) {
+            return false;
+        }
+
         PluginManager pm = getServer().getPluginManager();
 
         // Hook MyPet
@@ -234,6 +239,8 @@ public class RPGInventory extends PluginLifecycle {
             pm.registerEvents(new ElytraListener(), this);
         }
         this.resourcePackModule = ResourcePackModule.init(this);
+
+        return true;
     }
 
     private void removeListeners() {
@@ -285,6 +292,7 @@ public class RPGInventory extends PluginLifecycle {
 
     @Override
     public void onDisable() {
+        StringUtils.Placeholders.unregisterPlaceholders();
         saveData();
     }
 
