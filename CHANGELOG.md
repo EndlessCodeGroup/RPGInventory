@@ -14,6 +14,8 @@ X changes total
 
 ## [Unreleased]
 
+## [2.4.1] (2022-04-19)
+
 ### Added
 
 - Support of 1.18 now is experimental
